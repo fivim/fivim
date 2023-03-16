@@ -1,0 +1,38 @@
+:root {
+  --enas-background-primary-color_sunrise: #faeecf;
+  --enas-foreground-primary-color_sunrise: #5c3f27;
+  --enas-highlight-color_sunrise: #d68420;
+}
+
+:root[theme='sunrise'] {
+  --enas-background-primary-color: var(--enas-background-primary-color_sunrise);
+  --enas-background-secondary-color: #eed0ab;
+
+  --enas-foreground-primary-color: var(--enas-foreground-primary-color_sunrise);
+  --enas-foreground-secondary-color: #a37337;
+
+  --enas-highlight-color: var(--enas-highlight-color_sunrise);
+  --enas-border-color: #dab993;
+
+  --enas-scrollbar-thumb-color: var(--enas-border-color);
+
+  // element-plus
+  --el-bg-color-overlay: var(--enas-background-primary-color);
+  --el-bg-color: var(--enas-background-primary-color);
+  --el-border-color:var(--enas-border-color);
+  --el-border-color-light: var(--enas-border-color);
+  --el-border-color-lighter: var(--enas-border-color);
+  --el-color-primary: var(--enas-highlight-color);
+  --el-fill-color-blank: var(--enas-background-secondary-color);
+  --el-text-color-primary: var(--enas-foreground-secondary-color);
+  --el-text-color-regular: var(--enas-foreground-primary-color);
+
+  .el-button {
+    --el-button-bg-color: var(--enas-background-secondary-color);
+    --el-button-border-color: var(--enas-border-color);
+    --el-button-hover-bg-color: var(--enas-highlight-color);
+    --el-button-hover-border-color: var(--enas-border-color);
+    --el-button-hover-text-color: var(--enas-foreground-primary-color);
+    --el-button-text-color: var(--enas-foreground-primary-color);
+  }
+}

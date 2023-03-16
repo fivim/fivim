@@ -1,0 +1,18 @@
+:root {
+  --enas-background-primary-color_default: rgb(255, 255, 255);
+  --enas-foreground-primary-color_default: rgb(51, 51, 54);
+  --enas-highlight-color_default: rgb(69, 155, 247);
+}
+
+:root {
+  --enas-background-primary-color: var(--enas-background-primary-color_default);
+  --enas-background-secondary-color: rgb(238, 239, 241);
+
+  --enas-foreground-primary-color: var(--enas-foreground-primary-color_default);
+  --enas-foreground-secondary-color: rgb(58, 54, 54);
+
+  --enas-highlight-color: var(--enas-highlight-color_default);
+  --enas-border-color: rgb(223, 225, 228);
+
+  --enas-scrollbar-thumb-color: var(--enas-border-color);
+}

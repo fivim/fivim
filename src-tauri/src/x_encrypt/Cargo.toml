@@ -1,0 +1,23 @@
+[package]
+name = "xencrypt"
+description = ""
+version = "1.0.0"
+authors = [""]
+edition = "2018"
+license = ""
+homepage = ""
+repository = ""
+readme = ""
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+xsjcl = { path = "../x_sjcl/" }
+chacha20poly1305 = { version = "0.10.1", features = ["stream"] }
+anyhow = "1.0.69"
+rand = "0.8.5"
+ccm = "0.5.0"
+serde_json = "1.0.93"
+serde = { version = "1.0.152", features = ["derive"] }
+aes = "0.8.2"
+base64 = "0.21.0"

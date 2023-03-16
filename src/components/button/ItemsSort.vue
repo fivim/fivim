@@ -1,0 +1,63 @@
+<template>
+    <XPopover refId="itemsSortBtnPop" placement="top-start" trigger="click" :propTitle="t('Sort')">
+        <template #reference>
+            <el-button :icon="Sort" circle />
+        </template>
+
+        <div class="enas-list">
+            <div class="group-title">
+                {{ t('Sort') }}
+            </div>
+            <el-radio-group v-model="settingStore.data.appearance.itemsColumnSortBy">
+                <el-radio label="title">{{ t('Sort by title') }}</el-radio>
+                <el-radio label="updateTime">{{ t('Sort by update time') }}</el-radio>
+                <el-radio label="createTime">{{ t('Sort by create time') }}</el-radio>
+            </el-radio-group>
+
+            <div class="list-item">
+                <div class="flex">
+                    <div class="flex flex-grow">{{ t('Sort order') }}</div>
+                    <div class="flex flex-grow justify-content-right">
+                        <SortAscendingOutlined @click="settingStore.data.appearance.itemsColumnSortOrder = 'ASC'"
+                            :class="`px-1 ${settingStore.data.appearance.itemsColumnSortOrder !== 'DESC' ? 'highlight font-bold' : ''}`" />
+                        <SortDescendingOutlined
+                            @click="settingStore.data.appearance.itemsColumnSortOrder = 'DESC'"
+                            :class="`px-1 ${settingStore.data.appearance.itemsColumnSortOrder === 'DESC' ? 'highlight font-bold' : ''}`" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="group-title">
+                {{ t('View') }}
+            </div>
+            <div class="list-item">
+                <div class="flex">
+                    <div class="flex flex-grow">{{ t('Show create time') }}</div>
+                    <div class="flex flex-grow justify-content-right">
+                        <el-switch v-model="settingStore.data.appearance.itemsColumnShowCreateTime" />
+                    </div>
+                </div>
+            </div>
+            <div class="list-item">
+                <div class="flex">
+                    <div class="flex flex-grow">{{ t('Show update time') }}</div>
+                    <div class="flex flex-grow justify-content-right">
+                        <el-switch v-model="settingStore.data.appearance.itemsColumnShowUpdateTime" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </XPopover>
+</template>
+
+<script lang="ts" setup>
+import { Sort } from '@element-plus/icons-vue'
+import { SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue'
+import { useI18n } from 'vue-i18n'
+
+import XPopover from '@/components/xPopover/popover.vue'
+import { useSettingStore } from '@/pinia/modules/settings'
+
+const { t } = useI18n()
+const settingStore = useSettingStore()
+</script>

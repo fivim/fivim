@@ -1,0 +1,22 @@
+[package]
+name = "xsjcl"
+description = "Library which supports decrypting data that was encrypted using SJCL"
+version = "1.0.0"
+authors = ["Teraku <teraku@teraku.de>"]
+edition = "2018"
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/Milchdealer/sjcl-rust"
+repository = "https://github.com/Milchdealer/sjcl-rust"
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version = "1.0.152", features = ["derive"] }
+serde_json = "1.0.93"
+pbkdf2 = { version = "0.11.0", features = ["simple"] }
+password-hash = "0.4.2"
+ccm = "0.5.0"
+aes = "0.8.2"
+thiserror = "1.0"
+base64 = "0.21.0"

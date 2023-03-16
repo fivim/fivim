@@ -1,0 +1,59 @@
+// Note:
+// The navigation-column color of this theme is very different from the normal background color. 
+// There are several special treatments.
+
+:root {
+  --enas-background-primary-color_balance: rgb(224,233,236);
+  --enas-foreground-primary-color_balance: rgb(61, 60, 64);
+  --enas-highlight-color_balance: rgb(158, 162, 248);
+}
+
+:root[theme='balance'] {
+  --enas-background-primary-color: var(--enas-background-primary-color_balance);
+  --enas-background-secondary-color: rgb(17,42,61);
+
+  --enas-foreground-primary-color: var(--enas-foreground-primary-color_balance);
+  --enas-foreground-secondary-color: var(--enas-foreground-primary-color_balance);
+
+  --enas-highlight-color: var(--enas-highlight-color_balance);
+  --enas-border-color: rgb(33, 78, 112);
+
+  --enas-scrollbar-thumb-color: var(--enas-border-color);
+
+  // Special definitions
+  // navigation-column
+  --enas-navigation-foreground-color: var(--enas-background-primary-color);
+  --enas-title-bar-foreground-color: var(--enas-background-primary-color);
+
+  .navigation-pane,
+  .desktop-title-bar {
+    .anticon {
+      color: var(--enas-background-primary-color);
+    }
+  }
+
+  .desktop-title-bar .btn:hover svg,
+  .desktop-title-bar .btn:focus svg {
+    color: var(--enas-highlight-color);
+  }
+
+  // element-plus
+  --el-bg-color-overlay: var(--enas-background-primary-color);
+  --el-bg-color: var(--enas-background-primary-color);
+  --el-border-color:var(--enas-border-color);
+  --el-border-color-light: var(--enas-border-color);
+  --el-border-color-lighter: var(--enas-border-color);
+  --el-color-primary: var(--enas-highlight-color);
+  --el-fill-color-blank: var(--enas-background-primary-color);
+  --el-text-color-primary: var(--enas-foreground-secondary-color);
+  --el-text-color-regular: var(--enas-foreground-primary-color);
+
+  .el-button {
+    --el-button-bg-color: var(--enas-background-primary-color);
+    --el-button-border-color: var(--enas-border-color);
+    --el-button-hover-bg-color: var(--enas-highlight-color);
+    --el-button-hover-border-color: var(--enas-border-color);
+    --el-button-hover-text-color: var(--enas-foreground-primary-color);
+    --el-button-text-color: var(--enas-foreground-primary-color);
+  }
+}

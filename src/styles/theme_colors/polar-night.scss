@@ -1,0 +1,38 @@
+:root {
+  --enas-background-primary-color_polar-night: rgb(14, 79, 94);
+  --enas-foreground-primary-color_polar-night: rgb(217, 221, 230);
+  --enas-highlight-color_polar-night: rgb(63, 189, 214);
+}
+
+:root[theme='polar-night'] {
+  --enas-background-primary-color: var(--enas-background-primary-color_polar-night);
+  --enas-background-secondary-color: rgb(8, 59, 66);
+
+  --enas-foreground-primary-color: var(--enas-foreground-primary-color_polar-night);
+  --enas-foreground-secondary-color: rgb(130, 200, 221);
+
+  --enas-highlight-color: var(--enas-highlight-color_polar-night);
+  --enas-border-color: rgb(93, 105, 129);
+
+  --enas-scrollbar-thumb-color: var(--enas-border-color);
+
+  // element-plus
+  --el-bg-color-overlay: var(--enas-background-primary-color);
+  --el-bg-color: var(--enas-background-primary-color);
+  --el-border-color:var(--enas-border-color);
+  --el-border-color-light: var(--enas-border-color);
+  --el-border-color-lighter: var(--enas-border-color);
+  --el-color-primary: var(--enas-highlight-color);
+  --el-fill-color-blank: var(--enas-background-secondary-color);
+  --el-text-color-primary: var(--enas-foreground-secondary-color);
+  --el-text-color-regular: var(--enas-foreground-primary-color);
+
+  .el-button {
+    --el-button-bg-color: var(--enas-background-secondary-color);
+    --el-button-border-color: var(--enas-border-color);
+    --el-button-hover-bg-color: var(--enas-highlight-color);
+    --el-button-hover-border-color: var(--enas-border-color);
+    --el-button-hover-text-color: var(--enas-foreground-primary-color);
+    --el-button-text-color: var(--enas-foreground-primary-color);
+  }
+}

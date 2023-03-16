@@ -1,0 +1,39 @@
+// icons of ant-design
+.anticon {
+  font-size: initial;
+  vertical-align: middle;
+  color: var(--enas-foreground-primary-color);
+}
+
+// custom list
+.enas-list {
+  .group-title {
+    font-weight: 700;
+    border-bottom: 1px solid var(--enas-border-color);
+    color: var(--enas-highlight-color);
+  }
+
+  .list-item {
+    line-height: 2rem;
+    display: block;
+  }
+}
+
+// custom element-plus style
+.el-form-item__label {
+  word-break: keep-all;
+  height: auto;
+}
+
+// Set custom style of el-popper
+.el-popper.is-customized {
+  /* Set padding to ensure the height is 32px */
+  padding: 6px 12px;
+  background: linear-gradient(90deg, var(--enas-background-primary-color), var(--enas-background-secondary-color));
+  color: var(--enas-foreground-primary-color);
+  border: 1px solid var(--enas-border-color);
+}
+
+.el-popper.is-customized .el-popper__arrow::before {
+  display: none;
+}

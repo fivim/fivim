@@ -1,0 +1,55 @@
+.desktop-title-bar {
+  color: var(--enas-title-bar-foreground-color) !important;
+  margin-top: 1px;
+
+  cursor: pointer;
+  -webkit-app-region: drag;
+  padding: 0;
+  margin: 0;
+  height: var(--enas-desktop-title-bar-height);
+  line-height: calc(var(--enas-desktop-title-bar-height) - 1px);
+  vertical-align: middle;
+  background-color: var(--enas-title-bar-background-color) !important;
+  border-bottom: 1px solid var(--enas-border-color);
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  top: 0;
+
+  .btn {
+    -webkit-app-region: no-drag;
+    margin: 0;
+    background: none;
+    border: none;
+    padding: 0 5px;
+    color: var(--enas-foreground-primary-color);
+    vertical-align: middle;
+    height: 100%;
+    float: left;
+
+    .el-button {
+      vertical-align: middle;
+      height: 100%;
+    }
+
+    svg {
+      max-width: var(--enas-desktop-titlebar-icon-font-size);
+    }
+
+    &:hover svg,
+    &:focus svg {
+      color: var(--enas-foreground-secondary-color);
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .title-bar-left-buttons,
+  .title-bar-right-buttons {
+    font-size: 0;
+  }
+
+}

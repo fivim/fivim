@@ -1,0 +1,38 @@
+:root {
+  --enas-background-primary-color_material: rgb(42, 42, 42);
+  --enas-foreground-primary-color_material: rgb(196, 196, 197);
+  --enas-highlight-color_material: rgb(58, 163, 132);
+}
+
+:root[theme='material'] {
+  --enas-background-primary-color: var(--enas-background-primary-color_material);
+  --enas-background-secondary-color: rgb(10, 10, 10);
+
+  --enas-foreground-primary-color: var(--enas-foreground-primary-color_material);
+  --enas-foreground-secondary-color: rgb(170, 165, 165);
+
+  --enas-highlight-color: var(--enas-highlight-color_material);
+  --enas-border-color: rgb(69, 78, 100);
+
+  --enas-scrollbar-thumb-color: var(--enas-border-color);
+
+  // element-plus
+  --el-bg-color-overlay: var(--enas-background-primary-color);
+  --el-bg-color: var(--enas-background-primary-color);
+  --el-border-color:var(--enas-border-color);
+  --el-border-color-light: var(--enas-border-color);
+  --el-border-color-lighter: var(--enas-border-color);
+  --el-color-primary: var(--enas-highlight-color);
+  --el-fill-color-blank: var(--enas-background-secondary-color);
+  --el-text-color-primary: var(--enas-foreground-secondary-color);
+  --el-text-color-regular: var(--enas-foreground-primary-color);
+
+  .el-button {
+    --el-button-bg-color: var(--enas-background-secondary-color);
+    --el-button-border-color: var(--enas-border-color);
+    --el-button-hover-bg-color: var(--enas-highlight-color);
+    --el-button-hover-border-color: var(--enas-border-color);
+    --el-button-hover-text-color: var(--enas-foreground-primary-color);
+    --el-button-text-color: var(--enas-foreground-primary-color);
+  }
+}

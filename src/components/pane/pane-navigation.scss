@@ -1,0 +1,125 @@
+$content-horizontal-padding: 1rem;
+
+#navigation-column {
+  background-color: var(--enas-navigation-background-color);
+  color: var(--enas-navigation-foreground-color);
+
+  @media screen and (min-width: 768px) {
+    border-right: 1px solid var(--enas-border-color);
+  }
+
+  .navigation-pane {
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    display: flex;
+    flex-direction: column;
+
+    .section-title-bar {
+      padding-top: 0.8rem;
+      padding-bottom: 0.5rem;
+      padding-left: $content-horizontal-padding;
+      padding-right: $content-horizontal-padding;
+      font-size: 12px;
+
+      .right {
+        padding: 0px;
+        background-color: transparent;
+        align-items: center;
+        flex-direction: row;
+        cursor: pointer;
+        display: flex;
+      }
+    }
+
+    .tag {
+      border: 0;
+      background-color: transparent;
+      padding-left: 0.8rem;
+      padding-right: 0.8rem;
+      font-size: 14px;
+      cursor: pointer;
+      transition: height 0.1s ease-in-out;
+      width: 100%;
+      user-select: none;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+
+      &:focus {
+        border: 0;
+        outline: 0;
+        box-shadow: none;
+      }
+
+      >.tag-info {
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        min-height: 35px;
+       
+        >.tag-icon {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          margin-right: 0.5rem;
+        }
+
+        >.title {
+          background-color: transparent;
+          font-weight: 600;
+          border: none;
+          cursor: pointer;
+          text-overflow: ellipsis;
+          flex-grow: 1;
+          font-size: 1rem;
+          text-align: left;
+          overflow: hidden;
+          // pointer-events: none;
+
+          &.editing {
+            pointer-events: auto;
+            user-select: text;
+            -moz-user-select: text;
+            -khtml-user-select: text;
+            -webkit-user-select: text;
+          }
+
+          &:focus {
+            outline: 0;
+            box-shadow: 0;
+          }
+        }
+
+        .action {
+          padding-right: 4px;
+          padding-top: 1px;
+          font-weight: 400;
+          color: var(--enas-foreground-primary-color);
+          min-width: 15px;
+          text-align: right;
+        }
+      }
+
+      &.selected {
+        >.tag-info {
+          .title {
+            cursor: text;
+          }
+
+          .count {
+            font-weight: 700;
+          }
+        }
+      }
+
+      &:hover:not(.selected),
+      &.selected,
+      &.is-drag-over {
+        background-color: var(--enas-background-secondary-color);
+      }
+    }
+  }
+}

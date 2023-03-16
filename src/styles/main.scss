@@ -1,0 +1,184 @@
+:root {
+  --enas-z-index-editor-title-bar: 10;
+  --enas-z-index-resizer-overlay: 11;
+  --enas-z-index-pane-resizer: 12;
+
+  --enas-base-font-size: 0.813rem;
+  --enas-simplified-chinese-font: 'Microsoft Yahei', '微软雅黑体';
+  --enas-monospace-font: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, 'Ubuntu Mono', 'Courier New', monospace;
+  --enas-sans-serif-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', var(--enas-simplified-chinese-font), sans-serif;
+  --enas-editor-font-family: var(--enas-sans-serif-font);
+
+  --enas-note-editor-margin: 10px;
+  --enas-note-editor-padding: 10px;
+  --enas-editor-title-bar-height: 52px;
+  --enas-desktop-title-bar-height: 36px;
+  --enas-desktop-title-bar-icon-font-size: 16px;
+
+  --enas-translate-x: 0;
+  --enas-translate-y: 0;
+  --enas-rotate: 0;
+  --enas-skew-x: 0;
+  --enas-skew-y: 0;
+  --enas-scale-x: 1;
+  --enas-scale-y: 1;
+
+  --enas-shadow: 0 0 #0000;
+  --enas-shadow-colored: 0 0 #9c505000;
+  --enas-ring-offset-shadow: 0 0 #0000;
+  --enas-ring-shadow: 0 0 #0000;
+
+  // Color of each part
+  --enas-title-bar-background-color: var(--enas-background-secondary-color);
+  --enas-title-bar-foreground-color: var(--enas-foreground-primary-color);
+
+  --enas-navigation-background-color: var(--enas-background-secondary-color);
+  --enas-navigation-foreground-color: var(--enas-foreground-primary-color);
+
+  --enas-items-background-color: var(--enas-background-primary-color);
+  --enas-items-foreground-color: var(--enas-foreground-primary-color);
+
+  --enas-editor-background-color: var(--enas-background-primary-color);
+  --enas-editor-foreground-color: var(--enas-foreground-primary-color);
+}
+
+html,
+body {
+  font-size: var(--enas-base-font-size);
+  color: var(--enas-foreground-primary-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -moz-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  line-height: normal;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: var(--enas-font-size-h1);
+}
+
+h2 {
+  font-size: var(--enas-font-size-h2);
+}
+
+h3 {
+  font-size: var(--enas-font-size-h3);
+}
+
+p {
+  color: var(--enas-foreground-primary-color);
+  margin: 0;
+}
+
+input,
+textarea,
+button,
+select,
+label,
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+input,
+button,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: normal;
+}
+
+a {
+  text-decoration: none;
+
+  &.no-decoration {
+    color: inherit;
+  }
+
+  &:hover {
+    text-decoration: underline;
+
+    &.no-decoration {
+      text-decoration: none;
+    }
+  }
+}
+
+html {
+  border: 1px solid var(--enas-border-color) !important;
+  background-color: var(--enas-background-primary-color) !important;
+  overflow: hidden;
+}
+
+.highlight {
+  color: var(--enas-highlight-color) !important;
+}
+
+.app {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  vertical-align: top;
+  width: 100%;
+
+  .section {
+    overflow: hidden;
+
+    .section-title-bar-header {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
+#resizer-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: var(--enas-z-index-resizer-overlay);
+  opacity: 0;
+}
+
+.color-primary {
+  color: var(--enas-foreground-primary-color);
+}
+
+.color-secondary {
+  color: var(--enas-foreground-secondary-color);
+}
+
+// scrollbar
+::-webkit-scrollbar {
+  width: 17px;
+  height: 18px;
+  border-left: none;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 5px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  -webkit-border-radius: 10px;
+  background-color: var(--enas-scrollbar-thumb-color);
+  -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}

@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "codex"
+  ],
+  "globals": {
+    "HTMLElement": true,
+    "HTMLDivElement": true,
+    "File": true
+  }
+}
