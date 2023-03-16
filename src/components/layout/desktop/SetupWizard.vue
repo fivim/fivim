@@ -93,14 +93,15 @@ import {
 import { settingOptions } from '@/conf'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
-import { isMobileScreen, OsThemeIsDark } from '@/utils/media_query'
+import { initAtFirst } from '@/libs/init/at_first'
 import { i18n, getLanguageMeta, setLocale } from '@/libs/init/i18n'
+import { initCoreDirs } from '@/libs/init/dirs'
 import { saveDefaultEntryFile } from '@/libs/user_data/entry_file'
 import { genFileNamingRuleDemoHtml, genTimeHashedSign, TimeHashedSignType, genMasterPasswordSha256 } from '@/utils/hash'
-import { getAvailableLocale } from '@/utils/locale'
 import { elOptionArrSort } from '@/utils/array'
+import { getAvailableLocale } from '@/utils/locale'
+import { isMobileScreen, OsThemeIsDark } from '@/utils/media_query'
 import { setTheme } from '@/utils/utils'
-import { initAtFirst } from '@/libs/init/at_first'
 
 const getAvailableDefaultLocale = () => {
   const defaultLocale = getAvailableLocale(i18n.global.availableLocales, DefaultLanguage)
@@ -296,6 +297,12 @@ const onSave = () => {
     return
   }
 
+  const appData = appStore.data
+  appData.existConfigFile = true
+  appStore.setData(appData)
+
+  setTheme(ruleForm.theme)
+
   const settingData = settingStore.data
   settingData.normal.language = ruleForm.language
   settingData.normal.workDir = ruleForm.workDir
@@ -310,18 +317,17 @@ const onSave = () => {
   settingData.appearance.itemsColumnSortOrder = DefaultItemsColumnSortOrder
   settingData.appearance.theme = ruleForm.theme
   settingData.sync.intervalSeconds = DefaultSyncIntervalSeconds
-  settingStore.setData(settingData, true).then(() => {
-    saveDefaultEntryFile()
-    // TODO save sync lock file
+
+  // initCoreDirs before settingStore save config
+  initCoreDirs().then(() => {
+    settingStore.setData(settingData, true).then(() => {
+      saveDefaultEntryFile()
+      // TODO save sync lock file
+
+      const pwdSha256 = genMasterPasswordSha256(settingData.encryption.masterPassword, MasterPasswordSalt)
+      initAtFirst(pwdSha256)
+    })
   })
-
-  appStore.data.existConfigFile = true
-  appStore.setData(appStore.data)
-
-  setTheme(settingData.appearance.theme)
-
-  const pwdSha256 = genMasterPasswordSha256(settingData.encryption.masterPassword, MasterPasswordSalt)
-  initAtFirst(pwdSha256)
 }
 </script>
 

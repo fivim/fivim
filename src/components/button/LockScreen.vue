@@ -12,9 +12,9 @@ import { useAppStore } from '@/pinia/modules/app'
 
 const appStore = useAppStore()
 const onLock = async () => {
-  const appInfo = appStore.data
-  appInfo.lockscreen = true
-  appStore.setData(appInfo)
+  const appData = appStore.data
+  appData.lockscreen = true
+  appStore.setData(appData)
 }
 </script>
 

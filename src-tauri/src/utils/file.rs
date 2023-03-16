@@ -9,13 +9,24 @@ use base64::decode;
 
 pub fn get_parent_dir_in_path_string(path_str: &str) -> String {
     let dir = std::path::Path::new(&path_str);
-    let parent_dir = dir.parent().unwrap();
-    return parent_dir
-        .as_os_str()
-        .to_os_string()
-        .to_str()
-        .unwrap()
-        .to_string();
+
+    match dir.parent() {
+        Some(parent_dir) => {
+            return parent_dir
+                .as_os_str()
+                .to_os_string()
+                .to_str()
+                .unwrap()
+                .to_string();
+        }
+        None => {
+            print!(
+                ">>> get_parent_dir_in_path_string parent is none, path: {}\n",
+                path_str
+            );
+            return "".to_string();
+        }
+    }
 }
 
 pub fn check_dir_or_create(dir_str: &str) {
@@ -29,7 +40,7 @@ pub fn check_dir_or_create(dir_str: &str) {
 }
 
 pub fn file_size(file_path: &str) -> u64 {
-    match fs::metadata(&file_path){
+    match fs::metadata(&file_path) {
         Ok(metadata) => return metadata.len(),
         Err(_) => return 0,
     }

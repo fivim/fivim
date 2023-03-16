@@ -2,6 +2,7 @@
   <div>
     <div id="web-nav-btns" v-if="isWebPage()">
       <SettingButton />
+      <SyncButton />
       <ThemeButton />
     </div>
 
@@ -158,10 +159,12 @@ import { useSettingStore } from '@/pinia/modules/settings'
 import { parseNotebook } from '@/libs/user_data/parser_decode'
 import { saveUserDataAndCreateNotebookFile } from '@/libs/user_data/parser_encode'
 import XPopover from '@/components/xPopover/popover.vue'
+import SyncButton from '@/components/button/Sync.vue'
 import SettingButton from '@/components/button/Setting.vue'
 import ThemeButton from '@/components/button/Theme.vue'
 import { getTimestampMilliseconds } from '@/utils/time'
 import { getHasdedSign } from '@/utils/pinia_data_related'
+import { colorIsDark } from '@/___professional___/utils/color'
 import { Note, Notebook, Tag } from './types'
 
 const { t } = useI18n()
@@ -211,7 +214,6 @@ const onDialogCloseNotebook = async () => {
       }
     }
 
-    console.log('>>> updated paneData:: ', paneData)
     paneDataStore.setData(paneData)
   }
 }
@@ -293,7 +295,7 @@ const getDialogTitleAddEditTag = () => {
 const onListNotebookItems = (index: number) => {
   const nb = paneDataStore.data.navigationColumn.notebooks[index]
   const p = appStore.data.dataPath
-  const filePath = p.pathOfSyncCachedDir + nb.hashedSign + settingStore.data.encryption.fileExt
+  const filePath = p.pathOfCurrentDir + nb.hashedSign + settingStore.data.encryption.fileExt
 
   CmdInvoke.readUserDataFile(settingStore.data.encryption.masterPassword, filePath, true).then((data: UserDataFile) => {
     if (data.file_data_str.length === 0) {
@@ -330,7 +332,8 @@ const onListTagItems = (tag: Tag) => {
 // ========== add / edit tag end ==========
 
 const emojiPickerIsDark = () => {
-  return false
+  const color = getComputedStyle(document.documentElement).getPropertyValue('--el-bg-color-overlay')
+  return colorIsDark(color)
 }
 </script>
 

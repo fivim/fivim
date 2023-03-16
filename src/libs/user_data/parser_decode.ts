@@ -83,7 +83,7 @@ export const parseNotebook = (jsonStr: string): Note[] => {
 
 export const parseNotebookSourceV1 = (data: NotebookSource): Note[] => {
   const res: Note[] = []
-  const attrsArr = ['title', 'icon', 'hashedSign', 'summary', 'type', 'content', 'updateTime', 'createTime', 'tagsHashedSign']
+  const attrsArr = data.attrsArr
   const dataArr = data.dataArr
   if (dataArr.length > 0) {
     for (const i of dataArr) {
@@ -102,7 +102,6 @@ export const parseNotebookSourceV1 = (data: NotebookSource): Note[] => {
           createTime: new Date(i[attrsArr.indexOf('createTime')]),
           hashedSign: i[attrsArr.indexOf('hashedSign')],
           icon: i[attrsArr.indexOf('icon')],
-          summary: i[attrsArr.indexOf('summary')],
           tagsArr: tagsHashedSignArr,
           title: i[attrsArr.indexOf('title')],
           type: itemType,

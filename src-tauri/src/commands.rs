@@ -77,11 +77,6 @@ pub fn write_string_into_file(file_path: String, file_content: String) -> bool {
     }
 }
 
-// #[tauri::command]
-// pub fn translate(lang: String, word: String) -> String {
-//     return x_i18n::get_translate(lang, word);
-// }
-
 #[tauri::command]
 pub fn get_dict_json() -> String {
     return x_i18n::get_dict_json();

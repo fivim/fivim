@@ -5,7 +5,6 @@ export const notebookAttrsArr = [
   'hashedSign',
   'title',
   'icon',
-  'summary',
   'type',
   'content',
   'updateTime',

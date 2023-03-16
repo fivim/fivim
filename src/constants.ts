@@ -12,7 +12,6 @@ export const DefaultItemsColumnSortBy = 'createTime'
 export const DefaultItemsColumnSortOrder = 'ASC'
 export const DefaultLanguage = 'en'
 export const DefaultLanguageInNativeWord = 'English'
-export const DefaultNoteSummaryLimit = 50
 export const DefaultSyncIntervalSeconds = '300'// Use string
 export const DefaultThemeDark = 'material'
 export const DefaultThemeLight = 'default'

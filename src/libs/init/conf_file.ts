@@ -27,7 +27,7 @@ export const initWithConfFile = (pwdSha256: string, successCallback: CallableFun
   const settingStore = useSettingStore()
 
   const p = appStore.data.dataPath
-  return CmdInvoke.decryptFileToString(confFilePwd(pwdSha256), p.pathOfConfig).then((data: string) => {
+  return CmdInvoke.decryptFileToString(confFilePwd(pwdSha256), p.pathOfConfig).then(async (data: string) => {
     if (data === '') {
       return false
     }
@@ -60,7 +60,7 @@ export const initWithConfFile = (pwdSha256: string, successCallback: CallableFun
       setLocale(locale)
     }
 
-    settingStore.setData(conf, false)
+    await settingStore.setData(conf, false)
 
     // Theme
     const ast = appStore.data
@@ -69,7 +69,8 @@ export const initWithConfFile = (pwdSha256: string, successCallback: CallableFun
       setTheme(themeName)
       ast.currentTheme = themeName
     }
-    appStore.setData(ast)
+
+    await appStore.setData(ast)
 
     if (successCallback) {
       successCallback()
@@ -84,6 +85,14 @@ export const saveConfToFile = () => {
   const settingStore = useSettingStore()
   const p = appStore.data.dataPath
 
-  // save as toml format
   CmdInvoke.encryptStringToFile(confFilePwd(settingStore.data.encryption.masterPassword), p.pathOfConfig, JSON.stringify(settingStore.data))
+}
+
+export const checkConfFileExist = () => {
+  const appStore = useAppStore()
+  const aaa = appStore.data
+  CmdInvoke.existFile(aaa.dataPath.pathOfConfig).then((exist: boolean) => {
+    aaa.existConfigFile = exist
+    appStore.setData(aaa)
+  })
 }

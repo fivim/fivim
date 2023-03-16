@@ -30,7 +30,6 @@ export type Note = {
   createTime: Date
   hashedSign: string
   icon: string
-  summary: string
   tagsArr: string[]
   title: string
   type: DocType

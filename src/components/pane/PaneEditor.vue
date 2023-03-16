@@ -28,7 +28,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-import { DefaultNoteSummaryLimit, DocTypeNote } from '@/constants'
+import { DocTypeNote } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
 import ChangeEditorButton from '@/components/button/EditorTag.vue'

@@ -32,7 +32,7 @@ export type EntryFileSource = {
 }
 
 // User's notebook data
-export type NotebookSourceAttrsArrKey = 'title' | 'icon' | 'hashedSign' | 'summary' | 'type' | 'content' | 'updateTime' | 'createTime' | 'tagsHashedSign'
+export type NotebookSourceAttrsArrKey = 'title' | 'icon' | 'hashedSign' | 'type' | 'content' | 'updateTime' | 'createTime' | 'tagsHashedSign'
 export type NotebookSource = {
     dataVersion: number
     attrsArr: NotebookSourceAttrsArrKey[]

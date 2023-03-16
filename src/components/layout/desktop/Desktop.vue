@@ -67,6 +67,7 @@ import { PaneIds, PaneSide, PaneResizeType } from '@/components/pane/types'
 import PaneNavigation from '@/components/pane/PaneNavigation.vue'
 import PaneItems from '@/components/pane/PaneItems.vue'
 import PaneEditor from '@/components/pane/PaneEditor.vue'
+// import EditorFullScreen from '@/___professional___/components/pane/EditorMilkdownFullScreen.vue'
 
 const appStore = useAppStore()
 

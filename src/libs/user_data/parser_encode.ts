@@ -11,7 +11,7 @@ import { jsonCopy } from '@/utils/utils'
 
 import { EntryFileSourceNotebooksTagsAttrsArrKey, EntryFileSource, NotebookSource } from './types'
 import { notebookAttrsArr } from './types_templates'
-import { getEntryFileName, genCurrentNotebookFileName, getWorkDir } from './utils'
+import { getEntryFileName, genCurrentNotebookFileName } from './utils'
 
 export const writeEncryptedUserDataToFile = (dir: string, fileName: string, userData: string) => {
   const settingStore = useSettingStore()
@@ -88,7 +88,8 @@ const saveEntryFile = async () => {
 
   console.log('>>> saveEntryFile content:: ', content)
 
-  return writeEncryptedUserDataToFile(getWorkDir(), getEntryFileName(), JSON.stringify(content))
+  const p = appStore.data.dataPath
+  return writeEncryptedUserDataToFile(p.pathOfCurrentDir, getEntryFileName(), JSON.stringify(content))
 }
 
 // Set a fileName while isCurrentOpened is true
@@ -150,12 +151,12 @@ const saveNotebookFile = async (isCurrentOpened: boolean, fileName: string) => {
   }
 
   const p = appStore.data.dataPath
-  const filePath = p.pathOfSyncCachedDir + fileName
-  const writeRes = await writeEncryptedUserDataToFile(getWorkDir(), fileName, JSON.stringify(content))
+  const writeRes = await writeEncryptedUserDataToFile(p.pathOfCurrentDir, fileName, JSON.stringify(content))
 
   if (!writeRes) {
     return Promise.resolve(false)
   } else {
+    const filePath = p.pathOfCurrentDir + fileName
     const sha256 = await CmdInvoke.sha256ByFilePath(filePath)
     const fileMeta = {
       dtimeUtc: 0,

@@ -59,9 +59,9 @@ const onChangeTheme = (themeName: string) => {
   setting.appearance.theme = themeName
   settingStore.setData(setting, true)
 
-  const appInfo = appStore.data
-  appInfo.currentTheme = themeName
-  appStore.setData(appInfo)
+  const appData = appStore.data
+  appData.currentTheme = themeName
+  appStore.setData(appData)
 
   saveConfToFile()
 

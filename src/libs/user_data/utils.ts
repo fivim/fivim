@@ -13,8 +13,3 @@ export const genCurrentNotebookFileName = () => {
   const senc = settingStore.data.encryption
   return `${hashedSign}${senc.fileExt}`
 }
-
-export const getWorkDir = () => {
-  const settingStore = useSettingStore()
-  return settingStore.data.normal.workDir
-}

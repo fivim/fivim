@@ -6,7 +6,7 @@
 
     <div class="enas-list">
       <div class="list-item" @click="onAddNote">
-        <FileTextOutlined /> {{ t('Notebook') }}
+        <FileTextOutlined /> {{ t('Note') }}
       </div>
     </div>
   </XPopover>
@@ -47,7 +47,6 @@ const addItem = (itemType: typeof DocTypeNote) => {
     hashedSign: genTimeHashedSign(settingData.encryption.fileNameRule || DefaultFileNameRule, settingData.appearance.dateTimeFormat, settingData.encryption.fileExt),
     title: t('Untitled'),
     icon: '',
-    summary: '',
     type: itemType,
     content: '',
     updateTime: new Date(),
@@ -71,5 +70,4 @@ const addItem = (itemType: typeof DocTypeNote) => {
 const onAddNote = () => {
   addItem(DocTypeNote)
 }
-
 </script>

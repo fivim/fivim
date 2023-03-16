@@ -155,24 +155,27 @@ fn serialize_large_file_bytes(pwd: &str, file_name: &str, source_of_large_file_p
 pub fn read_file(pwd: &str, file_path: &str, parse_as_string: bool) -> UserFileData {
     let size = x_file::file_size(&file_path);
     let empty = UserFileData::new();
-    if size < x_conf::USER_DATA_FILE_SIZE_MIN {
-        print!("File is to small");
-        return empty;
-    } else if size <= x_conf::LARGE_FILE_SIZE {
+    if size <= x_conf::LARGE_FILE_SIZE {
         // small file, read all the content
         match x_file::read_file_to_bytes(&file_path) {
             Ok(content) => {
                 let mut d = deserialize(content);
                 if parse_as_string {
-                    d.file_data_str = x_encrypt::decrypt_bytes(pwd, &d.file_data);                               
+                    d.file_data_str = x_encrypt::decrypt_bytes(pwd, &d.file_data);
                 }
                 return d;
             }
-            Err(_) => todo!(),
+            Err(e) => {
+                print!(
+                    ">>> read_file read_file_to_bytes path: {} , error: {:?} \n",
+                    &file_path, e
+                );
+                return empty;
+            }
         };
     } else {
         // latge file, use buffer for saving memory.
-        print!("Unsupport large file");
+        print!("Unsupport large file \n");
     }
 
     return empty;

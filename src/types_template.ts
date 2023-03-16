@@ -21,9 +21,12 @@ export const EmptyAppInfo: AppInfo = {
   },
   currentTheme: '',
   dataPath: {
-    pathOfhome: '',
+    pathOfHome: '',
     pathOfConfig: '',
     pathOfAppData: '',
+    pathOfCurrentDir: '',
+    pathOfCustomStyle: '',
+    pathOfCustomBackgroundImage: '',
     pathOfSyncDir: '',
     pathOfSyncCachedDir: '',
     pathOfSyncDownloadDir: ''

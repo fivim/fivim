@@ -31,10 +31,10 @@ import { useI18n } from 'vue-i18n'
 import { UnlockOutlined } from '@ant-design/icons-vue'
 
 import { AppName, MasterPasswordSalt } from '@/constants'
-import { initAtFirst } from '@/libs/init/at_first'
-import { genMasterPasswordSha256 } from '@/utils/hash'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
+import { initAtFirst } from '@/libs/init/at_first'
+import { genMasterPasswordSha256 } from '@/utils/hash'
 
 const appStore = useAppStore()
 const settingStore = useSettingStore()
@@ -46,7 +46,10 @@ const checkPassword = () => {
   const pwdSha256 = genMasterPasswordSha256(password.value, MasterPasswordSalt)
   initAtFirst(pwdSha256).then(() => {
     if (pwdSha256 === settingStore.data.encryption.masterPassword) {
-      appStore.data.lockscreen = false
+      const data = appStore.data
+      data.lockscreen = false
+      appStore.setData(data)
+
       masterPasswordWrong.value = false
       password.value = ''
     } else {

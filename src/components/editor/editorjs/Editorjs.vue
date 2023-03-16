@@ -38,7 +38,7 @@ interface emitType {
 }
 
 const emits = defineEmits<emitType>()
-const editor = ref<EditorJS>()
+const editorJs = ref<EditorJS>()
 let saveTimer: number
 const saveTimerSeconds = 5 // TODO: can put it in config
 
@@ -52,14 +52,14 @@ const editorInit = () => {
     contentData: JSON.parse(props.content) as OutputData
   } as Props)
 
-  editor.value = new EditorJS({
+  editorJs.value = new EditorJS({
     holder: props.holder,
     ...conf,
 
     // onReady callback
     onReady: () => {
       console.log('Editor.js is ready to work!')
-      props.initCallback(editor)
+      props.initCallback(editorJs)
       saveTimer = setInterval(editorSave, saveTimerSeconds * 1000)
     },
     // onChange callback
@@ -72,9 +72,9 @@ const editorInit = () => {
 
 const editorSave = () => {
   // Refer: https://editorjs.io/saving-data/
-  if (editor.value) {
+  if (editorJs.value) {
     try {
-      editor.value.save().then((outputObj: object) => {
+      editorJs.value.save().then((outputObj: object) => {
         const json = JSON.stringify(outputObj)
         console.log('>>> Editor updated json: ', json)
         emits('editorUpdate', json)
@@ -88,13 +88,13 @@ const editorSave = () => {
 }
 
 const editorDestroy = () => {
-  if (editor.value) {
+  if (editorJs.value) {
     try {
-      editor.value.destroy()
+      editorJs.value.destroy()
     } catch (error) {
 
     }
-    editor.value = undefined
+    editorJs.value = undefined
   }
   clearInterval(saveTimer)
   return true

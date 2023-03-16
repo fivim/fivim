@@ -4,9 +4,9 @@ import { useSettingStore } from '@/pinia/modules/settings'
 
 const showTitleBar = (): boolean => {
   const appStore = useAppStore()
-  const appInfo = appStore.data
+  const appData = appStore.data
 
-  if (appInfo.appMode === AppMode.Desktop && !appInfo.isWebPage) {
+  if (appData.appMode === AppMode.Desktop && !appData.isWebPage) {
     return true
   }
   return false

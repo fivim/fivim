@@ -34,10 +34,13 @@ export type ChangeMasterPasswordProcessItem = {
 
 export type DataPath = {
     // core
-    pathOfhome: string;
-    pathOfConfig: string;
     pathOfAppData: string;
+    pathOfConfig: string;
+    pathOfHome: string;
+    pathOfCurrentDir: string
     // other
+    pathOfCustomStyle: string
+    pathOfCustomBackgroundImage: string
     pathOfSyncDir: string
     pathOfSyncCachedDir: string
     pathOfSyncDownloadDir: string

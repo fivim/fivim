@@ -185,9 +185,9 @@ const onSave = (close: boolean) => {
       CmdInvoke.systemTrayUpdateText()
 
       // changeLocaleTimestamp
-      const appInfo = appStore.data
-      appInfo.changeLocaleTimestamp = new Date().getTime()
-      appStore.setData(appInfo)
+      const appData = appStore.data
+      appData.changeLocaleTimestamp = new Date().getTime()
+      appStore.setData(appData)
     }
   }
 }

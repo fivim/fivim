@@ -16,5 +16,4 @@ pub const TEXT_HIDE: &str = "Hide";
 pub const TEXT_SHOW: &str = "Show";
 
 // User data size
-pub const USER_DATA_FILE_SIZE_MIN: u64 = 30 + 46 + 22;
 pub const LARGE_FILE_SIZE: u64 = 1024 * 1024 * 100; // 100MiB

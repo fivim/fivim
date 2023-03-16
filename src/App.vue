@@ -4,7 +4,8 @@ import { RouterView } from 'vue-router'
 import { envIsDev } from '@/conf'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
-import { initDataDirs } from '@/utils/pinia_data_related'
+import { initCoreDirs } from '@/libs/init/dirs'
+import { checkConfFileExist } from '@/libs/init/conf_file'
 import { disableRightCilckAndDevTool } from '@/utils/utils'
 
 import DesktopLockscreen from '@/components/layout/desktop/Lockscreen.vue'
@@ -17,7 +18,9 @@ if (!envIsDev) {
 const appStore = useAppStore()
 const settingStore = useSettingStore()
 
-initDataDirs()
+initCoreDirs().then(() => {
+  checkConfFileExist()
+})
 </script>
 
 <template>
@@ -34,6 +37,9 @@ initDataDirs()
       <!-- setup wizard -->
       <template v-if="settingStore.data.encryption.masterPassword === ''">
         <DesktopSetupWizard />
+      </template>
+      <template v-else>
+        Config file doesn't exist.
       </template>
 
     </template>
