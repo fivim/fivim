@@ -11,22 +11,25 @@
 
 Enassi is an encryption assistant, your note and file will be encrypted.
 
+- 💌 Free and open source
+- 🌐 Multi-language support
+- 🎨 Various themes
+- 💻 Cross-platform
+- 🙂 Easy to use
+- 🔒 All data encryption(Support large file)
+
 ## Table of Contents
 
 - [user manual](./docs/en_US/user_manual.md)
 - [develop](./docs/en_US/develop.md)
-  - [file_format](./docs/en_US/file_format.md)
-  - [user_data_struct](./docs/en_US/user_data_struct.md)
+  - [file format](./docs/en_US/file_format.md)
+  - [user data struct](./docs/en_US/user_data_struct.md)
 
 ## Product positioning 
 
 - Personal private data storage.
 - Do not actively access the network.
 - License is [ENASSI DUAL License](./LICENSE)
-
-## Known issues
-
-- Reading and writing from workDir has a bug
 
 ## Dante
 
@@ -37,6 +40,24 @@ Enassi is an encryption assistant, your note and file will be encrypted.
 * XMR: 46df6rwnqcUCFaSummLobcH3J9sWgqYASF8Znq5HnhgrLeASh8u4TPJ2LaLnoQk3uV6t18CgNuFVCDfLUR9G94AZUj1TtGr
 * SOL: BbrRkLArfTeAieAtDpvBHNE4KBKX9fmbjPb5JDmKHWE7
 * ETH: 0xA59186a08424BE262FBacA922E87Ab82F3C5245B
+
+### Platforms
+
+Tauri currently supports development and distribution on the following platforms:
+
+| Platform                 | Versions        |
+| :----------------------- | :-------------- |
+| Windows                  | 7 and above     |
+| macOS                    | 10.15 and above |
+| Linux                    | See below       |
+| iOS/iPadOS (coming soon) |                 |
+| Android (coming soon)    |                 |
+
+#### Linux Support
+
+- Arch
+- Debian (Ubuntu 18.04 and above or equivalent)
+- Fedora (latest 2 versions)
 
 ## Roadmap
 
