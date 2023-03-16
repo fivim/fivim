@@ -7,6 +7,7 @@
 [![Discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://discord.gg/2yrMRAnV3M)
 [![donating](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://opencollective.com/enassi)
 
+
 > Note: So far, this project is still under development, and it is not recommended to store data now. Version 1.0 will be the first stable version, and the data synchronization function will be released in version 2.0
 
 Enassi is an encryption assistant, your note and file will be encrypted.
@@ -20,16 +21,32 @@ Enassi is an encryption assistant, your note and file will be encrypted.
 
 ## Table of Contents
 
-- [user manual](./docs/en_US/user_manual.md)
-- [develop](./docs/en_US/develop.md)
-  - [file format](./docs/en_US/file_format.md)
-  - [user data struct](./docs/en_US/user_data_struct.md)
+- [user manual](./docs/en/user_manual.md)
+- [themes](./docs/en/themes.md)
+- [develop](./docs/en/develop.md)
+  - [file format](./docs/en/file_format.md)
+  - [user data struct](./docs/en/user_data_struct.md)
 
 ## Product positioning 
 
 - Personal private data storage.
 - Do not actively access the network.
 - License is [ENASSI DUAL License](./LICENSE)
+
+## Screenshot
+
+The following two screenshots are the **default** theme and **material** theme.
+
+[More themes](./docs/en/themes.md)
+
+<p>
+  <img src="./docs/images/default.png" width="340px" style="float:left">
+  <div style="float:left;">&nbsp;</div>
+  <img src="./docs/images/material.png" width="340px" style="float:left">
+</p>
+<p style="clear:both">
+
+
 
 ## Dante
 

@@ -11,8 +11,8 @@ It has 2 parts:
 | usage                                | length   | remark                   |
 | ------------------------------------ | -------- | ------------------------ |
 | File header signature                | 4 bytes  | 'PK\x03\x04'             |
-| File structure version               | 2 bytes  | Defaults 1               |
-| Inner data structure version         | 2 bytes  | Defaults 1               |
+| File format version                  | 2 bytes  | Defaults 1               |
+| User data structure version          | 2 bytes  | Defaults 1               |
 | CRC-32                               | 4 bytes  | Can be 0                 |
 | File last modification UTC timestamp | 8 bytes  | Max: 2286-11-21 01:46:39 |
 | Empty                                | 10 bytes | 0                        |
@@ -30,8 +30,10 @@ It has 2 parts:
 | Item file name                       | variable | Can be none                 |
 
 ### Body
-| Item file data length                | 4 bytes  | Max: 2147483647                 |
-| Item file data                       | variable | Can be none              |
+| usage                 | length   | remark          |
+| --------------------- | -------- | --------------- |
+| Item file data length | 4 bytes  | Max: 2147483647 |
+| Item file data        | variable | Can be none     |
 
 ### Tail (min 22 bytes)
 | usage                 | length   | remark       |

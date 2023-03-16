@@ -4,6 +4,10 @@
 
 Download and install the program, please set the necessary information in the setup wizard when you run it for the first time. The master password will be used to encrypt all your data, it is very important and can only be set once (the function of changing the master password will be provided in the future).
 
+Editor function:
+
+- Image: you can paste images into editor, it will be encoded as base64.
+
 ## Desktop
 ### User Interface
 
