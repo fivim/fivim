@@ -1,23 +1,49 @@
-# enassi
-
-![GitHub Org's stars](https://img.shields.io/github/stars/enassi?style=social)
-![GitHub followers](https://img.shields.io/github/followers/enassi?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/enassi/enassi?style=social)
-
-[![Discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://discord.gg/2yrMRAnV3M)
-[![donating](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://opencollective.com/enassi)
+<h1 align="center">
+  <img src="./src-tauri/icons/Square150x150Logo.png" width=200 height=200/><br>
+  enassi
+</h1>
 
 
-> Note: So far, this project is still under development, and it is not recommended to store data now. Version 1.0 will be the first stable version, and the data synchronization function will be released in version 2.0
+<h4 align="center">Enassi is your data encryption assistant.</h4>
 
-Enassi is an encryption assistant, your note and file will be encrypted.
+<div align="center">
+  <a href="https://github.com/enassi/enassi" target="_blank">
+    <img src="https://img.shields.io/github/stars/enassi?style=social" />
+  </a>
+  <a href="https://github.com/enassi/enassi" target="_blank">
+    <img src="https://img.shields.io/github/followers/enassi?style=social" />
+  </a>
+  <a href="https://github.com/enassi/enassi" target="_blank">
+    <img src="https://img.shields.io/github/watchers/enassi/enassi?style=social" />
+  </a>
+  <a href="https://discord.gg/2yrMRAnV3M" target="_blank">
+      <img src="https://img.shields.io/badge/chat-discord-7289da.svg">
+  </a>
+   <a href="https://opencollective.com/enassi" target="_blank">
+      <img src="https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg">
+  </a>
+</div>
 
-- 💌 Free and open source
-- 🌐 Multi-language support
-- 🎨 Various themes
-- 💻 Cross-platform
-- 🙂 Easy to use
-- 🔒 All data encryption(Support large file)
+> Note: So far, this project is still under development.
+
+- 🔒 Encrypt everything, support large file.
+- 🙂 Easy to use.
+- 💌 Free and open source.
+- 💻 Cross-platform.
+- 🌐 Multi-language support.
+- 🎨 Various themes.
+- 🔗 Share the encrypted data with your friends.
+
+The following two screenshots are the **default** theme and the **material** theme.
+
+[More themes](./docs/en/themes.md)
+
+<p>
+  <img src="./docs/images/default.png" width="340px" style="float:left">
+  <div style="float:left;">&nbsp;</div>
+  <img src="./docs/images/material.png" width="340px" style="float:left">
+</p>
+<p style="clear:both">
 
 ## Table of Contents
 
@@ -29,24 +55,9 @@ Enassi is an encryption assistant, your note and file will be encrypted.
 
 ## Product positioning 
 
-- Personal private data storage.
+- Encrypted storage of personal privacy data.
 - Do not actively access the network.
 - License is [ENASSI DUAL License](./LICENSE)
-
-## Screenshot
-
-The following two screenshots are the **default** theme and **material** theme.
-
-[More themes](./docs/en/themes.md)
-
-<p>
-  <img src="./docs/images/default.png" width="340px" style="float:left">
-  <div style="float:left;">&nbsp;</div>
-  <img src="./docs/images/material.png" width="340px" style="float:left">
-</p>
-<p style="clear:both">
-
-
 
 ## Dante
 

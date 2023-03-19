@@ -21,6 +21,7 @@
   - responsible for:    
     - visual function
     - user data synchronization
+    - note editor: [editorjs](https://editorjs.io/)
   - User interface
     - Framework: [Element Plus](https://element-plus.org)
     - Icon: 

@@ -8,6 +8,15 @@ Editor function:
 
 - Image: you can paste images into editor, it will be encoded as base64.
 
+## Data directory
+
+- The configure file is in your home directory `.enassi/conf.bin`, its content has been encrypted.
+  - on Windows is: `C:\Users\YOUR_USER_NAME\.enassi\conf.bin`
+  - on Linux is: `~/.enassi/conf.bin`
+  - on MacOS is: `~/.enassi/conf.bin`
+
+- The user data directory is set by yourself in `Setup wizard` 
+
 ## Desktop
 ### User Interface
 
