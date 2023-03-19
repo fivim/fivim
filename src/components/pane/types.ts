@@ -41,6 +41,7 @@ export type Notebook = {
   icon: string
   title: string
   mtimeUtc: number // modify timestamp(in milliseconds) for notebook itself, update when add or edit
+  tagsArr: string[]
 }
 
 export type Tag = {
@@ -55,11 +56,13 @@ export type EditorColumnData = {
   title: string
   type: DocType
 }
+
 export type ItemsColumnData = {
   hashedSign: string
   icon: string
   list: Note[]
   title: string
+  tagsArr: string[]
   type: ItemsListType
 }
 

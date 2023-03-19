@@ -1,5 +1,5 @@
 <template>
-  <div class="title-bar-right-buttons">
+  <div class="title-bar-window-buttons">
     <template v-if="isMacOs">
       <button class="btn" @click="onWinClose">
         <CloseOutlined />

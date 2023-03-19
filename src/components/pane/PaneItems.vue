@@ -1,9 +1,9 @@
 <template>
-  <div :id="props.id" :class="`${className} section items`" ref="innerRef">
+  <div :class="`${className} section`" ref="innerRef">
 
     <!-- title -->
-    <div class="items-title-bar">
-      <div class="items-title-bar-container">
+    <div class="title-bar">
+      <div class="title-bar-container">
         <div class="section-title-bar-header">
           <div class="box flex">
             <div class="left lg:pt-0">
@@ -24,51 +24,66 @@
             </div>
           </div>
         </div>
+        <!-- tags -->
+        <div class="tags text-xs"
+          v-if="paneDataStore.data.itemsColumn.tagsArr && paneDataStore.data.itemsColumn.tagsArr.length > 0">
+          <template v-for="(ii, index) in paneDataStore.data.itemsColumn.tagsArr" v-bind:key="index">
+            <!-- TODO Not elegant enough -->
+            <span class="tag-btn" v-if="getTagData(ii).title">
+              <label class="icon">{{ getTagData(ii).icon }} </label>
+              <span>{{ getTagData(ii).title }}</span>
+            </span>
+          </template>
+        </div>
       </div>
     </div>
 
     <!-- content -->
-    <template
-      v-if="paneDataStore.data.itemsColumn.type === ItemsListTypeNotebook && paneDataStore.data.itemsColumn.list">
-      <div class="content-list-item-group" v-for="(item, index) in list" v-bind:key="index"
-        @click="onChangeItem(index)">
-        <div class="content-list-item">
-          <div class="left">
-            <el-icon class="item-icon" v-if="item.type === DocTypeNote">
-              <Tickets />
-            </el-icon>
-          </div>
-          <div class="main">
-            <div class="title text-base line-height-1_3">{{ item.title }}</div>
-            <div class="leading-1.4 mt-1 text-sm opacity-50 text-xs"
-              v-if="settingStore.data.appearance.itemsColumnShowCreateTime">
-              <span>
-                {{ t('Created') }}:
-                {{ formatDateTime(item.createTime, settingStore.data.appearance.dateTimeFormat) }}
-              </span>
+    <template v-if="paneDataStore.data.itemsColumn.type === ItemsListTypeNotebook && paneDataStore.data.itemsColumn.list">
+      <div class="content-list">
+        <div class="content-list-item p-2" v-for="(item, index) in list" v-bind:key="index" @click="onChangeItem(index)">
+          <div class="flex">
+            <div class="left">
+              <el-icon class="item-icon" v-if="item.type === DocTypeNote">
+                <Tickets />
+              </el-icon>
             </div>
+            <div class="main">
+              <div class="title">{{ item.title }}</div>
+            </div>
+            <div class="right"></div>
+          </div>
 
-            <div class="leading-1.4 mt-1 text-sm opacity-50 text-xs"
-              v-if="settingStore.data.appearance.itemsColumnShowUpdateTime">
-              <span>
+          <div>
+            <div class="mt-1 text-sm opacity-50 text-xs">
+              <div v-if="settingStore.data.appearance.itemsColumnShowCreateTime">
+                {{ t('Created') }}:
+                <span class="fr">
+                  {{ formatDateTime(item.createTime, settingStore.data.appearance.dateTimeFormat) }}
+                </span>
+              </div>
+              <div v-if="settingStore.data.appearance.itemsColumnShowUpdateTime">
                 {{ t('Updated') }}:
-                {{ formatDateTime(item.updateTime, settingStore.data.appearance.dateTimeFormat) }}
-              </span>
+                <span class="fr">
+                  {{ formatDateTime(item.updateTime, settingStore.data.appearance.dateTimeFormat) }}
+                </span>
+              </div>
             </div>
 
             <div class="tags text-xs" v-if="item.tagsArr.length > 0">
-              <span class="tag-btn" v-for="(ii, index) in item.tagsArr" v-bind:key="index">
-                <label class="icon">{{ getTagData(ii).icon }} </label>
-                <span>{{ getTagData(ii).title }}</span>
-              </span>
+              <template v-for="(ii, index) in item.tagsArr" v-bind:key="index">
+                <!-- TODO Not elegant enough -->
+                <span class="tag-btn" v-if="getTagData(ii).title">
+                  <label class="icon">{{ getTagData(ii).icon }} </label>
+                  <span>{{ getTagData(ii).title }}</span>
+                </span>
+              </template>
             </div>
           </div>
-          <div class="right"></div>
         </div>
       </div>
     </template>
-    <template
-      v-if="paneDataStore.data.itemsColumn.type === ItemsListTypeTag && paneDataStore.data.itemsColumn.list">
+    <template v-if="paneDataStore.data.itemsColumn.type === ItemsListTypeTag && paneDataStore.data.itemsColumn.list">
       <CollectionTag />
       <!-- notebook -->
       <!-- note -->
@@ -85,7 +100,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { CollectionTag, Tickets } from '@element-plus/icons-vue'
+import { CollectionTag, Tickets, Grid } from '@element-plus/icons-vue'
 
 import { ItemsListTypeNotebook, ItemsListTypeTag, DocTypeNote } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
@@ -97,10 +112,6 @@ import { formatDateTime } from '@/utils/string'
 import { Tag, Note } from './types'
 
 const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  },
   className: {
     type: String,
     required: true
@@ -113,18 +124,23 @@ const settingStore = useSettingStore()
 const paneDataStore = usePaneDataStore()
 
 const getTagData = (hashedSign: string): Tag => {
-  const tagsArr = paneDataStore.data.navigationColumn.tags
-  for (const i of tagsArr) {
-    if (i.hashedSign === hashedSign) {
-      return i
-    }
-  }
-  return {
-    title: hashedSign,
+  let res = {
+    title: '',
     icon: '',
     hashedSign,
     mtimeUtc: 0
   }
+  const tagsArr = paneDataStore.data.navigationColumn.tags
+  if (tagsArr) {
+    for (const i of tagsArr) {
+      if (i.hashedSign === hashedSign) {
+        res = i
+        break
+      }
+    }
+  }
+
+  return res
 }
 
 const onChangeItem = (index: number) => {

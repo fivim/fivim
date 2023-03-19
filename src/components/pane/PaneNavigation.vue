@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="navigation-column">
     <div id="web-nav-btns" v-if="isWebPage()">
       <SettingButton />
       <SyncButton />
@@ -23,16 +23,18 @@
         </div>
 
         <template v-if="paneDataStore.data.navigationColumn.notebooks.length > 0">
-          <div class="tag" v-for="(item, index) in paneDataStore.data.navigationColumn.notebooks" v-bind:key="index">
-            <div class="tag-info">
-              <div class="tag-icon" @click="onListNotebookItems(index)">
+          <div class="nb-name" v-for="(item, index) in paneDataStore.data.navigationColumn.notebooks" v-bind:key="index">
+            <div class="info">
+              <div class="icon" @click="onListNotebookItems(index)">
                 {{ item.icon }}
               </div>
               <div class="title" @click="onListNotebookItems(index)">
                 {{ item.title }}
               </div>
-              <div class="action" @click="onOpenDialogNorebook(item)">
-                <EditOutlined />
+              <div class="action">
+                <DeleteOutlined @click="onDeleteNotebook(item)" />
+                <span>&nbsp;</span>
+                <EditOutlined @click="onOpenDialogNorebook(item)" />
               </div>
             </div>
           </div>
@@ -64,6 +66,7 @@
               <div class="enas-list cur-ptr">
                 <div class="list-item" @click="onOpenDialogTag(item)"> {{ t('Edit') }} </div>
                 <div class="list-item" @click="onListTagItems(item)"> {{ t('Show list') }} </div>
+                <div class="list-item" @click="onDeleteTag(item)"> {{ t('Delete') }} </div>
               </div>
             </el-popover>
           </div>
@@ -97,7 +100,9 @@
           <template v-if="paneDataStore.data.navigationColumn.tags.length > 0">
             <div v-for="(item, index) in paneDataStore.data.navigationColumn.tags" v-bind:key="index">
               <div class="py-2" @click="onNewNotebookAddTag(item)">
-                {{ item.icon }}{{ item.title }}
+                <span :class="`${tempNotebookTagExist(item.hashedSign) ? 'font-bold' : ''}`">
+                  {{ item.icon }}{{ item.title }}
+                </span>
               </div>
             </div>
           </template>
@@ -145,32 +150,28 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import { EditOutlined } from '@ant-design/icons-vue'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue'
 import { VuemojiPicker, EmojiClickEventDetail } from 'vuemoji-picker'
 import { useI18n } from 'vue-i18n'
 
-import { ItemsListTypeNotebook, ItemsListTypeTag, StrSignOk } from '@/constants'
-import { CmdInvoke } from '@/libs/commands'
-import { UserDataFile } from '@/libs/commands/types'
-import { useAppStore } from '@/pinia/modules/app'
-import { usePaneDataStore } from '@/pinia/modules/pane_data'
-import { useSettingStore } from '@/pinia/modules/settings'
-import { parseNotebook } from '@/libs/user_data/parser_decode'
-import { saveUserDataAndCreateNotebookFile } from '@/libs/user_data/parser_encode'
 import XPopover from '@/components/xPopover/popover.vue'
 import SyncButton from '@/components/button/Sync.vue'
 import SettingButton from '@/components/button/Setting.vue'
 import ThemeButton from '@/components/button/Theme.vue'
+
+import { ItemsListTypeNotebook, ItemsListTypeTag, StrSignOk } from '@/constants'
+import { useAppStore } from '@/pinia/modules/app'
+import { usePaneDataStore } from '@/pinia/modules/pane_data'
+import { saveCurrentNotebookAndCreateNotebookFile, deleteNotebook, deleteTag, readNotebookdata } from '@/libs/user_data/utils'
 import { getTimestampMilliseconds } from '@/utils/time'
 import { getHasdedSign } from '@/utils/pinia_data_related'
-import { colorIsDark } from '@/___professional___/utils/color'
 import { Note, Notebook, Tag } from './types'
 
 const { t } = useI18n()
 const appStore = useAppStore()
 const paneDataStore = usePaneDataStore()
-const settingStore = useSettingStore()
 
 const isWebPage = () => {
   return appStore.data.isWebPage
@@ -196,12 +197,13 @@ const onDialogCloseNotebook = async () => {
       title: tempNotebookTitle.value,
       icon: tempNotebookIcon.value,
       hashedSign,
-      mtimeUtc: getTimestampMilliseconds()
+      mtimeUtc: getTimestampMilliseconds(),
+      tagsArr: tempNotebookTagHashedSign.value
     })
 
     resetTempNotebook()
     // Save new notebook data file at first, then open it.
-    if (await saveUserDataAndCreateNotebookFile(hashedSign) === StrSignOk) {
+    if (await saveCurrentNotebookAndCreateNotebookFile(hashedSign) === StrSignOk) {
       onListNotebookItems(paneData.navigationColumn.notebooks.length - 1)
     }
   } else if (dialogTypeAddEditNotebook.value === DIALOG_TYPE_EDIT) {
@@ -210,6 +212,7 @@ const onDialogCloseNotebook = async () => {
         i.icon = tempNotebookIcon.value
         i.title = tempNotebookTitle.value
         i.mtimeUtc = getTimestampMilliseconds()
+        i.tagsArr = tempNotebookTagHashedSign.value
         break
       }
     }
@@ -217,11 +220,13 @@ const onDialogCloseNotebook = async () => {
     paneDataStore.setData(paneData)
   }
 }
+
 const resetTempNotebook = () => {
   tempNotebookTitle.value = ''
   tempNotebookIcon.value = ''
   dialogTypeAddEditNotebook.value = DIALOG_TYPE_ADD
 }
+
 const onNotebookEmojiClick = (detail: EmojiClickEventDetail) => {
   tempNotebookIcon.value = detail.unicode || ''
 }
@@ -235,10 +240,22 @@ const onOpenDialogNorebook = (detail: Notebook) => {
 }
 
 const onNewNotebookAddTag = (detail: Tag) => {
-  tempNotebookTagHashedSign.value.push(detail.hashedSign)
+  const arr = tempNotebookTagHashedSign.value
+  const index = arr.indexOf(detail.hashedSign)
+  if (index >= 0) { // If exist delete it
+    arr.splice(index, 1)
+    tempNotebookTagHashedSign.value = arr
+  } else {
+    tempNotebookTagHashedSign.value.push(detail.hashedSign)
+  }
 }
+
 const getDialogTitleAddEditNotebook = () => {
   return dialogTypeAddEditNotebook.value === DIALOG_TYPE_EDIT ? t('Edit notebook') : t('Add notebook')
+}
+
+const tempNotebookTagExist = (hashedSign: string) => {
+  return tempNotebookTagHashedSign.value.indexOf(hashedSign) >= 0
 }
 // ========== add / edit notebook end ==========
 
@@ -288,34 +305,25 @@ const onOpenDialogTag = (detail: Tag) => {
   tempTagText.value = detail.title
   tempTagHashedSign.value = detail.hashedSign
 }
+
 const getDialogTitleAddEditTag = () => {
   return dialogTypeAddEditTag.value === DIALOG_TYPE_EDIT ? t('Edit tag') : t('Add tag')
 }
 
 const onListNotebookItems = (index: number) => {
   const nb = paneDataStore.data.navigationColumn.notebooks[index]
-  const p = appStore.data.dataPath
-  const filePath = p.pathOfCurrentDir + nb.hashedSign + settingStore.data.encryption.fileExt
-
-  CmdInvoke.readUserDataFile(settingStore.data.encryption.masterPassword, filePath, true).then((data: UserDataFile) => {
-    if (data.file_data_str.length === 0) {
-      console.log('>>> onListNotebookItems readUserDataFile get empty content')
-      //   ElMessage({
-      //     message: t('Unable to read file contents') + filePath,
-      //     type: 'error'
-      //   })
-    }
-
-    const ret = parseNotebook(JSON.parse(data.file_data_str))// call JSON.parse to get a JSON string
+  readNotebookdata(nb.hashedSign).then((notes) => {
     paneDataStore.setItemsColumnData({
       title: nb.title,
       icon: nb.icon,
       hashedSign: nb.hashedSign,
+      tagsArr: nb.tagsArr,
       type: ItemsListTypeNotebook,
-      list: ret
+      list: notes
     })
   })
 }
+
 const onListTagItems = (tag: Tag) => {
   const items: Note[] = []
   // TODO: loop all the data, find the same tag
@@ -324,12 +332,69 @@ const onListTagItems = (tag: Tag) => {
     title: tag.title,
     icon: tag.icon,
     hashedSign: tag.hashedSign,
+    tagsArr: [],
     type: ItemsListTypeTag,
     list: items
   })
 }
 
 // ========== add / edit tag end ==========
+
+// ---------- delete notebook / tag ----------
+const onDeleteNotebook = (detail: Notebook) => {
+  ElMessageBox.confirm(
+    'Are you sure to delete this notebook?', // TODO translate
+    t('Warning'),
+    {
+      confirmButtonText: t('OK'),
+      cancelButtonText: t('Cancel'),
+      type: 'warning'
+    }
+  )
+    .then(async () => {
+      if (await deleteNotebook(detail.hashedSign)) {
+        ElMessage({
+          type: 'success',
+          message: t('Operation succeeded')
+        })
+      } else {
+        ElMessage({
+          type: 'error',
+          message: t('Operation failure')
+        })
+      }
+    })
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    .catch(() => { })
+}
+
+const onDeleteTag = (detail: Tag) => {
+  ElMessageBox.confirm(
+    'Are you sure to delete this tag?', // TODO translate
+    t('Warning'),
+    {
+      confirmButtonText: t('OK'),
+      cancelButtonText: t('Cancel'),
+      type: 'warning'
+    }
+  )
+    .then(async () => {
+      if (await deleteTag(detail.hashedSign)) {
+        ElMessage({
+          type: 'success',
+          message: t('Operation succeeded')
+        })
+      } else {
+        ElMessage({
+          type: 'error',
+          message: t('Operation failure')
+        })
+      }
+    })
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    .catch(() => { })
+}
+// ========== delete notebook / tag end ==========
 
 const emojiPickerIsDark = () => {
   const color = getComputedStyle(document.documentElement).getPropertyValue('--el-bg-color-overlay')

@@ -1,6 +1,6 @@
 <template>
   <!-- desktop title bar -->
-  <DesktopTitleBar v-if="isDesktopMode() && !isMobileMode()">
+  <DesktopTitleBar :showExtButtons="true" v-if="isDesktopMode() && !isMobileMode()">
     <template #titleName>
       {{ appStore.data.currentFile.name ? appStore.data.currentFile.name + " - " + AppName : AppName }}
     </template>
@@ -17,8 +17,8 @@
     <div id="app" :class="`app ${isDesktopMode() ? 'disp-grid' : ''}`" :style="{ ...computeStylesForContainer() }">
       <template v-for="(item, index) in paneController.panesNameArr" v-bind:key="index">
         <!-- navigation -->
-        <PaneNavigation ref="navigationRef" v-if="(item === PaneIds.NavigationColumn)" :id="item"
-          :className="classNames(computePaneClasses(false, index + 1), isDesktopMode() ? 'w-full' : '')">
+        <PaneNavigation ref="navigationRef" v-if="(item === PaneIds.NavigationColumn)"
+          :className="classNames(computePaneClasses(false), item)">
 
           <template #default>
             <LazyPaneResizer v-if="isDesktopMode()" :collapsable="true" :defaultWidth="PaneWidthNavigation" :left="0"
@@ -29,8 +29,8 @@
         </PaneNavigation>
 
         <!-- items -->
-        <PaneItems ref="itemsRef" v-if="(item === PaneIds.ItemsColumn)" :id="item"
-          :className="classNames(computePaneClasses(false, index + 1), isDesktopMode() ? 'w-full' : '')">
+        <PaneItems ref="itemsRef" v-if="(item === PaneIds.ItemsColumn)"
+          :className="classNames(computePaneClasses(false), item)">
 
           <template #default>
             <LazyPaneResizer v-if="isDesktopMode()" :collapsable="true" :defaultWidth="PaneWidthItems" :left="0"
@@ -41,8 +41,8 @@
         </PaneItems>
 
         <!-- editor -->
-        <PaneEditor ref="editorContentRef" v-if="(item === PaneIds.EditorColumn)" :id="item"
-          :className="classNames(computePaneClasses(true, index + 1), isDesktopMode() ? 'w-full' : '')">
+        <PaneEditor ref="editorContentRef" v-if="(item === PaneIds.EditorColumn)"
+          :className="classNames(computePaneClasses(true), item)">
 
         </PaneEditor>
       </template>
@@ -53,21 +53,18 @@
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue'
 
-import { AppMode } from '@/types'
-import { AppName } from '@/constants'
-import { isTabletScreen } from '@/utils/media_query'
-import { classNames } from '@/utils/string'
-import { useAppStore } from '@/pinia/modules/app'
-
 import DesktopTitleBar from '@/components/layout/desktop/titleBar/DesktopTitleBar.vue'
-
-// panes
 import type { PaneController } from '@/components/pane/types'
 import { PaneIds, PaneSide, PaneResizeType } from '@/components/pane/types'
 import PaneNavigation from '@/components/pane/PaneNavigation.vue'
 import PaneItems from '@/components/pane/PaneItems.vue'
 import PaneEditor from '@/components/pane/PaneEditor.vue'
-// import EditorFullScreen from '@/___professional___/components/pane/EditorMilkdownFullScreen.vue'
+
+import { AppMode } from '@/types'
+import { AppName } from '@/constants'
+import { isTabletScreen } from '@/utils/media_query'
+import { classNames } from '@/utils/string'
+import { useAppStore } from '@/pinia/modules/app'
 
 const appStore = useAppStore()
 
@@ -140,8 +137,8 @@ const computeStylesForContainer = () => {
   }
 }
 
-const computePaneClasses = (isPendingEntrance: boolean, index: number): string => {
-  const common = `app-pane app-pane-${index + 1}`
+const computePaneClasses = (isPendingEntrance: boolean): string => {
+  const common = isDesktopMode() ? 'w-full' : ''
   if (!isDesktopMode) {
     return `pos-abs top-0 left-0 w-full ${common} ${isPendingEntrance ? 'translate-x-100%' : 'translate-x-0 '}`
   } else {

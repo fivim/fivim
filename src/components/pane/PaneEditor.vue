@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="section editor max-h-full">
+    <div class="section max-h-full">
       <div class="title-bar">
         <div class="box mb-0 flex-nowrap gap-4">
           <div class="left">
@@ -18,8 +18,9 @@
       </div>
 
       <div>
-        <EditorEditorjs :class="`${paneDataStore.data.editorColumn.type === DocTypeNote ? 'pos-rel' : 'disp-none'} note`"
-          ref="editorRef" :content="paneDataStore.data.editorColumn.content || '{}'" @editorUpdate="onEditorUpdate" />
+        <EditorEditorjs ref="editorRef" :content="paneDataStore.data.editorColumn.content || '{}'"
+          @onUpdate="onEditorUpdate"
+          :class="`${paneDataStore.data.editorColumn.type === DocTypeNote ? 'pos-rel' : 'disp-none'} note`" />
       </div>
     </div>
   </div>
@@ -28,15 +29,16 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-import { DocTypeNote } from '@/constants'
-import { useAppStore } from '@/pinia/modules/app'
-import { usePaneDataStore } from '@/pinia/modules/pane_data'
 import ChangeEditorButton from '@/components/button/EditorTag.vue'
 import EditorEditorjs from '@/components/editor/editorjs/Editorjs.vue'
 
+import { DocTypeNote } from '@/constants'
+import { useAppStore } from '@/pinia/modules/app'
+import { usePaneDataStore } from '@/pinia/modules/pane_data'
+
+const editorRef = ref<InstanceType<typeof EditorEditorjs>>()
 const appStore = useAppStore()
 const paneDataStore = usePaneDataStore()
-const editorRef = ref<InstanceType<typeof EditorEditorjs>>()
 
 const onTitleInput = (str: string) => {
   const info = appStore.data
@@ -51,6 +53,7 @@ const onTitleInput = (str: string) => {
 
 const onEditorUpdate = (str: string) => {
   const icd = paneDataStore.data.itemsColumn
+
   if (icd.list.length === 0) {
     // alert('Please create a new note first') // TODO: translate
   } else {
@@ -66,8 +69,7 @@ appStore.$subscribe((mutation, state) => {
   const info = state.data
   const currentFileHashedSign = info.currentFile.hashedSign
   if (currentFileHashedSign !== lastFileHashedSign) {
-    // TODO: save previous content as locally history
-    // editorRef.value?.editorUpdate(paneDataStore.data.itemsColumn.list[info.currentFile.indexInItemsList].content)
+    editorRef.value?.setContent(paneDataStore.data.editorColumn.content || '{}')
   }
 
   lastFileHashedSign = currentFileHashedSign

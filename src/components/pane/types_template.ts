@@ -10,7 +10,8 @@ export const EmptyPaneData: PaneData = {
     icon: '',
     list: [],
     title: '',
-    type: 'notebook'
+    type: 'notebook',
+    tagsArr: []
   },
   editorColumn: {
     content: '',

@@ -6,50 +6,38 @@
 import { ref, onMounted } from 'vue'
 import EditorJS, { OutputData } from '@editorjs/editorjs'
 
-import { useAppStore } from '@/pinia/modules/app'
 import { mergeConfig } from './conf'
 import { Props } from './types'
-
-const appStore = useAppStore()
 
 const props = defineProps({
   content: {
     type: String,
-    default: () => (''),
+    default: () => ('{}'),
     require: true
   },
   holder: {
     type: String,
     default: () => 'editorjs-holder'
-  },
-  initCallback: {
-    type: Function,
-    default: () => ({})
-  },
-  updateCallback: {
-    type: Function,
-    default: () => ({})
   }
 })
 
 // For better code hints. Refer: https://juejin.cn/post/7012814138145505287
 interface emitType {
-  (e: 'editorUpdate', value: string): void
+  (e: 'onUpdate', value: string): void
 }
 
 const emits = defineEmits<emitType>()
 const editorJs = ref<EditorJS>()
 let saveTimer: number
-const saveTimerSeconds = 5 // TODO: can put it in config
 
-const editorInit = () => {
-  if (!editorDestroy()) {
+const init = (jsonStr: string) => {
+  if (!destroy()) {
     console.log('editorDestroy error')
   }
 
   const conf = mergeConfig({
     contentPlaceholder: '',
-    contentData: JSON.parse(props.content) as OutputData
+    contentData: JSON.parse(jsonStr) as OutputData
   } as Props)
 
   editorJs.value = new EditorJS({
@@ -58,28 +46,25 @@ const editorInit = () => {
 
     // onReady callback
     onReady: () => {
-      console.log('Editor.js is ready to work!')
-      props.initCallback(editorJs)
-      saveTimer = setInterval(editorSave, saveTimerSeconds * 1000)
+      console.log('Editor.js is ready!')
     },
     // onChange callback
     onChange: (_api, event) => {
       console.log('Now I know that Editor\'s content changed!', event)
-      props.updateCallback()
+      save()
     }
   })
 }
 
-const editorSave = () => {
+const save = () => {
   // Refer: https://editorjs.io/saving-data/
   if (editorJs.value) {
     try {
       editorJs.value.save().then((outputObj: object) => {
         const json = JSON.stringify(outputObj)
-        console.log('>>> Editor updated json: ', json)
-        emits('editorUpdate', json)
+        emits('onUpdate', json)
       }).catch((error) => {
-        console.log('Saving failed: ', error)
+        console.log('editorSave failed: ', error)
       })
     } catch (error) {
 
@@ -87,7 +72,7 @@ const editorSave = () => {
   }
 }
 
-const editorDestroy = () => {
+const destroy = () => {
   if (editorJs.value) {
     try {
       editorJs.value.destroy()
@@ -100,22 +85,23 @@ const editorDestroy = () => {
   return true
 }
 
-onMounted(() => {
-  editorInit()
-})
-
-let lastChangeLocaleTimestamp = 0
-appStore.$subscribe((mutation, state) => {
-  const info = state.data
-  const changeLocaleTimestamp = info.changeLocaleTimestamp
-  if (changeLocaleTimestamp > lastChangeLocaleTimestamp) {
-    lastChangeLocaleTimestamp = changeLocaleTimestamp
-
-    // Save data and reinit
-    editorSave()
-    editorInit()
+const setContent = (jsonStr: string) => {
+  if (editorJs.value) {
+    try {
+      // Save data and reinit
+      save()
+      init(jsonStr)
+    } catch (error) {
+      console.log('editorSetContent failed: ', error)
+    }
   }
+}
+
+onMounted(() => {
+  init(props.content)
 })
+
+defineExpose({ setContent })
 </script>
 
 <style lang="scss">
@@ -128,6 +114,7 @@ appStore.$subscribe((mutation, state) => {
 
   .ce-toolbar__actions {
     background-color: var(--enas-border-color);
+    right: auto !important;
   }
 
   // ---------- change table border ----------
@@ -148,15 +135,16 @@ appStore.$subscribe((mutation, state) => {
   }
 }
 
+// ---------- change action button on left side ----------
+// Both desktop and mobile.
+.codex-editor__redactor {
+  margin-right: 0 !important; // 50px
+  margin-left: 50px !important;
+}
+
+// Only for mobile.
 @media (min-width: 651px) {
   .codex-editor--narrow {
-    // ---------- change action button on left side ----------
-
-    .codex-editor__redactor {
-      margin-right: 0 !important; // 50px
-      margin-left: 50px !important;
-    }
-
     .ce-toolbar__actions {
       right: auto !important; // -5px
       left: -10px !important;
@@ -179,7 +167,7 @@ appStore.$subscribe((mutation, state) => {
       margin-left: -50px;
     }
   }
-
-  // ========== change action button on left side ==========
 }
+
+// ========== change action button on left side ==========
 </style>

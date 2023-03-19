@@ -5,7 +5,7 @@
 
       <slot name="titleName"></slot>
 
-      <div class="title-bar-left-buttons">
+      <div class="title-bar-ext-buttons" v-if="showExtButtons">
         <SettingButton />
         <ThemeButton />
         <SaveButton />
@@ -13,7 +13,7 @@
       </div>
     </template>
     <template v-else>
-      <div class="title-bar-left-buttons">
+      <div class="title-bar-ext-buttons" v-if="showExtButtons">
         <SettingButton />
         <ThemeButton />
         <SaveButton />
@@ -34,8 +34,17 @@ import LockButton from '@/components/button/LockScreen.vue'
 import SaveButton from '@/components/button/Save.vue'
 import SettingButton from '@/components/button/Setting.vue'
 import ThemeButton from '@/components/button/Theme.vue'
+
 import { CmdAdapter } from '@/libs/commands'
 import WindowBtns from './WindowBtns.vue'
+
+const props = defineProps({
+  showExtButtons: {
+    type: Boolean,
+    default: () => (false),
+    require: true
+  }
+})
 
 const isMacOs = ref(false)
 
