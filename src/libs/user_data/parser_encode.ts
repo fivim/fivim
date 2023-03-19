@@ -6,7 +6,7 @@ import { formatDateTime } from '@/utils/string'
 import { jsonCopy } from '@/utils/utils'
 
 import { EntryFileSourceNotebooksTagsAttrsArrKey, EntryFileSource, NotebookSource } from './types'
-import { notebookAttrsArr, entryFileTemplate, notebookTemplate } from './types_templates'
+import { tmplNotebookAttrsArr, tmplEntryFileData, tmplNotebook } from './types_templates'
 import { getEntryFileName, genCurrentNotebookFileName, updateFileMeta, writeEncryptedUserDataToFile } from './utils'
 import { Note } from '@/components/pane/types'
 
@@ -14,11 +14,11 @@ export const saveEntryFile = async () => {
   const appStore = useAppStore()
   const paneDataStore = usePaneDataStore()
 
-  const content: EntryFileSource = jsonCopy(entryFileTemplate)
+  const content: EntryFileSource = jsonCopy(tmplEntryFileData)
 
   // notebooks
   const tn = new OrderedFieldArrayTable([])
-  const notebooksData = paneDataStore.data.navigationColumn.notebooks // It's a Proxy
+  const notebooksData = paneDataStore.data.navigationCol.notebooks // It's a Proxy
   const notebooksDataLast = jsonCopy(notebooksData) // Get the value of Proxy
   tn.fromObjectArray(notebooksDataLast, {})
   content.noteBooks.attrsArr = tn.toFieldArray().keysArr as EntryFileSourceNotebooksTagsAttrsArrKey[]
@@ -26,7 +26,7 @@ export const saveEntryFile = async () => {
 
   // tags
   const tt = new OrderedFieldArrayTable([])
-  const tagsData = paneDataStore.data.navigationColumn.tags // It's a Proxy
+  const tagsData = paneDataStore.data.navigationCol.tags // It's a Proxy
   const tagsDataLast = jsonCopy(tagsData) // Get the value of Proxy
   tt.fromObjectArray(tagsDataLast, {})
   content.tags.attrsArr = tt.toFieldArray().keysArr as EntryFileSourceNotebooksTagsAttrsArrKey[]
@@ -51,11 +51,11 @@ export const genNotebookFileContent = (notes: Note[]) => {
   const settings = settingStore.data
   const dateTimeFormat = settings.appearance.dateTimeFormat
 
-  const content: NotebookSource = jsonCopy(notebookTemplate)
+  const content: NotebookSource = jsonCopy(tmplNotebook)
 
   // Notebook data has a tagsArr need to join with ',', as a string.
   // Need special handling for tagsArr.
-  const arr = jsonCopy(notebookAttrsArr) as string[]
+  const arr = jsonCopy(tmplNotebookAttrsArr) as string[]
   arr.push('tagsArr') // Add tagsArr, as the last field, remove it later
   const tcn = new OrderedFieldArrayTable(arr)
 
@@ -110,12 +110,12 @@ export const saveNotebookFile = async (isCurrent: boolean, fileName: string) => 
 
   // save the data of the notebook opened currently
   if (isCurrent) {
-    if (paneDataStore.data.itemsColumn.list.length === 0) {
+    if (paneDataStore.data.listCol.list.length === 0) {
       return Promise.resolve(true)
     }
 
     fileName = genCurrentNotebookFileName()
-    content = genNotebookFileContent(paneDataStore.data.itemsColumn.list)
+    content = genNotebookFileContent(paneDataStore.data.listCol.list)
   } else {
     if (fileName === '') {
       // TODO alert error

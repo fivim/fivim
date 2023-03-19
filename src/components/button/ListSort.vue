@@ -1,5 +1,5 @@
 <template>
-    <XPopover refId="itemsSortBtnPop" placement="top-start" trigger="click" :propTitle="t('Sort')">
+    <XPopover refId="listSortBtnPop" placement="top-start" trigger="click" :propTitle="t('Sort')">
         <template #reference>
             <el-button :icon="Sort" circle />
         </template>
@@ -8,7 +8,7 @@
             <div class="group-title">
                 {{ t('Sort') }}
             </div>
-            <el-radio-group v-model="settingStore.data.appearance.itemsColumnSortBy">
+            <el-radio-group v-model="settingStore.data.appearance.listColSortBy">
                 <el-radio label="title">{{ t('Sort by title') }}</el-radio>
                 <el-radio label="updateTime">{{ t('Sort by update time') }}</el-radio>
                 <el-radio label="createTime">{{ t('Sort by create time') }}</el-radio>
@@ -18,11 +18,11 @@
                 <div class="flex">
                     <div class="flex flex-grow">{{ t('Sort order') }}</div>
                     <div class="flex flex-grow justify-content-right">
-                        <SortAscendingOutlined @click="settingStore.data.appearance.itemsColumnSortOrder = 'ASC'"
-                            :class="`px-1 ${settingStore.data.appearance.itemsColumnSortOrder !== 'DESC' ? 'highlight font-bold' : ''}`" />
+                        <SortAscendingOutlined @click="settingStore.data.appearance.listColSortOrder = 'ASC'"
+                            :class="`px-1 ${settingStore.data.appearance.listColSortOrder !== 'DESC' ? 'highlight font-bold' : ''}`" />
                         <SortDescendingOutlined
-                            @click="settingStore.data.appearance.itemsColumnSortOrder = 'DESC'"
-                            :class="`px-1 ${settingStore.data.appearance.itemsColumnSortOrder === 'DESC' ? 'highlight font-bold' : ''}`" />
+                            @click="settingStore.data.appearance.listColSortOrder = 'DESC'"
+                            :class="`px-1 ${settingStore.data.appearance.listColSortOrder === 'DESC' ? 'highlight font-bold' : ''}`" />
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 <div class="flex">
                     <div class="flex flex-grow">{{ t('Show create time') }}</div>
                     <div class="flex flex-grow justify-content-right">
-                        <el-switch v-model="settingStore.data.appearance.itemsColumnShowCreateTime" />
+                        <el-switch v-model="settingStore.data.appearance.listColShowCreateTime" />
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <div class="flex">
                     <div class="flex flex-grow">{{ t('Show update time') }}</div>
                     <div class="flex flex-grow justify-content-right">
-                        <el-switch v-model="settingStore.data.appearance.itemsColumnShowUpdateTime" />
+                        <el-switch v-model="settingStore.data.appearance.listColShowUpdateTime" />
                     </div>
                 </div>
             </div>

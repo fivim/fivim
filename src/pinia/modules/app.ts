@@ -2,11 +2,11 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 import type { AppInfo } from '@/types'
-import { EmptyAppInfo } from '@/types_template'
+import { tmplAppData } from '@/types_template'
 import { getTimestampMilliseconds } from '@/utils/time'
 
 export const useAppStore = defineStore('appStore', () => {
-  const data = ref<AppInfo>(EmptyAppInfo)
+  const data = ref<AppInfo>(tmplAppData)
 
   const setData = (val: AppInfo) => {
     data.value = val

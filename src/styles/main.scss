@@ -32,14 +32,14 @@
   --enas-title-bar-background-color: var(--enas-background-secondary-color);
   --enas-title-bar-foreground-color: var(--enas-foreground-primary-color);
 
-  --enas-navigation-background-color: var(--enas-background-secondary-color);
-  --enas-navigation-foreground-color: var(--enas-foreground-primary-color);
+  --enas-navigation-col-background-color: var(--enas-background-secondary-color);
+  --enas-navigation-col-foreground-color: var(--enas-foreground-primary-color);
 
-  --enas-items-background-color: var(--enas-background-primary-color);
-  --enas-items-foreground-color: var(--enas-foreground-primary-color);
+  --enas-list-col-background-color: var(--enas-background-primary-color);
+  --enas-list-col-foreground-color: var(--enas-foreground-primary-color);
 
-  --enas-editor-background-color: var(--enas-background-primary-color);
-  --enas-editor-foreground-color: var(--enas-foreground-primary-color);
+  --enas-editor-col-background-color: var(--enas-background-primary-color);
+  --enas-editor-col-foreground-color: var(--enas-foreground-primary-color);
 }
 
 html,

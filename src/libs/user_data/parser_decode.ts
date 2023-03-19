@@ -1,12 +1,13 @@
 import { DocTypeNote } from '@/constants'
 import { PaneData, Notebook, Note, Tag } from '@/components/pane/types'
-import { EmptyPaneData } from '@/components/pane/types_template'
+import { tmplPaneData } from '@/components/pane/types_template'
+import { DocTypeSheet } from '@/___professional___/constants'
 
 import { EntryFileSource, NotebookSource, ParsedEntryFileRes, FileMeta } from './types'
-import { manifestDataEmpty } from './types_templates'
+import { tmplMmanifestData } from './types_templates'
 
 export const parseEntryFile = (jsonStr: string): ParsedEntryFileRes => {
-  const res: ParsedEntryFileRes = JSON.parse(JSON.stringify(manifestDataEmpty))
+  const res: ParsedEntryFileRes = JSON.parse(JSON.stringify(tmplMmanifestData))
 
   try {
     const data: EntryFileSource = JSON.parse(jsonStr)
@@ -25,7 +26,7 @@ export const parseEntryFile = (jsonStr: string): ParsedEntryFileRes => {
 }
 
 export const parseNavColDataV1 = (data: EntryFileSource): PaneData => {
-  const res = EmptyPaneData
+  const res = tmplPaneData
   const noteBooksData = data.noteBooks
   const nbAttrsArr = noteBooksData.attrsArr
   const nbDataArr = noteBooksData.dataArr
@@ -42,7 +43,7 @@ export const parseNavColDataV1 = (data: EntryFileSource): PaneData => {
       })
     }
   }
-  res.navigationColumn.notebooks = resNotebookArr
+  res.navigationCol.notebooks = resNotebookArr
 
   const tagsData = data.tags
   const tagAttrsArr = tagsData.attrsArr
@@ -58,7 +59,7 @@ export const parseNavColDataV1 = (data: EntryFileSource): PaneData => {
       })
     }
   }
-  res.navigationColumn.tags = resTagsArr
+  res.navigationCol.tags = resTagsArr
 
   return res
 }
@@ -94,7 +95,7 @@ export const parseNotebookSourceV1 = (data: NotebookSource): Note[] => {
       }
 
       const itemType = i[attrsArr.indexOf('type')]
-      if (itemType === DocTypeNote) {
+      if (itemType === DocTypeNote || itemType === DocTypeSheet) {
         res.push({
           content: i[attrsArr.indexOf('content')],
           createTime: new Date(i[attrsArr.indexOf('createTime')]),

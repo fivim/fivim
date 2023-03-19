@@ -17,7 +17,7 @@
     <div id="app" :class="`app ${isDesktopMode() ? 'disp-grid' : ''}`" :style="{ ...computeStylesForContainer() }">
       <template v-for="(item, index) in paneController.panesNameArr" v-bind:key="index">
         <!-- navigation -->
-        <PaneNavigation ref="navigationRef" v-if="(item === PaneIds.NavigationColumn)"
+        <PaneNavigation ref="navigationRef" v-if="(item === PaneIds.NavigationCol)"
           :className="classNames(computePaneClasses(false), item)">
 
           <template #default>
@@ -28,20 +28,20 @@
           </template>
         </PaneNavigation>
 
-        <!-- items -->
-        <PaneItems ref="itemsRef" v-if="(item === PaneIds.ItemsColumn)"
+        <!-- list -->
+        <PaneList ref="listRef" v-if="(item === PaneIds.ListCol)"
           :className="classNames(computePaneClasses(false), item)">
 
           <template #default>
-            <LazyPaneResizer v-if="isDesktopMode()" :collapsable="true" :defaultWidth="PaneWidthItems" :left="0"
-              :minWidth="PANE_ITEMS_MIN_WIDTH" :modifyElementWidth="false" :side="PaneSide.Right"
-              :type="PaneResizeType.WidthOnly" :width="PaneWidthItems" :pane="itemsRef"
-              @onWidthChange="onWidthChangeItemsPane" />
+            <LazyPaneResizer v-if="isDesktopMode()" :collapsable="true" :defaultWidth="PaneWidthList" :left="0"
+              :minWidth="PANE_LIST_MIN_WIDTH" :modifyElementWidth="false" :side="PaneSide.Right"
+              :type="PaneResizeType.WidthOnly" :width="PaneWidthList" :pane="listRef"
+              @onWidthChange="onWidthChangeListPane" />
           </template>
-        </PaneItems>
+        </PaneList>
 
         <!-- editor -->
-        <PaneEditor ref="editorContentRef" v-if="(item === PaneIds.EditorColumn)"
+        <PaneEditor ref="editorContentRef" v-if="(item === PaneIds.EditorCol)"
           :className="classNames(computePaneClasses(true), item)">
 
         </PaneEditor>
@@ -57,8 +57,9 @@ import DesktopTitleBar from '@/components/layout/desktop/titleBar/DesktopTitleBa
 import type { PaneController } from '@/components/pane/types'
 import { PaneIds, PaneSide, PaneResizeType } from '@/components/pane/types'
 import PaneNavigation from '@/components/pane/PaneNavigation.vue'
-import PaneItems from '@/components/pane/PaneItems.vue'
+import PaneList from '@/components/pane/PaneList.vue'
 import PaneEditor from '@/components/pane/PaneEditor.vue'
+// import EditorFullScreen from '@/___professional___/components/pane/EditorMilkdownFullScreen.vue'
 
 import { AppMode } from '@/types'
 import { AppName } from '@/constants'
@@ -70,14 +71,14 @@ const appStore = useAppStore()
 
 // ---------- panes ----------
 const paneController: PaneController = {
-  panesNameArr: [PaneIds.NavigationColumn, PaneIds.ItemsColumn, PaneIds.EditorColumn],
+  panesNameArr: [PaneIds.NavigationCol, PaneIds.ListCol, PaneIds.EditorCol],
   focusModeEnabled: false
 }
 
 const PANE_NAVIGATION_MIN_WIDTH = 100
-const PANE_ITEMS_MIN_WIDTH = 220
+const PANE_LIST_MIN_WIDTH = 220
 const PaneWidthNavigation = ref(200)
-const PaneWidthItems = ref(PANE_ITEMS_MIN_WIDTH)
+const PaneWidthList = ref(PANE_LIST_MIN_WIDTH)
 
 const isDesktopMode = () => {
   return appStore.data.appMode === AppMode.Desktop
@@ -111,13 +112,13 @@ const computeStylesForContainer = () => {
           gridTemplateColumns: '1fr 2fr'
         }
       } else {
-        if (panesNameArr[0] === PaneIds.NavigationColumn) {
+        if (panesNameArr[0] === PaneIds.NavigationCol) {
           return {
             gridTemplateColumns: `${PaneWidthNavigation.value}px auto`
           }
         } else {
           return {
-            gridTemplateColumns: `${PaneWidthItems.value}px auto`
+            gridTemplateColumns: `${PaneWidthList.value}px auto`
           }
         }
       }
@@ -129,7 +130,7 @@ const computeStylesForContainer = () => {
         }
       }
       return {
-        gridTemplateColumns: `${PaneWidthNavigation.value}px ${PaneWidthItems.value}px 2fr`
+        gridTemplateColumns: `${PaneWidthNavigation.value}px ${PaneWidthList.value}px 2fr`
       }
     }
     default:
@@ -149,7 +150,7 @@ const computePaneClasses = (isPendingEntrance: boolean): string => {
 
 // ---------- resizer ----------
 const navigationRef = ref()
-const itemsRef = ref()
+const listRef = ref()
 const editorContentRef = ref()
 
 const LazyPaneResizer = defineAsyncComponent({
@@ -160,8 +161,8 @@ const onWidthChangeNavigationPane = (width: number) => {
   PaneWidthNavigation.value = width
 }
 
-const onWidthChangeItemsPane = (width: number) => {
-  PaneWidthItems.value = width
+const onWidthChangeListPane = (width: number) => {
+  PaneWidthList.value = width
 }
 // ========== resizer end ==========
 

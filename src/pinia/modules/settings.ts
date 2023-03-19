@@ -2,13 +2,13 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 import type { Setting } from '@/types'
-import { EmptySetting } from '@/types_template'
+import { tmplSettingData } from '@/types_template'
 import { MasterPasswordMinLength, MasterPasswordMaxLength } from '@/constants'
 import { saveConfToFile } from '@/libs/init/conf_file'
 import { CmdAdapter } from '@/libs/commands'
 
 export const useSettingStore = defineStore('settingStore', () => {
-  const data = ref<Setting>(EmptySetting)
+  const data = ref<Setting>(tmplSettingData)
 
   // set data and save config file
   const setData = async (val: Setting, writeTofile: boolean) => {

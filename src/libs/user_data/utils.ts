@@ -12,7 +12,7 @@ import { getTimestampMilliseconds } from '@/utils/time'
 
 import { parseNotebookJson } from './parser_decode'
 import { saveNotebookFile, saveEntryFile, genNotebookFileContent, saveNotebookFileWithContent } from './parser_encode'
-import { fileMeta } from './types_templates'
+import { tmplFileMeta } from './types_templates'
 
 export const getEntryFileName = () => {
   const settingStore = useSettingStore()
@@ -22,7 +22,7 @@ export const getEntryFileName = () => {
 export const genCurrentNotebookFileName = () => {
   const settingStore = useSettingStore()
   const paneDataStore = usePaneDataStore()
-  const hashedSign = paneDataStore.data.itemsColumn.hashedSign
+  const hashedSign = paneDataStore.data.listCol.hashedSign
   const senc = settingStore.data.encryption
   return `${hashedSign}${senc.fileExt}`
 }
@@ -72,7 +72,7 @@ export const updateFileMeta = async (dir: string, fileName: string) => {
   const appStore = useAppStore()
   const appData = appStore.data
 
-  let meta = fileMeta
+  let meta = tmplFileMeta
   if (Object.prototype.hasOwnProperty.call(appData.fileMetaMapping, fileName)) {
     meta = appData.fileMetaMapping[fileName]
   }
@@ -88,7 +88,7 @@ export const deleteFileMeta = async (fileName: string) => {
   const appStore = useAppStore()
   const appData = appStore.data
 
-  let meta = fileMeta
+  let meta = tmplFileMeta
   if (Object.prototype.hasOwnProperty.call(appData.fileMetaMapping, fileName)) {
     meta = appData.fileMetaMapping[fileName]
   }
@@ -102,7 +102,7 @@ export const updateFileMetaModifyTime = async (fileName: string) => {
   const appStore = useAppStore()
   const appData = appStore.data
 
-  let meta = fileMeta
+  let meta = tmplFileMeta
   if (Object.prototype.hasOwnProperty.call(appData.fileMetaMapping, fileName)) {
     meta = appData.fileMetaMapping[fileName]
   }
@@ -132,7 +132,7 @@ export const saveCurrentNotebook = async (): Promise<string> => {
 
   // Save current notebook, and record the sha256 into entry file
   return saveNotebookFile(true, '').then((saveNotebookRes) => {
-    if (paneDataStore.data.itemsColumn.list.length > 0) {
+    if (paneDataStore.data.listCol.list.length > 0) {
       if (!saveNotebookRes) {
         return t('&Failed to save file:', { fileName: genCurrentNotebookFileName() })
       }
@@ -187,7 +187,7 @@ export const saveCurrentNotebookData = async () => {
 
 export const deleteNotebook = async (hashedSign: string) => {
   const paneDataStore = usePaneDataStore()
-  const navColData = paneDataStore.data.navigationColumn
+  const navColData = paneDataStore.data.navigationCol
   for (let index = 0; index < navColData.notebooks.length; index++) {
     // delete the data in paneData
     if (navColData.notebooks[index].hashedSign === hashedSign) {
@@ -208,8 +208,8 @@ export const deleteNotebook = async (hashedSign: string) => {
 export const deleteTag = async (hashedSign: string) => {
   const paneDataStore = usePaneDataStore()
 
-  const navColData = paneDataStore.data.navigationColumn
-  const itemsColData = paneDataStore.data.itemsColumn
+  const navColData = paneDataStore.data.navigationCol
+  const listColData = paneDataStore.data.listCol
   for (let ti = 0; ti < navColData.tags.length; ti++) {
     // Loop and delete tag of notebooks and notes
     for (let nbi = 0; nbi < navColData.notebooks.length; nbi++) {
@@ -223,15 +223,15 @@ export const deleteTag = async (hashedSign: string) => {
 
       // Delete tag of note
       // If the notebook is opened, just modify the pane data.
-      if (itemsColData.hashedSign === nb.hashedSign) {
-        for (let ici = 0; ici < itemsColData.list.length; ici++) {
-          const item = itemsColData.list[ici]
+      if (listColData.hashedSign === nb.hashedSign) {
+        for (let ici = 0; ici < listColData.list.length; ici++) {
+          const item = listColData.list[ici]
           const iii = item.tagsArr.indexOf(hashedSign)
           if (iii >= 0) {
-            itemsColData.list[ici].tagsArr.splice(iii, 1)
+            listColData.list[ici].tagsArr.splice(iii, 1)
           }
         }
-        paneDataStore.setItemsColumnData(itemsColData)
+        paneDataStore.setListColData(listColData)
       } else {
         // Open the notebook file, loop and delete tag of notes.
         readNotebookdata(nb.hashedSign).then((notes) => {

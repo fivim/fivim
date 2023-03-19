@@ -88,7 +88,7 @@ import {
   DefaultLanguage, DefaultTimeFormat,
   DefaultFileExt, DefaultFileNameRule,
   DefaultThemeDark, DefaultThemeLight,
-  DefaultItemsColumnSortBy, DefaultItemsColumnSortOrder
+  DefaultListColSortBy, DefaultListColSortOrder
 } from '@/constants'
 import { settingOptions } from '@/conf'
 import { useAppStore } from '@/pinia/modules/app'
@@ -313,8 +313,8 @@ const onSave = () => {
   settingData.encryption.syncLockFileName = genTimeHashedSign(ruleForm.fileNameRule, ruleForm.dateTimeFormat, ruleForm.fileExt)
   settingData.encryption.masterPassword = genMasterPasswordSha256(ruleForm.masterPassword, MasterPasswordSalt)
   settingData.appearance.dateTimeFormat = ruleForm.dateTimeFormat
-  settingData.appearance.itemsColumnSortBy = DefaultItemsColumnSortBy
-  settingData.appearance.itemsColumnSortOrder = DefaultItemsColumnSortOrder
+  settingData.appearance.listColSortBy = DefaultListColSortBy
+  settingData.appearance.listColSortOrder = DefaultListColSortOrder
   settingData.appearance.theme = ruleForm.theme
   settingData.sync.intervalSeconds = DefaultSyncIntervalSeconds
 

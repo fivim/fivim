@@ -22,13 +22,13 @@
           </div>
         </div>
 
-        <template v-if="paneDataStore.data.navigationColumn.notebooks.length > 0">
-          <div class="nb-name" v-for="(item, index) in paneDataStore.data.navigationColumn.notebooks" v-bind:key="index">
+        <template v-if="paneDataStore.data.navigationCol.notebooks.length > 0">
+          <div class="nb-name" v-for="(item, index) in paneDataStore.data.navigationCol.notebooks" v-bind:key="index">
             <div class="info">
-              <div class="icon" @click="onListNotebookItems(index)">
+              <div class="icon" @click="onListNotebook(index)">
                 {{ item.icon }}
               </div>
-              <div class="title" @click="onListNotebookItems(index)">
+              <div class="title" @click="onListNotebook(index)">
                 {{ item.title }}
               </div>
               <div class="action">
@@ -55,8 +55,8 @@
             </div>
           </div>
         </div>
-        <template v-if="paneDataStore.data.navigationColumn.tags.length > 0">
-          <div class="disp-inline-block ml-2 mb-2" v-for="(item, index) in paneDataStore.data.navigationColumn.tags"
+        <template v-if="paneDataStore.data.navigationCol.tags.length > 0">
+          <div class="disp-inline-block ml-2 mb-2" v-for="(item, index) in paneDataStore.data.navigationCol.tags"
             v-bind:key="index">
             <el-popover placement="left-start" trigger="click">
               <template #reference>
@@ -65,7 +65,7 @@
 
               <div class="enas-list cur-ptr">
                 <div class="list-item" @click="onOpenDialogTag(item)"> {{ t('Edit') }} </div>
-                <div class="list-item" @click="onListTagItems(item)"> {{ t('Show list') }} </div>
+                <div class="list-item" @click="onListTag(item)"> {{ t('Show list') }} </div>
                 <div class="list-item" @click="onDeleteTag(item)"> {{ t('Delete') }} </div>
               </div>
             </el-popover>
@@ -97,8 +97,8 @@
             <el-button>{{ t('Tag') }}</el-button>
           </template>
 
-          <template v-if="paneDataStore.data.navigationColumn.tags.length > 0">
-            <div v-for="(item, index) in paneDataStore.data.navigationColumn.tags" v-bind:key="index">
+          <template v-if="paneDataStore.data.navigationCol.tags.length > 0">
+            <div v-for="(item, index) in paneDataStore.data.navigationCol.tags" v-bind:key="index">
               <div class="py-2" @click="onNewNotebookAddTag(item)">
                 <span :class="`${tempNotebookTagExist(item.hashedSign) ? 'font-bold' : ''}`">
                   {{ item.icon }}{{ item.title }}
@@ -161,12 +161,13 @@ import SyncButton from '@/components/button/Sync.vue'
 import SettingButton from '@/components/button/Setting.vue'
 import ThemeButton from '@/components/button/Theme.vue'
 
-import { ItemsListTypeNotebook, ItemsListTypeTag, StrSignOk } from '@/constants'
+import { ListColListTypeNotebook, ListColListTypeTag, StrSignOk } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
 import { saveCurrentNotebookAndCreateNotebookFile, deleteNotebook, deleteTag, readNotebookdata } from '@/libs/user_data/utils'
 import { getTimestampMilliseconds } from '@/utils/time'
 import { getHasdedSign } from '@/utils/pinia_data_related'
+import { colorIsDark } from '@/___professional___/utils/color'
 import { Note, Notebook, Tag } from './types'
 
 const { t } = useI18n()
@@ -193,7 +194,7 @@ const onDialogCloseNotebook = async () => {
 
   if (dialogTypeAddEditNotebook.value === DIALOG_TYPE_ADD) {
     const hashedSign = getHasdedSign()
-    paneData.navigationColumn.notebooks.push({
+    paneData.navigationCol.notebooks.push({
       title: tempNotebookTitle.value,
       icon: tempNotebookIcon.value,
       hashedSign,
@@ -204,10 +205,10 @@ const onDialogCloseNotebook = async () => {
     resetTempNotebook()
     // Save new notebook data file at first, then open it.
     if (await saveCurrentNotebookAndCreateNotebookFile(hashedSign) === StrSignOk) {
-      onListNotebookItems(paneData.navigationColumn.notebooks.length - 1)
+      onListNotebook(paneData.navigationCol.notebooks.length - 1)
     }
   } else if (dialogTypeAddEditNotebook.value === DIALOG_TYPE_EDIT) {
-    for (const i of paneData.navigationColumn.notebooks) {
+    for (const i of paneData.navigationCol.notebooks) {
       if (i.hashedSign === tempNotebookHashedSign.value) {
         i.icon = tempNotebookIcon.value
         i.title = tempNotebookTitle.value
@@ -269,14 +270,14 @@ const onDialogCloseTag = () => {
   visibleAddEditTag.value = false
   const paneData = paneDataStore.data
   if (dialogTypeAddEditTag.value === DIALOG_TYPE_ADD) {
-    paneData.navigationColumn.tags.push({
+    paneData.navigationCol.tags.push({
       title: tempTagText.value,
       icon: tempTagIcon.value,
       hashedSign: getHasdedSign(),
       mtimeUtc: getTimestampMilliseconds()
     })
   } else if (dialogTypeAddEditTag.value === DIALOG_TYPE_EDIT) {
-    for (const i of paneData.navigationColumn.tags) {
+    for (const i of paneData.navigationCol.tags) {
       if (i.hashedSign === tempTagHashedSign.value) {
         i.icon = tempTagIcon.value
         i.title = tempTagText.value
@@ -310,30 +311,30 @@ const getDialogTitleAddEditTag = () => {
   return dialogTypeAddEditTag.value === DIALOG_TYPE_EDIT ? t('Edit tag') : t('Add tag')
 }
 
-const onListNotebookItems = (index: number) => {
-  const nb = paneDataStore.data.navigationColumn.notebooks[index]
+const onListNotebook = (index: number) => {
+  const nb = paneDataStore.data.navigationCol.notebooks[index]
   readNotebookdata(nb.hashedSign).then((notes) => {
-    paneDataStore.setItemsColumnData({
+    paneDataStore.setListColData({
       title: nb.title,
       icon: nb.icon,
       hashedSign: nb.hashedSign,
       tagsArr: nb.tagsArr,
-      type: ItemsListTypeNotebook,
+      type: ListColListTypeNotebook,
       list: notes
     })
   })
 }
 
-const onListTagItems = (tag: Tag) => {
+const onListTag = (tag: Tag) => {
   const items: Note[] = []
   // TODO: loop all the data, find the same tag
 
-  paneDataStore.setItemsColumnData({
+  paneDataStore.setListColData({
     title: tag.title,
     icon: tag.icon,
     hashedSign: tag.hashedSign,
     tagsArr: [],
-    type: ItemsListTypeTag,
+    type: ListColListTypeTag,
     list: items
   })
 }
@@ -343,7 +344,7 @@ const onListTagItems = (tag: Tag) => {
 // ---------- delete notebook / tag ----------
 const onDeleteNotebook = (detail: Notebook) => {
   ElMessageBox.confirm(
-    'Are you sure to delete this notebook?', // TODO translate
+    'Are you sure to close this notebook? 将会删除对应的笔记本数据文件', // TODO 翻译
     t('Warning'),
     {
       confirmButtonText: t('OK'),
@@ -370,7 +371,7 @@ const onDeleteNotebook = (detail: Notebook) => {
 
 const onDeleteTag = (detail: Tag) => {
   ElMessageBox.confirm(
-    'Are you sure to delete this tag?', // TODO translate
+    'Are you sure to close this tag? 将会删除所有数据中的该tag', // TODO 翻译
     t('Warning'),
     {
       confirmButtonText: t('OK'),

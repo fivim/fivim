@@ -1,11 +1,11 @@
 import { PaneData } from './types'
 
-export const EmptyPaneData: PaneData = {
-  navigationColumn: {
+export const tmplPaneData: PaneData = {
+  navigationCol: {
     notebooks: [],
     tags: []
   },
-  itemsColumn: {
+  listCol: {
     hashedSign: '',
     icon: '',
     list: [],
@@ -13,7 +13,7 @@ export const EmptyPaneData: PaneData = {
     type: 'notebook',
     tagsArr: []
   },
-  editorColumn: {
+  editorCol: {
     content: '',
     title: '',
     type: 'note'

@@ -1,4 +1,5 @@
 import { ElOptionItem } from '@/types_common'
+import { SyncTypeList } from '@/libs/sync/types'
 import { ChangeMasterPasswordProcessItem } from './types'
 import { TimeFormatYyyyMmDdHhMmSs } from './constants'
 import { getOptionFileNameRule } from '@/utils/hash'
@@ -57,6 +58,25 @@ export const settingOptions: { [key: string]: ElOptionItem[] } = {
     {
       value: 'MM-DD-YY HH:mm:ss A',
       label: '12-31-22 01:02:03 AM'
+    }
+  ],
+
+  // sync
+  sync: SyncTypeList,
+
+  // sync interval seconds
+  syncIntervalSeconds: [
+    {
+      value: '300',
+      label: '5 minutes'
+    },
+    {
+      value: '900',
+      label: '15 minutes'
+    },
+    {
+      value: '3600',
+      label: '1 hour'
     }
   ],
 

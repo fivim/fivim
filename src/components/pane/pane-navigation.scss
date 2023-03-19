@@ -1,8 +1,8 @@
 $content-horizontal-padding: 1rem;
 
 .navigation-column {
-  background-color: var(--enas-navigation-background-color);
-  color: var(--enas-navigation-foreground-color);
+  background-color: var(--enas-navigation-col-background-color);
+  color: var(--enas-navigation-col-foreground-color);
 
   @media screen and (min-width: 768px) {
     border-right: 1px solid var(--enas-border-color);

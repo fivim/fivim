@@ -1,6 +1,7 @@
 import { AppMode } from '@/types'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
+import { updateThemeColorIfHasCustomBackgroundImage } from '@/___professional___/utils/color'
 
 const showTitleBar = (): boolean => {
   const appStore = useAppStore()
@@ -52,5 +53,7 @@ export const initStyle = () => {
           background-image: url("${customBackagroundImg}")!important; 
           background-size: cover;
       }`)
+
+    updateThemeColorIfHasCustomBackgroundImage(settingStore.data.appearance.customBackagroundOpacity)
   }
 }

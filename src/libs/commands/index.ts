@@ -1,13 +1,8 @@
 import { Commands, WriteFileRes, UserDataFile } from './types'
+import { SyncListResItemLocalDisk } from '@/libs/sync/types'
 import { runInTauri } from '@/utils/utils'
 import { CommandsTauri } from './command_tauri'
 import { CommandsWeb } from './command_web'
-
-export type SyncListResItemLocalDisk = {
-  file_name: string,
-  is_dir: boolean,
-  modified_time_stamp: number
-}
 
 export let CmdAdapter: Commands
 

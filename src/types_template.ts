@@ -3,7 +3,7 @@ import { DocTypeNote } from '@/constants'
 
 import { EntryFileSource } from '@/libs/user_data/types'
 
-export const EmptyAppInfo: AppInfo = {
+export const tmplAppData: AppInfo = {
   appMode: AppMode.Empty,
   changeLocaleTimestamp: 0,
   changeMasterPasswordStatus: {
@@ -15,7 +15,7 @@ export const EmptyAppInfo: AppInfo = {
   },
   currentFile: {
     hashedSign: '',
-    indexInItemsList: 0,
+    indexInList: 0,
     name: '',
     type: DocTypeNote
   },
@@ -40,7 +40,7 @@ export const EmptyAppInfo: AppInfo = {
   pathSeparator: ''
 }
 
-export const EmptySetting: Setting = {
+export const tmplSettingData: Setting = {
   normal: {
     language: '',
     showFileSavingStatus: true,
@@ -52,10 +52,10 @@ export const EmptySetting: Setting = {
     theme: '',
     customBackagroundImg: '',
     customBackagroundOpacity: 0.8,
-    itemsColumnSortBy: 'title',
-    itemsColumnSortOrder: 'ASC',
-    itemsColumnShowCreateTime: true,
-    itemsColumnShowUpdateTime: true
+    listColSortBy: 'title',
+    listColSortOrder: 'ASC',
+    listColShowCreateTime: true,
+    listColShowUpdateTime: true
   },
   sync: {
     storageType: '',
@@ -91,7 +91,7 @@ export const EmptySetting: Setting = {
   }
 }
 
-export const EmptyEntryFile: EntryFileSource = {
+export const tmplEntryFileData: EntryFileSource = {
   dataVersion: 0,
   noteBooks: {
     attrsArr: [],

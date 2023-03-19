@@ -4,7 +4,7 @@ import { useAppStore } from '@/pinia/modules/app'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
 import { useSettingStore } from '@/pinia/modules/settings'
 
-import { EmptyEntryFile } from '@/types_template'
+import { tmplEntryFileData } from '@/types_template'
 import { CmdInvoke } from '@/libs/commands'
 import { UserDataFile } from '@/libs/commands/types'
 import { i18n } from '@/libs/init/i18n'
@@ -63,5 +63,5 @@ export const saveDefaultEntryFile = () => {
   const fileName = settingStore.data.encryption.entryFileName
   const p = appStore.data.dataPath
 
-  writeUserData(p.pathOfCurrentDir + fileName, fileName, stringToUint8Array(JSON.stringify(EmptyEntryFile)))
+  writeUserData(p.pathOfCurrentDir + fileName, fileName, stringToUint8Array(JSON.stringify(tmplEntryFileData)))
 }

@@ -1,12 +1,13 @@
-import { ItemsListTypeNotebook, ItemsListTypeTag, DocTypeNote } from '@/constants'
+import { ListColListTypeNotebook, ListColListTypeTag, DocTypeNote } from '@/constants'
+import { DocTypeSheet } from '@/___professional___/constants'
 
-export type DocType = typeof DocTypeNote
-export type ItemsListType = typeof ItemsListTypeNotebook | typeof ItemsListTypeTag
+export type DocType = typeof DocTypeNote | typeof DocTypeSheet
+export type ListColType = typeof ListColListTypeNotebook | typeof ListColListTypeTag
 
 export enum PaneIds {
-  EditorColumn = 'editor-column',
-  ItemsColumn = 'items-column',
-  NavigationColumn = 'navigation-column'
+  EditorCol = 'editor-column',
+  ListCol = 'list-column',
+  NavigationCol = 'navigation-column'
 }
 
 export enum PaneResizeType {
@@ -51,28 +52,28 @@ export type Tag = {
   mtimeUtc: number // modify timestamp(in milliseconds) for tag itself, update when add or edit
 }
 
-export type EditorColumnData = {
+export type EditorColData = {
   content: string
   title: string
   type: DocType
 }
 
-export type ItemsColumnData = {
+export type ListColData = {
   hashedSign: string
   icon: string
   list: Note[]
   title: string
   tagsArr: string[]
-  type: ItemsListType
+  type: ListColType
 }
 
-export type NavigationColumnData = {
+export type NavigationColData = {
   notebooks: Notebook[]
   tags: Tag[]
 }
 
 export type PaneData = {
-  editorColumn: EditorColumnData
-  itemsColumn: ItemsColumnData
-  navigationColumn: NavigationColumnData
+  editorCol: EditorColData
+  listCol: ListColData
+  navigationCol: NavigationColData
 }

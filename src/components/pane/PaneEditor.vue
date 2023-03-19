@@ -5,7 +5,7 @@
         <div class="box mb-0 flex-nowrap gap-4">
           <div class="left">
             <div class="title">
-              <el-input v-model="paneDataStore.data.editorColumn.title" class="input" @input="onTitleInput" />
+              <el-input v-model="paneDataStore.data.editorCol.title" class="input" @input="onTitleInput" />
             </div>
           </div>
 
@@ -18,9 +18,9 @@
       </div>
 
       <div>
-        <EditorEditorjs ref="editorRef" :content="paneDataStore.data.editorColumn.content || '{}'"
+        <EditorEditorjs ref="editorRef" :content="paneDataStore.data.editorCol.content || '{}'"
           @onUpdate="onEditorUpdate"
-          :class="`${paneDataStore.data.editorColumn.type === DocTypeNote ? 'pos-rel' : 'disp-none'} note`" />
+          :class="`${paneDataStore.data.editorCol.type === DocTypeNote ? 'pos-rel' : 'disp-none'} note`" />
       </div>
     </div>
   </div>
@@ -45,22 +45,22 @@ const onTitleInput = (str: string) => {
   info.currentFile.name = str
   appStore.setData(info)
 
-  const index = info.currentFile.indexInItemsList
-  const icd = paneDataStore.data.itemsColumn
+  const index = info.currentFile.indexInList
+  const icd = paneDataStore.data.listCol
   icd.list[index].title = str
-  paneDataStore.setItemsColumnData(icd)
+  paneDataStore.setListColData(icd)
 }
 
 const onEditorUpdate = (str: string) => {
-  const icd = paneDataStore.data.itemsColumn
+  const icd = paneDataStore.data.listCol
 
   if (icd.list.length === 0) {
     // alert('Please create a new note first') // TODO: translate
   } else {
-    const index = appStore.data.currentFile.indexInItemsList
+    const index = appStore.data.currentFile.indexInList
     icd.list[index].content = str
     icd.list[index].updateTime = new Date()
-    paneDataStore.setItemsColumnData(icd)
+    paneDataStore.setListColData(icd)
   }
 }
 
@@ -69,7 +69,7 @@ appStore.$subscribe((mutation, state) => {
   const info = state.data
   const currentFileHashedSign = info.currentFile.hashedSign
   if (currentFileHashedSign !== lastFileHashedSign) {
-    editorRef.value?.setContent(paneDataStore.data.editorColumn.content || '{}')
+    editorRef.value?.setContent(paneDataStore.data.editorCol.content || '{}')
   }
 
   lastFileHashedSign = currentFileHashedSign

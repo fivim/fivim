@@ -1,8 +1,8 @@
-import { EmptyPaneData } from '@/components/pane/types_template'
+import { tmplPaneData } from '@/components/pane/types_template'
 
 import { NotebookSourceAttrsArrKey, FileMetaValue, EntryFileSource, NotebookSource, ParsedEntryFileRes } from './types'
 
-export const notebookAttrsArr = [
+export const tmplNotebookAttrsArr = [
   'hashedSign',
   'title',
   'icon',
@@ -13,19 +13,19 @@ export const notebookAttrsArr = [
   'tagsHashedSign'
 ] as NotebookSourceAttrsArrKey[]
 
-export const fileMeta = {
+export const tmplFileMeta = {
   dtimeUtc: 0,
   mtimeUtc: 0,
   sha256: ''
 } as FileMetaValue
 
-export const manifestDataEmpty: ParsedEntryFileRes = {
-  paneData: EmptyPaneData,
+export const tmplMmanifestData: ParsedEntryFileRes = {
+  paneData: tmplPaneData,
   fileMetaMapping: {},
   syncLockFileName: ''
 }
 
-export const entryFileTemplate: EntryFileSource = {
+export const tmplEntryFileData: EntryFileSource = {
   dataVersion: 1,
   noteBooks: {
     attrsArr: [
@@ -57,8 +57,8 @@ export const entryFileTemplate: EntryFileSource = {
   syncLockFileName: ''
 }
 
-export const notebookTemplate: NotebookSource = {
+export const tmplNotebook: NotebookSource = {
   dataVersion: 1,
-  attrsArr: notebookAttrsArr,
+  attrsArr: tmplNotebookAttrsArr,
   dataArr: []
 }

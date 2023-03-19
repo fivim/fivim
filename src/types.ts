@@ -14,7 +14,7 @@ export enum AppMode {
 
 export type CurrentFile = {
     hashedSign: string // hashed file name of currently opened
-    indexInItemsList: number
+    indexInList: number // the index in list of the list column
     name: string // file name of currently opened
     type: DocType
 }
@@ -73,10 +73,10 @@ export type Setting = {
         customBackagroundImg: string
         customBackagroundOpacity: number
         dateTimeFormat: string
-        itemsColumnShowCreateTime: boolean
-        itemsColumnShowUpdateTime: boolean
-        itemsColumnSortBy: 'title' | 'updateTime' | 'createTime'
-        itemsColumnSortOrder: 'ASC' | 'DESC'
+        listColShowCreateTime: boolean
+        listColShowUpdateTime: boolean
+        listColSortBy: 'title' | 'updateTime' | 'createTime'
+        listColSortOrder: 'ASC' | 'DESC'
         theme: string
     },
     sync: {

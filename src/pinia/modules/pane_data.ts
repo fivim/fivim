@@ -1,33 +1,33 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import { PaneData, ItemsColumnData, EditorColumnData, NavigationColumnData } from '@/components/pane/types'
-import { EmptyPaneData } from '@/components/pane/types_template'
+import { PaneData, ListColData, EditorColData, NavigationColData } from '@/components/pane/types'
+import { tmplPaneData } from '@/components/pane/types_template'
 
 export const usePaneDataStore = defineStore('paneDataStore', () => {
-  const data = ref<PaneData>(EmptyPaneData)
+  const data = ref<PaneData>(tmplPaneData)
 
   const setData = (val: PaneData) => {
     data.value = val
   }
 
-  const setEditorColumnData = (val: EditorColumnData) => {
-    data.value.editorColumn = val
+  const setEditorColumnData = (val: EditorColData) => {
+    data.value.editorCol = val
   }
 
-  const setItemsColumnData = (val: ItemsColumnData) => {
-    data.value.itemsColumn = val
+  const setListColData = (val: ListColData) => {
+    data.value.listCol = val
   }
 
-  const setNavigationColumnData = (val: NavigationColumnData) => {
-    data.value.navigationColumn = val
+  const setNavigationColumnData = (val: NavigationColData) => {
+    data.value.navigationCol = val
   }
 
   return {
     data,
     setData,
     setEditorColumnData,
-    setItemsColumnData,
+    setListColData,
     setNavigationColumnData
   }
 })
