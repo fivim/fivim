@@ -28,6 +28,9 @@
       - Mainly use `@element-plus/icons-vue` 
       - Also use some icons of [@ant-design/icons-vue](https://ant.design/components/icon#list-of-icons)
 
+- VCS: git:
+  - EOL config: `git config --global core.autocrlf false`
+
 ## File struct and inner data struct
 - [file format](./file_format.md)
 - [user data struct](./user_data_struct.md)
