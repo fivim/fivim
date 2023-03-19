@@ -1,63 +1,16 @@
-import { StrSignOk, StrSignErr } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
-import { CmdInvoke } from '@/libs/commands'
-import { i18n } from '@/libs/init/i18n'
 import { OrderedFieldArrayTable } from '@/utils/array'
-import { formatDateTime, stringToUint8Array } from '@/utils/string'
-import { getTimestampMilliseconds } from '@/utils/time'
+import { formatDateTime } from '@/utils/string'
 import { jsonCopy } from '@/utils/utils'
 
 import { EntryFileSourceNotebooksTagsAttrsArrKey, EntryFileSource, NotebookSource } from './types'
-import { notebookAttrsArr } from './types_templates'
-import { getEntryFileName, genCurrentNotebookFileName } from './utils'
+import { notebookAttrsArr, entryFileTemplate, notebookTemplate } from './types_templates'
+import { getEntryFileName, genCurrentNotebookFileName, updateFileMeta, writeEncryptedUserDataToFile } from './utils'
+import { Note } from '@/components/pane/types'
 
-export const writeEncryptedUserDataToFile = (dir: string, fileName: string, userData: string) => {
-  const settingStore = useSettingStore()
-  const mp = settingStore.data.encryption.masterPassword
-  return CmdInvoke.writeUserDataFile(mp, dir + fileName, fileName, stringToUint8Array(JSON.stringify(userData)), '')
-}
-
-const entryFileTemplate: EntryFileSource = {
-  dataVersion: 1,
-  noteBooks: {
-    attrsArr: [
-      'title',
-      'icon',
-      'hashedSign',
-      'mtimeUtc'
-    ],
-    dataArr: []
-  },
-  tags: {
-    attrsArr: [
-      'title',
-      'icon',
-      'hashedSign',
-      'mtimeUtc'
-    ],
-    dataArr: []
-  },
-  attachments: {
-    attrsArr: [],
-    dataArr: []
-  },
-  // files: {
-  //   attrsArr: [],
-  //   dataArr: []
-  // },
-  fileMetaMapping: {},
-  syncLockFileName: ''
-}
-
-const notebookTemplate: NotebookSource = {
-  dataVersion: 1,
-  attrsArr: notebookAttrsArr,
-  dataArr: []
-}
-
-const saveEntryFile = async () => {
+export const saveEntryFile = async () => {
   const appStore = useAppStore()
   const paneDataStore = usePaneDataStore()
 
@@ -85,121 +38,101 @@ const saveEntryFile = async () => {
 
   // fileMetaMapping
   content.fileMetaMapping = appStore.data.fileMetaMapping
-
-  console.log('>>> saveEntryFile content:: ', content)
+  if (import.meta.env.TAURI_DEBUG) {
+    console.log('>>> saveEntryFile content:: ', content)
+  }
 
   const p = appStore.data.dataPath
   return writeEncryptedUserDataToFile(p.pathOfCurrentDir, getEntryFileName(), JSON.stringify(content))
 }
 
-// Set a fileName while isCurrentOpened is true
-const saveNotebookFile = async (isCurrentOpened: boolean, fileName: string) => {
-  const appStore = useAppStore()
-  const paneDataStore = usePaneDataStore()
+export const genNotebookFileContent = (notes: Note[]) => {
   const settingStore = useSettingStore()
   const settings = settingStore.data
+  const dateTimeFormat = settings.appearance.dateTimeFormat
 
   const content: NotebookSource = jsonCopy(notebookTemplate)
 
+  // Notebook data has a tagsArr need to join with ',', as a string.
+  // Need special handling for tagsArr.
+  const arr = jsonCopy(notebookAttrsArr) as string[]
+  arr.push('tagsArr') // Add tagsArr, as the last field, remove it later
+  const tcn = new OrderedFieldArrayTable(arr)
+
+  const listDataLast = jsonCopy(notes) // Get the value of Proxy
+
+  tcn.fromObjectArray(listDataLast, {
+    createTime: (item: unknown, currentObj: object) => {
+      return {
+        currentItemAfter: formatDateTime(new Date(item as string), dateTimeFormat),
+        moveToNewNewFieldName: ''
+      }
+    },
+    updateTime: (item: unknown, currentObj: object) => {
+      return {
+        currentItemAfter: formatDateTime(new Date(item as string), dateTimeFormat),
+        moveToNewNewFieldName: ''
+      }
+    },
+    tagsArr: (item: unknown, currentObj: object) => {
+      const list = item as string[]
+      const newItemValue = list.join(',')
+      console.log('>>> newItemValue ::', newItemValue)
+      return {
+        currentItemAfter: newItemValue,
+        moveToNewNewFieldName: 'tagsHashedSign'
+      }
+    }
+  })
+  // Remove the tagsArr filed
+  const outArr = tcn.toFieldArray().valuesArr as string[][]
+  for (let index = 0; index < outArr.length; index++) {
+    const element = outArr[index]
+    element.pop()
+    content.dataArr.push(element)
+  }
+
+  console.log('>>> after convert ::', content)
+  return content
+}
+
+export const saveNotebookFileWithContent = async (fileName: string, content: NotebookSource) => {
+  const appStore = useAppStore()
+  const p = appStore.data.dataPath
+  return await writeEncryptedUserDataToFile(p.pathOfCurrentDir, fileName, JSON.stringify(content))
+}
+
+// Set a fileName while isCurrent is true
+export const saveNotebookFile = async (isCurrent: boolean, fileName: string) => {
+  const appStore = useAppStore()
+  const paneDataStore = usePaneDataStore()
+  let content: NotebookSource
+
   // save the data of the notebook opened currently
-  if (isCurrentOpened) {
+  if (isCurrent) {
     if (paneDataStore.data.itemsColumn.list.length === 0) {
       return Promise.resolve(true)
     }
 
     fileName = genCurrentNotebookFileName()
-    const dateTimeFormat = settings.appearance.dateTimeFormat
-
-    // Notebook data has a tagsArr need to join with ',', as a string.
-    // Need special handling for tagsArr.
-    const arr = jsonCopy(notebookAttrsArr) as string[]
-    arr.push('tagsArr') // Add tagsArr, as the last field, remove it later
-    const tcn = new OrderedFieldArrayTable(arr)
-
-    const listData = paneDataStore.data.itemsColumn.list // It's a Proxy
-    const listDataLast = jsonCopy(listData) // Get the value of Proxy
-
-    tcn.fromObjectArray(listDataLast, {
-      createTime: (item: unknown, currentObj: object) => {
-        return {
-          currentItemAfter: formatDateTime(new Date(item as string), dateTimeFormat),
-          moveToNewNewFieldName: ''
-        }
-      },
-      updateTime: (item: unknown, currentObj: object) => {
-        return {
-          currentItemAfter: formatDateTime(new Date(item as string), dateTimeFormat),
-          moveToNewNewFieldName: ''
-        }
-      },
-      tagsArr: (item: unknown, currentObj: object) => {
-        const list = item as string[]
-
-        return {
-          currentItemAfter: list.join(','),
-          moveToNewNewFieldName: 'tagsHashedSign'
-        }
-      }
-    })
-    // Remove the tagsArr filed
-    const outArr = tcn.toFieldArray().valuesArr as string[][]
-    for (let index = 0; index < outArr.length; index++) {
-      const element = outArr[index]
-      element.pop()
-      content.dataArr.push(element)
+    content = genNotebookFileContent(paneDataStore.data.itemsColumn.list)
+  } else {
+    if (fileName === '') {
+      // TODO alert error
+      return
     }
+    content = genNotebookFileContent([])
+  }
+
+  if (import.meta.env.TAURI_DEBUG) {
+    console.log('>>> saveNotebookFile content:: ', content)
   }
 
   const p = appStore.data.dataPath
-  const writeRes = await writeEncryptedUserDataToFile(p.pathOfCurrentDir, fileName, JSON.stringify(content))
-
-  if (!writeRes) {
+  if (!saveNotebookFileWithContent(fileName, content)) {
     return Promise.resolve(false)
   } else {
-    const filePath = p.pathOfCurrentDir + fileName
-    const sha256 = await CmdInvoke.sha256ByFilePath(filePath)
-    const fileMeta = {
-      dtimeUtc: 0,
-      mtimeUtc: getTimestampMilliseconds(),
-      sha256
-    }
-    appStore.data.fileMetaMapping[fileName] = fileMeta
+    updateFileMeta(p.pathOfCurrentDir, fileName)
     return Promise.resolve(true)
   }
-}
-
-export const saveUserData = async (): Promise<string> => {
-  const paneDataStore = usePaneDataStore()
-  const t = i18n.global.t
-
-  // Save current notebook, and record the sha256 into entry file
-  return saveNotebookFile(true, '').then((saveNotebookRes) => {
-    if (paneDataStore.data.itemsColumn.list.length > 0) {
-      if (!saveNotebookRes) {
-        return t('&Failed to save file:', { fileName: genCurrentNotebookFileName() })
-      }
-    }
-
-    return saveEntryFile().then((saveEntryFileRes) => {
-      if (!saveEntryFileRes) {
-        return t('&Failed to save file:', { fileName: getEntryFileName() })
-      }
-      return StrSignOk
-    })
-  })
-}
-
-export const saveUserDataAndCreateNotebookFile = async (fileName: string): Promise<string> => {
-  const sur = await saveUserData()
-  if (sur === StrSignOk) {
-    return saveNotebookFile(false, fileName).then((saveRes) => {
-      if (saveRes) {
-        return StrSignOk
-      } else {
-        return StrSignErr
-      }
-    })
-  }
-
-  return sur
 }

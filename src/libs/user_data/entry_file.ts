@@ -11,6 +11,7 @@ import { i18n } from '@/libs/init/i18n'
 import { stringToUint8Array } from '@/utils/string'
 import { jsonCopy } from '@/utils/utils'
 import { parseEntryFile } from './parser_decode'
+import { writeUserData } from './utils'
 
 export const initEntryFile = async () => {
   const appStore = useAppStore()
@@ -59,9 +60,8 @@ export const initEntryFile = async () => {
 export const saveDefaultEntryFile = () => {
   const appStore = useAppStore()
   const settingStore = useSettingStore()
-  const mp = settingStore.data.encryption.masterPassword
   const fileName = settingStore.data.encryption.entryFileName
   const p = appStore.data.dataPath
 
-  return CmdInvoke.writeUserDataFile(mp, p.pathOfCurrentDir + fileName, fileName, stringToUint8Array(JSON.stringify(EmptyEntryFile)), '')
+  writeUserData(p.pathOfCurrentDir + fileName, fileName, stringToUint8Array(JSON.stringify(EmptyEntryFile)))
 }

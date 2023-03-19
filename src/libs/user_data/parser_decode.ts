@@ -1,13 +1,9 @@
 import { DocTypeNote } from '@/constants'
 import { PaneData, Notebook, Note, Tag } from '@/components/pane/types'
 import { EmptyPaneData } from '@/components/pane/types_template'
-import { EntryFileSource, NotebookSource, ParsedEntryFileRes, FileMeta } from './types'
 
-export const manifestDataEmpty: ParsedEntryFileRes = {
-  paneData: EmptyPaneData,
-  fileMetaMapping: {},
-  syncLockFileName: ''
-}
+import { EntryFileSource, NotebookSource, ParsedEntryFileRes, FileMeta } from './types'
+import { manifestDataEmpty } from './types_templates'
 
 export const parseEntryFile = (jsonStr: string): ParsedEntryFileRes => {
   const res: ParsedEntryFileRes = JSON.parse(JSON.stringify(manifestDataEmpty))
@@ -41,7 +37,8 @@ export const parseNavColDataV1 = (data: EntryFileSource): PaneData => {
         hashedSign: i[nbAttrsArr.indexOf('hashedSign')],
         icon: i[nbAttrsArr.indexOf('icon')],
         title: i[nbAttrsArr.indexOf('title')],
-        mtimeUtc: parseInt(i[nbAttrsArr.indexOf('mtimeUtc')])
+        mtimeUtc: parseInt(i[nbAttrsArr.indexOf('mtimeUtc')]),
+        tagsArr: []
       })
     }
   }
@@ -66,7 +63,7 @@ export const parseNavColDataV1 = (data: EntryFileSource): PaneData => {
   return res
 }
 
-export const parseNotebook = (jsonStr: string): Note[] => {
+export const parseNotebookJson = (jsonStr: string): Note[] => {
   const res: Note[] = []
   if (jsonStr === '') {
     return res
@@ -85,6 +82,7 @@ export const parseNotebookSourceV1 = (data: NotebookSource): Note[] => {
   const res: Note[] = []
   const attrsArr = data.attrsArr
   const dataArr = data.dataArr
+
   if (dataArr.length > 0) {
     for (const i of dataArr) {
       const tagsHashedSignArr: string[] = []
