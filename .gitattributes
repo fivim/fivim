@@ -25,9 +25,12 @@
 .gitignore text eol=lf
 
 Cargo.lock text eol=lf
+LICENSE text eol=lf
 
 # Denote all files that are truly binary and should not be modified.
 *.png binary
 *.jpg binary
 *.psd binary
 *.bin binary
+*.ico binary
+*.icns binary

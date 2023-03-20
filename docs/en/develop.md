@@ -69,8 +69,11 @@ Commit the changes to your repository.
 git commit -m "Normalize all the line endings"
 ```
 
-check eol: `git ls-files --eol`
+Check eol: 
 
+```sh
+git ls-files --eol
+```
 
 ## File struct and inner data struct
 - [file format](./file_format.md)
