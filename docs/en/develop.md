@@ -32,17 +32,11 @@
 
 ### git
 
-EOL config: 
+#### EOL use `LF`
 
-[Refer](https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings#about-line-endings)
+[Refer1](https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings#about-line-endings)
 
 set a `.gitattributes`  file,
-
-```sh
-git config --global core.autocrlf false
-git rm --cached -r .
-git reset --hard
-```
 
 Save your current files in Git, so that none of your work is lost.
 
@@ -73,6 +67,16 @@ Check eol:
 
 ```sh
 git ls-files --eol
+```
+
+Or [Refer2](https://www.aleksandrhovhannisyan.com/blog/crlf-vs-lf-normalizing-line-endings-in-git/#a-simple-gitattributes-config):
+
+set a `.gitattributes`  file like `Refer1`
+
+```sh
+git config --global core.autocrlf false
+git rm --cached -r .
+git reset --hard
 ```
 
 ## File struct and inner data struct
