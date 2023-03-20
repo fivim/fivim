@@ -34,16 +34,11 @@
 - 🎨 Various themes.
 - 🔗 Share the encrypted data with your friends.
 
-The following two screenshots are the **default** theme and the **material** theme.
+The following two screenshots are the **default** theme and the **material** theme. [More themes](./docs/en/themes.md)
 
-[More themes](./docs/en/themes.md)
-
-<p>
-  <img src="./docs/images/default.png" width="340px" style="float:left">
-  <div style="float:left;">&nbsp;</div>
-  <img src="./docs/images/material.png" width="340px" style="float:left">
-</p>
-<p style="clear:both">
+| default theme                               | material theme                                |
+| ------------------------------------------- | --------------------------------------------- |
+| ![default theme](./docs/images/default.png) | ![material theme](./docs/images/material.png) |
 
 ## Table of Contents
 
@@ -57,7 +52,7 @@ The following two screenshots are the **default** theme and the **material** the
 
 - Encrypted storage of personal privacy data.
 - Do not actively access the network.
-- License is [ENASSI DUAL License](./LICENSE)
+- [License](./LICENSE)
 
 ## Dante
 
@@ -73,13 +68,13 @@ The following two screenshots are the **default** theme and the **material** the
 
 Tauri currently supports development and distribution on the following platforms:
 
-| Platform                 | Versions        |
-| :----------------------- | :-------------- |
-| Windows                  | 7 and above     |
-| macOS                    | 10.15 and above |
-| Linux                    | See below       |
-| iOS/iPadOS (coming soon) |                 |
-| Android (coming soon)    |                 |
+| Platform   | Versions        |
+| :--------- | :-------------- |
+| Windows    | 7 and above     |
+| macOS      | 10.15 and above |
+| Linux      | See below       |
+| iOS/iPadOS | coming soon     |
+| Android    | coming soon     |
 
 #### Linux Support
 
