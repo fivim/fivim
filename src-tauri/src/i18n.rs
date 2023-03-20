@@ -7,7 +7,9 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 
 use crate::conf as x_conf;
+use crate::utils::dir as x_dir;
 use crate::utils::file as x_file;
+use crate::utils::logger as x_logger;
 use crate::utils::path as x_path;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -16,7 +18,6 @@ pub struct I18nDictLangMeta {
     name: String,
     nativeName: String, // Javascript naming style
 }
-
 
 pub struct Conf {
     locale: String,
@@ -42,7 +43,7 @@ lazy_static! {
     });
 
     static ref CONFIG: Mutex<Conf> = Mutex::new(Conf{
-        locale: x_conf::DEFAULT_LOCALE.to_string(),
+        locale: x_conf::DEFAULT_LANGUAGE.to_string(),
         locales_dir: "".to_string()
     });
 }
@@ -96,7 +97,11 @@ pub fn init_dict() {
         let json_str =
             match x_file::read_file_to_string(x_path::path_buf_to_string(file_path).as_str()) {
                 Ok(f) => f,
-                Err(e) => panic!("Reading language package exception:{}", e),
+                Err(e) => {
+                    let msg = format!("Reading language package exception:{}", e);
+                    x_logger::log_error(&msg);
+                    panic!("{}", msg);
+                },
             };
 
         insert_dict(lang_name, json_str);
@@ -108,7 +113,7 @@ pub fn get_locales_list() -> Vec<String> {
     let locals_dir = get_locales_dir();
 
     if locals_dir != "" {
-        for key in x_path::get_file_list_of_dir(&locals_dir) {
+        for key in x_dir::get_file_list_of_dir(&locals_dir) {
             let new_key = key.replace(x_conf::LOCALES_FILE_EXT, ""); // remove extension
             res.push(new_key);
         }

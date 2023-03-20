@@ -5,6 +5,7 @@ use crate::conf as x_conf;
 use crate::utils::encrypt as x_encrypt;
 use crate::utils::file as x_file;
 use crate::utils::hash as x_hash;
+use crate::utils::logger as x_logger;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserFileData {
@@ -145,7 +146,7 @@ fn serialize_small_file_bytes(pwd: &str, file_name: &str, file_content: Vec<u8>)
 }
 
 fn serialize_large_file_bytes(pwd: &str, file_name: &str, source_of_large_file_path: &str) {
-    print!("Unsupport large file");
+    x_logger::log_error(&format!("Unsupport large file"));
     // TODO
     // Item file data length
     // Item file data
@@ -166,16 +167,16 @@ pub fn read_file(pwd: &str, file_path: &str, parse_as_string: bool) -> UserFileD
                 return d;
             }
             Err(e) => {
-                print!(
+                x_logger::log_error(&format!(
                     ">>> read_file read_file_to_bytes path: {} , error: {:?} \n",
                     &file_path, e
-                );
+                ));
                 return empty;
             }
         };
     } else {
         // latge file, use buffer for saving memory.
-        print!("Unsupport large file \n");
+        x_logger::log_error(&format!("Unsupport large file \n"));
     }
 
     return empty;

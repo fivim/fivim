@@ -1,17 +1,17 @@
-import { homeDir } from '@tauri-apps/api/path'
-import { AppName, ConfigFileName } from '@/constants'
+import { ConfigFileName } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
-import { CmdAdapter } from '@/libs/commands'
+import { CmdAdapter, CmdInvoke } from '@/libs/commands'
 import { jsonCopy } from '@/utils/utils'
 
 export const initCoreDirs = async () => {
   const appStore = useAppStore()
 
   const separator = await CmdAdapter.isWindows() ? '\\' : '/'
-  const pathOfHome = await homeDir()
+  const appCoreConf = await CmdInvoke.getAppCoreConf()
 
-  const pathOfAppData = `${pathOfHome}${separator}.${AppName}${separator}`
+  const pathOfHome = appCoreConf.homeDir
+  const pathOfAppData = appCoreConf.homeAppDir
   const pathOfConfig = `${pathOfAppData}${ConfigFileName}`
 
   // style
@@ -19,8 +19,12 @@ export const initCoreDirs = async () => {
   const pathOfCustomBackgroundImage = `${pathOfCustomStyle}custom_background_image.jpg`
 
   const aaa = appStore.data
-  aaa.pathSeparator = separator
-  aaa.dataPath.pathOfAppData = pathOfAppData
+  aaa.appName = appCoreConf.appName
+  aaa.defaultLocale = appCoreConf.defaultLanguage
+  aaa.defaultLocaleInNative = appCoreConf.defaultLanguageInNative
+  aaa.version = appCoreConf.version
+
+  aaa.dataPath.pathOfHomeAppData = pathOfAppData
   aaa.dataPath.pathOfConfig = pathOfConfig
   aaa.dataPath.pathOfHome = pathOfHome
   aaa.dataPath.pathOfCustomStyle = pathOfCustomStyle
@@ -47,7 +51,6 @@ export const initWorkDirs = async () => {
   const pathOfSyncDownloadDir = `${pathOfSyncDir}download${separator}`
 
   const aaa = appStore.data
-  aaa.pathSeparator = separator
   aaa.dataPath.pathOfCurrentDir = pathOfCurrentDir
   aaa.dataPath.pathOfSyncDir = pathOfSyncDir
   aaa.dataPath.pathOfSyncCachedDir = pathOfSyncCachedDir

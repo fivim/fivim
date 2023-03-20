@@ -12,6 +12,15 @@ export enum AppMode {
     Mobile = 'mobile'
 }
 
+export type AppCoreConf = {
+    appName: string
+    defaultLanguage: string,
+    defaultLanguageInNative: string,
+    homeAppDir: string
+    homeDir: string
+    version: string
+}
+
 export type CurrentFile = {
     hashedSign: string // hashed file name of currently opened
     indexInList: number // the index in list of the list column
@@ -34,7 +43,7 @@ export type ChangeMasterPasswordProcessItem = {
 
 export type DataPath = {
     // core
-    pathOfAppData: string;
+    pathOfHomeAppData: string;
     pathOfConfig: string;
     pathOfHome: string;
     pathOfCurrentDir: string
@@ -48,18 +57,21 @@ export type DataPath = {
 
 export type AppInfo = {
     appMode: AppMode // desktop mode or mobile mode
+    appName: string
     changeLocaleTimestamp: number // record timestamp for editor i18n
     changeMasterPasswordStatus: ChangeMasterPasswordStatus
     currentFile: CurrentFile
     currentTheme: string
     dataPath: DataPath
+    defaultLocale: string,
+    defaultLocaleInNative: string,
     editorFullScreen: boolean
     existConfigFile: boolean
     fileMetaMapping: FileMeta
     isWebPage: boolean
     lockscreen: boolean
-    pathSeparator: string
     textDirection: TextDirection
+    version: string
 }
 
 export type Setting = {
@@ -78,30 +90,6 @@ export type Setting = {
         listColSortBy: 'title' | 'updateTime' | 'createTime'
         listColSortOrder: 'ASC' | 'DESC'
         theme: string
-    },
-    sync: {
-        storageType: string
-        enableFailSafe: boolean
-        intervalSeconds: string // For ElSelect
-        lastSyncTimestamp: number
-
-        amazonS3: {
-            bucket: string
-            url: string
-            region: string
-            accessKey: string
-            secretKey: string
-        },
-        aliyunOss: {
-            bucket: string
-            url: string
-            region: string
-            accessKeyId: string
-            accessKeySecret: string
-        },
-        localDisk: {
-            remoteDirPath: string
-        }
     },
     encryption: {
         masterPassword: string

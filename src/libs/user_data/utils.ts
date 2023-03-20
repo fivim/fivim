@@ -7,7 +7,6 @@ import { usePaneDataStore } from '@/pinia/modules/pane_data'
 import { CmdInvoke } from '@/libs/commands'
 import { stringToUint8Array } from '@/utils/string'
 import { i18n } from '@/libs/init/i18n'
-import { SyncUserData } from '@/libs/sync/sync_data'
 import { getTimestampMilliseconds } from '@/utils/time'
 
 import { parseNotebookJson } from './parser_decode'
@@ -157,16 +156,6 @@ export const saveCurrentNotebookAndCreateNotebookFile = async (fileName: string)
   return sur
 }
 
-export const saveUserDataAndSync = async (): Promise<string> => {
-  const sur = await saveCurrentNotebook()
-  if (sur === StrSignOk) {
-    const sud = new SyncUserData()
-    return sud.run()
-  }
-
-  return sur
-}
-
 export const saveCurrentNotebookData = async () => {
   const t = i18n.global.t
   const errMsg = await saveCurrentNotebook()
@@ -192,7 +181,7 @@ export const deleteNotebook = async (hashedSign: string) => {
     // delete the data in paneData
     if (navColData.notebooks[index].hashedSign === hashedSign) {
       navColData.notebooks.splice(index, 1)
-      paneDataStore.setNavigationColumnData(navColData)
+      paneDataStore.setNavigationColData(navColData)
     }
   }
 
@@ -258,7 +247,7 @@ export const deleteTag = async (hashedSign: string) => {
     }
   }
 
-  paneDataStore.setNavigationColumnData(navColData)
+  paneDataStore.setNavigationColData(navColData)
 
   saveCurrentNotebookData()
   if (await saveToEntryFile() === StrSignOk) {

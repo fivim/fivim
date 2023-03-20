@@ -1,7 +1,6 @@
 import { DocTypeNote } from '@/constants'
 import { PaneData, Notebook, Note, Tag } from '@/components/pane/types'
 import { tmplPaneData } from '@/components/pane/types_template'
-import { DocTypeSheet } from '@/___professional___/constants'
 
 import { EntryFileSource, NotebookSource, ParsedEntryFileRes, FileMeta } from './types'
 import { tmplMmanifestData } from './types_templates'
@@ -95,7 +94,7 @@ export const parseNotebookSourceV1 = (data: NotebookSource): Note[] => {
       }
 
       const itemType = i[attrsArr.indexOf('type')]
-      if (itemType === DocTypeNote || itemType === DocTypeSheet) {
+      if (itemType === DocTypeNote) {
         res.push({
           content: i[attrsArr.indexOf('content')],
           createTime: new Date(i[attrsArr.indexOf('createTime')]),

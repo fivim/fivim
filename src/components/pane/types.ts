@@ -1,7 +1,6 @@
 import { ListColListTypeNotebook, ListColListTypeTag, DocTypeNote } from '@/constants'
-import { DocTypeSheet } from '@/___professional___/constants'
 
-export type DocType = typeof DocTypeNote | typeof DocTypeSheet
+export type DocType = typeof DocTypeNote
 export type ListColType = typeof ListColListTypeNotebook | typeof ListColListTypeTag
 
 export enum PaneIds {
@@ -54,6 +53,7 @@ export type Tag = {
 
 export type EditorColData = {
   content: string
+  hashedSign: string
   title: string
   type: DocType
 }

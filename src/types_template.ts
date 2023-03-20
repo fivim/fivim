@@ -5,6 +5,7 @@ import { EntryFileSource } from '@/libs/user_data/types'
 
 export const tmplAppData: AppInfo = {
   appMode: AppMode.Empty,
+  appName: '',
   changeLocaleTimestamp: 0,
   changeMasterPasswordStatus: {
     action: '',
@@ -23,7 +24,7 @@ export const tmplAppData: AppInfo = {
   dataPath: {
     pathOfHome: '',
     pathOfConfig: '',
-    pathOfAppData: '',
+    pathOfHomeAppData: '',
     pathOfCurrentDir: '',
     pathOfCustomStyle: '',
     pathOfCustomBackgroundImage: '',
@@ -31,13 +32,15 @@ export const tmplAppData: AppInfo = {
     pathOfSyncCachedDir: '',
     pathOfSyncDownloadDir: ''
   },
+  defaultLocale: '',
+  defaultLocaleInNative: '',
   editorFullScreen: false,
   existConfigFile: false,
   fileMetaMapping: {},
   isWebPage: true,
   lockscreen: true,
   textDirection: 'LTR',
-  pathSeparator: ''
+  version: ''
 }
 
 export const tmplSettingData: Setting = {
@@ -56,30 +59,6 @@ export const tmplSettingData: Setting = {
     listColSortOrder: 'ASC',
     listColShowCreateTime: true,
     listColShowUpdateTime: true
-  },
-  sync: {
-    storageType: '',
-    intervalSeconds: '300',
-    lastSyncTimestamp: 0,
-    enableFailSafe: true,
-
-    amazonS3: {
-      bucket: '',
-      url: '',
-      region: '',
-      accessKey: '',
-      secretKey: ''
-    },
-    aliyunOss: {
-      bucket: '',
-      url: '',
-      region: '',
-      accessKeyId: '',
-      accessKeySecret: ''
-    },
-    localDisk: {
-      remoteDirPath: ''
-    }
   },
   encryption: {
     masterPassword: '',

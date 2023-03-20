@@ -12,7 +12,7 @@
         <el-result class="h-full">
           <template #icon>
             <div class="app-name highlight">
-              {{ AppName }}
+              {{ appStore.data.appName }}
             </div>
           </template>
 
@@ -41,7 +41,7 @@ import { UnlockOutlined } from '@ant-design/icons-vue'
 
 import DesktopTitleBar from '@/components/layout/desktop/titleBar/DesktopTitleBar.vue'
 
-import { AppName, MasterPasswordSalt } from '@/constants'
+import { MasterPasswordSalt } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
 import { initAtFirst } from '@/libs/init/at_first'

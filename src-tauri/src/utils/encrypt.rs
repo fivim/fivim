@@ -2,6 +2,7 @@ use xencrypt::chacha20poly1305::{
     decrypt_large_file, decrypt_u8_arr, encrypt_large_file, encrypt_u8_arr,
 };
 
+use crate::utils::logger as x_logger;
 use crate::utils::{array_like, hash};
 
 const SIZE_KEY: usize = 32;
@@ -57,7 +58,7 @@ pub fn encrypt_file(
     ) {
         Ok(_) => return true,
         Err(e) => {
-            print!(">>> encrypt_file error: {:?} \n", e);
+            x_logger::log_error(&format!(">>> encrypt_file error: {:?} \n", e));
             return false;
         }
     }
@@ -67,7 +68,7 @@ pub fn decrypt_file(pwd: &str, source_path: &str, dist_path: &str) -> bool {
     match decrypt_large_file(source_path, dist_path, &gen_key(pwd), &gen_nonce_large(pwd)) {
         Ok(_) => return true,
         Err(e) => {
-            print!(">>> decrypt_file error: {:?} \n", e);
+            x_logger::log_error(&format!(">>> decrypt_file error: {:?} \n", e));
             return false;
         }
     }
@@ -92,7 +93,7 @@ pub fn decrypt_bytes(pwd: &str, content: &Vec<u8>) -> String {
     match String::from_utf8(dec) {
         Ok(d) => return d,
         Err(e) => {
-            print!(">>> decrypt_string error: {:?} \n", e);
+            x_logger::log_error(&format!(">>> decrypt_string error: {:?} \n", e));
             return "".to_string();
         }
     }

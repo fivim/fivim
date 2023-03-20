@@ -1,7 +1,6 @@
 import { createI18n } from 'vue-i18n'
 
 import { TextDirection } from '@/types'
-import { DefaultLanguage } from '@/constants'
 import { settingOptions } from '@/conf'
 import { getOsLocale } from '@/utils/locale'
 import { InitCommandsAdapter, CmdInvoke } from '@/libs/commands'
@@ -64,17 +63,22 @@ const getDict = async () => {
 const getLoclae = async () => {
   let data = await CmdInvoke.getLocale()
   if (!data) {
-    data = getOsLocale(DefaultLanguage)
+    data = getOsLocale(getDefaultLoclae())
     CmdInvoke.setLocale(data)
   }
   return data
+}
+
+const getDefaultLoclae = () => {
+  const appStore = useAppStore()
+  return appStore.data.defaultLocale
 }
 
 const dict = await getDict()
 const loclae = await getLoclae()
 
 export const i18n = createI18n({
-  locale: loclae || DefaultLanguage,
+  locale: loclae || getDefaultLoclae(),
   messages: dict,
   legacy: false// Otherwise, there will cause "SyntaxError: Not available in legacy mode"
 })

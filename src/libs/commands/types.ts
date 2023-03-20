@@ -25,3 +25,5 @@ export type UserDataFile = {
     file_data: Uint8Array,
     file_data_str: string,
 }
+
+export type LogLevel = 'ERROR' | 'INFO' | 'DEBUG'

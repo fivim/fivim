@@ -1,15 +1,12 @@
 <template>
   <XPopover refId="listAddBtnPop" placement="top-start" trigger="click" :propTitle="t('Add')">
     <template #reference>
-      <el-button :icon="Plus" color="#626aef" circle />
+      <ElButton :icon="Plus" color="#626aef" circle />
     </template>
 
     <div class="enas-list">
       <div class="list-item" @click="onAddNote">
         <FileTextOutlined /> {{ t('Note') }}
-      </div>
-      <div class="list-item" @click="onAddTable">
-        <TableOutlined /> {{ t('Table') }}
       </div>
     </div>
   </XPopover>
@@ -18,7 +15,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import { FileTextOutlined, TableOutlined } from '@ant-design/icons-vue'
+import { FileTextOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 import { Note } from '@/components/pane/types'
@@ -28,14 +25,13 @@ import { usePaneDataStore } from '@/pinia/modules/pane_data'
 import { useSettingStore } from '@/pinia/modules/settings'
 import XPopover from '@/components/xPopover/popover.vue'
 import { genTimeHashedSign } from '@/utils/hash'
-import { DocTypeSheet } from '@/___professional___/constants'
 
 const appStore = useAppStore()
 const paneDataStore = usePaneDataStore()
 const settingStore = useSettingStore()
 const { t } = useI18n()
 
-const addItem = (itemType: typeof DocTypeNote | typeof DocTypeSheet) => {
+const addItem = (itemType: typeof DocTypeNote) => {
   const pd = paneDataStore.data
   if (pd.navigationCol.notebooks.length === 0) {
     ElMessage({
@@ -59,8 +55,8 @@ const addItem = (itemType: typeof DocTypeNote | typeof DocTypeSheet) => {
   }
 
   pd.listCol.list.push(newItem)
-  pd.editorColumn.title = newItem.title
-  pd.editorColumn.content = newItem.content
+  pd.editorCol.title = newItem.title
+  pd.editorCol.content = newItem.content
   paneDataStore.setData(pd)
 
   const info = appStore.data
@@ -73,9 +69,5 @@ const addItem = (itemType: typeof DocTypeNote | typeof DocTypeSheet) => {
 
 const onAddNote = () => {
   addItem(DocTypeNote)
-}
-
-const onAddTable = () => {
-  addItem(DocTypeSheet)
 }
 </script>

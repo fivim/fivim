@@ -3,7 +3,8 @@ pub const WINDOW_LABEL_MAIN: &str = "main";
 pub const WINDOW_LABEL_SPLASHSCREEN: &str = "splashscreen";
 
 // I18n
-pub const DEFAULT_LOCALE: &str = "en";
+pub const DEFAULT_LANGUAGE: &str = "en";
+pub const DEFAULT_LANGUAGE_IN_NATIVE_WORD: &str = "English";
 pub const LOCALES_DIR_NAME: &str = "locales";
 pub const LOCALES_FILE_EXT: &str = ".json";
 
@@ -17,3 +18,6 @@ pub const TEXT_SHOW: &str = "Show";
 
 // User data size
 pub const LARGE_FILE_SIZE: u64 = 1024 * 1024 * 100; // 100MiB
+
+// Other
+pub const LOG_FILE_EXT: &str = ".log";

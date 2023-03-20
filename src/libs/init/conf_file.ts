@@ -1,5 +1,5 @@
 import type { Setting } from '@/types'
-import { DefaultLanguage, MasterPasswordSalt } from '@/constants'
+import { MasterPasswordSalt } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
 import { CmdInvoke } from '@/libs/commands'
@@ -33,7 +33,7 @@ export const initWithConfFile = (pwdSha256: string, successCallback: CallableFun
     }
 
     const conf: Setting = JSON.parse(data as string) as Setting
-    setLocale(getAvailableLocale(i18n.global.availableLocales, DefaultLanguage))
+    setLocale(getAvailableLocale(i18n.global.availableLocales, appStore.data.defaultLocale))
 
     // Verify the contents of the configuration file
     if (Object.keys(conf).length === 0) {

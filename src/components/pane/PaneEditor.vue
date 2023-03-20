@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="section max-h-full">
+    <div v-if="paneDataStore.data.editorCol.hashedSign === ''">
+      <div class="empty py-2"> {{ t('&No content') }} </div>
+    </div>
+    <div v-else class="section max-h-full">
       <div class="title-bar">
         <div class="box mb-0 flex-nowrap gap-4">
           <div class="left">
@@ -18,8 +21,7 @@
       </div>
 
       <div>
-        <EditorEditorjs ref="editorRef" :content="paneDataStore.data.editorCol.content || '{}'"
-          @onUpdate="onEditorUpdate"
+        <EditorEditorjs ref="editorRef" :content="paneDataStore.data.editorCol.content || '{}'" @onUpdate="onEditorUpdate"
           :class="`${paneDataStore.data.editorCol.type === DocTypeNote ? 'pos-rel' : 'disp-none'} note`" />
       </div>
     </div>
@@ -28,6 +30,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ChangeEditorButton from '@/components/button/EditorTag.vue'
 import EditorEditorjs from '@/components/editor/editorjs/Editorjs.vue'
@@ -39,6 +42,7 @@ import { usePaneDataStore } from '@/pinia/modules/pane_data'
 const editorRef = ref<InstanceType<typeof EditorEditorjs>>()
 const appStore = useAppStore()
 const paneDataStore = usePaneDataStore()
+const { t } = useI18n()
 
 const onTitleInput = (str: string) => {
   const info = appStore.data
@@ -77,5 +81,6 @@ appStore.$subscribe((mutation, state) => {
 </script>
 
 <style lang="scss" scoped>
+@import './common.scss';
 @import './pane-editor.scss';
 </style>

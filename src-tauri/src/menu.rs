@@ -4,6 +4,7 @@ use tauri::{
 };
 
 use crate::conf;
+use crate::utils::logger as x_logger;
 
 // Create the main menu:
 pub fn make_window_menu() -> tauri::Menu {
@@ -46,21 +47,21 @@ pub fn make_tray_menu(app: &tauri::App) -> tauri::Result<()> {
                     size: _,
                     ..
                 } => {
-                    println!("system tray received a left click");
+                    x_logger::log_info(&format!("system tray received a left click"));
                 }
                 SystemTrayEvent::RightClick {
                     position: _,
                     size: _,
                     ..
                 } => {
-                    println!("system tray received a right click");
+                    x_logger::log_info(&format!("system tray received a right click"));
                 }
                 SystemTrayEvent::DoubleClick {
                     position: _,
                     size: _,
                     ..
                 } => {
-                    println!("system tray received a double click");
+                    x_logger::log_info(&format!("system tray received a double click"));
                 }
                 SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
                     conf::TEXT_SHOW => {

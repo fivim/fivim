@@ -10,8 +10,9 @@
       <el-tab-pane :label="t('General')">
         <el-form :model="settingStore.data" label-width="150px" :label-position="genLabelPosition()">
           <el-form-item :label="t('File')">
-            used MB
+            {{ t('Total size of all files ', { size: getDataSize() }) }}
           </el-form-item>
+          <!--
           <el-form-item :label="t('Last sync time')">
             2022-12-12
           </el-form-item>
@@ -26,6 +27,7 @@
           </el-form-item>
           <el-button>{{ t('Export data') }}</el-button>
           <el-button>{{ t('Import data') }}</el-button>
+          -->
         </el-form>
       </el-tab-pane>
       <el-tab-pane :label="t('Appearance')">
@@ -46,68 +48,6 @@
             </el-select>
           </el-form-item>
           <SettingCustomBackground />
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane :label="t('Sync')">
-        <el-form :model="settingStore.data" label-width="150px" :label-position="genLabelPosition()">
-          <el-form-item :label="t('Storage type')">
-            <el-select v-model="settingStore.data.sync.storageType" class="m-2" :placeholder="t('Select')">
-              <el-option v-for="item in settingOptions.sync" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
-          <div v-if="(settingStore.data.sync.storageType === StorageType.aliyunOss)" class="secondary-background">
-            <el-form-item label="bucket">
-              <el-input v-model="settingStore.data.sync.aliyunOss.bucket" />
-            </el-form-item>
-            <el-form-item label="endpoint URL">
-              <el-input v-model="settingStore.data.sync.aliyunOss.url" />
-            </el-form-item>
-            <el-form-item label="region">
-              <el-input v-model="settingStore.data.sync.aliyunOss.region" />
-            </el-form-item>
-            <el-form-item label="AccessKey ID">
-              <el-input v-model="settingStore.data.sync.aliyunOss.accessKeyId" />
-            </el-form-item>
-            <el-form-item label="AccessKey Secret">
-              <el-input v-model="settingStore.data.sync.aliyunOss.accessKeySecret" />
-            </el-form-item>
-          </div>
-          <div v-if="(settingStore.data.sync.storageType === StorageType.amazonS3)" class="secondary-background">
-            <el-form-item label="bucket">
-              <el-input v-model="settingStore.data.sync.amazonS3.bucket" />
-            </el-form-item>
-            <el-form-item label="URL">
-              <el-input v-model="settingStore.data.sync.amazonS3.url" />
-            </el-form-item>
-            <el-form-item label="region">
-              <el-input v-model="settingStore.data.sync.amazonS3.region" />
-            </el-form-item>
-            <el-form-item label="access key">
-              <el-input v-model="settingStore.data.sync.amazonS3.accessKey" />
-            </el-form-item>
-            <el-form-item label="secret key">
-              <el-input v-model="settingStore.data.sync.amazonS3.secretKey" />
-            </el-form-item>
-          </div>
-          <div v-if="(settingStore.data.sync.storageType === StorageType.localDisk)" class="secondary-background">
-            <el-form-item :label="t('Folder path')">
-              <el-input v-model="settingStore.data.sync.localDisk.remoteDirPath" />
-            </el-form-item>
-          </div>
-          <el-form-item :label="t('Sync interval time')">
-            <el-select v-model="settingStore.data.sync.intervalSeconds" :placeholder="t('Select')">
-              <el-option v-for="item in settingOptions.syncIntervalSeconds" :key="item.value" :label="item.label"
-                :value="item.value" />
-            </el-select>
-          </el-form-item>
-          <!--
-          <el-form-item :label="t('Fail-safe')">
-            <div>
-              <el-switch v-model="settingStore.data.sync.enableFailSafe" />
-            </div>
-            <div class="small">{{ t('&Fail-safe') }}</div>
-          </el-form-item>
-          -->
         </el-form>
       </el-tab-pane>
       <el-tab-pane :label="t('Encryption')">
@@ -188,7 +128,6 @@ import { ElMessage } from 'element-plus'
 import { SettingOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
-import { StorageType } from '@/libs/sync/types'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
 import { ReFileExt, MasterPasswordSalt } from '@/constants'
@@ -196,11 +135,10 @@ import { ElPrecessItem } from '@/types_common'
 import { settingOptions, changeMasterPasswordProcessData } from '@/conf'
 import { i18n, getLanguageMeta, setLocale } from '@/libs/init/i18n'
 import { CmdInvoke } from '@/libs/commands'
-import { initSync } from '@/libs/init/at_first'
 import { elOptionArrSort } from '@/utils/array'
+import { happybytes } from '@/utils/bytes'
 import { isMobileScreen, getPageWidth } from '@/utils/media_query'
 import { genFileNamingRuleDemoHtml, sha256, genMasterPasswordSha256 } from '@/utils/hash'
-import SettingCustomBackground from '@/___professional___/components/SettingCustomBackground.vue'
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -208,6 +146,11 @@ const settingStore = useSettingStore()
 
 const masterPasswordOld = ref('')
 const masterPasswordNew = ref('')
+
+const getDataSize = async () => {
+  const size = await CmdInvoke.getDirSize(appStore.data.dataPath.pathOfCurrentDir)
+  return happybytes(size, false)
+}
 
 // ---------- Change master password ----------
 const changeMasterPasswordProgressColor: ElPrecessItem[] = []
@@ -240,8 +183,6 @@ const onSave = (close: boolean) => {
 
   const sd = settingStore.data
   settingStore.setData(sd, true)
-
-  initSync()
 
   // If language changed
   const languageNew = settingStore.data.normal.language

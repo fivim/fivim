@@ -1,8 +1,15 @@
-import { Commands, WriteFileRes, UserDataFile } from './types'
-import { SyncListResItemLocalDisk } from '@/libs/sync/types'
+import { AppCoreConf } from '@/types'
 import { runInTauri } from '@/utils/utils'
+
+import { Commands, WriteFileRes, UserDataFile, LogLevel } from './types'
 import { CommandsTauri } from './command_tauri'
 import { CommandsWeb } from './command_web'
+
+export type SyncListResItemLocalDisk = {
+  file_name: string,
+  is_dir: boolean,
+  modified_time_stamp: number
+}
 
 export let CmdAdapter: Commands
 
@@ -21,6 +28,8 @@ export const CmdInvoke = {
   // core
   closeSplashscreen: () =>
     CmdAdapter.invoke('close_splashscreen', {}) as Promise<boolean>,
+  getAppCoreConf: () =>
+    CmdAdapter.invoke('get_app_core_conf', {}) as Promise<AppCoreConf>,
   getDictJson: () =>
     CmdAdapter.invoke('get_dict_json', {}) as Promise<string>,
   getLocale: () =>
@@ -33,16 +42,12 @@ export const CmdInvoke = {
   // file and dir
   copyFile: (filePath: string, targetFilePath: string) =>
     CmdAdapter.invoke('copy_file', { filePath, targetFilePath }) as Promise<boolean>,
-  deleteDir: (dirPath: string) =>
-    CmdAdapter.invoke('delete_dir', { dirPath }) as Promise<boolean>,
   deleteFile: (filePath: string) =>
     CmdAdapter.invoke('delete_file', { filePath }) as Promise<boolean>,
   existFile: (filePath: string) =>
     CmdAdapter.invoke('exist_file', { filePath }) as Promise<boolean>,
   getFileBytes: (filePath: string) =>
     CmdAdapter.invoke('get_file_bytes', { filePath }) as Promise<Uint8Array>,
-  listDirChildren: (dirPath: string) =>
-    CmdAdapter.invoke('list_dir_children', { dirPath }) as Promise<SyncListResItemLocalDisk[]>,
   readFileToBytes: (filePath: string) =>
     CmdAdapter.invoke('read_file_to_bytes', { filePath }) as Promise<Uint8Array>,
   readFileToString: (filePath: string) =>
@@ -55,6 +60,18 @@ export const CmdInvoke = {
     CmdAdapter.invoke('write_string_into_file', { filePath, fileContent }) as Promise<WriteFileRes>,
   writeBytesIntoFile: (filePath: string, fileContent: Uint8Array) =>
     CmdAdapter.invoke('write_bytes_into_file', { filePath, fileContent: Array.from(fileContent) }) as Promise<WriteFileRes>,
+
+  // dir
+  deleteDir: (dirPath: string) =>
+    CmdAdapter.invoke('delete_dir', { dirPath }) as Promise<boolean>,
+  getDirSize: (dirPath: string) =>
+    CmdAdapter.invoke('get_dir_size', { dirPath }) as Promise<number>,
+  listDirChildren: (dirPath: string) =>
+    CmdAdapter.invoke('list_dir_children', { dirPath }) as Promise<SyncListResItemLocalDisk[]>,
+
+  // log
+  log: (level: LogLevel, content: string) =>
+    CmdAdapter.invoke('log', { level, content }),
 
   // other
   notification: (title: string, body: string, icon: string) =>

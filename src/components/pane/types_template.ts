@@ -15,6 +15,7 @@ export const tmplPaneData: PaneData = {
   },
   editorCol: {
     content: '',
+    hashedSign: '',
     title: '',
     type: 'note'
   }

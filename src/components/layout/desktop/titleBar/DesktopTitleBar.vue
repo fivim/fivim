@@ -8,7 +8,6 @@
       <div class="title-bar-ext-buttons" v-if="showExtButtons">
         <SettingButton />
         <ThemeButton />
-        <SyncButton />
         <SaveButton />
         <LockButton />
       </div>
@@ -17,7 +16,6 @@
       <div class="title-bar-ext-buttons" v-if="showExtButtons">
         <SettingButton />
         <ThemeButton />
-        <SyncButton />
         <SaveButton />
         <LockButton />
       </div>
@@ -34,7 +32,6 @@ import { ref } from 'vue'
 
 import LockButton from '@/components/button/LockScreen.vue'
 import SaveButton from '@/components/button/Save.vue'
-import SyncButton from '@/components/button/Sync.vue'
 import SettingButton from '@/components/button/Setting.vue'
 import ThemeButton from '@/components/button/Theme.vue'
 

@@ -56,11 +56,14 @@
           </div>
         </div>
         <template v-if="paneDataStore.data.navigationCol.tags.length > 0">
-          <div class="disp-inline-block ml-2 mb-2" v-for="(item, index) in paneDataStore.data.navigationCol.tags"
+          <div class="disp-inline-block ml-2 mb-2 tags" v-for="(item, index) in paneDataStore.data.navigationCol.tags"
             v-bind:key="index">
             <el-popover placement="left-start" trigger="click">
               <template #reference>
-                <el-tag>{{ item.icon }}{{ item.title }}</el-tag>
+                <span class="tag-btn">
+                  <label class="icon">{{ item.icon }} </label>
+                  <span>{{ item.title }}</span>
+                </span>
               </template>
 
               <div class="enas-list cur-ptr">
@@ -157,7 +160,6 @@ import { VuemojiPicker, EmojiClickEventDetail } from 'vuemoji-picker'
 import { useI18n } from 'vue-i18n'
 
 import XPopover from '@/components/xPopover/popover.vue'
-import SyncButton from '@/components/button/Sync.vue'
 import SettingButton from '@/components/button/Setting.vue'
 import ThemeButton from '@/components/button/Theme.vue'
 
@@ -167,7 +169,6 @@ import { usePaneDataStore } from '@/pinia/modules/pane_data'
 import { saveCurrentNotebookAndCreateNotebookFile, deleteNotebook, deleteTag, readNotebookdata } from '@/libs/user_data/utils'
 import { getTimestampMilliseconds } from '@/utils/time'
 import { getHasdedSign } from '@/utils/pinia_data_related'
-import { colorIsDark } from '@/___professional___/utils/color'
 import { Note, Notebook, Tag } from './types'
 
 const { t } = useI18n()
@@ -322,6 +323,10 @@ const onListNotebook = (index: number) => {
       type: ListColListTypeNotebook,
       list: notes
     })
+
+    // TODO: save the value of the editor
+
+    paneDataStore.resetEditorColData()
   })
 }
 
@@ -344,7 +349,7 @@ const onListTag = (tag: Tag) => {
 // ---------- delete notebook / tag ----------
 const onDeleteNotebook = (detail: Notebook) => {
   ElMessageBox.confirm(
-    'Are you sure to close this notebook? 将会删除对应的笔记本数据文件', // TODO 翻译
+    t('&delete notebook comfirm tip', { name: detail.title }),
     t('Warning'),
     {
       confirmButtonText: t('OK'),
@@ -371,7 +376,7 @@ const onDeleteNotebook = (detail: Notebook) => {
 
 const onDeleteTag = (detail: Tag) => {
   ElMessageBox.confirm(
-    'Are you sure to close this tag? 将会删除所有数据中的该tag', // TODO 翻译
+    t('&delete tag comfirm tip', { name: detail.title }),
     t('Warning'),
     {
       confirmButtonText: t('OK'),
@@ -398,26 +403,17 @@ const onDeleteTag = (detail: Tag) => {
 // ========== delete notebook / tag end ==========
 
 const emojiPickerIsDark = () => {
-  const color = getComputedStyle(document.documentElement).getPropertyValue('--el-bg-color-overlay')
-  return colorIsDark(color)
+  return true
 }
 </script>
 
 <style lang="scss" scoped>
+@import './common.scss';
 @import './pane-navigation.scss';
 
 #web-nav-btns {
   padding: 0.5rem;
   background: var(--enas-foreground-primary-color) !important;
   border-bottom: 1px solid var(--enas-border-color);
-}
-
-.empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  box-sizing: border-box;
 }
 </style>

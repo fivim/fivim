@@ -4,9 +4,10 @@ import { ref } from 'vue'
 import type { AppInfo } from '@/types'
 import { tmplAppData } from '@/types_template'
 import { getTimestampMilliseconds } from '@/utils/time'
+import { jsonCopy } from '@/utils/utils'
 
 export const useAppStore = defineStore('appStore', () => {
-  const data = ref<AppInfo>(tmplAppData)
+  const data = ref<AppInfo>(jsonCopy(tmplAppData))
 
   const setData = (val: AppInfo) => {
     data.value = val

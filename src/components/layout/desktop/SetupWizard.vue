@@ -2,7 +2,7 @@
   <div class="setup-wizard">
     <div class="p-4">
       <div class="highlight text-xxl pb-4">
-        {{ AppName }} {{ t('Setup wizard') }}
+        {{ appStore.data.appName }} {{ t('Setup wizard') }}
       </div>
 
       <el-form label-width="150px" :label-position="genLabelPosition()" ref="ruleFormRef" :model="ruleForm"
@@ -81,11 +81,9 @@ import type { FormInstance, FormRules } from 'element-plus'
 
 import { ElOptionItem } from '@/types_common'
 import {
-  AppName,
   MasterPasswordSalt, MasterPasswordMinLength, MasterPasswordMaxLength,
   AvailableThemes, ReFileExt,
-  DefaultSyncIntervalSeconds,
-  DefaultLanguage, DefaultTimeFormat,
+  DefaultTimeFormat,
   DefaultFileExt, DefaultFileNameRule,
   DefaultThemeDark, DefaultThemeLight,
   DefaultListColSortBy, DefaultListColSortOrder
@@ -104,7 +102,7 @@ import { isMobileScreen, OsThemeIsDark } from '@/utils/media_query'
 import { setTheme } from '@/utils/utils'
 
 const getAvailableDefaultLocale = () => {
-  const defaultLocale = getAvailableLocale(i18n.global.availableLocales, DefaultLanguage)
+  const defaultLocale = getAvailableLocale(i18n.global.availableLocales, appStore.data.defaultLocale)
   setLocale(defaultLocale)
 
   const data = settingStore.data
@@ -316,7 +314,6 @@ const onSave = () => {
   settingData.appearance.listColSortBy = DefaultListColSortBy
   settingData.appearance.listColSortOrder = DefaultListColSortOrder
   settingData.appearance.theme = ruleForm.theme
-  settingData.sync.intervalSeconds = DefaultSyncIntervalSeconds
 
   // initCoreDirs before settingStore save config
   initCoreDirs().then(() => {

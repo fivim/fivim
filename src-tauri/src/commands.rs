@@ -4,10 +4,12 @@ use crate::conf as x_conf;
 use crate::data_file_parse as x_parser;
 use crate::i18n as x_i18n;
 use crate::menu as x_menu;
+use crate::utils::dir as x_dir;
 use crate::utils::encrypt as x_encrypt;
 use crate::utils::file as x_file;
 use crate::utils::hash as x_hash;
-use crate::utils::path as x_path;
+use crate::utils::logger as x_logger;
+use crate::utils::tauri_config;
 
 /*
 The tauri.windows in tauri.conf.json should have:
@@ -38,6 +40,11 @@ pub async fn close_splashscreen(window: tauri::Window) {
 #[tauri::command]
 pub async fn system_tray_update_text(app_handle: tauri::AppHandle) {
     x_menu::system_tray_update_text(app_handle).await;
+}
+
+#[tauri::command]
+pub fn get_app_core_conf() -> tauri_config::AppCoreConf {
+    return tauri_config::get_app_core_conf();
 }
 
 #[tauri::command]
@@ -93,11 +100,6 @@ pub fn set_locale(locale: String) {
 }
 
 #[tauri::command]
-pub fn list_dir_children(dir_path: String) -> Vec<x_path::DirChildren> {
-    return x_path::get_children_list_of_dir(dir_path.as_str());
-}
-
-#[tauri::command]
 pub fn get_file_bytes(file_path: String) -> Vec<u8> {
     match x_file::read_file_to_bytes(file_path.as_str()) {
         Ok(c) => {
@@ -126,7 +128,17 @@ pub fn delete_file(file_path: String) -> bool {
 
 #[tauri::command]
 pub fn delete_dir(dir_path: String) -> bool {
-    return x_file::delete_dir(&dir_path);
+    return x_dir::delete_dir(&dir_path);
+}
+
+#[tauri::command]
+pub fn get_dir_size(dir_path: String) -> u64 {
+    return x_dir::get_dir_size(&dir_path);
+}
+
+#[tauri::command]
+pub fn list_dir_children(dir_path: String) -> Vec<x_dir::DirChildren> {
+    return x_dir::get_children_list_of_dir(dir_path.as_str());
 }
 
 #[tauri::command]
@@ -161,7 +173,11 @@ pub fn decrypt_string(pwd: String, content: Vec<u8>) -> String {
 }
 
 #[tauri::command]
-pub fn read_user_data_file(pwd: String, file_path: String, parse_as_string: bool) -> x_parser::UserFileData {
+pub fn read_user_data_file(
+    pwd: String,
+    file_path: String,
+    parse_as_string: bool,
+) -> x_parser::UserFileData {
     return x_parser::read_file(pwd.as_str(), file_path.as_str(), parse_as_string);
 }
 
@@ -169,21 +185,34 @@ pub fn read_user_data_file(pwd: String, file_path: String, parse_as_string: bool
 pub fn write_user_data_file(
     pwd: String,
     file_path: String,
-    file_name: String,    
+    file_name: String,
     file_content: Vec<u8>,
     source_of_large_file_path: String,
 ) -> bool {
     match x_parser::write_file(
         pwd.as_str(),
         file_path.as_str(),
-        file_name.as_str(),        
+        file_name.as_str(),
         file_content,
         source_of_large_file_path.as_str(),
     ) {
         Ok(_) => return true,
         Err(e) => {
-            print!(">>> write_user_data_file error: {}\n", e);
+            x_logger::log_error(&format!(">>> write_user_data_file error: {}\n", e));
             return false;
         }
     };
+}
+
+#[tauri::command]
+pub fn log(level: String, content: String) {
+    let level_string = level.as_str();
+    let content_str = content.as_str();
+
+    match level_string {
+        "ERROR" => x_logger::log_error(content_str),
+        "INFO" => x_logger::log_info(content_str),
+        "DEBUG" => x_logger::log_debug(content_str),
+        &_ => todo!()
+    }
 }

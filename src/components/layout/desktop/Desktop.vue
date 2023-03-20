@@ -2,7 +2,7 @@
   <!-- desktop title bar -->
   <DesktopTitleBar :showExtButtons="true" v-if="isDesktopMode() && !isMobileMode()">
     <template #titleName>
-      {{ appStore.data.currentFile.name ? appStore.data.currentFile.name + " - " + AppName : AppName }}
+      {{ appStore.data.currentFile.name ? appStore.data.currentFile.name + " - " + appStore.data.appName : appStore.data.appName }}
     </template>
   </DesktopTitleBar>
 
@@ -59,10 +59,8 @@ import { PaneIds, PaneSide, PaneResizeType } from '@/components/pane/types'
 import PaneNavigation from '@/components/pane/PaneNavigation.vue'
 import PaneList from '@/components/pane/PaneList.vue'
 import PaneEditor from '@/components/pane/PaneEditor.vue'
-// import EditorFullScreen from '@/___professional___/components/pane/EditorMilkdownFullScreen.vue'
 
 import { AppMode } from '@/types'
-import { AppName } from '@/constants'
 import { isTabletScreen } from '@/utils/media_query'
 import { classNames } from '@/utils/string'
 import { useAppStore } from '@/pinia/modules/app'

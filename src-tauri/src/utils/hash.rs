@@ -2,6 +2,8 @@ use md5;
 use sha2::{Digest, Sha256};
 use std::{fs::File, io};
 
+use crate::utils::logger as x_logger;
+
 // Use sha2 crate to save memory, read file as stream, not read the entire file
 pub fn sha256_by_file_path(file_path: &str) -> String {
     match File::open(file_path) {
@@ -13,7 +15,10 @@ pub fn sha256_by_file_path(file_path: &str) -> String {
             return fh;
         }
         Err(e) => {
-            print!(">>> sha256_by_file_path open file({}) error: {}\n", &file_path, e);
+            x_logger::log_error(&format!(
+                ">>> sha256_by_file_path open file({}) error: {}\n",
+                &file_path, e
+            ));
             return "".to_string();
         }
     }
