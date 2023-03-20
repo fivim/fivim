@@ -9,27 +9,68 @@
 
 ## Technology stack
 
-- Backend: 
-  - language and framework: rust + [tauri](https://tauri.app)
-  - responsible for:
-    - read / write file
-    - decrypt / decrypt
-  - Encryption Algorithm: [chacha20poly1305](https://crates.io/crates/chacha20poly1305)
+### Backend
 
-- Frontend: 
-  - language and framework: typescript + [vue](https://vuejs.org) + vite
-  - responsible for:    
-    - visual function
-    - user data synchronization
-    - note editor: [editorjs](https://editorjs.io/)
-  - User interface
-    - Framework: [Element Plus](https://element-plus.org)
-    - Icon: 
-      - Mainly use `@element-plus/icons-vue` 
-      - Also use some icons of [@ant-design/icons-vue](https://ant.design/components/icon#list-of-icons)
+- language and framework: rust + [tauri](https://tauri.app)
+- responsible for:
+  - read / write file
+  - decrypt / decrypt
+- Encryption Algorithm: [chacha20poly1305](https://crates.io/crates/chacha20poly1305)
 
-- VCS: git:
-  - EOL config: `git config --global core.autocrlf false`
+### Frontend
+
+- language and framework: typescript + [vue](https://vuejs.org) + vite
+- responsible for:    
+  - visual function
+  - user data synchronization
+  - note editor: [editorjs](https://editorjs.io/)
+- User interface
+  - Framework: [Element Plus](https://element-plus.org)
+  - Icon: 
+    - Mainly use `@element-plus/icons-vue` 
+    - Also use some icons of [@ant-design/icons-vue](https://ant.design/components/icon#list-of-icons)
+
+### git
+
+EOL config: 
+
+[Refer](https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings#about-line-endings)
+
+set a `.gitattributes`  file,
+
+```sh
+git config --global core.autocrlf false
+git rm --cached -r .
+git reset --hard
+```
+
+Save your current files in Git, so that none of your work is lost.
+
+```sh
+git add . -u
+git commit -m "Saving files before refreshing line endings"
+```
+
+Add all your changed files back and normalize the line endings.
+
+```sh
+git add --renormalize .
+```
+
+Show the rewritten, normalized files.
+
+```sh
+git status
+```
+
+Commit the changes to your repository.
+
+```sh
+git commit -m "Normalize all the line endings"
+```
+
+check eol: `git ls-files --eol`
+
 
 ## File struct and inner data struct
 - [file format](./file_format.md)
