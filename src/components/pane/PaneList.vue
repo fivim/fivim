@@ -53,9 +53,6 @@
                   <el-icon class="item-icon" v-if="item.type === DocTypeNote">
                     <Tickets />
                   </el-icon>
-                  <el-icon class="item-icon" v-if="item.type === DocTypeSheet">
-                    <Grid />
-                  </el-icon>
                 </div>
                 <div class="main">
                   <div class="title">{{ item.title }}</div>

@@ -47,6 +47,15 @@
                 :value="item.value" />
             </el-select>
           </el-form-item>
+
+          <!-- list column -->
+          <el-form-item :label="t('Show create time')">
+            <el-switch v-model="settingStore.data.appearance.listColShowCreateTime" />
+          </el-form-item>
+          <el-form-item :label="t('Show update time')">
+            <el-switch v-model="settingStore.data.appearance.listColShowUpdateTime" />
+          </el-form-item>
+
           <SettingCustomBackground />
         </el-form>
       </el-tab-pane>

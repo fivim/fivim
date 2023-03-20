@@ -26,26 +26,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="group-title">
-                {{ t('View') }}
-            </div>
-            <div class="list-item">
-                <div class="flex">
-                    <div class="flex flex-grow">{{ t('Show create time') }}</div>
-                    <div class="flex flex-grow justify-content-right">
-                        <el-switch v-model="settingStore.data.appearance.listColShowCreateTime" />
-                    </div>
-                </div>
-            </div>
-            <div class="list-item">
-                <div class="flex">
-                    <div class="flex flex-grow">{{ t('Show update time') }}</div>
-                    <div class="flex flex-grow justify-content-right">
-                        <el-switch v-model="settingStore.data.appearance.listColShowUpdateTime" />
-                    </div>
-                </div>
-            </div>
         </div>
     </XPopover>
 </template>
