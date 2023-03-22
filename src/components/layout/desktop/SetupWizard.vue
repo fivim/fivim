@@ -316,7 +316,6 @@ const onSave = () => {
   settingData.appearance.listColSortBy = DefaultListColSortBy
   settingData.appearance.listColSortOrder = DefaultListColSortOrder
   settingData.appearance.theme = ruleForm.theme
-  settingData.sync.intervalSeconds = DefaultSyncIntervalSeconds
 
   // initCoreDirs before settingStore save config
   initCoreDirs().then(() => {
