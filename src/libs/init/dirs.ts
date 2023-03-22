@@ -38,6 +38,7 @@ export const initWorkDirs = async () => {
 
   const separator = await CmdAdapter.isWindows() ? '\\' : '/'
   const settings = settingStore.data
+  const masterPassword = settingStore.data.encryption.masterPassword
 
   // workDir
   let workDir = settings.normal.workDir
@@ -45,10 +46,16 @@ export const initWorkDirs = async () => {
     workDir = workDir + separator
   }
 
-  const pathOfCurrentDir = `${workDir}current${separator}`
-  const pathOfSyncDir = `${workDir}sync${separator}`
-  const pathOfSyncCachedDir = `${pathOfSyncDir}cache${separator}`
-  const pathOfSyncDownloadDir = `${pathOfSyncDir}download${separator}`
+  // Encrypt dir name, use flat directory structure
+  const currentDir = await CmdInvoke.stringCrc32(masterPassword + '#current')
+  const syncDir = await CmdInvoke.stringCrc32(masterPassword + '#sync')
+  const syncCacheDir = await CmdInvoke.stringCrc32(masterPassword + '#sync/cache')
+  const syncDownloadDir = await CmdInvoke.stringCrc32(masterPassword + '#sync/download')
+
+  const pathOfCurrentDir = `${workDir}${currentDir}${separator}`
+  const pathOfSyncDir = `${workDir}${syncDir}${separator}`
+  const pathOfSyncCachedDir = `${workDir}${syncCacheDir}${separator}`
+  const pathOfSyncDownloadDir = `${workDir}${syncDownloadDir}${separator}`
 
   const aaa = appStore.data
   aaa.dataPath.pathOfCurrentDir = pathOfCurrentDir

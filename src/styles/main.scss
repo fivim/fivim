@@ -3,6 +3,9 @@
   --enas-z-index-resizer-overlay: 11;
   --enas-z-index-pane-resizer: 12;
 
+  --enas-scrollbar-width: 17px;
+  --enas-scrollbar-height: 18px;
+
   --enas-base-font-size: 0.813rem;
   --enas-simplified-chinese-font: 'Microsoft Yahei', '微软雅黑体';
   --enas-monospace-font: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, 'Ubuntu Mono', 'Courier New', monospace;
@@ -160,8 +163,8 @@ html {
 
 // scrollbar
 ::-webkit-scrollbar {
-  width: 17px;
-  height: 18px;
+  width: var(--enas-scrollbar-width);
+  height: var(--enas-scrollbar-height);
   border-left: none;
 }
 

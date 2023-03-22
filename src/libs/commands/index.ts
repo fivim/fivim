@@ -1,7 +1,7 @@
 import { AppCoreConf } from '@/types'
 import { runInTauri } from '@/utils/utils'
 
-import { Commands, WriteFileRes, UserDataFile, LogLevel } from './types'
+import { Commands, WriteFileRes, UserDataFile } from './types'
 import { CommandsTauri } from './command_tauri'
 import { CommandsWeb } from './command_web'
 
@@ -70,8 +70,18 @@ export const CmdInvoke = {
     CmdAdapter.invoke('list_dir_children', { dirPath }) as Promise<SyncListResItemLocalDisk[]>,
 
   // log
-  log: (level: LogLevel, content: string) =>
-    CmdAdapter.invoke('log', { level, content }),
+  logInfo: (content: string) => {
+    console.log('>>> log info::', content)
+    CmdAdapter.invoke('log', { level: 'INFO', content })
+  },
+  logError: (content: string) => {
+    console.log('>>> log error::', content)
+    CmdAdapter.invoke('log', { level: 'ERROR', content })
+  },
+  logDebug: (content: string) => {
+    console.log('>>> log debug::', content)
+    CmdAdapter.invoke('log', { level: 'DEBUG', content })
+  },
 
   // other
   notification: (title: string, body: string, icon: string) =>
@@ -86,6 +96,8 @@ export const CmdInvoke = {
   //   CmdAdapter.invoke('encrypt_file', { pwd, sourcePath, distPath }) as Promise<boolean>,
   encryptString: (pwd: string, content: string) =>
     CmdAdapter.invoke('encrypt_string', { pwd, content }) as Promise<Uint8Array>,
+  stringCrc32: (str: string) =>
+    CmdAdapter.invoke('string_crc32', { string: str }) as Promise<number>,
 
   // user data file
   readUserDataFile: (pwd: string, filePath: string, parseAsString: boolean) =>

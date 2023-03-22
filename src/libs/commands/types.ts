@@ -20,10 +20,9 @@ export type WriteFileRes = {
 
 export type UserDataFile = {
     crc32: number,
+    crc32_check: number,
     file_modify_timestamp: number,
     file_name: string,
     file_data: Uint8Array,
     file_data_str: string,
 }
-
-export type LogLevel = 'ERROR' | 'INFO' | 'DEBUG'

@@ -213,6 +213,11 @@ pub fn log(level: String, content: String) {
         "ERROR" => x_logger::log_error(content_str),
         "INFO" => x_logger::log_info(content_str),
         "DEBUG" => x_logger::log_debug(content_str),
-        &_ => todo!()
+        &_ => todo!(),
     }
+}
+
+#[tauri::command]
+pub fn string_crc32(string: String) -> u32 {
+    return x_hash::crc32_by_bytes(string.as_bytes());
 }

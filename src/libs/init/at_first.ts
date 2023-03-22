@@ -1,6 +1,7 @@
 import { AppMode } from '@/types'
 import { useAppStore } from '@/pinia/modules/app'
-import { CmdInvoke } from '@/libs/commands'
+import { useSettingStore } from '@/pinia/modules/settings'
+import { CmdInvoke, CmdAdapter } from '@/libs/commands'
 import { i18n } from '@/libs/init/i18n'
 import { initWithConfFile, InitError } from '@/libs/init/conf_file'
 import { initCoreDirs, initWorkDirs } from '@/libs/init/dirs'
@@ -30,30 +31,43 @@ const initAppData = () => {
 }
 
 // Initialize other after configuration file initialization.
-export const initAfterConfigFile = async () => {
-  // CmdInvoke.closeSplashscreen()// close splashscreen
+export const initSuccessCallback = async () => {
+  return initWorkDirs().then(() => {
+    // CmdInvoke.closeSplashscreen()// close splashscreen
 
-  await initWorkDirs()
-  initAppData()
-  initStyle()
-  initEntryFile()
+    initAppData()
+    initStyle()
+    return initEntryFile().then(() => {
+      return true
+    }).catch((err) => {
+      const t = i18n.global.t
+      const name = t('configuration')
+      CmdAdapter.notification(t('Error initializing {name} file', { name }), t(err), '')
+      return false
+    })
+  })
 }
 
-const failedCallback = (err: InitError) => {
+const initFailedCallback = (err: InitError) => {
   const t = i18n.global.t
   switch (err) {
     case InitError.noConfFile:
-      console.log('initialization error: cannot find the configuration file.')
+      CmdInvoke.logError('initialization error: cannot find the configuration file.')
       CmdInvoke.notification(t('initialization error'), t('&cannot find conf file'), '')
       break
     case InitError.noSyncLockFileName:
-      console.log('initialization error: &cannot find sync lock file')
+      CmdInvoke.logError('initialization error: &cannot find sync lock file')
       CmdInvoke.notification(t('initialization error'), t('&cannot find sync lock file'), '')
       break
   }
 }
 
-export const initAtFirst = async (pwdSha256: string) => {
+export const initAtFirst = async (pwdSha256: string, hasConfigFile: boolean) => {
   await initCoreDirs()
-  return await initWithConfFile(pwdSha256, initAfterConfigFile, failedCallback)
+
+  if (hasConfigFile) {
+    return await initWithConfFile(pwdSha256, initSuccessCallback, initFailedCallback)
+  }
+
+  return initSuccessCallback()
 }

@@ -154,6 +154,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "block-padding"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0a90ec2df9600c28a01c56c4784c9207a96d2451833aeceb8cc97e4c9548bb78"
+dependencies = [
+ "generic-array",
+]
+
+[[package]]
 name = "brotli"
 version = "3.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -239,6 +248,15 @@ checksum = "aa0e3586af56b3bfa51fca452bd56e8dbbbd5d8d81cbf0b7e4e35b695b537eb8"
 dependencies = [
  "serde",
  "toml",
+]
+
+[[package]]
+name = "cbc"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "26b52a9543ae338f279b96b0b9fed9c8093744685043739079ce85cd58f289a6"
+dependencies = [
+ "cipher",
 ]
 
 [[package]]
@@ -732,7 +750,7 @@ dependencies = [
 
 [[package]]
 name = "encryption_assistant"
-version = "0.2.0"
+version = "0.4.0"
 dependencies = [
  "base64 0.21.0",
  "chrono",
@@ -747,6 +765,7 @@ dependencies = [
  "simplelog",
  "tauri",
  "tauri-build",
+ "time 0.3.20",
  "window-shadows",
  "xencrypt",
 ]
@@ -1363,6 +1382,7 @@ version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a0c10553d664a4d0bcff9f4215d0aac67a639cc68ef660840afe309b807bc9f5"
 dependencies = [
+ "block-padding",
  "generic-array",
 ]
 
@@ -1585,7 +1605,7 @@ dependencies = [
  "dirs-next",
  "objc-foundation",
  "objc_id",
- "time 0.3.17",
+ "time 0.3.20",
 ]
 
 [[package]]
@@ -2163,7 +2183,7 @@ dependencies = [
  "indexmap",
  "line-wrap",
  "serde",
- "time 0.3.17",
+ "time 0.3.20",
  "xml-rs",
 ]
 
@@ -2728,7 +2748,7 @@ checksum = "acee08041c5de3d5048c8b3f6f13fafb3026b24ba43c6a695a0c76179b844369"
 dependencies = [
  "log",
  "termcolor",
- "time 0.3.17",
+ "time 0.3.20",
 ]
 
 [[package]]
@@ -3040,7 +3060,7 @@ dependencies = [
  "sha2",
  "tauri-utils",
  "thiserror",
- "time 0.3.17",
+ "time 0.3.20",
  "uuid 1.2.2",
  "walkdir",
 ]
@@ -3220,9 +3240,9 @@ dependencies = [
 
 [[package]]
 name = "time"
-version = "0.3.17"
+version = "0.3.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a561bf4617eebd33bca6434b988f39ed798e527f51a1e797d0ee4f61c0a38376"
+checksum = "cd0cbfecb4d19b5ea75bb31ad904eb5b9fa13f21079c3b92017ebdf4999a5890"
 dependencies = [
  "itoa 1.0.4",
  "libc",
@@ -3240,9 +3260,9 @@ checksum = "2e153e1f1acaef8acc537e68b44906d2db6436e2b35ac2c6b42640fff91f00fd"
 
 [[package]]
 name = "time-macros"
-version = "0.2.6"
+version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d967f99f534ca7e495c575c62638eebc2898a8c84c119b89e250477bc4ba16b2"
+checksum = "fd80a657e71da814b8e5d60d3374fc6d35045062245d80224748ae522dd76f36"
 dependencies = [
  "time-core",
 ]
@@ -4052,9 +4072,11 @@ dependencies = [
  "aes",
  "anyhow",
  "base64 0.21.0",
+ "cbc",
  "ccm",
  "chacha20poly1305",
  "rand 0.8.5",
+ "rand_core 0.6.4",
  "serde",
  "serde_json",
  "xsjcl",

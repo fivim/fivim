@@ -45,6 +45,7 @@ import { MasterPasswordSalt } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
 import { initAtFirst } from '@/libs/init/at_first'
+import { CmdInvoke } from '@/libs/commands'
 import { genMasterPasswordSha256 } from '@/utils/hash'
 
 const appStore = useAppStore()
@@ -55,7 +56,7 @@ const password = ref('')
 const masterPasswordWrong = ref(false)
 const checkPassword = () => {
   const pwdSha256 = genMasterPasswordSha256(password.value, MasterPasswordSalt)
-  initAtFirst(pwdSha256).then(() => {
+  initAtFirst(pwdSha256, true).then(() => {
     if (pwdSha256 === settingStore.data.encryption.masterPassword) {
       const data = appStore.data
       data.lockscreen = false
@@ -63,6 +64,8 @@ const checkPassword = () => {
 
       masterPasswordWrong.value = false
       password.value = ''
+
+      CmdInvoke.logInfo('Unlock succeeded.')
     } else {
       masterPasswordWrong.value = true
     }

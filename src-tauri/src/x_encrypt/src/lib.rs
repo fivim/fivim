@@ -1,2 +1,3 @@
+pub mod aes_cbc;
 pub mod aes_ccm;
-pub mod chacha20poly1305;
+pub mod xchacha20poly1305;

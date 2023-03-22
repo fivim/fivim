@@ -10,7 +10,7 @@
       <el-tab-pane :label="t('General')">
         <el-form :model="settingStore.data" label-width="150px" :label-position="genLabelPosition()">
           <el-form-item :label="t('File')">
-            {{ t('Total size of all files ', { size: getDataSize() }) }}
+            {{ t('&Total size of all files', { size: allFileSize }) }}
           </el-form-item>
           <!--
           <el-form-item :label="t('Last sync time')">
@@ -155,10 +155,11 @@ const settingStore = useSettingStore()
 
 const masterPasswordOld = ref('')
 const masterPasswordNew = ref('')
+const allFileSize = ref('0')
 
-const getDataSize = async () => {
+const getAllFileSize = async () => {
   const size = await CmdInvoke.getDirSize(appStore.data.dataPath.pathOfCurrentDir)
-  return happybytes(size, false)
+  allFileSize.value = happybytes(size, false)
 }
 
 // ---------- Change master password ----------
@@ -183,6 +184,8 @@ const languageOld = ref('')
 const onOpen = () => {
   dialogVisible.value = true
   languageOld.value = settingStore.data.normal.language
+
+  getAllFileSize()
 }
 
 const onSave = (close: boolean) => {

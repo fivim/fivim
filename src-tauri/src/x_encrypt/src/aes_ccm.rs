@@ -13,7 +13,7 @@ use xsjcl::{decrypt_json, encrypt, SjclParams};
 
 // Refer: https://users.rust-lang.org/t/is-there-any-pure-rust-code-to-decrypt-an-aes-ccm-data/90138/2
 // Note: Key is not the password.
-pub fn decryptDirect(input: &str, key: &str) -> Vec<u8> {
+pub fn decrypt_direct(input: &str, key: &str) -> Vec<u8> {
     #[derive(Deserialize)]
     struct Input {
         iv: String,

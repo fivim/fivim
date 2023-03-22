@@ -44,7 +44,7 @@ import { useI18n } from 'vue-i18n'
 import { AvailableThemes } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
-import XPopover from '@/components/xPopover/popover.vue'
+import XPopover from '@/components/UI_component/x_popover.vue'
 import { saveConfToFile } from '@/libs/init/conf_file'
 import { setTheme } from '@/utils/utils'
 

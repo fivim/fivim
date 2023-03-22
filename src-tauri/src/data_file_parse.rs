@@ -10,6 +10,7 @@ use crate::utils::logger as x_logger;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserFileData {
     crc32: i32,
+    crc32_check: u32,
     file_modify_timestamp: i64,
     file_name: String,
     file_data: Vec<u8>,
@@ -20,6 +21,7 @@ impl UserFileData {
     pub fn new() -> Self {
         return UserFileData {
             crc32: 0,
+            crc32_check: 0,
             file_modify_timestamp: 0,
             file_name: "".to_owned(),
             file_data: [].to_vec(),
@@ -66,6 +68,7 @@ pub fn deserialize(bytes: Vec<u8>) -> UserFileData {
     res.file_name = String::from_utf8(item_file_name.to_vec()).unwrap();
     res.file_data = item_file_data.to_vec();
     res.crc32 = i32::from_le_bytes(item_crc32);
+    res.crc32_check = x_hash::crc32_by_bytes(x_hash::sha256_by_bytes(&item_file_data).as_bytes());
     res.file_modify_timestamp = i64::from_le_bytes(file_modify_timestamp);
 
     return res;

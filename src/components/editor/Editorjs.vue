@@ -6,6 +6,7 @@
 import { ref, onMounted } from 'vue'
 import EditorJS, { OutputData } from '@editorjs/editorjs'
 
+import { CmdInvoke } from '@/libs/commands'
 import { mergeConfig } from '@/libs/editorjs/conf'
 import { Props } from '@/libs/editorjs/types'
 
@@ -32,7 +33,7 @@ let saveTimer: number
 
 const init = (jsonStr: string) => {
   if (!destroy()) {
-    console.log('editorDestroy error')
+    CmdInvoke.logError('editorDestroy error')
   }
 
   const conf = mergeConfig({
@@ -46,11 +47,11 @@ const init = (jsonStr: string) => {
 
     // onReady callback
     onReady: () => {
-      console.log('Editor.js is ready!')
+      //
     },
     // onChange callback
     onChange: (_api, event) => {
-      console.log('Now I know that Editor\'s content changed!', event)
+      //
       save()
     }
   })
@@ -64,7 +65,7 @@ const save = () => {
         const json = JSON.stringify(outputObj)
         emits('onUpdate', json)
       }).catch((error) => {
-        console.log('editorSave failed: ', error)
+        CmdInvoke.logError('editorSave failed: ' + error)
       })
     } catch (error) {
 
@@ -92,7 +93,7 @@ const setContent = (jsonStr: string) => {
       save()
       init(jsonStr)
     } catch (error) {
-      console.log('editorSetContent failed: ', error)
+      CmdInvoke.logError('editorSetContent failed: ' + error)
     }
   }
 }
@@ -112,62 +113,30 @@ defineExpose({ setContent })
     max-width: 100%;
   }
 
-  .ce-toolbar__actions {
-    background-color: var(--enas-border-color);
-    right: auto !important;
-  }
-
-  // ---------- change table border ----------
   .tc-table,
   .tc-add-column {
     --color-border: var(--enas-border-color);
   }
 
-  .tc-table {
-    border-left: 1px solid var(--color-border);
+  .ce-toolbar__plus,
+  .ce-toolbar__settings-btn {
+    background-color: var(--enas-border-color);
   }
 
-  // ========== change table border end ==========
-
-  // remove padding of marker
-  .cdx-marker {
-    padding: 0;
-  }
-}
-
-// ---------- change action button on left side ----------
-// Both desktop and mobile.
-.codex-editor__redactor {
-  margin-right: 0 !important; // 50px
-  margin-left: 50px !important;
-}
-
-// Only for mobile.
-@media (min-width: 651px) {
-  .codex-editor--narrow {
-    .ce-toolbar__actions {
-      right: auto !important; // -5px
-      left: -10px !important;
+  @media (min-width: 651px) {
+    &.codex-editor--narrow .codex-editor__redactor {
+      margin-right: 0 !important;
     }
 
-    .ce-toolbox {
-      left: 0 !important; // auto
-      right: auto !important; // 0
+    &.codex-editor--narrow .ce-block--focused {
+      margin-right: 0 !important;
+      padding-right: 0 !important;
     }
 
-    .ce-toolbox .ce-popover {
-      right: auto !important; // 0
-      left: 0 !important;
-    }
-
-    .ce-block--focused {
-      margin-right: 0 !important; // -50px;
-      padding-right: 0 !important; // 50px;
-      padding-left: 50px;
-      margin-left: -50px;
+    .ce-settings {
+      right: 200px !important;
+      left: auto;
     }
   }
 }
-
-// ========== change action button on left side ==========
 </style>

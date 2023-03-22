@@ -25,7 +25,13 @@ export const initEntryFile = async () => {
   const entryFileName = encrytpSetting.entryFileName
   const path = dir + entryFileName
 
-  CmdInvoke.readUserDataFile(settings.encryption.masterPassword, path, true).then((fileData: UserDataFile) => {
+  return CmdInvoke.readUserDataFile(settings.encryption.masterPassword, path, true).then((fileData: UserDataFile) => {
+    if (fileData.crc32 !== fileData.crc32_check) {
+      const msg = 'File verification failed'
+      CmdInvoke.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
+      return Promise.reject(new Error(msg))
+    }
+
     const jsonStr = fileData.file_data_str
     if (jsonStr.length === 0) {
       const t = i18n.global.t

@@ -19,6 +19,7 @@ mod menu;
 mod utils;
 
 fn main() {
+    // xencrypt::aes_cbc::test();
     utils::dir::set_app_dir();
 
     // init logger
@@ -59,6 +60,7 @@ fn main() {
             commands::decrypt_string,
             // commands::encrypt_file,
             commands::encrypt_string,
+            commands::string_crc32,
             // user data file
             commands::read_user_data_file,
             commands::write_user_data_file,

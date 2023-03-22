@@ -24,7 +24,7 @@ import { useI18n } from 'vue-i18n'
 import { Tag } from '@/components/pane/types'
 import { useAppStore } from '@/pinia/modules/app'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
-import XPopover from '@/components/xPopover/popover.vue'
+import XPopover from '@/components/UI_component/x_popover.vue'
 
 const { t } = useI18n()
 const appStore = useAppStore()

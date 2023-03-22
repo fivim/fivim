@@ -83,6 +83,7 @@ import { ElOptionItem } from '@/types_common'
 import {
   MasterPasswordSalt, MasterPasswordMinLength, MasterPasswordMaxLength,
   AvailableThemes, ReFileExt,
+  DefaultSyncIntervalSeconds,
   DefaultTimeFormat,
   DefaultFileExt, DefaultFileNameRule,
   DefaultThemeDark, DefaultThemeLight,
@@ -91,6 +92,7 @@ import {
 import { settingOptions } from '@/conf'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
+import { CmdInvoke } from '@/libs/commands'
 import { initAtFirst } from '@/libs/init/at_first'
 import { i18n, getLanguageMeta, setLocale } from '@/libs/init/i18n'
 import { initCoreDirs } from '@/libs/init/dirs'
@@ -314,15 +316,18 @@ const onSave = () => {
   settingData.appearance.listColSortBy = DefaultListColSortBy
   settingData.appearance.listColSortOrder = DefaultListColSortOrder
   settingData.appearance.theme = ruleForm.theme
+  settingData.sync.intervalSeconds = DefaultSyncIntervalSeconds
 
   // initCoreDirs before settingStore save config
   initCoreDirs().then(() => {
     settingStore.setData(settingData, true).then(() => {
-      saveDefaultEntryFile()
-      // TODO save sync lock file
-
       const pwdSha256 = genMasterPasswordSha256(settingData.encryption.masterPassword, MasterPasswordSalt)
-      initAtFirst(pwdSha256)
+      initAtFirst(pwdSha256, false).then((initRes) => {
+        saveDefaultEntryFile()
+        // TODO save sync lock file
+
+        CmdInvoke.logInfo('SetupWizard finished.')
+      })
     })
   })
 }

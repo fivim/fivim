@@ -35,7 +35,7 @@ import { Sort } from '@element-plus/icons-vue'
 import { SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
-import XPopover from '@/components/xPopover/popover.vue'
+import XPopover from '@/components/UI_component/x_popover.vue'
 import { useSettingStore } from '@/pinia/modules/settings'
 
 const { t } = useI18n()

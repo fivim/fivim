@@ -1,7 +1,3 @@
-declare module '@editorjs/attaches' {
-    export type AttachesTool = unknown
-}
-
 declare module '@editorjs/checklist' {
     export type ChecklistTool = unknown
 }
@@ -20,10 +16,6 @@ declare module '@editorjs/embed' {
 
 declare module '@editorjs/header' {
     export type HeaderTool = unknown
-}
-
-declare module '@editorjs/image' {
-    export type ImageTool = unknown
 }
 
 declare module '@editorjs/inline-code' {
@@ -56,10 +48,6 @@ declare module '@editorjs/quote' {
 
 declare module '@editorjs/raw' {
     export type RawTool = unknown
-}
-
-declare module '@editorjs/simple-image' {
-    export type SimpleImageTool = unknown
 }
 
 declare module '@editorjs/table' {

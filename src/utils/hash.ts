@@ -158,7 +158,7 @@ export const genFileNamingRuleDemoHtml = (t: CallableFunction, dateTimeFormat: s
     <p><span class='font-bold disp-inline-block'>${t('Timestamp')}: </span> ${genTimeHashedSign(TimeHashedSignType.timestamp, dateTimeFormat, fileExt)}</p>
     <p><span class='font-bold disp-inline-block'>${t('Timestamp 36')}: </span> ${genTimeHashedSign(TimeHashedSignType.timestamp36, dateTimeFormat, fileExt)}</p>
     <p><span class='font-bold disp-inline-block'>${t('Timestamp 62')}: </span> ${genTimeHashedSign(TimeHashedSignType.timestamp62, dateTimeFormat, fileExt)}</p>
-    <p><span class='font-bold disp-inline-block'>UUID v4 : </span> ${genTimeHashedSign(TimeHashedSignType.uuidV4, dateTimeFormat, fileExt)}</p>
+    <p><span class='font-bold disp-inline-block'>UUID v4: </span> ${genTimeHashedSign(TimeHashedSignType.uuidV4, dateTimeFormat, fileExt)}</p>
 
     <p><span class='font-bold disp-inline-block'>${t('Formatted time SHA256')}: </span> ${genTimeHashedSign(TimeHashedSignType.formattedTimeSha256, dateTimeFormat, fileExt)}</p>
     <p><span class='font-bold disp-inline-block'>UUID v4 SHA256: </span> ${genTimeHashedSign(TimeHashedSignType.uuidV4Sha256, dateTimeFormat, fileExt)}</p>

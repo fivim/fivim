@@ -86,7 +86,7 @@
       <el-input v-model="tempNotebookTitle" />
 
       <div class="py-2">
-        <XPopover refId="themeBtnPop" placement="bottom-start" trigger="click" :propTitle="t('Icon')" :widthAuto="true">
+        <XPopover refId="notebookIconBtnPop" placement="bottom-start" trigger="click" :propTitle="t('Icon')" :widthAuto="true">
           <template #reference>
             <el-button>{{ tempNotebookIcon ? `${tempNotebookIcon} ` : '' }}{{ t('Icon') }}</el-button>
           </template>
@@ -95,7 +95,7 @@
           <VuemojiPicker @emojiClick="onNotebookEmojiClick" :isDark="emojiPickerIsDark()" />
         </XPopover>
 
-        <XPopover refId="themeBtnPop" placement="bottom-start" trigger="click" :propTitle="t('Icon')" :widthAuto="true">
+        <XPopover refId="notebookIconBtnPop" placement="bottom-start" trigger="click" :propTitle="t('Icon')" :widthAuto="true">
           <template #reference>
             <el-button>{{ t('Tag') }}</el-button>
           </template>
@@ -129,7 +129,7 @@
       <el-input v-model="tempTagText" />
 
       <div class="py-2">
-        <XPopover refId="themeBtnPop" placement="bottom-start" trigger="click" :propTitle="t('Icon')" :widthAuto="true">
+        <XPopover refId="tagIconBtnPop" placement="bottom-start" trigger="click" :propTitle="t('Icon')" :widthAuto="true">
           <template #reference>
             <el-button>{{ tempTagIcon ? `${tempTagIcon} ` : '' }}{{ t('Icon') }}</el-button>
           </template>
@@ -159,13 +159,15 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue'
 import { VuemojiPicker, EmojiClickEventDetail } from 'vuemoji-picker'
 import { useI18n } from 'vue-i18n'
 
-import XPopover from '@/components/xPopover/popover.vue'
+import XPopover from '@/components/UI_component/x_popover.vue'
+import SyncButton from '@/components/button/Sync.vue'
 import SettingButton from '@/components/button/Setting.vue'
 import ThemeButton from '@/components/button/Theme.vue'
 
 import { ListColListTypeNotebook, ListColListTypeTag, StrSignOk } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
+import { CmdAdapter } from '@/libs/commands'
 import { saveCurrentNotebookAndCreateNotebookFile, deleteNotebook, deleteTag, readNotebookdata } from '@/libs/user_data/utils'
 import { getTimestampMilliseconds } from '@/utils/time'
 import { getHasdedSign } from '@/utils/pinia_data_related'
@@ -323,10 +325,13 @@ const onListNotebook = (index: number) => {
       type: ListColListTypeNotebook,
       list: notes
     })
-
     // TODO: save the value of the editor
 
     paneDataStore.resetEditorColData()
+  }).catch((err) => {
+    const name = t('notebook')
+    CmdAdapter.notification(t('Error initializing {name} file', { name }), t(err), '')
+    return false
   })
 }
 
@@ -357,18 +362,8 @@ const onDeleteNotebook = (detail: Notebook) => {
       type: 'warning'
     }
   )
-    .then(async () => {
-      if (await deleteNotebook(detail.hashedSign)) {
-        ElMessage({
-          type: 'success',
-          message: t('Operation succeeded')
-        })
-      } else {
-        ElMessage({
-          type: 'error',
-          message: t('Operation failure')
-        })
-      }
+    .then(() => {
+      deleteNotebook(detail.hashedSign)
     })
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     .catch(() => { })
@@ -384,18 +379,8 @@ const onDeleteTag = (detail: Tag) => {
       type: 'warning'
     }
   )
-    .then(async () => {
-      if (await deleteTag(detail.hashedSign)) {
-        ElMessage({
-          type: 'success',
-          message: t('Operation succeeded')
-        })
-      } else {
-        ElMessage({
-          type: 'error',
-          message: t('Operation failure')
-        })
-      }
+    .then(() => {
+      deleteTag(detail.hashedSign)
     })
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     .catch(() => { })

@@ -1,6 +1,7 @@
 import { DocTypeNote } from '@/constants'
 import { PaneData, Notebook, Note, Tag } from '@/components/pane/types'
 import { tmplPaneData } from '@/components/pane/types_template'
+import { CmdInvoke } from '@/libs/commands'
 
 import { EntryFileSource, NotebookSource, ParsedEntryFileRes, FileMeta } from './types'
 import { tmplMmanifestData } from './types_templates'
@@ -17,7 +18,7 @@ export const parseEntryFile = (jsonStr: string): ParsedEntryFileRes => {
       return res
     }
   } catch (error) {
-    console.log('>>> parseManifest error: ', error)
+    CmdInvoke.logError('>>> parseManifest error: ' + error)
     return res
   }
 
@@ -73,7 +74,7 @@ export const parseNotebookJson = (jsonStr: string): Note[] => {
     const data: NotebookSource = JSON.parse(jsonStr)
     return parseNotebookSourceV1(data)
   } catch (error) {
-    console.log('>>> parseNotebook error: ', error)
+    CmdInvoke.logError('>>> parseNotebook error: ' + error)
     return res
   }
 }

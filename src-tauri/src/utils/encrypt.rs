@@ -1,5 +1,5 @@
-use xencrypt::chacha20poly1305::{
-    decrypt_large_file, decrypt_u8_arr, encrypt_large_file, encrypt_u8_arr,
+use xencrypt::xchacha20poly1305::{
+    decrypt_large_file, decrypt_u8_vec, encrypt_large_file, encrypt_u8_vec,
 };
 
 use crate::utils::logger as x_logger;
@@ -49,10 +49,10 @@ pub fn encrypt_file(
     file_tail: &[u8],
 ) -> bool {
     match encrypt_large_file(
-        source_path,
-        dist_path,
         &gen_key(pwd),
         &gen_nonce_large(pwd),
+        source_path,
+        dist_path,
         file_header,
         file_tail,
     ) {
@@ -65,7 +65,7 @@ pub fn encrypt_file(
 }
 
 pub fn decrypt_file(pwd: &str, source_path: &str, dist_path: &str) -> bool {
-    match decrypt_large_file(source_path, dist_path, &gen_key(pwd), &gen_nonce_large(pwd)) {
+    match decrypt_large_file(&gen_key(pwd), &gen_nonce_large(pwd), source_path, dist_path) {
         Ok(_) => return true,
         Err(e) => {
             x_logger::log_error(&format!(">>> decrypt_file error: {:?} \n", e));
@@ -75,14 +75,14 @@ pub fn decrypt_file(pwd: &str, source_path: &str, dist_path: &str) -> bool {
 }
 
 pub fn encrypt_bytes(pwd: &str, content: &[u8]) -> Vec<u8> {
-    match encrypt_u8_arr(&content.to_vec(), &gen_key(pwd), &gen_nonce_small(pwd)) {
+    match encrypt_u8_vec(&gen_key(pwd), &gen_nonce_small(pwd), &content.to_vec()) {
         Ok(vu8) => return vu8,
         Err(_) => return vec![],
     }
 }
 
 pub fn decrypt_bytes(pwd: &str, content: &Vec<u8>) -> String {
-    let dec = match decrypt_u8_arr(&content, &gen_key(pwd), &gen_nonce_small(pwd)) {
+    let dec = match decrypt_u8_vec(&gen_key(pwd), &gen_nonce_small(pwd), &content) {
         Ok(vu8) => vu8,
         Err(_) => vec![],
     };

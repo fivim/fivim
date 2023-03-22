@@ -7,7 +7,6 @@ import CodeTool from '@editorjs/code'
 import DelimiterTool from '@editorjs/delimiter'
 import EmbedTool from '@editorjs/embed'
 import HeaderTool from '@editorjs/header'
-// import ImageTool from '@editorjs/image'
 import ImageTool from './plugins/image/src/index.js'
 import InlineCodeTool from '@editorjs/inline-code'
 import LinkTool from '@editorjs/link'
@@ -16,22 +15,22 @@ import MarkerTool from '@editorjs/marker'
 import NestedListTool from '@editorjs/nested-list'
 import QuoteTool from '@editorjs/quote'
 import RawHtmlTool from '@editorjs/raw'
-// import SimpleImageTool from '@editorjs/simple-image'
 import TableTool from '@editorjs/table'
 import WarningTool from '@editorjs/warning'
 
 import { Props } from './types'
 import { i18n } from '@/libs/init/i18n'
-const t = i18n.global.t
 
 // Insert plugin
 export const mergeConfig = (confInput: Props) => {
+  const t = i18n.global.t
+
   const confAdd: EditorConfig = {
     data: confInput.contentData,
     placeholder: confInput.contentPlaceholder || '',
 
     // logLevel: 'ERROR', // avoid type error
-    autofocus: true,
+    // autofocus: true,
     hideToolbar: false,
     tools: {
       attaches: {
@@ -44,7 +43,6 @@ export const mergeConfig = (confInput: Props) => {
       checklist: ChecklistTool,
       code: CodeTool,
       delimiter: DelimiterTool,
-      // embed: Embed,
       embed: {
         class: EmbedTool as unknown as undefined, // avoid type error
         inlineToolbar: true,
@@ -55,24 +53,18 @@ export const mergeConfig = (confInput: Props) => {
           }
         }
       },
-      // header: Header,
       header: { // Refer: https://github.com/editor-js/header
         class: HeaderTool as unknown as undefined, // avoid type error
         // inlineToolbar: ['marker', 'link'],
         config: {
-          placeholder: 'Header'
+          placeholder: t('Header'),
+          levels: [1, 2, 3, 4, 5, 6]
         }
         // shortcut: 'CMD+SHIFT+H'
       },
-      // simpleImage: SimpleImage,
-      // image: Image,
       image: { // Refer: https://github.com/editor-js/image
         class: ImageTool as unknown as undefined, // avoid type error
         config: {
-          endpoints: {
-            byFile: 'http://localhost:8008/uploadFile', // Your backend file uploader endpoint
-            byUrl: 'http://localhost:8008/fetchUrl' // Your endpoint that provides uploading by Url
-          },
           // ---------- Custom uploader ----------
           // Refer: https://github.com/editor-js/image section <Providing custom uploading methods>
           uploader: {
@@ -129,14 +121,12 @@ export const mergeConfig = (confInput: Props) => {
         }
       },
       inlineCode: InlineCodeTool,
-      // link: Link,
       link: { // Refer: https://github.com/editor-js/link
         class: LinkTool as unknown as undefined, // avoid type error
         config: {
           endpoint: 'http://localhost:8008/fetchUrl' // Your backend endpoint for url data fetching,
         }
       },
-      // list: List,
       list: { // Refer: https://github.com/editor-js/list
         class: ListTool as unknown as undefined, // avoid type error
         inlineToolbar: true

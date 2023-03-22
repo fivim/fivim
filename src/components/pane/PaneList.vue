@@ -46,44 +46,49 @@
         <!-- content -->
         <template v-if="paneDataStore.data.listCol.type === ListColListTypeNotebook && paneDataStore.data.listCol.list">
           <div class="content-list">
-            <div class="content-list-item p-2" v-for="(item, index) in list" v-bind:key="index"
+            <div class="content-list-item" v-for="(item, index) in list" v-bind:key="index"
               @click="onChangeItem(index)">
-              <div class="flex">
-                <div class="left">
-                  <el-icon class="item-icon" v-if="item.type === DocTypeNote">
-                    <Tickets />
-                  </el-icon>
-                </div>
-                <div class="main">
-                  <div class="title">{{ item.title }}</div>
-                </div>
-                <div class="right"></div>
-              </div>
-
-              <div>
-                <div class="mt-1 text-sm opacity-50 text-xs">
-                  <div v-if="settingStore.data.appearance.listColShowCreateTime">
-                    {{ t('Created') }}:
-                    <span class="fr">
-                      {{ formatDateTime(item.createTime, settingStore.data.appearance.dateTimeFormat) }}
-                    </span>
+              <div :class="item.hashedSign === paneDataStore.data.editorCol.hashedSign ? 'selected p-2' : 'p-2'">
+                <div class="flex">
+                  <div class="left">
+                    <el-icon class="item-icon" v-if="item.type === DocTypeNote">
+                      <Tickets />
+                    </el-icon>
+                    <el-icon class="item-icon" v-if="item.type === DocTypeSheet">
+                      <Grid />
+                    </el-icon>
                   </div>
-                  <div v-if="settingStore.data.appearance.listColShowUpdateTime">
-                    {{ t('Updated') }}:
-                    <span class="fr">
-                      {{ formatDateTime(item.updateTime, settingStore.data.appearance.dateTimeFormat) }}
-                    </span>
+                  <div class="main">
+                    <div class="title">{{ item.title }}</div>
                   </div>
+                  <div class="right"></div>
                 </div>
 
-                <div class="tags text-xs" v-if="item.tagsArr.length > 0">
-                  <template v-for="(ii, index) in item.tagsArr" v-bind:key="index">
-                    <!-- TODO Not elegant enough -->
-                    <span class="tag-btn" v-if="getTagData(ii).title">
-                      <label class="icon">{{ getTagData(ii).icon }} </label>
-                      <span>{{ getTagData(ii).title }}</span>
-                    </span>
-                  </template>
+                <div>
+                  <div class="mt-1 text-sm opacity-50 text-xs">
+                    <div v-if="settingStore.data.appearance.listColShowCreateTime">
+                      {{ t('Created') }}:
+                      <span class="fr">
+                        {{ formatDateTime(item.createTime, settingStore.data.appearance.dateTimeFormat) }}
+                      </span>
+                    </div>
+                    <div v-if="settingStore.data.appearance.listColShowUpdateTime">
+                      {{ t('Updated') }}:
+                      <span class="fr">
+                        {{ formatDateTime(item.updateTime, settingStore.data.appearance.dateTimeFormat) }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="tags text-xs" v-if="item.tagsArr.length > 0">
+                    <template v-for="(ii, index) in item.tagsArr" v-bind:key="index">
+                      <!-- TODO Not elegant enough -->
+                      <span class="tag-btn" v-if="getTagData(ii).title">
+                        <label class="icon">{{ getTagData(ii).icon }} </label>
+                        <span>{{ getTagData(ii).title }}</span>
+                      </span>
+                    </template>
+                  </div>
                 </div>
               </div>
             </div>

@@ -26,6 +26,8 @@
 
 > Note: So far, this project is still under development.
 
+## Features
+
 - 🔒 Encrypt everything, support large file.
 - 🙂 Easy to use.
 - 💌 Free and open source.
@@ -86,7 +88,7 @@ Tauri currently supports development and distribution on the following platforms
 
 [ ] list tag items
 
-[ ] log
+[x] log
 
 [ ] change master password
 

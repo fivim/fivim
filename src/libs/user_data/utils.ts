@@ -47,11 +47,17 @@ export const writeEncryptedUserDataToFile = (dir: string, fileName: string, cont
 export const readNotebookdata = async (hashedSign: string) => {
   const settingStore = useSettingStore()
 
-  const data = await CmdInvoke.readUserDataFile(settingStore.data.encryption.masterPassword, getNotebookFilePath(hashedSign), true)
-  if (data.file_data_str.length === 0) {
-    console.log('>>> readNotebookdata readUserDataFile get empty content')
+  const fileData = await CmdInvoke.readUserDataFile(settingStore.data.encryption.masterPassword, getNotebookFilePath(hashedSign), true)
+  if (fileData.crc32 !== fileData.crc32_check) {
+    const msg = 'File verification failed'
+    CmdInvoke.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
+    return Promise.reject(new Error(msg))
   }
-  const notesData = JSON.parse(data.file_data_str)
+
+  if (fileData.file_data_str.length === 0) {
+    CmdInvoke.logError('>>> readNotebookdata readUserDataFile get empty content')
+  }
+  const notesData = JSON.parse(fileData.file_data_str)
 
   if (import.meta.env.TAURI_DEBUG) {
     console.log('>>> readNotebookdata notesData:: ', JSON.parse(notesData))
@@ -161,15 +167,13 @@ export const saveCurrentNotebookData = async () => {
   const errMsg = await saveCurrentNotebook()
   if (errMsg === StrSignOk) {
     ElMessage({
-      message: t('OK'),
-      type: 'success',
-      showClose: true
+      message: t('Operation succeeded'),
+      type: 'success'
     })
   } else {
     ElMessage({
       message: errMsg,
-      type: 'error',
-      showClose: true
+      type: 'error'
     })
   }
 }
@@ -187,16 +191,23 @@ export const deleteNotebook = async (hashedSign: string) => {
 
   saveToEntryFile()
   deleteFileMeta(hashedSign)
+
+  const t = i18n.global.t
   if (await deleteFileInCurrentDir(hashedSign)) {
-    return true
+    ElMessage({
+      type: 'success',
+      message: t('Operation succeeded')
+    })
   } else {
-    return false
+    ElMessage({
+      type: 'error',
+      message: t('Operation failure')
+    })
   }
 }
 
 export const deleteTag = async (hashedSign: string) => {
   const paneDataStore = usePaneDataStore()
-
   const navColData = paneDataStore.data.navigationCol
   const listColData = paneDataStore.data.listCol
   for (let ti = 0; ti < navColData.tags.length; ti++) {
