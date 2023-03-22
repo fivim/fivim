@@ -33,7 +33,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import ChangeEditorButton from '@/components/button/EditorTag.vue'
-import EditorEditorjs from '@/components/editor/editorjs/Editorjs.vue'
+import EditorEditorjs from '@/components/editor/Editorjs.vue'
 
 import { DocTypeNote } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'

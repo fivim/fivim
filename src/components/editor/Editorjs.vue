@@ -6,8 +6,8 @@
 import { ref, onMounted } from 'vue'
 import EditorJS, { OutputData } from '@editorjs/editorjs'
 
-import { mergeConfig } from './conf'
-import { Props } from './types'
+import { mergeConfig } from '@/libs/editorjs/conf'
+import { Props } from '@/libs/editorjs/types'
 
 const props = defineProps({
   content: {
