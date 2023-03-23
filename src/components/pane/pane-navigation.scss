@@ -1,8 +1,7 @@
-$content-horizontal-padding: 1rem;
-
 .navigation-column {
   background-color: var(--enas-navigation-col-background-color);
   color: var(--enas-navigation-col-foreground-color);
+  padding: var(--enas-col-padding);
 
   @media screen and (min-width: 768px) {
     border-right: 1px solid var(--enas-border-color);
@@ -17,10 +16,6 @@ $content-horizontal-padding: 1rem;
     flex-direction: column;
 
     .section-title-bar {
-      padding-top: 0.8rem;
-      padding-bottom: 0.5rem;
-      padding-left: $content-horizontal-padding;
-      padding-right: $content-horizontal-padding;
       font-size: 12px;
 
       .right {
@@ -36,8 +31,6 @@ $content-horizontal-padding: 1rem;
     .nb-name {
       border: 0;
       background-color: transparent;
-      padding-left: 0.8rem;
-      padding-right: 0.8rem;
       font-size: 14px;
       cursor: pointer;
       transition: height 0.1s ease-in-out;
@@ -117,5 +110,13 @@ $content-horizontal-padding: 1rem;
         background-color: var(--enas-background-secondary-color);
       }
     }
+  }
+
+  .bottom-action {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: var(--enas-col-padding);
   }
 }

@@ -138,5 +138,45 @@ defineExpose({ setContent })
       left: auto;
     }
   }
+
+  // ---------- color ----------
+  .ce-popover {
+    background-color: var(--enas-editor-col-background-color);
+    border-color: var(--enas-border-color);
+  }
+
+  .ce-popover__item-icon,
+  .ce-popover__item-label {
+    color: var(--enas-foreground-primary-color);
+    background-color: var(--enas-editor-col-background-color);
+  }
+
+  .ce-inline-toolbar,
+  .ce-conversion-toolbar {
+    background-color: var(--enas-background-secondary-color);
+    border-color: var(--enas-border-color);
+  }
+
+  .ce-conversion-tool__icon,
+  .ce-inline-toolbar__dropdown:hover {
+    background-color: var(--enas-background-secondary-color);
+  }
+
+  .ce-conversion-tool:hover,
+  .ce-inline-tool:hover {
+    background-color: var(--enas-highlight-color);
+  }
+
+  @media (hover: hover) {
+    .ce-popover__item:hover:not(.ce-popover__item--no-visible-hover) {
+      background-color: var(--enas-background-secondary-color);
+
+      .ce-popover__item-label {
+        background-color: var(--enas-background-secondary-color);
+      }
+    }
+  }
 }
+
+// ---------- color end ----------
 </style>

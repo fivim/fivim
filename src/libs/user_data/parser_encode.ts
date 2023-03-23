@@ -1,14 +1,24 @@
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
+import { getDataDirs } from '@/libs/init/dirs'
 import { OrderedFieldArrayTable } from '@/utils/array'
 import { formatDateTime } from '@/utils/string'
 import { jsonCopy } from '@/utils/utils'
 
-import { EntryFileSourceNotebooksTagsAttrsArrKey, EntryFileSource, NotebookSource } from './types'
-import { tmplNotebookAttrsArr, tmplEntryFileData, tmplNotebook } from './types_templates'
+import { NotebookAttrsArrKey, EntryFileSource, NotebookSource } from './types'
+import { tmplNotebookAttrsArr, tmplNoteAttrsArr, tmplEntryFileData, tmplNotebook } from './types_templates'
 import { getEntryFileName, genCurrentNotebookFileName, updateFileMeta, writeEncryptedUserDataToFile } from './utils'
 import { Note } from '@/components/pane/types'
+
+const ofatTagArrCallback = (item: unknown, currentObj: object) => {
+  const list = item as string[]
+  const newItemValue = list.join(',')
+  return {
+    currentItemAfter: newItemValue,
+    moveToNewNewFieldName: 'tagsHashedSign'
+  }
+}
 
 export const saveEntryFile = async () => {
   const appStore = useAppStore()
@@ -17,20 +27,31 @@ export const saveEntryFile = async () => {
   const content: EntryFileSource = jsonCopy(tmplEntryFileData)
 
   // notebooks
-  const tn = new OrderedFieldArrayTable([])
-  const notebooksData = paneDataStore.data.navigationCol.notebooks // It's a Proxy
-  const notebooksDataLast = jsonCopy(notebooksData) // Get the value of Proxy
-  tn.fromObjectArray(notebooksDataLast, {})
-  content.noteBooks.attrsArr = tn.toFieldArray().keysArr as EntryFileSourceNotebooksTagsAttrsArrKey[]
-  content.noteBooks.dataArr = tn.toFieldArray().valuesArr as string[][]
+  const notebooksData = paneDataStore.data.navigationCol.notebooks
+  // Notebook data has a tagsArr need to join with ',', as a string.
+  // Need special handling for tagsArr.
+  const arr = jsonCopy(tmplNotebookAttrsArr) as string[]
+  arr.push('tagsArr') // Add tagsArr, as the last field, remove it later
+  const ofatn = new OrderedFieldArrayTable(arr)
+  const nbData = jsonCopy(notebooksData) // Get the value of Proxy
+
+  ofatn.fromObjectArray(nbData, {
+    tagsArr: ofatTagArrCallback
+  })
+  // Remove the tagsArr filed
+  const outArr = ofatn.toFieldArray().valuesArr as string[][]
+  for (let index = 0; index < outArr.length; index++) {
+    const element = outArr[index]
+    element.pop()
+    content.noteBooks.dataArr.push(element)
+  }
 
   // tags
-  const tt = new OrderedFieldArrayTable([])
-  const tagsData = paneDataStore.data.navigationCol.tags // It's a Proxy
-  const tagsDataLast = jsonCopy(tagsData) // Get the value of Proxy
-  tt.fromObjectArray(tagsDataLast, {})
-  content.tags.attrsArr = tt.toFieldArray().keysArr as EntryFileSourceNotebooksTagsAttrsArrKey[]
-  content.tags.dataArr = tt.toFieldArray().valuesArr as string[][]
+  const ofatt = new OrderedFieldArrayTable([])
+  const tagsData = paneDataStore.data.navigationCol.tags
+  ofatt.fromObjectArray(tagsData, {})
+  content.tags.attrsArr = ofatt.toFieldArray().keysArr as NotebookAttrsArrKey[]
+  content.tags.dataArr = ofatt.toFieldArray().valuesArr as string[][]
 
   // attachments
 
@@ -42,7 +63,7 @@ export const saveEntryFile = async () => {
     console.log('>>> saveEntryFile content:: ', content)
   }
 
-  const p = appStore.data.dataPath
+  const p = await getDataDirs()
   return writeEncryptedUserDataToFile(p.pathOfCurrentDir, getEntryFileName(), JSON.stringify(content))
 }
 
@@ -53,58 +74,46 @@ export const genNotebookFileContent = (notes: Note[]) => {
 
   const content: NotebookSource = jsonCopy(tmplNotebook)
 
-  // Notebook data has a tagsArr need to join with ',', as a string.
+  // Note data has a tagsArr need to join with ',', as a string.
   // Need special handling for tagsArr.
-  const arr = jsonCopy(tmplNotebookAttrsArr) as string[]
+  const arr = jsonCopy(tmplNoteAttrsArr) as string[]
   arr.push('tagsArr') // Add tagsArr, as the last field, remove it later
-  const tcn = new OrderedFieldArrayTable(arr)
+  const ofat = new OrderedFieldArrayTable(arr)
+  const nData = jsonCopy(notes) // Get the value of Proxy
 
-  const listDataLast = jsonCopy(notes) // Get the value of Proxy
-
-  tcn.fromObjectArray(listDataLast, {
-    createTime: (item: unknown, currentObj: object) => {
+  ofat.fromObjectArray(nData, {
+    ctimeUtc: (item: unknown, currentObj: object) => {
       return {
         currentItemAfter: formatDateTime(new Date(item as string), dateTimeFormat),
         moveToNewNewFieldName: ''
       }
     },
-    updateTime: (item: unknown, currentObj: object) => {
+    mtimeUtc: (item: unknown, currentObj: object) => {
       return {
         currentItemAfter: formatDateTime(new Date(item as string), dateTimeFormat),
         moveToNewNewFieldName: ''
       }
     },
-    tagsArr: (item: unknown, currentObj: object) => {
-      const list = item as string[]
-      const newItemValue = list.join(',')
-      console.log('>>> newItemValue ::', newItemValue)
-      return {
-        currentItemAfter: newItemValue,
-        moveToNewNewFieldName: 'tagsHashedSign'
-      }
-    }
+    tagsArr: ofatTagArrCallback
   })
   // Remove the tagsArr filed
-  const outArr = tcn.toFieldArray().valuesArr as string[][]
+  const outArr = ofat.toFieldArray().valuesArr as string[][]
   for (let index = 0; index < outArr.length; index++) {
     const element = outArr[index]
     element.pop()
     content.dataArr.push(element)
   }
 
-  console.log('>>> after convert ::', content)
   return content
 }
 
 export const saveNotebookFileWithContent = async (fileName: string, content: NotebookSource) => {
-  const appStore = useAppStore()
-  const p = appStore.data.dataPath
+  const p = await getDataDirs()
   return await writeEncryptedUserDataToFile(p.pathOfCurrentDir, fileName, JSON.stringify(content))
 }
 
 // Set a fileName while isCurrent is true
 export const saveNotebookFile = async (isCurrent: boolean, fileName: string) => {
-  const appStore = useAppStore()
   const paneDataStore = usePaneDataStore()
   let content: NotebookSource
 
@@ -128,7 +137,7 @@ export const saveNotebookFile = async (isCurrent: boolean, fileName: string) => 
     console.log('>>> saveNotebookFile content:: ', content)
   }
 
-  const p = appStore.data.dataPath
+  const p = await getDataDirs()
   if (!saveNotebookFileWithContent(fileName, content)) {
     return Promise.resolve(false)
   } else {

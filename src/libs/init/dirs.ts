@@ -1,44 +1,51 @@
-import { ConfigFileName } from '@/constants'
+import { ConfigFileName, ConfigStartUpFileName } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
 import { CmdAdapter, CmdInvoke } from '@/libs/commands'
 import { jsonCopy } from '@/utils/utils'
 
 export const initCoreDirs = async () => {
-  const appStore = useAppStore()
-
   const separator = await CmdAdapter.isWindows() ? '\\' : '/'
   const appCoreConf = await CmdInvoke.getAppCoreConf()
 
+  const appStore = useAppStore()
+  const aaa = appStore.data
+
   const pathOfHome = appCoreConf.homeDir
   const pathOfAppData = appCoreConf.homeAppDir
-  const pathOfConfig = `${pathOfAppData}${ConfigFileName}`
 
-  // style
-  const pathOfCustomStyle = `${pathOfAppData}${separator}style${separator}`
-  const pathOfCustomBackgroundImage = `${pathOfCustomStyle}custom_background_image.jpg`
-
-  const aaa = appStore.data
   aaa.appName = appCoreConf.appName
   aaa.defaultLocale = appCoreConf.defaultLanguage
   aaa.defaultLocaleInNative = appCoreConf.defaultLanguageInNative
   aaa.version = appCoreConf.version
 
+  aaa.dataPath.separator = separator
   aaa.dataPath.pathOfHomeAppData = pathOfAppData
-  aaa.dataPath.pathOfConfig = pathOfConfig
   aaa.dataPath.pathOfHome = pathOfHome
-  aaa.dataPath.pathOfCustomStyle = pathOfCustomStyle
-  aaa.dataPath.pathOfCustomBackgroundImage = pathOfCustomBackgroundImage
   appStore.setData(jsonCopy(aaa))
 }
 
-export const initWorkDirs = async () => {
-  const appStore = useAppStore()
-  const settingStore = useSettingStore()
-
+export const pathJoin = async (dirs: string[]) => {
   const separator = await CmdAdapter.isWindows() ? '\\' : '/'
+  return dirs.join(separator)
+}
+
+export const getDataDirs = async () => {
+  const appStore = useAppStore()
+  const dataPath = appStore.data.dataPath
+  const separator = dataPath.separator
+  const pathOfHomeAppData = dataPath.pathOfHomeAppData
+
+  const settingStore = useSettingStore()
   const settings = settingStore.data
   const masterPassword = settingStore.data.encryption.masterPassword
+
+  const pathOfCustomStyle = `${pathOfHomeAppData}${separator}style${separator}`
+  // Encrypt dir name, use flat directory structure
+  const currentDir = await CmdInvoke.stringCrc32(masterPassword + '#current')
+  const syncDir = await CmdInvoke.stringCrc32(masterPassword + '#sync')
+  const syncCacheDir = await CmdInvoke.stringCrc32(masterPassword + '#sync/cache')
+  const syncDownloadDir = await CmdInvoke.stringCrc32(masterPassword + '#sync/download')
 
   // workDir
   let workDir = settings.normal.workDir
@@ -46,26 +53,17 @@ export const initWorkDirs = async () => {
     workDir = workDir + separator
   }
 
-  // Encrypt dir name, use flat directory structure
-  const currentDir = await CmdInvoke.stringCrc32(masterPassword + '#current')
-  const syncDir = await CmdInvoke.stringCrc32(masterPassword + '#sync')
-  const syncCacheDir = await CmdInvoke.stringCrc32(masterPassword + '#sync/cache')
-  const syncDownloadDir = await CmdInvoke.stringCrc32(masterPassword + '#sync/download')
-
-  const pathOfCurrentDir = `${workDir}${currentDir}${separator}`
-  const pathOfSyncDir = `${workDir}${syncDir}${separator}`
-  const pathOfSyncCachedDir = `${workDir}${syncCacheDir}${separator}`
-  const pathOfSyncDownloadDir = `${workDir}${syncDownloadDir}${separator}`
-
-  const aaa = appStore.data
-  aaa.dataPath.pathOfCurrentDir = pathOfCurrentDir
-  aaa.dataPath.pathOfSyncDir = pathOfSyncDir
-  aaa.dataPath.pathOfSyncCachedDir = pathOfSyncCachedDir
-  aaa.dataPath.pathOfSyncDownloadDir = pathOfSyncDownloadDir
-  appStore.setData(jsonCopy(aaa))
-}
-
-export const pathJoin = async (dirs: string[]) => {
-  const separator = await CmdAdapter.isWindows() ? '\\' : '/'
-  return dirs.join(separator)
+  return {
+    pathOfHome: dataPath.pathOfHome,
+    pathOfHomeAppData,
+    pathOfConfig: `${pathOfHomeAppData}${ConfigFileName}`,
+    pathOfConfigStartUp: `${pathOfHomeAppData}${ConfigStartUpFileName}`,
+    pathOfCurrentDir: `${workDir}${currentDir}${separator}`,
+    pathOfSyncDir: `${workDir}${syncDir}${separator}`,
+    pathOfSyncCachedDir: `${workDir}${syncCacheDir}${separator}`,
+    pathOfSyncDownloadDir: `${workDir}${syncDownloadDir}${separator}`,
+    // style
+    pathOfCustomStyle,
+    pathOfCustomBackgroundImage: `${pathOfCustomStyle}custom_background_image.jpg`
+  }
 }

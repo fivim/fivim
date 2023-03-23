@@ -9,8 +9,9 @@
     <el-tabs tab-position="left">
       <el-tab-pane :label="t('General')">
         <el-form :model="settingStore.data" label-width="150px" :label-position="genLabelPosition()">
-          <el-form-item :label="t('File')">
-            {{ t('&Total size of all files', { size: allFileSize }) }}
+          <el-form-item :label="t('Working directory')">
+            <div class="w-full">{{ settingStore.data.normal.workDir }}</div>
+            <div class="w-full">{{ t('&Total size of all files', { size: allFileSize }) }}</div>
           </el-form-item>
           <!--
           <el-form-item :label="t('Last sync time')">
@@ -33,8 +34,8 @@
       <el-tab-pane :label="t('Appearance')">
         <el-form :model="settingStore.data" label-width="150px" :label-position="genLabelPosition()">
           <el-form-item :label="t('Language')">
-            <el-select v-model="settingStore.data.normal.language" class="m-2" :placeholder="t('Select')" filterable>
-              <el-option v-for="(item, index) in settingOptions.language.sort(elOptionArrSort)" :key="index"
+            <el-select v-model="settingStore.data.appearance.locale" class="m-2" :placeholder="t('Select')" filterable>
+              <el-option v-for="(item, index) in settingOptions.locale.sort(elOptionArrSort)" :key="index"
                 :label="item.label + ' - ' + getLanguageMeta(item.value).nativeName" :value="item.value">
                 <span class="fl">{{ item.label }}</span>
                 <span class="fr color-secondary">{{ getLanguageMeta(item.value).nativeName }}</span>
@@ -55,8 +56,6 @@
           <el-form-item :label="t('Show update time')">
             <el-switch v-model="settingStore.data.appearance.listColShowUpdateTime" />
           </el-form-item>
-
-          <SettingCustomBackground />
         </el-form>
       </el-tab-pane>
       <el-tab-pane :label="t('Encryption')">
@@ -144,6 +143,7 @@ import { ElPrecessItem } from '@/types_common'
 import { settingOptions, changeMasterPasswordProcessData } from '@/conf'
 import { i18n, getLanguageMeta, setLocale } from '@/libs/init/i18n'
 import { CmdInvoke } from '@/libs/commands'
+import { getDataDirs } from '@/libs/init/dirs'
 import { elOptionArrSort } from '@/utils/array'
 import { happybytes } from '@/utils/bytes'
 import { isMobileScreen, getPageWidth } from '@/utils/media_query'
@@ -158,7 +158,8 @@ const masterPasswordNew = ref('')
 const allFileSize = ref('0')
 
 const getAllFileSize = async () => {
-  const size = await CmdInvoke.getDirSize(appStore.data.dataPath.pathOfCurrentDir)
+  const p = await getDataDirs()
+  const size = await CmdInvoke.getDirSize(p.pathOfCurrentDir)
   allFileSize.value = happybytes(size, false)
 }
 
@@ -180,10 +181,10 @@ const changeMasterPasswordStatus = computed(() => {
 // ---------- dialog ----------
 const dialogVisible = ref(false)
 
-const languageOld = ref('')
+const localeOld = ref('')
 const onOpen = () => {
   dialogVisible.value = true
-  languageOld.value = settingStore.data.normal.language
+  localeOld.value = settingStore.data.appearance.locale
 
   getAllFileSize()
 }
@@ -196,12 +197,12 @@ const onSave = (close: boolean) => {
   const sd = settingStore.data
   settingStore.setData(sd, true)
 
-  // If language changed
-  const languageNew = settingStore.data.normal.language
-  if (languageNew !== languageOld.value) {
-    if (i18n.global.availableLocales.indexOf(languageNew) >= 0) { // Check if the new language is allowed
-      setLocale(languageNew)
-      languageOld.value = languageNew
+  // If locale changed
+  const localeNew = settingStore.data.appearance.locale
+  if (localeNew !== localeOld.value) {
+    if (i18n.global.availableLocales.indexOf(localeNew) >= 0) { // Check if the new locale is allowed
+      setLocale(localeNew)
+      localeOld.value = localeNew
 
       CmdInvoke.systemTrayUpdateText()
 

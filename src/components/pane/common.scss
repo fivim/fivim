@@ -17,8 +17,20 @@
         color: var(--enas-foreground-primary-color);
         background-color: var(--enas-highlight-color);
         align-items: center;
-        padding: 0.25rem 0.5rem;
+        padding: 0.2rem;
         border-radius: 0.25rem;
+    }
+
+    &.small {
+        .icon {
+            font-size: 0.5rem;
+        }
+
+        .tag-btn {
+            border-radius: 0.1rem;
+            font-size: 0.75rem;
+            padding: 0.1rem 0.2rem;
+        }
     }
 }
 

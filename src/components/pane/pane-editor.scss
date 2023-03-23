@@ -10,10 +10,7 @@
   .title-bar {
     width: 100%;
     z-index: var(--enas-z-index-editor-title-bar);
-    padding-top: var(--enas-note-editor-padding);
-    padding-left: var(--enas-note-editor-padding);
-    padding-bottom: var(--enas-note-editor-padding);
-    padding-right: var(--enas-note-editor-padding);
+    padding: var(--enas-note-editor-padding);
     height: var(--enas-editor-title-bar-height);
 
     .box {

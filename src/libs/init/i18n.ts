@@ -47,7 +47,7 @@ const getDict = async () => {
     if (Object.prototype.hasOwnProperty.call(langPack, key)) {
       const pack = JSON.parse(langPack[key]) as LangPackItem
 
-      settingOptions.language.push({
+      settingOptions.locale.push({
         value: key,
         label: pack.meta.name
       })

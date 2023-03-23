@@ -14,7 +14,7 @@
 
           <div class="right note-view-options-buttons ">
             <el-button-group>
-              <ChangeEditorButton />
+              <SelectTagButton :tagExist="tagExist" :useIcon="true" @onClick="onClickTag"> </SelectTagButton>
             </el-button-group>
           </div>
         </div>
@@ -32,17 +32,18 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import ChangeEditorButton from '@/components/button/EditorTag.vue'
 import EditorEditorjs from '@/components/editor/Editorjs.vue'
+import SelectTagButton from '@/components/button/SelectTag.vue'
 
 import { DocTypeNote } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
+import { Tag } from '@/components/pane/types'
 
-const editorRef = ref<InstanceType<typeof EditorEditorjs>>()
 const appStore = useAppStore()
 const paneDataStore = usePaneDataStore()
 const { t } = useI18n()
+const editorRef = ref<InstanceType<typeof EditorEditorjs>>()
 
 const onTitleInput = (str: string) => {
   const info = appStore.data
@@ -59,13 +60,31 @@ const onEditorUpdate = (str: string) => {
   const icd = paneDataStore.data.listCol
 
   if (icd.list.length === 0) {
-    // alert('Please create a new note first') // TODO: translate
+    // alert('Please create a new note first') // TODO: add translate
   } else {
     const index = appStore.data.currentFile.indexInList
     icd.list[index].content = str
-    icd.list[index].updateTime = new Date()
+    icd.list[index].mtimeUtc = new Date()
     paneDataStore.setListColData(icd)
   }
+}
+
+const tagExist = (hashedSign: string) => {
+  return paneDataStore.data.editorCol.tagsArr.indexOf(hashedSign) >= 0
+}
+
+const onClickTag = (detail: Tag) => {
+  const data = paneDataStore.data.editorCol
+  const arr = data.tagsArr
+  const index = arr.indexOf(detail.hashedSign)
+
+  if (index >= 0) { // If exist delete it
+    arr.splice(index, 1)
+  } else {
+    arr.push(detail.hashedSign)
+  }
+
+  paneDataStore.setEditorColData(data)
 }
 
 let lastFileHashedSign = ''

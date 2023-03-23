@@ -1,17 +1,25 @@
 import { tmplPaneData } from '@/components/pane/types_template'
 
-import { NotebookSourceAttrsArrKey, FileMetaValue, EntryFileSource, NotebookSource, ParsedEntryFileRes } from './types'
+import { NoteAttrsArrKey, NotebookAttrsArrKey, FileMetaValue, EntryFileSource, NotebookSource, ParsedEntryFileRes } from './types'
 
 export const tmplNotebookAttrsArr = [
+  'title',
+  'icon',
+  'hashedSign',
+  'mtimeUtc',
+  'tagsHashedSign'
+] as NotebookAttrsArrKey[]
+
+export const tmplNoteAttrsArr = [
   'hashedSign',
   'title',
   'icon',
   'type',
   'content',
-  'updateTime',
-  'createTime',
+  'mtimeUtc',
+  'ctimeUtc',
   'tagsHashedSign'
-] as NotebookSourceAttrsArrKey[]
+] as NoteAttrsArrKey[]
 
 export const tmplFileMeta = {
   dtimeUtc: 0,
@@ -28,21 +36,11 @@ export const tmplMmanifestData: ParsedEntryFileRes = {
 export const tmplEntryFileData: EntryFileSource = {
   dataVersion: 1,
   noteBooks: {
-    attrsArr: [
-      'title',
-      'icon',
-      'hashedSign',
-      'mtimeUtc'
-    ],
+    attrsArr: tmplNotebookAttrsArr,
     dataArr: []
   },
   tags: {
-    attrsArr: [
-      'title',
-      'icon',
-      'hashedSign',
-      'mtimeUtc'
-    ],
+    attrsArr: tmplNotebookAttrsArr,
     dataArr: []
   },
   attachments: {
@@ -59,6 +57,6 @@ export const tmplEntryFileData: EntryFileSource = {
 
 export const tmplNotebook: NotebookSource = {
   dataVersion: 1,
-  attrsArr: tmplNotebookAttrsArr,
+  attrsArr: tmplNoteAttrsArr,
   dataArr: []
 }

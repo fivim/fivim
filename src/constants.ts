@@ -3,10 +3,12 @@ import { TimeHashedSignType } from '@/utils/hash'
 export const TimeFormatYyyyMmDdHhMmSs = 'YYYY-MM-DD HH:mm:ss'
 
 export const AvailableThemes = ['default', 'balance', 'frost', 'material', 'polar-night', 'pretty', 'sunrise']
-export const ConfigFileName = 'conf.bin'
+export const ConfigFileName = 'conf.bin' // main configuration file
+export const ConfigStartUpFileName = 'conf.startup.bin' // only read once on every startup
+export const ConfigStartUpPwd = '' // pwd of ConfigStartUpFile
 export const DefaultFileExt = ''
 export const DefaultFileNameRule = TimeHashedSignType.formattedTimeSha256
-export const DefaultListColSortBy = 'createTime'
+export const DefaultListColSortBy = 'ctimeUtc'
 export const DefaultListColSortOrder = 'ASC'
 export const DefaultSyncIntervalSeconds = '300'// Use string
 export const DefaultThemeDark = 'material'

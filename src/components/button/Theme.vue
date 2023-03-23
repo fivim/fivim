@@ -14,11 +14,11 @@
         <div class="cur-ptr">
           <template v-for="(item, index) in AvailableThemes" v-bind:key="index">
             <div class="list-item" @click="onChangeTheme(item)">
-              <div class="flex">
-                <div :class="`flex flex-grow ${appStore.data.currentTheme === item ? ' font-bold highlight' : ''}`">
+              <div class="disp-flex">
+                <div :class="`disp-flex flex-grow ${appStore.data.currentTheme === item ? ' font-bold highlight' : ''}`">
                   {{ item }}
                 </div>
-                <div class="flex flex-grow justify-content-right ">
+                <div class="disp-flex flex-grow justify-content-right ">
                   <div class="theme-color-box-group">
                     <div class="theme-color-box" :style="`background-color:var(--enas-background-primary-color_${item})`">
                     </div>

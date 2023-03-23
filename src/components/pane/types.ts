@@ -27,13 +27,13 @@ export type PaneController = {
 // List item type, including note / tag / table
 export type Note = {
   content: string
-  createTime: Date
+  ctimeUtc: Date
   hashedSign: string
   icon: string
   tagsArr: string[]
   title: string
   type: DocType
-  updateTime: Date
+  mtimeUtc: Date
 }
 
 export type Notebook = {
@@ -56,6 +56,7 @@ export type EditorColData = {
   hashedSign: string
   title: string
   type: DocType
+  tagsArr: string[]
 }
 
 export type ListColData = {

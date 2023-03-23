@@ -1,5 +1,7 @@
 import { ElMessageBox } from 'element-plus'
 
+import { ErrorMessages } from '@/types'
+import { getDataDirs } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
 import { useSettingStore } from '@/pinia/modules/settings'
@@ -9,7 +11,7 @@ import { CmdInvoke } from '@/libs/commands'
 import { UserDataFile } from '@/libs/commands/types'
 import { i18n } from '@/libs/init/i18n'
 import { stringToUint8Array } from '@/utils/string'
-import { jsonCopy } from '@/utils/utils'
+
 import { parseEntryFile } from './parser_decode'
 import { writeUserData } from './utils'
 
@@ -17,19 +19,19 @@ export const initEntryFile = async () => {
   const appStore = useAppStore()
   const paneDataStore = usePaneDataStore()
   const settingStore = useSettingStore()
-  const appData = appStore.data
+
   const settings = settingStore.data
   const encrytpSetting = settings.encryption
-  const p = appData.dataPath
+  const p = await getDataDirs()
   const dir = p.pathOfCurrentDir
   const entryFileName = encrytpSetting.entryFileName
   const path = dir + entryFileName
 
   return CmdInvoke.readUserDataFile(settings.encryption.masterPassword, path, true).then((fileData: UserDataFile) => {
     if (fileData.crc32 !== fileData.crc32_check) {
-      const msg = 'File verification failed'
+      const msg = ErrorMessages.FileVerificationFailed
       CmdInvoke.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
-      return Promise.reject(new Error(msg))
+      // return Promise.reject(new Error(msg))
     }
 
     const jsonStr = fileData.file_data_str
@@ -54,8 +56,13 @@ export const initEntryFile = async () => {
       return
     }
 
-    const ret = parseEntryFile(JSON.parse(jsonStr)) // Remove escape of file_data_str
-    paneDataStore.setData(jsonCopy(ret.paneData)) // ret is a Proxy
+    const ret = parseEntryFile(jsonStr)
+    paneDataStore.setData(ret.paneData)
+
+    if (import.meta.env.TAURI_DEBUG) {
+      console.log('>>> Entry file data:: ', jsonStr)
+      console.log('>>> Entry file data after parsed:: ', ret.paneData)
+    }
 
     const appData = appStore.data
     appData.fileMetaMapping = ret.fileMetaMapping
@@ -63,11 +70,10 @@ export const initEntryFile = async () => {
   })
 }
 
-export const saveDefaultEntryFile = () => {
-  const appStore = useAppStore()
+export const saveDefaultEntryFile = async () => {
   const settingStore = useSettingStore()
   const fileName = settingStore.data.encryption.entryFileName
-  const p = appStore.data.dataPath
+  const p = await getDataDirs()
 
   writeUserData(p.pathOfCurrentDir + fileName, fileName, stringToUint8Array(JSON.stringify(tmplEntryFileData)))
 }

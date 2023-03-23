@@ -750,7 +750,7 @@ dependencies = [
 
 [[package]]
 name = "encryption_assistant"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "base64 0.21.0",
  "chrono",

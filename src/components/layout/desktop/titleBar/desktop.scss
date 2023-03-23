@@ -50,6 +50,14 @@
   .title-bar-ext-buttons,
   .title-bar-window-buttons {
     font-size: 0;
+
+    .btn:first-child {
+      padding-left: 1rem
+    }
+
+    .btn:last-child {
+      padding-right: 1rem
+    }
   }
 
 }

@@ -8,19 +8,19 @@ export type FileMetaValue = {
 export type FileMeta = { [key: string]: FileMetaValue }
 
 // User's entry file data
-export type EntryFileSourceNotebooksTagsAttrsArrKey = 'title' | 'icon' | 'hashedSign' | 'mtimeUtc'
+export type NotebookAttrsArrKey = 'title' | 'icon' | 'hashedSign' | 'mtimeUtc' | 'tagsHashedSign'
 export type EntryFileSource = {
     dataVersion: number
     noteBooks: {
-        attrsArr: EntryFileSourceNotebooksTagsAttrsArrKey[]
+        attrsArr: NotebookAttrsArrKey[]
         dataArr: string[][]
     },
     tags: {
-        attrsArr: EntryFileSourceNotebooksTagsAttrsArrKey[]
+        attrsArr: NotebookAttrsArrKey[]
         dataArr: string[][]
     },
     attachments: {
-        attrsArr: EntryFileSourceNotebooksTagsAttrsArrKey[]
+        attrsArr: NotebookAttrsArrKey[]
         dataArr: string[][]
     },
     // files: {
@@ -31,11 +31,11 @@ export type EntryFileSource = {
     syncLockFileName: string
 }
 
-// User's notebook data
-export type NotebookSourceAttrsArrKey = 'title' | 'icon' | 'hashedSign' | 'type' | 'content' | 'updateTime' | 'createTime' | 'tagsHashedSign'
+// User's note data
+export type NoteAttrsArrKey = 'title' | 'icon' | 'hashedSign' | 'type' | 'content' | 'mtimeUtc' | 'ctimeUtc' | 'tagsHashedSign'
 export type NotebookSource = {
     dataVersion: number
-    attrsArr: NotebookSourceAttrsArrKey[]
+    attrsArr: NoteAttrsArrKey[]
     dataArr: string[][]
 }
 

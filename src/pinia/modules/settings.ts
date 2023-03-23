@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import type { Setting } from '@/types'
 import { tmplSettingData } from '@/types_template'
 import { MasterPasswordMinLength, MasterPasswordMaxLength } from '@/constants'
-import { saveConfToFile } from '@/libs/init/conf_file'
+import { saveConfToFile, saveStartUpConfFile } from '@/libs/init/conf_file'
 import { CmdAdapter } from '@/libs/commands'
 import { jsonCopy } from '@/utils/utils'
 
@@ -12,7 +12,7 @@ export const useSettingStore = defineStore('settingStore', () => {
   const data = ref<Setting>(jsonCopy(tmplSettingData))
 
   // set data and save config file
-  const setData = async (val: Setting, writeTofile: boolean) => {
+  const setData = async (val: Setting, writeToConfigFile: boolean) => {
     // Ensure that the local directory path ends with a slash
     const separator = await CmdAdapter.isWindows() ? '\\' : '/'
 
@@ -23,8 +23,9 @@ export const useSettingStore = defineStore('settingStore', () => {
 
     data.value = val
 
-    if (writeTofile) {
+    if (writeToConfigFile) {
       saveConfToFile()
+      saveStartUpConfFile()
     }
   }
 

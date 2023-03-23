@@ -1,6 +1,8 @@
 import { ElMessage } from 'element-plus'
 
+import { ErrorMessages } from '@/types'
 import { StrSignOk, StrSignErr } from '@/constants'
+import { getDataDirs } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
@@ -26,10 +28,9 @@ export const genCurrentNotebookFileName = () => {
   return `${hashedSign}${senc.fileExt}`
 }
 
-export const getNotebookFilePath = (hashedSign: string) => {
-  const appStore = useAppStore()
+export const getNotebookFilePath = async (hashedSign: string) => {
   const settingStore = useSettingStore()
-  const p = appStore.data.dataPath
+  const p = await getDataDirs()
   return p.pathOfCurrentDir + hashedSign + settingStore.data.encryption.fileExt
 }
 
@@ -41,17 +42,17 @@ export const writeEncryptedUserDataToFile = (dir: string, fileName: string, cont
     console.log('>>> writeEncryptedUserDataToFile content:: ', content)
   }
 
-  return CmdInvoke.writeUserDataFile(mp, dir + fileName, fileName, stringToUint8Array(JSON.stringify(content)), '')
+  return CmdInvoke.writeUserDataFile(mp, dir + fileName, fileName, stringToUint8Array(content), '')
 }
 
 export const readNotebookdata = async (hashedSign: string) => {
   const settingStore = useSettingStore()
 
-  const fileData = await CmdInvoke.readUserDataFile(settingStore.data.encryption.masterPassword, getNotebookFilePath(hashedSign), true)
+  const fileData = await CmdInvoke.readUserDataFile(settingStore.data.encryption.masterPassword, await getNotebookFilePath(hashedSign), true)
   if (fileData.crc32 !== fileData.crc32_check) {
-    const msg = 'File verification failed'
+    const msg = ErrorMessages.FileVerificationFailed
     CmdInvoke.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
-    return Promise.reject(new Error(msg))
+    // return Promise.reject(new Error(msg))
   }
 
   if (fileData.file_data_str.length === 0) {
@@ -117,8 +118,8 @@ export const updateFileMetaModifyTime = async (fileName: string) => {
 }
 
 const deleteFileInCurrentDir = async (fileName: string) => {
-  const appStore = useAppStore()
-  const filePath = appStore.data.dataPath.pathOfCurrentDir + fileName
+  const p = await getDataDirs()
+  const filePath = p.pathOfCurrentDir + fileName
   return await CmdInvoke.deleteFile(filePath)
 }
 

@@ -25,7 +25,8 @@
             </div>
 
             <el-button type="primary" @click="checkPassword">
-              <UnlockOutlined />{{ t('Unlock') }}
+              <UnlockOutlined />
+              <span class="p-2">{{ t('Unlock') }}</span>
             </el-button>
           </template>
         </el-result>
@@ -45,6 +46,7 @@ import { MasterPasswordSalt } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
 import { initAtFirst } from '@/libs/init/at_first'
+import { initWithStartUpConfFile } from '@/libs/init/conf_file'
 import { CmdInvoke } from '@/libs/commands'
 import { genMasterPasswordSha256 } from '@/utils/hash'
 
@@ -70,6 +72,10 @@ const checkPassword = () => {
       masterPasswordWrong.value = true
     }
   })
+}
+
+if (settingStore.data.normal.workDir === '') {
+  initWithStartUpConfFile()
 }
 </script>
 

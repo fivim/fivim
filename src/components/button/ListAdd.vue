@@ -1,7 +1,7 @@
 <template>
   <XPopover refId="listAddBtnPop" placement="top-start" trigger="click" :propTitle="t('Add')">
     <template #reference>
-      <ElButton :icon="Plus" color="#626aef" circle />
+      <ElButton :icon="Plus" circle />
     </template>
 
     <div class="enas-list">
@@ -15,15 +15,15 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import { FileTextOutlined } from '@ant-design/icons-vue'
+import { FileTextOutlined, TableOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 import { Note } from '@/components/pane/types'
+import XPopover from '@/components/UI_component/x_popover.vue'
 import { DefaultFileNameRule, DocTypeNote } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { usePaneDataStore } from '@/pinia/modules/pane_data'
 import { useSettingStore } from '@/pinia/modules/settings'
-import XPopover from '@/components/xPopover/popover.vue'
 import { genTimeHashedSign } from '@/utils/hash'
 
 const appStore = useAppStore()
@@ -49,8 +49,8 @@ const addItem = (itemType: typeof DocTypeNote) => {
     icon: '',
     type: itemType,
     content: '',
-    updateTime: new Date(),
-    createTime: new Date(),
+    mtimeUtc: new Date(),
+    ctimeUtc: new Date(),
     tagsArr: []
   }
 

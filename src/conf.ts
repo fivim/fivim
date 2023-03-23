@@ -21,7 +21,7 @@ export const unicodeIcon = {
 
 export const settingOptions: { [key: string]: ElOptionItem[] } = {
   // ---------- appearance -----------
-  language: [],
+  locale: [],
 
   // ---------- datetime format -----------
   dateFormat: [

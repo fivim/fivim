@@ -8,9 +8,9 @@
     </template>
 
     <!-- Title bar -->
-    <div class="pop-title flex" v-if="appStore.data.appMode === AppMode.Mobile">
-      <div class="flex"> {{ propTitle }} </div>
-      <div class="flex"> <el-button v-if="isMobileMode()" :icon="Close" circle @click="onClosePop"></el-button>
+    <div class="pop-title disp-flex" v-if="appStore.data.appMode === AppMode.Mobile">
+      <div class="disp-flex"> {{ propTitle }} </div>
+      <div class="disp-flex"> <el-button v-if="isMobileMode()" :icon="Close" circle @click="onClosePop"></el-button>
       </div>
     </div>
 

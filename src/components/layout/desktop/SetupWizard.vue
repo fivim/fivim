@@ -7,10 +7,10 @@
 
       <el-form label-width="150px" :label-position="genLabelPosition()" ref="ruleFormRef" :model="ruleForm"
         :rules="rules">
-        <el-form-item :label="t('Language') + `(Language)`" prop="language">
-          <el-select v-model="ruleForm.language" :placeholder="t('Select')" @change="onChangeLanguage" filterable
+        <el-form-item :label="t('Language') + `(Language)`" prop="locale">
+          <el-select v-model="ruleForm.locale" :placeholder="t('Select')" @change="onChangeLanguage" filterable
             class="w-full">
-            <el-option v-for="(item, index) in settingOptions.language.sort(elOptionArrSort)" :key="index"
+            <el-option v-for="(item, index) in settingOptions.locale.sort(elOptionArrSort)" :key="index"
               :label="item.label + ' - ' + getLanguageMeta(item.value).nativeName" :value="item.value">
               <span class="fl">{{ item.label }}</span>
               <span class="fr color-secondary">{{ getLanguageMeta(item.value).nativeName }}</span>
@@ -108,7 +108,7 @@ const getAvailableDefaultLocale = () => {
   setLocale(defaultLocale)
 
   const data = settingStore.data
-  data.normal.language = defaultLocale
+  data.appearance.locale = defaultLocale
   settingStore.setData(data, false)
 
   return defaultLocale
@@ -142,7 +142,7 @@ const showErrorMsg = ref(false)
 const errorMsg = ref('')
 
 const ruleForm = reactive({
-  language: getAvailableDefaultLocale(),
+  locale: getAvailableDefaultLocale(),
   theme: getDefalutTheme(),
   masterPassword: '',
   dateTimeFormat: DefaultTimeFormat,
@@ -177,10 +177,10 @@ const validateRequired = (rule: any, value: any, callback: any) => {
   }
 }
 
-// If set message in rules, it won't change translate after change language.
+// If set message in rules, it won't change translate after change locale.
 // Use custom validator to resolve this issue.
 const rules = reactive<FormRules>({
-  language: [
+  locale: [
     {
       required: true,
       validator: validateRequired,
@@ -304,7 +304,6 @@ const onSave = () => {
   setTheme(ruleForm.theme)
 
   const settingData = settingStore.data
-  settingData.normal.language = ruleForm.language
   settingData.normal.workDir = ruleForm.workDir
   settingData.encryption.entryFileName = ruleForm.entryFileName
   settingData.encryption.fileExt = ruleForm.fileExt
@@ -313,9 +312,11 @@ const onSave = () => {
   settingData.encryption.syncLockFileName = genTimeHashedSign(ruleForm.fileNameRule, ruleForm.dateTimeFormat, ruleForm.fileExt)
   settingData.encryption.masterPassword = genMasterPasswordSha256(ruleForm.masterPassword, MasterPasswordSalt)
   settingData.appearance.dateTimeFormat = ruleForm.dateTimeFormat
+  settingData.appearance.locale = ruleForm.locale
   settingData.appearance.listColSortBy = DefaultListColSortBy
   settingData.appearance.listColSortOrder = DefaultListColSortOrder
   settingData.appearance.theme = ruleForm.theme
+  settingData.sync.intervalSeconds = DefaultSyncIntervalSeconds
 
   // initCoreDirs before settingStore save config
   initCoreDirs().then(() => {

@@ -2,12 +2,13 @@ import { DocTypeNote } from '@/constants'
 import { PaneData, Notebook, Note, Tag } from '@/components/pane/types'
 import { tmplPaneData } from '@/components/pane/types_template'
 import { CmdInvoke } from '@/libs/commands'
+import { jsonCopy } from '@/utils/utils'
 
 import { EntryFileSource, NotebookSource, ParsedEntryFileRes, FileMeta } from './types'
 import { tmplMmanifestData } from './types_templates'
 
 export const parseEntryFile = (jsonStr: string): ParsedEntryFileRes => {
-  const res: ParsedEntryFileRes = JSON.parse(JSON.stringify(tmplMmanifestData))
+  const res: ParsedEntryFileRes = jsonCopy(tmplMmanifestData)
 
   try {
     const data: EntryFileSource = JSON.parse(jsonStr)
@@ -34,13 +35,14 @@ export const parseNavColDataV1 = (data: EntryFileSource): PaneData => {
   const resNotebookArr: Notebook[] = []
   if (nbDataArr.length > 0) {
     for (const i of nbDataArr) {
-      resNotebookArr.push({
+      const item = {
         hashedSign: i[nbAttrsArr.indexOf('hashedSign')],
         icon: i[nbAttrsArr.indexOf('icon')],
         title: i[nbAttrsArr.indexOf('title')],
         mtimeUtc: parseInt(i[nbAttrsArr.indexOf('mtimeUtc')]),
-        tagsArr: []
-      })
+        tagsArr: getTagsArr(i[nbAttrsArr.indexOf('tagsHashedSign')])
+      }
+      resNotebookArr.push(item)
     }
   }
   res.navigationCol.notebooks = resNotebookArr
@@ -86,29 +88,32 @@ export const parseNotebookSourceV1 = (data: NotebookSource): Note[] => {
 
   if (dataArr.length > 0) {
     for (const i of dataArr) {
-      const tagsHashedSignArr: string[] = []
-      const tagsArrTemp: string[] = i[attrsArr.indexOf('tagsHashedSign')].split(',')
-      for (const i of tagsArrTemp) {
-        if (i !== '') {
-          tagsHashedSignArr.push(i)
-        }
-      }
-
       const itemType = i[attrsArr.indexOf('type')]
       if (itemType === DocTypeNote) {
         res.push({
           content: i[attrsArr.indexOf('content')],
-          createTime: new Date(i[attrsArr.indexOf('createTime')]),
+          ctimeUtc: new Date(i[attrsArr.indexOf('ctimeUtc')]),
           hashedSign: i[attrsArr.indexOf('hashedSign')],
           icon: i[attrsArr.indexOf('icon')],
-          tagsArr: tagsHashedSignArr,
+          tagsArr: getTagsArr(i[attrsArr.indexOf('tagsHashedSign')]),
           title: i[attrsArr.indexOf('title')],
           type: itemType,
-          updateTime: new Date(i[attrsArr.indexOf('updateTime')])
+          mtimeUtc: new Date(i[attrsArr.indexOf('mtimeUtc')])
         })
       }
     }
   }
 
   return res
+}
+
+const getTagsArr = (tagsHashedSign: string) => {
+  const tagsHashedSignArr: string[] = []
+  const tagsArrTemp: string[] = tagsHashedSign.split(',')
+  for (const i of tagsArrTemp) {
+    if (i !== '') {
+      tagsHashedSignArr.push(i)
+    }
+  }
+  return tagsHashedSignArr
 }

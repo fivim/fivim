@@ -22,15 +22,9 @@ export const tmplAppData: AppInfo = {
   },
   currentTheme: '',
   dataPath: {
+    separator: '/',
     pathOfHome: '',
-    pathOfConfig: '',
-    pathOfHomeAppData: '',
-    pathOfCurrentDir: '',
-    pathOfCustomStyle: '',
-    pathOfCustomBackgroundImage: '',
-    pathOfSyncDir: '',
-    pathOfSyncCachedDir: '',
-    pathOfSyncDownloadDir: ''
+    pathOfHomeAppData: ''
   },
   defaultLocale: '',
   defaultLocaleInNative: '',
@@ -45,7 +39,6 @@ export const tmplAppData: AppInfo = {
 
 export const tmplSettingData: Setting = {
   normal: {
-    language: '',
     showFileSavingStatus: true,
     spellCheck: false,
     workDir: ''
@@ -55,6 +48,7 @@ export const tmplSettingData: Setting = {
     theme: '',
     customBackagroundImg: '',
     customBackagroundOpacity: 0.8,
+    locale: '',
     listColSortBy: 'title',
     listColSortOrder: 'ASC',
     listColShowCreateTime: true,

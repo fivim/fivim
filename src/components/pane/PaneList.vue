@@ -10,7 +10,7 @@
         <div class="title-bar">
           <div class="title-bar-container">
             <div class="section-title-bar-header">
-              <div class="box flex">
+              <div class="box disp-flex">
                 <div class="left lg:pt-0">
                   <div class="left-box">
                     <label class="icon text-lg ">
@@ -30,7 +30,7 @@
               </div>
             </div>
             <!-- tags -->
-            <div class="tags text-xs"
+            <div class="tags small"
               v-if="paneDataStore.data.listCol.tagsArr && paneDataStore.data.listCol.tagsArr.length > 0">
               <template v-for="(ii, index) in paneDataStore.data.listCol.tagsArr" v-bind:key="index">
                 <!-- TODO Not elegant enough -->
@@ -46,10 +46,9 @@
         <!-- content -->
         <template v-if="paneDataStore.data.listCol.type === ListColListTypeNotebook && paneDataStore.data.listCol.list">
           <div class="content-list">
-            <div class="content-list-item" v-for="(item, index) in list" v-bind:key="index"
-              @click="onChangeItem(index)">
+            <div class="content-list-item" v-for="(item, index) in list" v-bind:key="index" @click="onChangeItem(index)">
               <div :class="item.hashedSign === paneDataStore.data.editorCol.hashedSign ? 'selected p-2' : 'p-2'">
-                <div class="flex">
+                <div class="disp-flex">
                   <div class="left">
                     <el-icon class="item-icon" v-if="item.type === DocTypeNote">
                       <Tickets />
@@ -62,22 +61,22 @@
                 </div>
 
                 <div>
-                  <div class="mt-1 text-sm opacity-50 text-xs">
+                  <div class="mb-1 text-sm opacity-50 text-xs">
                     <div v-if="settingStore.data.appearance.listColShowCreateTime">
                       {{ t('Created') }}:
                       <span class="fr">
-                        {{ formatDateTime(item.createTime, settingStore.data.appearance.dateTimeFormat) }}
+                        {{ formatDateTime(item.ctimeUtc, settingStore.data.appearance.dateTimeFormat) }}
                       </span>
                     </div>
                     <div v-if="settingStore.data.appearance.listColShowUpdateTime">
                       {{ t('Updated') }}:
                       <span class="fr">
-                        {{ formatDateTime(item.updateTime, settingStore.data.appearance.dateTimeFormat) }}
+                        {{ formatDateTime(item.mtimeUtc, settingStore.data.appearance.dateTimeFormat) }}
                       </span>
                     </div>
                   </div>
 
-                  <div class="tags text-xs" v-if="item.tagsArr.length > 0">
+                  <div class="tags small" v-if="item.tagsArr.length > 0">
                     <template v-for="(ii, index) in item.tagsArr" v-bind:key="index">
                       <!-- TODO Not elegant enough -->
                       <span class="tag-btn" v-if="getTagData(ii).title">
@@ -91,7 +90,7 @@
             </div>
           </div>
         </template>
-        <template v-if="paneDataStore.data.listCol.type === ListColListTypeTag && paneDataStore.data.listCol.list">
+        <template v-else-if="paneDataStore.data.listCol.type === ListColListTypeTag && paneDataStore.data.listCol.list">
           <CollectionTag />
           <!-- notebook -->
           <!-- note -->
@@ -161,6 +160,7 @@ const onChangeItem = (index: number) => {
   editorData.title = note.title
   editorData.type = note.type
   editorData.hashedSign = note.hashedSign
+  editorData.tagsArr = note.tagsArr
   paneDataStore.setEditorColData(editorData)
 
   const ast = appStore.data
@@ -174,33 +174,35 @@ const onChangeItem = (index: number) => {
 const listSort = (a: Note, b: Note) => {
   const sortBy = settingStore.data.appearance.listColSortBy
   const sortOrder = settingStore.data.appearance.listColSortOrder
-  if (Object.prototype.hasOwnProperty.call(a, sortBy)) {
-    let nameA: string | Date
-    let nameB: string | Date
 
+  if (Object.prototype.hasOwnProperty.call(a, sortBy)) {
+    let valueA: string | Date
+    let valueB: string | Date
     switch (sortBy) {
       case 'title':
-        nameA = a.title.toUpperCase()
-        nameB = b.title.toUpperCase()
+        valueA = a.title.toUpperCase()
+        valueB = b.title.toUpperCase()
         break
-      case 'updateTime':
-        nameA = a.updateTime
-        nameB = b.updateTime
+      case 'mtimeUtc':
+        valueA = a.mtimeUtc
+        valueB = b.mtimeUtc
         break
-      case 'createTime':
-        nameA = a.createTime
-        nameB = b.createTime
+      case 'ctimeUtc':
+        valueA = a.ctimeUtc
+        valueB = b.ctimeUtc
         break
       default:
         return 0
     }
 
-    if (nameA < nameB) {
+    if (valueA < valueB) {
       return sortOrder === 'DESC' ? 1 : -1
     }
-    if (nameA > nameB) {
+    if (valueA > valueB) {
       return sortOrder === 'DESC' ? -1 : 1
     }
+  } else {
+    console.log('>>> Cannot use sort field ::', sortBy)
   }
 
   return 0

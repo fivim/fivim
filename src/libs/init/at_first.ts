@@ -1,10 +1,9 @@
 import { AppMode } from '@/types'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
 import { CmdInvoke, CmdAdapter } from '@/libs/commands'
 import { i18n } from '@/libs/init/i18n'
 import { initWithConfFile, InitError } from '@/libs/init/conf_file'
-import { initCoreDirs, initWorkDirs } from '@/libs/init/dirs'
+import { initCoreDirs, getDataDirs } from '@/libs/init/dirs'
 import { runInTauri } from '@/utils/utils'
 import { initStyle } from '@/libs/init/styles'
 import { initEntryFile } from '@/libs/user_data/entry_file'
@@ -32,19 +31,17 @@ const initAppData = () => {
 
 // Initialize other after configuration file initialization.
 export const initSuccessCallback = async () => {
-  return initWorkDirs().then(() => {
-    // CmdInvoke.closeSplashscreen()// close splashscreen
+  // CmdInvoke.closeSplashscreen()// close splashscreen
 
-    initAppData()
-    initStyle()
-    return initEntryFile().then(() => {
-      return true
-    }).catch((err) => {
-      const t = i18n.global.t
-      const name = t('configuration')
-      CmdAdapter.notification(t('Error initializing {name} file', { name }), t(err), '')
-      return false
-    })
+  initAppData()
+  initStyle()
+  return initEntryFile().then(() => {
+    return true
+  }).catch((err: Error) => {
+    const t = i18n.global.t
+    const typeName = t('configuration')
+    CmdAdapter.notification(t('&Error initializing file', { name: typeName }), t(err.message), '')
+    return false
   })
 }
 

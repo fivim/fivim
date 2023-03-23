@@ -42,17 +42,9 @@ export type ChangeMasterPasswordProcessItem = {
 }
 
 export type DataPath = {
-    // core
+    separator: string,
     pathOfHomeAppData: string;
-    pathOfConfig: string;
     pathOfHome: string;
-    pathOfCurrentDir: string
-    // other
-    pathOfCustomStyle: string
-    pathOfCustomBackgroundImage: string
-    pathOfSyncDir: string
-    pathOfSyncCachedDir: string
-    pathOfSyncDownloadDir: string
 }
 
 export type AppInfo = {
@@ -76,7 +68,6 @@ export type AppInfo = {
 
 export type Setting = {
     normal: {
-        language: string
         showFileSavingStatus: boolean
         spellCheck: boolean
         workDir: string
@@ -85,9 +76,10 @@ export type Setting = {
         customBackagroundImg: string
         customBackagroundOpacity: number
         dateTimeFormat: string
+        locale: string
         listColShowCreateTime: boolean
         listColShowUpdateTime: boolean
-        listColSortBy: 'title' | 'updateTime' | 'createTime'
+        listColSortBy: 'title' | 'mtimeUtc' | 'ctimeUtc'
         listColSortOrder: 'ASC' | 'DESC'
         theme: string
     },
@@ -99,4 +91,15 @@ export type Setting = {
         fileNameRule: keyof typeof TimeHashedSignType
         syncLockFileName: string
     }
+}
+
+export type SettingOfStartUp = {
+    appearance: {
+        locale: string
+        theme: string
+    },
+}
+
+export enum ErrorMessages {
+    FileVerificationFailed = 'File verification failed' // TODO add translate
 }

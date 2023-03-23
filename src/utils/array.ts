@@ -62,8 +62,8 @@ Object Array is a array with some object that have the same struct, demo:
     "summary": 4,
     "type": 5,
     "content": 6,
-    "updateTime": 7,
-    "createTime": 8,
+    "mtimeUtc": 7,
+    "ctimeUtc": 8,
     "tagsHashedSign": 9
   },
   {
@@ -73,8 +73,8 @@ Object Array is a array with some object that have the same struct, demo:
     "summary": 44,
     "type": 55,
     "content": 66,
-    "updateTime": 77,
-    "createTime": 88,
+    "mtimeUtc": 77,
+    "ctimeUtc": 88,
     "tagsHashedSign": 99
   }
 ]
@@ -84,7 +84,7 @@ Field Array ia a bit like the HTML table which has a header and a body, demo:
 
 ```json
 {
-  "attrsArr": ["hashedSign", "title", "icon", "summary", "type", "content", "updateTime", "createTime", "tagsHashedSign"],
+  "attrsArr": ["hashedSign", "title", "icon", "summary", "type", "content", "mtimeUtc", "ctimeUtc", "tagsHashedSign"],
   "dataArr": [
     [1, 2, 3, 4, 5, 6, 7, 8, 9],
     [11, 22, 33, 44, 55, 66, 77, 88, 99]
@@ -153,7 +153,6 @@ export class OrderedFieldArrayTable {
     }
 
     const values: OfatValuesArr = []
-
     for (const obj of objArr) {
       const valuesSub: OfatValuesItem = new Array(this.keysArr.length)
       for (let index = 0; index < this.keysArr.length; index++) {
