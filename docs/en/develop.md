@@ -7,6 +7,12 @@
 - TS event prefix: `on`, like: `onClickButton`
 - Editor attachments path prefix: `attaches://`, like: `attaches://ebfa511124ae8a7b3f4f0252e846954d`
 
+Time about file and data:
+
+- ctimeUtc: create timestamp(UTC time)
+- dtimeUtc: delete timestamp(UTC time)
+- mtimeUtc: modify timestamp(UTC time)
+
 ## Technology stack
 
 ### Backend
@@ -63,12 +69,6 @@ Commit the changes to your repository.
 git commit -m "Normalize all the line endings"
 ```
 
-Check eol: 
-
-```sh
-git ls-files --eol
-```
-
 Or [Refer2](https://www.aleksandrhovhannisyan.com/blog/crlf-vs-lf-normalizing-line-endings-in-git/#a-simple-gitattributes-config):
 
 set a `.gitattributes`  file like `Refer1`
@@ -79,7 +79,14 @@ git rm --cached -r .
 git reset --hard
 ```
 
+Check eol: 
+
+```sh
+git ls-files --eol
+```
+
 ## File struct and inner data struct
+
 - [file format](./file_format.md)
 - [user data struct](./user_data_struct.md)
 
@@ -94,6 +101,7 @@ git reset --hard
 - Run `pnpm tauri dev` or `pnpm tauri build` at the end
 
 ### Troubleshooting
+
 ##### window10 / 11
 Install `Microsoft Visual Studio C++ Build Tools`
 

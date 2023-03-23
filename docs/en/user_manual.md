@@ -15,7 +15,7 @@ Editor function:
   - on Linux is: `~/.enassi/conf.bin`
   - on MacOS is: `~/.enassi/conf.bin`
 
-- The user data directory is set by yourself in `Setup wizard` 
+- The user data directory is set by yourself in `Setup wizard`.There will be several subdirectories in the working directory, and the directory names are encrypted.
 
 ## Desktop
 ### User Interface

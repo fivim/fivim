@@ -68,8 +68,8 @@ All the notes in a notebook are stored in one notebook file.
         "icon",
         "type",
         "content",
-        "updateTime",
-        "createTime",
+        "mtimeUtc",
+        "ctimeUtc",
         "tagsHashedSign"
     ],
     "dataArr": [
