@@ -58,13 +58,13 @@ export const readNotebookdata = async (hashedSign: string) => {
   if (fileData.file_data_str.length === 0) {
     CmdInvoke.logError('>>> readNotebookdata readUserDataFile get empty content')
   }
-  const notesData = JSON.parse(fileData.file_data_str)
+  const jsonStr = fileData.file_data_str
 
   if (import.meta.env.TAURI_DEBUG) {
-    console.log('>>> readNotebookdata notesData:: ', JSON.parse(notesData))
+    console.log('>>> readNotebookdata notesData:: ', JSON.parse(jsonStr))
   }
 
-  return parseNotebookJson(notesData) // call JSON.parse to get a JSON string
+  return parseNotebookJson(jsonStr) // call JSON.parse to get a JSON string
 }
 
 export const writeUserData = (filePath: string, fileName: string, fileContent: Uint8Array) => {
