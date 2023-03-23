@@ -9,7 +9,7 @@ use crate::utils::logger as x_logger;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserFileData {
-    crc32: i32,
+    crc32: u32,
     crc32_check: u32,
     file_modify_timestamp: i64,
     file_name: String,
@@ -67,8 +67,8 @@ pub fn deserialize(bytes: Vec<u8>) -> UserFileData {
 
     res.file_name = String::from_utf8(item_file_name.to_vec()).unwrap();
     res.file_data = item_file_data.to_vec();
-    res.crc32 = i32::from_le_bytes(item_crc32);
-    res.crc32_check = x_hash::crc32_by_bytes(x_hash::sha256_by_bytes(&item_file_data).as_bytes());
+    res.crc32 = u32::from_le_bytes(item_crc32);
+    res.crc32_check = x_hash::crc32_of_sha256(&item_file_data);
     res.file_modify_timestamp = i64::from_le_bytes(file_modify_timestamp);
 
     return res;
@@ -128,7 +128,7 @@ fn serialize_small_file_bytes(pwd: &str, file_name: &str, file_content: Vec<u8>)
 
     // Update crc32(sha256)
     let data = x_encrypt::encrypt_bytes(&pwd, &file_content); //Item file data
-    let crc32 = sha256_crc32_bytes(x_hash::sha256_by_bytes(&data).as_bytes());
+    let crc32 = sha256_crc32_bytes(&data);
     item_header[4..8].clone_from_slice(&crc32.to_vec()); // Item CRC-32
 
     // Merge most of the data.
@@ -226,8 +226,8 @@ fn size_bytes(size: usize) -> [u8; 4] {
     return sz.to_le_bytes();
 }
 
-fn sha256_crc32_bytes(sha256: &[u8]) -> [u8; 4] {
-    let crc32 = x_hash::crc32_by_bytes(sha256);
+fn sha256_crc32_bytes(data: &[u8]) -> [u8; 4] {
+    let crc32 = x_hash::crc32_of_sha256(data);
     return crc32.to_le_bytes();
 }
 

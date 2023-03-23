@@ -36,6 +36,10 @@ pub fn crc32_by_bytes(bys: &[u8]) -> u32 {
     return crc32fast::hash(bys);
 }
 
+pub fn crc32_of_sha256(data: &[u8]) -> u32 {
+    return crc32_by_bytes(sha256_by_bytes(data).as_bytes());
+}
+
 pub fn md5_bytes(input: &str) -> [u8; 16] {
     return *md5::compute(input);
 }
