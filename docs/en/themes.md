@@ -4,28 +4,28 @@ The built-in themes now provided are as follows
 
 balance:
 
-![balance](../images/balance.png)
+![balance](../images/themes/balance.png)
 
 default:
 
-![default](../images/default.png)
+![default](../images/themes/default.png)
 
 frost:
 
-![frost](../images/frost.png)
+![frost](../images/themes/frost.png)
 
 material:
 
-![material](../images/material.png)
+![material](../images/themes/material.png)
 
 polar-night:
 
-![polar-night](../images/polar-night.png)
+![polar-night](../images/themes/polar-night.png)
 
 pretty:
 
-![pretty](../images/pretty.png)
+![pretty](../images/themes/pretty.png)
 
 sunrise:
 
-![sunrise](../images/sunrise.png)
+![sunrise](../images/themes/sunrise.png)

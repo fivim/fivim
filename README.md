@@ -40,7 +40,7 @@ The following two screenshots are the **default** theme and the **material** the
 
 | default theme                               | material theme                                |
 | ------------------------------------------- | --------------------------------------------- |
-| ![default theme](./docs/images/default.png) | ![material theme](./docs/images/material.png) |
+| ![default theme](./docs/images/themes/default.png) | ![material theme](./docs/images/themes/material.png) |
 
 ## Table of Contents
 
