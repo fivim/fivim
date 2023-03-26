@@ -9,7 +9,7 @@
     "attrsArr": [
       "title",
       "icon",
-      "hashedSign"
+      "sign"
     ],
     "dataArr": [
       [
@@ -23,7 +23,7 @@
     "attrsArr": [
       "title",
       "icon",
-      "hashedSign"
+      "sign"
     ],
     "dataArr": [
       [
@@ -41,7 +41,7 @@
   "attachments": {
     "attrsArr": [
       "fileName",
-      "hashedSign",
+      "sign",
       "uploadTime"
     ],
     "dataArr": [
@@ -63,14 +63,14 @@ All the notes in a notebook are stored in one notebook file.
 {
     "dataVersion": 1,
     "attrsArr": [
-        "hashedSign",
+        "sign",
         "title",
         "icon",
         "type",
         "content",
         "mtimeUtc",
         "ctimeUtc",
-        "tagsHashedSign"
+        "tagsSign"
     ],
     "dataArr": [
         [

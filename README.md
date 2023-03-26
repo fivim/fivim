@@ -88,19 +88,11 @@ Tauri currently supports development and distribution on the following platforms
 
 [ ] list tag items
 
-[x] log
-
 [ ] change master password
 
 [ ] import / export note data
 
 [ ] optimize the style of emoji-picker 
-
-[ ] show editor outline
-
-[ ] encryption and decryption of selected attachments
-
-[ ] add more language
 
 [ ] sync
 
@@ -108,8 +100,20 @@ Tauri currently supports development and distribution on the following platforms
 
 [ ] support for custom css files
 
+[ ] add more language
+
 ## FAQ
 
+- How to share encrypted files with friends
+  - The first step, encrypt your file:
+    1. Click the **file manager** in the navigation column.
+    2. Chen click the share button in the list column.
+    3. Select the file and set the password.
+    4. You will see the encrypted file in the specified output directory.
+
+  - Send this file to your friends.
+  - Your friends input the same password to decrypt it.
+  - 
 - Windows 10/11 missing emoji flag support
   - On Windows 10/11, we rely on Edge, currently render flags as letters, not flags. 
   - Firefox has fixed this using their own flag emoji.

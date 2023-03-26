@@ -7,7 +7,7 @@ It has 2 parts:
 - File header: only have one.
 - Item file: currently only one is used. [document](./user_data_struct.md)
 
-## File header (min 30 bytes)
+## File header (30 bytes)
 | usage                                | length   | remark                   |
 | ------------------------------------ | -------- | ------------------------ |
 | File header signature                | 4 bytes  | 'PK\x03\x04'             |
@@ -19,24 +19,24 @@ It has 2 parts:
 
 ## Item file
 
-### Header (min 46 bytes)
+### Header (50 bytes)
 | usage                                | length   | remark                      |
 | ------------------------------------ | -------- | --------------------------- |
 | Item header signature                | 4 bytes  | 'PK\x01\x02'                |
-| CRC-32                               | 4 bytes  | crc32(sha256(file_content)) |
+| CRC-32                               | 4 bytes  | crc32(sha256(file content)) |
 | Item last modification UTC timestamp | 8 bytes  | Max: 2286-11-21 01:46:39    |
 | Item file name length                | 2 bytes  | Max: 32767                  |
+| Item file data length                | 4 bytes  | Max: 2147483647(2T)         |
 | Empty                                | 28 bytes | 0                           |
-| Item file name                       | variable | Can be none                 |
 
 ### Body
-| usage                 | length   | remark          |
-| --------------------- | -------- | --------------- |
-| Item file data length | 4 bytes  | Max: 2147483647 |
-| Item file data        | variable | Can be none     |
+| usage          | length   | remark      |
+| -------------- | -------- | ----------- |
+| Item file name | variable | Can be none |
+| Item file data | variable | Can be none |
 
-### Tail (min 22 bytes)
+### Tail (20 bytes)
 | usage                 | length   | remark       |
 | --------------------- | -------- | ------------ |
 | End of item signature | 4 bytes  | 'PK\x05\x06' |
-| Empty                 | 18 bytes | 0            |
+| Empty                 | 16 bytes | 0            |
