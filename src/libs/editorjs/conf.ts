@@ -33,6 +33,7 @@ export const mergeConfig = (confInput: Props) => {
     // autofocus: true,
     hideToolbar: false,
     tools: {
+      /* TODO
       attaches: {
         class: AttachesTool as unknown as undefined, // avoid type error
         config: {
@@ -40,6 +41,7 @@ export const mergeConfig = (confInput: Props) => {
           errorMessage: t('NoteEditor.File upload failed')
         }
       },
+      */
       checklist: ChecklistTool,
       code: CodeTool,
       delimiter: DelimiterTool,
@@ -117,7 +119,7 @@ export const mergeConfig = (confInput: Props) => {
                 })
             })
           }
-          // ========== Custom uploader end ==========
+          // ---------- Custom uploader end ----------
         }
       },
       inlineCode: InlineCodeTool,

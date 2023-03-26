@@ -1,7 +1,9 @@
 import { AppCoreConf } from '@/types'
-import { runInTauri } from '@/utils/utils'
+import { MasterPasswordSalt } from '@/constants'
+import { useSettingStore } from '@/pinia/modules/settings'
+import { runInTauri, genFilePwd } from '@/utils/utils'
 
-import { Commands, WriteFileRes, UserDataFile } from './types'
+import { Commands, WriteFileRes, UserDataFile, UserDataParseAs } from './types'
 import { CommandsTauri } from './command_tauri'
 import { CommandsWeb } from './command_web'
 
@@ -100,10 +102,14 @@ export const CmdInvoke = {
     CmdAdapter.invoke('string_crc32', { string: str }) as Promise<number>,
 
   // user data file
-  readUserDataFile: (pwd: string, filePath: string, parseAsString: boolean) =>
-    CmdAdapter.invoke('read_user_data_file', { pwd, filePath, parseAsString }) as Promise<UserDataFile>,
-  writeUserDataFile: (pwd: string, filePath: string, fileName: string, fileContent: Uint8Array, sourceOfLargeFilePath: string) =>
-    CmdAdapter.invoke('write_user_data_file', { pwd, filePath, fileName, fileContent: Array.from(fileContent), sourceOfLargeFilePath }) as Promise<boolean>,
+  readUserDataFile: (pwd: string, filePath: string, alwaysOpenInMemory: boolean, parseAs: UserDataParseAs, targetFilePath: string) => {
+    pwd = pwd ? genFilePwd(pwd, '') : getPwdByMasterPwd()
+    return CmdAdapter.invoke('read_user_data_file', { pwd, filePath, alwaysOpenInMemory, parseAs, targetFilePath }) as Promise<UserDataFile>
+  },
+  writeUserDataFile: (pwd: string, filePath: string, fileName: string, fileContent: Uint8Array, sourceOfLargeFilePath: string) => {
+    pwd = pwd ? genFilePwd(pwd, '') : getPwdByMasterPwd()
+    return CmdAdapter.invoke('write_user_data_file', { pwd, filePath, fileName, fileContent: Array.from(fileContent), sourceOfLargeFilePath }) as Promise<boolean>
+  },
 
   // ---------- combined functions ----------
   // encrypt
@@ -117,4 +123,9 @@ export const CmdInvoke = {
       return await CmdInvoke.decryptString(pwd, u8Arr)
     }) as Promise<string>
   }
+}
+
+export const getPwdByMasterPwd = () => {
+  const settingStore = useSettingStore()
+  return genFilePwd(settingStore.data.encryption.masterPassword, MasterPasswordSalt)
 }

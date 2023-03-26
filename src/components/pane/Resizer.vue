@@ -111,7 +111,7 @@ const init = () => {
     window.addEventListener('resize', debouncedResizeHandler)
   }
 }
-// ========== init end ==========
+// ---------- init end ----------
 
 // ---------- event ----------
 onBeforeUnmount(() => {
@@ -283,7 +283,7 @@ const handleResize = () => {
   handleEventWidth()
   finishSetWidth()
 }
-// ========== event end ==========
+// ---------- event end ----------
 
 // ---------- other ----------
 const getAppFrame = () => {

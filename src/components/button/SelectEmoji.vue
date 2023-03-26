@@ -13,7 +13,7 @@
 import { useI18n } from 'vue-i18n'
 import { VuemojiPicker, EmojiClickEventDetail } from 'vuemoji-picker'
 
-import XPopover from '@/components/UI_component/x_popover.vue'
+import XPopover from '@/components/widget/XPopover.vue'
 
 const props = defineProps({
   icon: {

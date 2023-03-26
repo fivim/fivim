@@ -18,10 +18,18 @@
         <div class="disp-flex">
           <div class="disp-flex flex-grow">{{ t('Sort order') }}</div>
           <div class="disp-flex flex-grow justify-content-right">
-            <SortAscendingOutlined @click="settingStore.data.appearance.listColSortOrder = 'ASC'"
-              :class="`px-1 ${settingStore.data.appearance.listColSortOrder !== 'DESC' ? 'highlight font-bold' : ''}`" />
-            <SortDescendingOutlined @click="settingStore.data.appearance.listColSortOrder = 'DESC'"
-              :class="`px-1 ${settingStore.data.appearance.listColSortOrder === 'DESC' ? 'highlight font-bold' : ''}`" />
+            <div class="px-1 cur-ptr">
+              <el-icon @click="settingStore.data.appearance.listColSortOrder = 'ASC'"
+                :class="`${settingStore.data.appearance.listColSortOrder !== 'DESC' ? 'highlight font-bold' : ''}`">
+                <SortDown />
+              </el-icon>
+            </div>
+            <div class="px-1 cur-ptr">
+              <el-icon @click="settingStore.data.appearance.listColSortOrder = 'DESC'"
+                :class="`${settingStore.data.appearance.listColSortOrder === 'DESC' ? 'highlight font-bold' : ''}`">
+                <SortUp />
+              </el-icon>
+            </div>
           </div>
         </div>
       </div>
@@ -30,11 +38,10 @@
 </template>
 
 <script lang="ts" setup>
-import { Sort } from '@element-plus/icons-vue'
-import { SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue'
+import { Sort, SortUp, SortDown } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 
-import XPopover from '@/components/UI_component/x_popover.vue'
+import XPopover from '@/components/widget/XPopover.vue'
 import { useSettingStore } from '@/pinia/modules/settings'
 
 const { t } = useI18n()

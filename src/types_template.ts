@@ -1,5 +1,5 @@
 import { AppInfo, AppMode, Setting } from '@/types'
-import { DocTypeNote } from '@/constants'
+import { TypeNote } from '@/constants'
 
 import { EntryFileSource } from '@/libs/user_data/types'
 
@@ -15,10 +15,10 @@ export const tmplAppData: AppInfo = {
     totalNumber: 0
   },
   currentFile: {
-    hashedSign: '',
+    sign: '',
     indexInList: 0,
     name: '',
-    type: DocTypeNote
+    type: TypeNote
   },
   currentTheme: '',
   dataPath: {
@@ -30,7 +30,6 @@ export const tmplAppData: AppInfo = {
   defaultLocaleInNative: '',
   editorFullScreen: false,
   existConfigFile: false,
-  fileMetaMapping: {},
   isWebPage: true,
   lockscreen: true,
   textDirection: 'LTR',
@@ -46,8 +45,6 @@ export const tmplSettingData: Setting = {
   appearance: {
     dateTimeFormat: '',
     theme: '',
-    customBackagroundImg: '',
-    customBackagroundOpacity: 0.8,
     locale: '',
     listColSortBy: 'title',
     listColSortOrder: 'ASC',
@@ -74,10 +71,9 @@ export const tmplEntryFileData: EntryFileSource = {
     attrsArr: [],
     dataArr: []
   },
-  attachments: {
+  files: {
     attrsArr: [],
     dataArr: []
   },
-  fileMetaMapping: {},
   syncLockFileName: ''
 }

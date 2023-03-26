@@ -10,7 +10,14 @@
       <el-tab-pane :label="t('General')">
         <el-form :model="settingStore.data" label-width="150px" :label-position="genLabelPosition()">
           <el-form-item :label="t('Working directory')">
-            <div class="w-full">{{ settingStore.data.normal.workDir }}</div>
+            <div class="w-full">
+              <el-input v-model="settingStore.data.normal.workDir" />
+            </div>
+            <div class="w-full mt-2">
+              <el-alert :title="t('Warning')"
+                description="If you modify the working directory, you need to move the files in the original directory to the new directory and restart the app."
+                type="warning" show-icon />
+            </div>
             <div class="w-full">{{ t('&Total size of all files', { size: allFileSize }) }}</div>
           </el-form-item>
           <!--
@@ -56,6 +63,7 @@
           <el-form-item :label="t('Show update time')">
             <el-switch v-model="settingStore.data.appearance.listColShowUpdateTime" />
           </el-form-item>
+
         </el-form>
       </el-tab-pane>
       <el-tab-pane :label="t('Encryption')">
@@ -143,10 +151,12 @@ import { ElPrecessItem } from '@/types_common'
 import { settingOptions, changeMasterPasswordProcessData } from '@/conf'
 import { i18n, getLanguageMeta, setLocale } from '@/libs/init/i18n'
 import { CmdInvoke } from '@/libs/commands'
+import { initSync } from '@/libs/init/at_first'
 import { getDataDirs } from '@/libs/init/dirs'
 import { elOptionArrSort } from '@/utils/array'
 import { happybytes } from '@/utils/bytes'
-import { isMobileScreen, getPageWidth } from '@/utils/media_query'
+import { isMobileScreen } from '@/utils/media_query'
+import { grnDialogWidth } from '@/utils/utils'
 import { genFileNamingRuleDemoHtml, sha256, genMasterPasswordSha256 } from '@/utils/hash'
 
 const { t } = useI18n()
@@ -176,7 +186,7 @@ const changeMasterPasswordStatus = computed(() => {
     totalNumber: appStore.data.changeMasterPasswordStatus.totalNumber
   })
 })
-// ========== Change master password end ==========
+// ---------- Change master password end ----------
 
 // ---------- dialog ----------
 const dialogVisible = ref(false)
@@ -197,6 +207,8 @@ const onSave = (close: boolean) => {
   const sd = settingStore.data
   settingStore.setData(sd, true)
 
+  initSync()
+
   // If locale changed
   const localeNew = settingStore.data.appearance.locale
   if (localeNew !== localeOld.value) {
@@ -214,22 +226,6 @@ const onSave = (close: boolean) => {
   }
 }
 
-const grnDialogWidth = () => {
-  // mobile version use "fullscreen" attr
-  // if (isMobileScreen()) {
-  //     return "100%"
-  // }
-
-  const width = getPageWidth()
-  if (width < 768) {
-    return '100%'
-  } else if (width < 1024) {
-    return '95%'
-  } else if (width >= 1024) {
-    return '50%'
-  }
-}
-
 const genLabelPosition = () => {
   if (isMobileScreen()) {
     return 'top'
@@ -237,7 +233,7 @@ const genLabelPosition = () => {
 
   return 'left'
 }
-// ========== dialog end ==========
+// ---------- dialog end ----------
 
 // ---------- master password ----------
 const changeMasterPasswordVisible = ref(false)
@@ -272,7 +268,7 @@ const onInputFileExt = (detail: string) => {
     })
   }
 }
-// ========== master password end ==========
+// ---------- master password end ----------
 </script>
 
 <style lang="scss">

@@ -26,3 +26,6 @@ export type UserDataFile = {
     file_data: Uint8Array,
     file_data_str: string,
 }
+
+// 'string' means normal string, 'base64' means base64 string, 'bin' means binary
+export type UserDataParseAs = 'string' | 'base64' | 'bin'

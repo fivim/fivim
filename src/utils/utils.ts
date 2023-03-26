@@ -1,3 +1,15 @@
+import { sha256 } from './hash'
+import { getPageWidth } from './media_query'
+
+// Make a password to encrypt/decrypt file with a salt.
+export const genFilePwd = (pwdSha256: string, salt: string) => {
+  if (pwdSha256 === '') {
+    return ''
+  }
+
+  return sha256(salt + salt + pwdSha256)
+}
+
 // deep copy a data
 export const jsonCopy = (data: any) => JSON.parse(JSON.stringify(data))
 
@@ -59,4 +71,20 @@ export const addCssStyle = (src: string) => {
 
 export const setTheme = (themeName: string) => {
   document.documentElement.setAttribute('theme', themeName)
+}
+
+export const grnDialogWidth = () => {
+  // mobile version use "fullscreen" attr
+  // if (isMobileScreen()) {
+  //     return "100%"
+  // }
+
+  const width = getPageWidth()
+  if (width < 768) {
+    return '100%'
+  } else if (width < 1024) {
+    return '95%'
+  } else if (width >= 1024) {
+    return '50%'
+  }
 }

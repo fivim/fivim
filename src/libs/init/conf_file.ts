@@ -5,8 +5,7 @@ import { useSettingStore } from '@/pinia/modules/settings'
 import { getDataDirs } from '@/libs/init/dirs'
 import { CmdInvoke } from '@/libs/commands'
 import { i18n, setLocale } from '@/libs/init/i18n'
-import { sha256 } from '@/utils/hash'
-import { setTheme } from '@/utils/utils'
+import { setTheme, genFilePwd } from '@/utils/utils'
 import { getAvailableLocale } from '@/utils/locale'
 
 export enum InitError {
@@ -14,14 +13,7 @@ export enum InitError {
   noSyncLockFileName
 }
 
-// Make a password with other sign.
-const confFilePwd = (pwdSha256: string) => {
-  if (pwdSha256 === '') {
-    return ''
-  }
-
-  return sha256(MasterPasswordSalt + MasterPasswordSalt + pwdSha256)
-}
+const genPwd = (pwdSha256: string) => genFilePwd(pwdSha256, MasterPasswordSalt)
 
 export const initWithStartUpConfFile = async () => {
   const p = await getDataDirs()
@@ -43,15 +35,15 @@ export const initWithStartUpConfFile = async () => {
 
     // Theme
     const appStore = useAppStore()
-    const ast = appStore.data
+    const ad = appStore.data
     const themeName = conf.appearance.theme
     if (themeName !== '') {
       setTheme(themeName)
-      ast.currentTheme = themeName
+      ad.currentTheme = themeName
       settings.appearance.theme = themeName
     }
 
-    await appStore.setData(ast)
+    await appStore.setData(ad)
     settingStore.setData(settings, false)
   })
 }
@@ -76,7 +68,7 @@ export const initWithConfFile = async (pwdSha256: string, successCallback: Calla
   const settingStore = useSettingStore()
 
   const p = await getDataDirs()
-  return CmdInvoke.decryptFileToString(confFilePwd(pwdSha256), p.pathOfConfig).then(async (data: string) => {
+  return CmdInvoke.decryptFileToString(genPwd(pwdSha256), p.pathOfConfig).then(async (data: string) => {
     if (data === '') {
       return false
     }
@@ -112,14 +104,14 @@ export const initWithConfFile = async (pwdSha256: string, successCallback: Calla
     await settingStore.setData(conf, false)
 
     // Theme
-    const ast = appStore.data
+    const ad = appStore.data
     const themeName = conf.appearance.theme
     if (themeName !== '') {
       setTheme(themeName)
-      ast.currentTheme = themeName
+      ad.currentTheme = themeName
     }
 
-    await appStore.setData(ast)
+    await appStore.setData(ad)
 
     if (successCallback) {
       successCallback()
@@ -133,15 +125,15 @@ export const saveConfToFile = async () => {
   const settingStore = useSettingStore()
   const p = await getDataDirs()
 
-  CmdInvoke.encryptStringToFile(confFilePwd(settingStore.data.encryption.masterPassword), p.pathOfConfig, JSON.stringify(settingStore.data))
+  CmdInvoke.encryptStringToFile(genPwd(settingStore.data.encryption.masterPassword), p.pathOfConfig, JSON.stringify(settingStore.data))
 }
 
 export const checkConfFileExist = async () => {
   const appStore = useAppStore()
-  const aaa = appStore.data
+  const ad = appStore.data
   const p = await getDataDirs()
   CmdInvoke.existFile(p.pathOfConfig).then((exist: boolean) => {
-    aaa.existConfigFile = exist
-    appStore.setData(aaa)
+    ad.existConfigFile = exist
+    appStore.setData(ad)
   })
 }

@@ -56,7 +56,7 @@ Object Array is a array with some object that have the same struct, demo:
 ```json
 [
   {
-    "hashedSign": 1,
+    "sign": 1,
     "title": 2,
     "icon": 3,
     "summary": 4,
@@ -64,10 +64,10 @@ Object Array is a array with some object that have the same struct, demo:
     "content": 6,
     "mtimeUtc": 7,
     "ctimeUtc": 8,
-    "tagsHashedSign": 9
+    "tagsSign": 9
   },
   {
-    "hashedSign": 11,
+    "sign": 11,
     "title": 22,
     "icon": 33,
     "summary": 44,
@@ -75,7 +75,7 @@ Object Array is a array with some object that have the same struct, demo:
     "content": 66,
     "mtimeUtc": 77,
     "ctimeUtc": 88,
-    "tagsHashedSign": 99
+    "tagsSign": 99
   }
 ]
 ```
@@ -84,7 +84,7 @@ Field Array ia a bit like the HTML table which has a header and a body, demo:
 
 ```json
 {
-  "attrsArr": ["hashedSign", "title", "icon", "summary", "type", "content", "mtimeUtc", "ctimeUtc", "tagsHashedSign"],
+  "attrsArr": ["sign", "title", "icon", "summary", "type", "content", "mtimeUtc", "ctimeUtc", "tagsSign"],
   "dataArr": [
     [1, 2, 3, 4, 5, 6, 7, 8, 9],
     [11, 22, 33, 44, 55, 66, 77, 88, 99]
@@ -99,7 +99,7 @@ type OfatToObjectArrayCallbackObj = {
   [key: string]: CallableFunction
 }
 type OfatFromObjectArrayCallbackObj = {
-  [key: string]: (item: unknown, currentObj: object) => {
+  [key: string]: (item: any, currentObj: object) => {
     currentItemAfter: unknown,
     moveToNewNewFieldName: string
   }

@@ -1,41 +1,90 @@
+import { TypeFile, TypeNone, TypeNote } from '@/constants'
+
 import { PaneData } from '@/components/pane/types'
 
-export type FileMetaValue = {
-    mtimeUtc: number // modify timestamp
-    dtimeUtc: number// delete timestamp
+export type DocType = typeof TypeNote | typeof TypeNone
+export type FileType = typeof TypeFile
+
+export type FileInfo = {
+    // common
+    ctimeUtc: Date // create timestamp(in milliseconds)
+    mtimeUtc: Date // modify timestamp(in milliseconds)
+    sign: string
+    tagsArr: string[]
+    title: string
+    // other
+    content: string // remark content
+    dtimeUtc: Date // delete timestamp(in milliseconds)
     sha256: string
+    size: number,
+    type: FileType
 }
-export type FileMeta = { [key: string]: FileMetaValue }
+
+export type NotebookInfo = {
+    // common
+    ctimeUtc: Date // create timestamp(in milliseconds)
+    mtimeUtc: Date // modify timestamp(in milliseconds)
+    sign: string
+    tagsArr: string[]
+    title: string
+    // other
+    icon: string
+}
+
+export type NoteInfo = {
+    // common
+    ctimeUtc: Date // create timestamp(in milliseconds)
+    mtimeUtc: Date // modify timestamp(in milliseconds)
+    sign: string
+    tagsArr: string[]
+    title: string
+    // other
+    content: string
+    icon: string
+    type: DocType
+}
+
+export type TagInfo = {
+    // common
+    ctimeUtc: Date // create timestamp(in milliseconds)
+    mtimeUtc: Date // modify timestamp(in milliseconds)
+    sign: string
+    title: string
+    // other
+    icon: string
+}
+
+export type AttrsArrKeyOfFile = 'ctimeUtc' | 'mtimeUtc' | 'sign' | 'tagsSign' | 'title' | 'content' | 'dtimeUtc' | 'sha256' | 'size'
+export type AttrsArrKeyOfNotebook = 'ctimeUtc' | 'mtimeUtc' | 'sign' | 'tagsSign' | 'title' | 'icon'
+export type AttrsArrKeyOfNote = 'ctimeUtc' | 'mtimeUtc' | 'sign' | 'tagsSign' | 'title' | 'content' | 'icon' | 'type'
 
 // User's entry file data
-export type NotebookAttrsArrKey = 'title' | 'icon' | 'hashedSign' | 'mtimeUtc' | 'tagsHashedSign'
 export type EntryFileSource = {
     dataVersion: number
     noteBooks: {
-        attrsArr: NotebookAttrsArrKey[]
+        attrsArr: AttrsArrKeyOfNotebook[]
         dataArr: string[][]
     },
     tags: {
-        attrsArr: NotebookAttrsArrKey[]
+        attrsArr: AttrsArrKeyOfNotebook[]
         dataArr: string[][]
     },
-    attachments: {
-        attrsArr: NotebookAttrsArrKey[]
+    files: {
+        attrsArr: AttrsArrKeyOfFile[]
         dataArr: string[][]
     },
-    // files: {
-    //     attrsArr: EntryFileSourceNotebooksTagsAttrsArrKey[]
-    //     dataArr: string[][]
-    // },
-    fileMetaMapping: FileMeta
     syncLockFileName: string
 }
 
+export type EntryFileSourceParsedRes = {
+    paneData: PaneData
+    syncLockFileName: string,
+}
+
 // User's note data
-export type NoteAttrsArrKey = 'title' | 'icon' | 'hashedSign' | 'type' | 'content' | 'mtimeUtc' | 'ctimeUtc' | 'tagsHashedSign'
 export type NotebookSource = {
     dataVersion: number
-    attrsArr: NoteAttrsArrKey[]
+    attrsArr: AttrsArrKeyOfNote[]
     dataArr: string[][]
 }
 
@@ -45,13 +94,8 @@ export type SyncLockSource = {
     syncExpireTimestamp: number
 }
 
-export type ParsedEntryFileRes = {
-    paneData: PaneData
-    fileMetaMapping: FileMeta
-    syncLockFileName: string,
-}
-
 export type MergeEntryFileMeta = {
-    fileMetaMapping: FileMeta
     syncLockFileName: string
 }
+
+export { TypeNote }

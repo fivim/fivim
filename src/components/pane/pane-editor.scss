@@ -60,17 +60,15 @@
     }
   }
 
-  .note {
+
+  .editor-box {
     margin: var(--enas-note-editor-margin);
     padding: var(--enas-note-editor-padding);
     border: 1px solid var(--enas-border-color);
-    height: calc(100vh - var(--enas-editor-title-bar-height) - var(--enas-desktop-title-bar-height) - var(--enas-note-editor-padding)*2);
-    overflow-y: scroll;
   }
 
-  .sheet {
-    margin: var(--enas-note-editor-margin);
-    padding: var(--enas-note-editor-padding);
-    border: 1px solid var(--enas-border-color);
+  .note {
+    height: calc(100vh - var(--enas-editor-title-bar-height) - var(--enas-desktop-title-bar-height) - var(--enas-note-editor-padding)*2);
+    overflow-y: scroll;
   }
 }

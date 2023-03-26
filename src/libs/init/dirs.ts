@@ -1,3 +1,4 @@
+import { ExtDataPath } from '@/types'
 import { ConfigFileName, ConfigStartUpFileName } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { useSettingStore } from '@/pinia/modules/settings'
@@ -9,25 +10,20 @@ export const initCoreDirs = async () => {
   const appCoreConf = await CmdInvoke.getAppCoreConf()
 
   const appStore = useAppStore()
-  const aaa = appStore.data
+  const ad = appStore.data
 
   const pathOfHome = appCoreConf.homeDir
   const pathOfAppData = appCoreConf.homeAppDir
 
-  aaa.appName = appCoreConf.appName
-  aaa.defaultLocale = appCoreConf.defaultLanguage
-  aaa.defaultLocaleInNative = appCoreConf.defaultLanguageInNative
-  aaa.version = appCoreConf.version
+  ad.appName = appCoreConf.appName
+  ad.defaultLocale = appCoreConf.defaultLanguage
+  ad.defaultLocaleInNative = appCoreConf.defaultLanguageInNative
+  ad.version = appCoreConf.version
 
-  aaa.dataPath.separator = separator
-  aaa.dataPath.pathOfHomeAppData = pathOfAppData
-  aaa.dataPath.pathOfHome = pathOfHome
-  appStore.setData(jsonCopy(aaa))
-}
-
-export const pathJoin = async (dirs: string[]) => {
-  const separator = await CmdAdapter.isWindows() ? '\\' : '/'
-  return dirs.join(separator)
+  ad.dataPath.separator = separator
+  ad.dataPath.pathOfHomeAppData = pathOfAppData
+  ad.dataPath.pathOfHome = pathOfHome
+  appStore.setData(jsonCopy(ad))
 }
 
 export const getDataDirs = async () => {
@@ -65,5 +61,5 @@ export const getDataDirs = async () => {
     // style
     pathOfCustomStyle,
     pathOfCustomBackgroundImage: `${pathOfCustomStyle}custom_background_image.jpg`
-  }
+  } as ExtDataPath
 }

@@ -18,21 +18,19 @@ import { Plus } from '@element-plus/icons-vue'
 import { FileTextOutlined, TableOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
-import { Note } from '@/components/pane/types'
-import XPopover from '@/components/UI_component/x_popover.vue'
-import { DefaultFileNameRule, DocTypeNote } from '@/constants'
+import XPopover from '@/components/widget/XPopover.vue'
+import { TypeNote } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
-import { usePaneDataStore } from '@/pinia/modules/pane_data'
-import { useSettingStore } from '@/pinia/modules/settings'
-import { genTimeHashedSign } from '@/utils/hash'
+import { usePanesStore } from '@/pinia/modules/panes'
+import { NoteInfo } from '@/libs/user_data/types'
+import { genFileName } from '@/utils/pinia_related'
 
 const appStore = useAppStore()
-const paneDataStore = usePaneDataStore()
-const settingStore = useSettingStore()
+const panesStore = usePanesStore()
 const { t } = useI18n()
 
-const addItem = (itemType: typeof DocTypeNote) => {
-  const pd = paneDataStore.data
+const addItem = (itemType: typeof TypeNote) => {
+  const pd = panesStore.data
   if (pd.navigationCol.notebooks.length === 0) {
     ElMessage({
       message: t('&Please add notebook first.'),
@@ -42,9 +40,9 @@ const addItem = (itemType: typeof DocTypeNote) => {
 
     return
   }
-  const settingData = settingStore.data
-  const newItem: Note = {
-    hashedSign: genTimeHashedSign(settingData.encryption.fileNameRule || DefaultFileNameRule, settingData.appearance.dateTimeFormat, settingData.encryption.fileExt),
+
+  const newItem: NoteInfo = {
+    sign: genFileName(),
     title: t('Untitled'),
     icon: '',
     type: itemType,
@@ -57,17 +55,17 @@ const addItem = (itemType: typeof DocTypeNote) => {
   pd.listCol.list.push(newItem)
   pd.editorCol.title = newItem.title
   pd.editorCol.content = newItem.content
-  paneDataStore.setData(pd)
+  panesStore.setData(pd)
 
   const info = appStore.data
-  info.currentFile.hashedSign = newItem.hashedSign
-  info.currentFile.indexInList = paneDataStore.data.listCol.list.length - 1
+  info.currentFile.sign = newItem.sign
+  info.currentFile.indexInList = panesStore.data.listCol.list.length - 1
   info.currentFile.name = newItem.title
   info.currentFile.type = newItem.type
   appStore.setData(info)
 }
 
 const onAddNote = () => {
-  addItem(DocTypeNote)
+  addItem(TypeNote)
 }
 </script>

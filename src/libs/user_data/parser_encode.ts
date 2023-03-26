@@ -1,77 +1,102 @@
-import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
-import { usePaneDataStore } from '@/pinia/modules/pane_data'
+import { TypeNote } from '@/constants'
+import { usePanesStore } from '@/pinia/modules/panes'
+import { CmdInvoke } from '@/libs/commands'
 import { getDataDirs } from '@/libs/init/dirs'
 import { OrderedFieldArrayTable } from '@/utils/array'
-import { formatDateTime } from '@/utils/string'
 import { jsonCopy } from '@/utils/utils'
 
-import { NotebookAttrsArrKey, EntryFileSource, NotebookSource } from './types'
-import { tmplNotebookAttrsArr, tmplNoteAttrsArr, tmplEntryFileData, tmplNotebook } from './types_templates'
+import { AttrsArrKeyOfNotebook, EntryFileSource, NotebookSource, NoteInfo } from './types'
+import { tmplFileAttrsArr, tmplNotebookAttrsArr, tmplNoteAttrsArr, tmplEntryFileData, tmplNotebook } from './types_templates'
 import { getEntryFileName, genCurrentNotebookFileName, updateFileMeta, writeEncryptedUserDataToFile } from './utils'
-import { Note } from '@/components/pane/types'
 
-const ofatTagArrCallback = (item: unknown, currentObj: object) => {
-  const list = item as string[]
-  const newItemValue = list.join(',')
+const ofatTagArrCallback = (item: string[], currentObj: object) => {
+  const newItemValue = item.join(',')
   return {
     currentItemAfter: newItemValue,
-    moveToNewNewFieldName: 'tagsHashedSign'
+    moveToNewNewFieldName: 'tagsSign'
+  }
+}
+
+const ofatTimeCallback = (item: Date, currentObj: object) => {
+  return {
+    currentItemAfter: item.toString(),
+    moveToNewNewFieldName: ''
+  }
+}
+
+const ofatNumberCallback = (item: number, currentObj: object) => {
+  return {
+    currentItemAfter: item.toString(),
+    moveToNewNewFieldName: ''
   }
 }
 
 export const saveEntryFile = async () => {
-  const appStore = useAppStore()
-  const paneDataStore = usePaneDataStore()
+  const panesStore = usePanesStore()
 
   const content: EntryFileSource = jsonCopy(tmplEntryFileData)
 
-  // notebooks
-  const notebooksData = paneDataStore.data.navigationCol.notebooks
+  // ---------- notebooks ----------
+  const notebooksData = panesStore.data.navigationCol.notebooks
   // Notebook data has a tagsArr need to join with ',', as a string.
   // Need special handling for tagsArr.
-  const arr = jsonCopy(tmplNotebookAttrsArr) as string[]
-  arr.push('tagsArr') // Add tagsArr, as the last field, remove it later
-  const ofatn = new OrderedFieldArrayTable(arr)
-  const nbData = jsonCopy(notebooksData) // Get the value of Proxy
-
-  ofatn.fromObjectArray(nbData, {
+  const nbaa = jsonCopy(tmplNotebookAttrsArr) as string[]
+  nbaa.push('tagsArr') // Add tagsArr, as the last field, remove it later
+  const ofatnb = new OrderedFieldArrayTable(nbaa)
+  // const nbData = jsonCopy(notebooksData) // Get the value of Proxy
+  const nbData = notebooksData
+  ofatnb.fromObjectArray(nbData, {
+    ctimeUtc: ofatTimeCallback,
+    mtimeUtc: ofatTimeCallback,
     tagsArr: ofatTagArrCallback
   })
   // Remove the tagsArr filed
-  const outArr = ofatn.toFieldArray().valuesArr as string[][]
-  for (let index = 0; index < outArr.length; index++) {
-    const element = outArr[index]
+  const ofatnbva = ofatnb.toFieldArray().valuesArr as string[][]
+  for (let index = 0; index < ofatnbva.length; index++) {
+    const element = ofatnbva[index]
     element.pop()
     content.noteBooks.dataArr.push(element)
   }
+  // ---------- notebooks end ----------
 
-  // tags
+  // ---------- tags ----------
   const ofatt = new OrderedFieldArrayTable([])
-  const tagsData = paneDataStore.data.navigationCol.tags
+  const tagsData = panesStore.data.navigationCol.tags
   ofatt.fromObjectArray(tagsData, {})
-  content.tags.attrsArr = ofatt.toFieldArray().keysArr as NotebookAttrsArrKey[]
+  content.tags.attrsArr = ofatt.toFieldArray().keysArr as AttrsArrKeyOfNotebook[]
   content.tags.dataArr = ofatt.toFieldArray().valuesArr as string[][]
+  // ---------- tags end ----------
 
-  // attachments
-
-  // files
-
-  // fileMetaMapping
-  content.fileMetaMapping = appStore.data.fileMetaMapping
-  if (import.meta.env.TAURI_DEBUG) {
-    console.log('>>> saveEntryFile content:: ', content)
+  // ---------- files ----------
+  const filesData = panesStore.data.navigationCol.files
+  // Notebook data has a tagsArr need to join with ',', as a string.
+  // Need special handling for tagsArr.
+  const faa = jsonCopy(tmplFileAttrsArr) as string[]
+  faa.push('tagsArr') // Add tagsArr, as the last field, remove it later
+  const ofatf = new OrderedFieldArrayTable(faa)
+  // const fData = jsonCopy(filesData) // Get the value of Proxy
+  const fData = filesData
+  ofatf.fromObjectArray(fData, {
+    ctimeUtc: ofatTimeCallback,
+    dtimeUtc: ofatTimeCallback,
+    mtimeUtc: ofatTimeCallback,
+    tagsArr: ofatTagArrCallback,
+    size: ofatNumberCallback
+  })
+  // Remove the tagsArr filed
+  const ofatfva = ofatf.toFieldArray().valuesArr as string[][]
+  for (let index = 0; index < ofatfva.length; index++) {
+    const element = ofatfva[index]
+    element.pop()
+    content.files.dataArr.push(element)
   }
+  // ---------- files end ----------
 
   const p = await getDataDirs()
   return writeEncryptedUserDataToFile(p.pathOfCurrentDir, getEntryFileName(), JSON.stringify(content))
 }
 
-export const genNotebookFileContent = (notes: Note[]) => {
-  const settingStore = useSettingStore()
-  const settings = settingStore.data
-  const dateTimeFormat = settings.appearance.dateTimeFormat
-
+export const genNotebookFileContent = (notes: NoteInfo[]) => {
   const content: NotebookSource = jsonCopy(tmplNotebook)
 
   // Note data has a tagsArr need to join with ',', as a string.
@@ -82,18 +107,8 @@ export const genNotebookFileContent = (notes: Note[]) => {
   const nData = jsonCopy(notes) // Get the value of Proxy
 
   ofat.fromObjectArray(nData, {
-    ctimeUtc: (item: unknown, currentObj: object) => {
-      return {
-        currentItemAfter: formatDateTime(new Date(item as string), dateTimeFormat),
-        moveToNewNewFieldName: ''
-      }
-    },
-    mtimeUtc: (item: unknown, currentObj: object) => {
-      return {
-        currentItemAfter: formatDateTime(new Date(item as string), dateTimeFormat),
-        moveToNewNewFieldName: ''
-      }
-    },
+    ctimeUtc: ofatTimeCallback,
+    mtimeUtc: ofatTimeCallback,
     tagsArr: ofatTagArrCallback
   })
   // Remove the tagsArr filed
@@ -114,20 +129,25 @@ export const saveNotebookFileWithContent = async (fileName: string, content: Not
 
 // Set a fileName while isCurrent is true
 export const saveNotebookFile = async (isCurrent: boolean, fileName: string) => {
-  const paneDataStore = usePaneDataStore()
+  const panesStore = usePanesStore()
+  if (panesStore.data.listCol.type !== TypeNote) {
+    CmdInvoke.logDebug('saveNotebookFile but listCol.type is not TypeNote :: ' + panesStore.data.listCol.type)
+    return Promise.resolve(true)
+  }
+
   let content: NotebookSource
 
   // save the data of the notebook opened currently
   if (isCurrent) {
-    if (paneDataStore.data.listCol.list.length === 0) {
+    if (panesStore.data.listCol.list.length === 0) {
       return Promise.resolve(true)
     }
 
     fileName = genCurrentNotebookFileName()
-    content = genNotebookFileContent(paneDataStore.data.listCol.list)
+    content = genNotebookFileContent(panesStore.data.listCol.list as NoteInfo[])
   } else {
     if (fileName === '') {
-      // TODO alert error
+      CmdInvoke.logError('saveNotebookFile but fileName is empty!')
       return
     }
     content = genNotebookFileContent([])

@@ -75,7 +75,7 @@ export const genUuidv4Sha256 = () => {
   return sha256(uuidv4())
 }
 
-export const genTimeHashedSign = (genType: keyof typeof TimeHashedSignType, dateTimeFormat: string, fileExt: string): string => {
+export const genFileNameByTime = (genType: keyof typeof TimeHashedSignType, dateTimeFormat: string, fileExt: string): string => {
   let prefix = '!!!'
   switch (genType) {
     // Simple
@@ -154,14 +154,14 @@ export const genFileNamingRuleDemoHtml = (t: CallableFunction, dateTimeFormat: s
   // const isRtl = currentLocaleDirection() === 'RTL' // TODO
   return `
   <div class="${isRtl ? 'direction-rtl' : ''}">
-    <p><span class='font-bold disp-inline-block'>${t('Formatted time')}: </span> ${genTimeHashedSign(TimeHashedSignType.formattedTime, dateTimeFormat, fileExt)}</p>
-    <p><span class='font-bold disp-inline-block'>${t('Timestamp')}: </span> ${genTimeHashedSign(TimeHashedSignType.timestamp, dateTimeFormat, fileExt)}</p>
-    <p><span class='font-bold disp-inline-block'>${t('Timestamp 36')}: </span> ${genTimeHashedSign(TimeHashedSignType.timestamp36, dateTimeFormat, fileExt)}</p>
-    <p><span class='font-bold disp-inline-block'>${t('Timestamp 62')}: </span> ${genTimeHashedSign(TimeHashedSignType.timestamp62, dateTimeFormat, fileExt)}</p>
-    <p><span class='font-bold disp-inline-block'>UUID v4: </span> ${genTimeHashedSign(TimeHashedSignType.uuidV4, dateTimeFormat, fileExt)}</p>
+    <p><span class='font-bold disp-inline-block'>${t('Formatted time')}: </span> ${genFileNameByTime(TimeHashedSignType.formattedTime, dateTimeFormat, fileExt)}</p>
+    <p><span class='font-bold disp-inline-block'>${t('Timestamp')}: </span> ${genFileNameByTime(TimeHashedSignType.timestamp, dateTimeFormat, fileExt)}</p>
+    <p><span class='font-bold disp-inline-block'>${t('Timestamp 36')}: </span> ${genFileNameByTime(TimeHashedSignType.timestamp36, dateTimeFormat, fileExt)}</p>
+    <p><span class='font-bold disp-inline-block'>${t('Timestamp 62')}: </span> ${genFileNameByTime(TimeHashedSignType.timestamp62, dateTimeFormat, fileExt)}</p>
+    <p><span class='font-bold disp-inline-block'>UUID v4: </span> ${genFileNameByTime(TimeHashedSignType.uuidV4, dateTimeFormat, fileExt)}</p>
 
-    <p><span class='font-bold disp-inline-block'>${t('Formatted time SHA256')}: </span> ${genTimeHashedSign(TimeHashedSignType.formattedTimeSha256, dateTimeFormat, fileExt)}</p>
-    <p><span class='font-bold disp-inline-block'>UUID v4 SHA256: </span> ${genTimeHashedSign(TimeHashedSignType.uuidV4Sha256, dateTimeFormat, fileExt)}</p>
+    <p><span class='font-bold disp-inline-block'>${t('Formatted time SHA256')}: </span> ${genFileNameByTime(TimeHashedSignType.formattedTimeSha256, dateTimeFormat, fileExt)}</p>
+    <p><span class='font-bold disp-inline-block'>UUID v4 SHA256: </span> ${genFileNameByTime(TimeHashedSignType.uuidV4Sha256, dateTimeFormat, fileExt)}</p>
   </div>
   `
 }

@@ -1,7 +1,7 @@
-import { ListColListTypeNotebook, ListColListTypeTag, DocTypeNote } from '@/constants'
+import { TypeFile, TypeTag, TypeNote } from '@/constants'
+import { NoteInfo, NotebookInfo, FileInfo, TagInfo, DocType, FileType } from '@/libs/user_data/types'
 
-export type DocType = typeof DocTypeNote
-export type ListColType = typeof ListColListTypeNotebook | typeof ListColListTypeTag
+export type ListColType = typeof TypeFile | typeof TypeTag | typeof TypeNote
 
 export enum PaneIds {
   EditorCol = 'editor-column',
@@ -24,53 +24,27 @@ export type PaneController = {
   panesNameArr: string[]
 }
 
-// List item type, including note / tag / table
-export type Note = {
-  content: string
-  ctimeUtc: Date
-  hashedSign: string
-  icon: string
-  tagsArr: string[]
-  title: string
-  type: DocType
-  mtimeUtc: Date
-}
-
-export type Notebook = {
-  hashedSign: string
-  icon: string
-  title: string
-  mtimeUtc: number // modify timestamp(in milliseconds) for notebook itself, update when add or edit
-  tagsArr: string[]
-}
-
-export type Tag = {
-  hashedSign: string
-  icon: string
-  title: string
-  mtimeUtc: number // modify timestamp(in milliseconds) for tag itself, update when add or edit
-}
-
 export type EditorColData = {
   content: string
-  hashedSign: string
+  sign: string
   title: string
-  type: DocType
+  type: DocType | FileType
   tagsArr: string[]
 }
 
 export type ListColData = {
-  hashedSign: string
+  sign: string
   icon: string
-  list: Note[]
+  list: NoteInfo[]
   title: string
   tagsArr: string[]
   type: ListColType
 }
 
 export type NavigationColData = {
-  notebooks: Notebook[]
-  tags: Tag[]
+  files: FileInfo[]
+  notebooks: NotebookInfo[]
+  tags: TagInfo[]
 }
 
 export type PaneData = {

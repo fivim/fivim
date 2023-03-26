@@ -1,5 +1,5 @@
 import { open as openDialog } from '@tauri-apps/api/dialog';
-import { getHasdedSign } from '@/utils/pinia_data_related';
+import { genFileName } from '@/utils/pinia_related';
 
 import ajax from '@codexteam/ajax';
 
@@ -72,7 +72,7 @@ export default class Uploader {
             success: 1,
             file: {
               title: splitArr.slice(-1),
-              url: attachmentPrefix + getHasdedSign(),
+              url: attachmentPrefix + genFileName(),
             },
           });
         });

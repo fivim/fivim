@@ -61,7 +61,7 @@ const save = () => {
   // Refer: https://editorjs.io/saving-data/
   if (editorJs.value) {
     try {
-      editorJs.value.save().then((outputObj: object) => {
+      editorJs.value.save().then((outputObj) => {
         const json = JSON.stringify(outputObj)
         emits('onUpdate', json)
       }).catch((error) => {

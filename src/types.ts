@@ -1,5 +1,4 @@
-import { DocType } from '@/components/pane/types'
-import { FileMeta } from '@/libs/user_data/types'
+import { DocType, FileType } from '@/libs/user_data/types'
 import { TimeHashedSignType } from '@/utils/hash'
 
 export type TextDirection = 'LTR' | 'RTL'
@@ -22,10 +21,10 @@ export type AppCoreConf = {
 }
 
 export type CurrentFile = {
-    hashedSign: string // hashed file name of currently opened
+    sign: string // hashed file name of currently opened
     indexInList: number // the index in list of the list column
     name: string // file name of currently opened
-    type: DocType
+    type: DocType | FileType
 }
 
 export type ChangeMasterPasswordStatus = {
@@ -47,6 +46,20 @@ export type DataPath = {
     pathOfHome: string;
 }
 
+export type ExtDataPath = {
+    pathOfHome: string,
+    pathOfHomeAppData: string,
+    pathOfConfig: string,
+    pathOfConfigStartUp: string,
+    pathOfCurrentDir: string,
+    pathOfSyncDir: string,
+    pathOfSyncCachedDir: string,
+    pathOfSyncDownloadDir: string,
+    // style
+    pathOfCustomStyle: string,
+    pathOfCustomBackgroundImage: string
+}
+
 export type AppInfo = {
     appMode: AppMode // desktop mode or mobile mode
     appName: string
@@ -59,7 +72,6 @@ export type AppInfo = {
     defaultLocaleInNative: string,
     editorFullScreen: boolean
     existConfigFile: boolean
-    fileMetaMapping: FileMeta
     isWebPage: boolean
     lockscreen: boolean
     textDirection: TextDirection
@@ -73,8 +85,6 @@ export type Setting = {
         workDir: string
     },
     appearance: {
-        customBackagroundImg: string
-        customBackagroundOpacity: number
         dateTimeFormat: string
         locale: string
         listColShowCreateTime: boolean

@@ -1,6 +1,5 @@
 import { AppMode } from '@/types'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
 
 const showTitleBar = (): boolean => {
   const appStore = useAppStore()
@@ -22,8 +21,6 @@ const insertStyleSheet = (style: string) => {
 }
 
 export const initStyle = () => {
-  const settingStore = useSettingStore()
-
   if (!showTitleBar()) {
     insertStyleSheet(`
       #desktop-title-bar { 
@@ -42,15 +39,6 @@ export const initStyle = () => {
       .app-main { 
           height: calc(100vh - var(--enas-desktop-title-bar-height) - 2px) !important;
           //min-height: calc(100vh - var(--enas-desktop-title-bar-height) - 2px) !important; 
-      }`)
-  }
-
-  const customBackagroundImg = settingStore.data.appearance.customBackagroundImg
-  if (customBackagroundImg) {
-    insertStyleSheet(`
-      html { 
-          background-image: url("${customBackagroundImg}")!important; 
-          background-size: cover;
       }`)
   }
 }

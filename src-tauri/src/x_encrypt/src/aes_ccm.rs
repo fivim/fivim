@@ -45,7 +45,8 @@ pub fn decrypt_direct(input: &str, key: &str) -> Vec<u8> {
     }
 }
 
-pub fn test_decrypt_aes_ccm() {
+#[test]
+pub fn test_aes_ccm_decrypt() {
     // use key
     // let input = r#"{
     //     "iv":"7M+yeOE9TaZpW711d8YffA==",

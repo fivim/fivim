@@ -572,6 +572,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b365fabc795046672053e29c954733ec3b05e4be654ab130fe8f1f94d7051f35"
 
 [[package]]
+name = "custom_error"
+version = "1.9.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4f8a51dd197fa6ba5b4dc98a990a43cc13693c23eb0089ebb0fcc1f04152bca6"
+
+[[package]]
 name = "cxx"
 version = "1.0.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -750,24 +756,25 @@ dependencies = [
 
 [[package]]
 name = "encryption_assistant"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "base64 0.21.0",
  "chrono",
  "crc32fast",
+ "custom_error",
  "fs_extra",
  "lazy_static",
- "log",
  "md5",
  "serde",
  "serde_json",
  "sha2",
- "simplelog",
+ "sys-info",
  "tauri",
  "tauri-build",
  "time 0.3.20",
  "window-shadows",
  "xencrypt",
+ "xutils",
 ]
 
 [[package]]
@@ -2886,6 +2893,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "sys-info"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b3a0d0aba8bf96a0e1ddfdc352fc53b3df7f39318c71854910c3c4b024ae52c"
+dependencies = [
+ "cc",
+ "libc",
+]
+
+[[package]]
 name = "system-deps"
 version = "5.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4080,6 +4097,7 @@ dependencies = [
  "serde",
  "serde_json",
  "xsjcl",
+ "xutils",
 ]
 
 [[package]]
@@ -4100,6 +4118,25 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror",
+]
+
+[[package]]
+name = "xutils"
+version = "1.0.0"
+dependencies = [
+ "anyhow",
+ "base64 0.21.0",
+ "crc32fast",
+ "custom_error",
+ "fs_extra",
+ "log",
+ "md5",
+ "serde",
+ "serde_json",
+ "sha2",
+ "simplelog",
+ "sys-info",
+ "time 0.3.20",
 ]
 
 [[package]]

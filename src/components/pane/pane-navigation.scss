@@ -9,9 +9,6 @@
 
   .navigation-pane {
     user-select: none;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
     display: flex;
     flex-direction: column;
 
@@ -36,9 +33,6 @@
       transition: height 0.1s ease-in-out;
       width: 100%;
       user-select: none;
-      -moz-user-select: none;
-      -khtml-user-select: none;
-      -webkit-user-select: none;
 
       &:focus {
         border: 0;
@@ -118,5 +112,7 @@
     left: 0;
     width: 100%;
     padding: var(--enas-col-padding);
+    cursor: pointer;
+    user-select: none;
   }
 }

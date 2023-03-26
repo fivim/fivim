@@ -1,22 +1,18 @@
 extern crate fs_extra;
-use fs_extra::dir::get_size;
-use std::{
-    env,
-    error::Error,
-    fs,
-    path::{Path, PathBuf},
-};
+use fs_extra::dir as f_dir;
+use std::{env, error::Error, fs, path::Path};
 
 use serde::{Deserialize, Serialize};
 
-use crate::utils::file as x_file;
-use crate::utils::logger as x_logger;
+use crate::errors::EaError as x_error;
+use crate::file as x_file;
+use crate::logger as x_logger;
 
 pub fn get_current_dir() -> String {
     return env::current_dir().unwrap().to_str().unwrap().into();
 }
 
-pub fn get_all_child_dir(root_path: &str) -> Result<Vec<String>, Box<dyn Error>> {
+pub fn get_sub_dir(root_path: &str) -> Result<Vec<String>, Box<dyn Error>> {
     let mut path_list = vec![root_path.to_string()];
     let mut start_index = 0;
 
@@ -39,7 +35,7 @@ pub fn get_all_child_dir(root_path: &str) -> Result<Vec<String>, Box<dyn Error>>
 }
 
 // Including file type only
-pub fn get_file_list_of_dir(dir: &str) -> Vec<String> {
+pub fn get_file_list(dir: &str) -> Vec<String> {
     let mut res: Vec<String> = Vec::new();
 
     match fs::read_dir(dir) {
@@ -50,10 +46,11 @@ pub fn get_file_list_of_dir(dir: &str) -> Vec<String> {
             }
         }
         Err(e) => {
-            x_logger::log_error(&format!(
-                ">>> get_file_list_of_dir read_dir({}) error: {}\n",
-                &dir, e
-            ));
+            let eee = x_error::DirReadError {
+                path: dir.to_owned(),
+                error: e,
+            };
+            x_logger::log_error(&format!("get_file_list:: {}\n", eee));
         }
     }
 
@@ -68,7 +65,7 @@ pub struct DirChildren {
 }
 
 // Including file and dir, if **is_dir** is true, it is a directory, or it is a file
-pub fn get_children_list_of_dir(dir: &str) -> Vec<DirChildren> {
+pub fn get_children_list(dir: &str) -> Vec<DirChildren> {
     let mut res: Vec<DirChildren> = Vec::new();
 
     match fs::read_dir(&dir) {
@@ -78,43 +75,24 @@ pub fn get_children_list_of_dir(dir: &str) -> Vec<DirChildren> {
                 let item = DirChildren {
                     file_name: entry.file_name().into_string().unwrap(),
                     is_dir: entry.path().is_dir(),
-                    modified_time_stamp: x_file::get_file_modified_time_f64(&entry),
+                    modified_time_stamp: x_file::get_modified_time_f64(&entry),
                 };
                 res.push(item);
             }
         }
         Err(e) => {
-            x_logger::log_error(&format!(
-                ">>> get_children_list_of_dir read_dir({}) error: {}\n",
-                &dir, e
-            ));
+            let eee = x_error::DirReadError {
+                path: dir.to_owned(),
+                error: e,
+            };
+            x_logger::log_error(&format!("get_children_list:: {}\n", eee));
         }
     };
 
     return res;
 }
 
-pub fn set_app_dir() -> bool {
-    let binding = get_current_root_dir();
-    let root = Path::new(&binding);
-    if env::set_current_dir(root).is_ok() {
-        return true;
-    }
-    return false;
-}
-
-#[cfg(not(debug_assertions))]
-fn get_current_root_dir() -> String {
-    return "./".to_string();
-}
-
-// In debug mode, the work dir is "src-tauri", need to set it to the root dir of the project.
-#[cfg(debug_assertions)]
-fn get_current_root_dir() -> String {
-    return "../".to_string();
-}
-
-pub fn check_dir_or_create(dir_str: &str) {
+pub fn check_or_create(dir_str: &str) {
     if !Path::new(&dir_str).exists() {
         std::fs::create_dir_all(&dir_str).unwrap();
     } else {
@@ -124,22 +102,23 @@ pub fn check_dir_or_create(dir_str: &str) {
     }
 }
 
-pub fn get_dir_size(dir: &str) -> u64 {
-    match get_size(dir) {
+pub fn get_size(dir: &str) -> u64 {
+    match f_dir::get_size(dir) {
         Ok(folder_size) => {
             return folder_size;
         }
         Err(e) => {
-            x_logger::log_error(&format!(
-                ">>> get_dir_size get_size, dir: {}, error: {}\n",
-                dir, e
-            ));
+            let eee = x_error::DirGetSizeError {
+                path: dir.to_owned(),
+                error: e,
+            };
+            x_logger::log_error(&format!("get_size:: {}\n", eee));
             return 0;
         }
     }
 }
 
-pub fn delete_dir(path_str: &str) -> bool {
+pub fn delete(path_str: &str) -> bool {
     match fs::remove_dir(path_str) {
         Ok(_) => return true,
         Err(_) => return false,

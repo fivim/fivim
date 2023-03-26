@@ -1,11 +1,12 @@
 use serde::{Deserialize, Serialize};
+use std::env;
 use std::path::Path;
 
 use tauri::api::path as t_path;
 use tauri::utils::assets::EmbeddedAssets;
 
 use crate::conf as x_conf;
-use crate::utils::path as x_path;
+use xutils::path as x_path;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AppCoreConf {
@@ -15,6 +16,26 @@ pub struct AppCoreConf {
     homeAppDir: String,            // Javascript naming style
     homeDir: String,               // Javascript naming style
     version: String,
+}
+
+pub fn set_app_dir() -> bool {
+    let binding = get_current_root_dir();
+    let root = Path::new(&binding);
+    if env::set_current_dir(root).is_ok() {
+        return true;
+    }
+    return false;
+}
+
+#[cfg(not(debug_assertions))]
+fn get_current_root_dir() -> String {
+    return "./".to_string();
+}
+
+// In debug mode, the work dir is "src-tauri", need to set it to the root dir of the project.
+#[cfg(debug_assertions)]
+fn get_current_root_dir() -> String {
+    return "../".to_string();
 }
 
 fn get_context() -> tauri::Context<EmbeddedAssets> {

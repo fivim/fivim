@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+import { TypeNone } from '@/constants'
 import { PaneData, ListColData, EditorColData, NavigationColData } from '@/components/pane/types'
 import { tmplPaneData } from '@/components/pane/types_template'
 import { jsonCopy } from '@/utils/utils'
 
-export const usePaneDataStore = defineStore('paneDataStore', () => {
+export const usePanesStore = defineStore('panesStore', () => {
   const data = ref<PaneData>(jsonCopy(tmplPaneData))
 
   const setData = (val: PaneData) => {

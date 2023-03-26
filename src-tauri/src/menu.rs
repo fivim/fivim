@@ -4,7 +4,7 @@ use tauri::{
 };
 
 use crate::conf;
-use crate::utils::logger as x_logger;
+use xutils::logger as x_logger;
 
 // Create the main menu:
 pub fn make_window_menu() -> tauri::Menu {
@@ -22,7 +22,7 @@ pub fn make_window_menu() -> tauri::Menu {
 
 // Create the tray menu:
 pub fn make_tray_menu(app: &tauri::App) -> tauri::Result<()> {
-    let tray_id = "enas-tray".to_string();
+    let tray_id = conf::TRAY_ID.to_string();
     let handle = app.handle();
     let window = handle.get_window(conf::WINDOW_LABEL_MAIN).unwrap();
 
@@ -90,13 +90,16 @@ pub async fn system_tray_update_text(app_handle: tauri::AppHandle) {
     app_handle
         .tray_handle()
         .get_item(conf::TEXT_SHOW)
-        .set_title(conf::TEXT_SHOW).unwrap();
+        .set_title(conf::TEXT_SHOW)
+        .unwrap();
     app_handle
         .tray_handle()
         .get_item(conf::TEXT_EXIT)
-        .set_title(conf::TEXT_EXIT).unwrap();
+        .set_title(conf::TEXT_EXIT)
+        .unwrap();
     app_handle
         .tray_handle()
         .get_item(conf::TEXT_HIDE)
-        .set_title(conf::TEXT_HIDE).unwrap();
+        .set_title(conf::TEXT_HIDE)
+        .unwrap();
 }

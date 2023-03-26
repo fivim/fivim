@@ -144,7 +144,7 @@ const computePaneClasses = (isPendingEntrance: boolean): string => {
     return `pos-rel overflow-hidden ${common}`
   }
 }
-// ========== panes end ==========
+// ---------- panes end ----------
 
 // ---------- resizer ----------
 const navigationRef = ref()
@@ -162,7 +162,7 @@ const onWidthChangeNavigationPane = (width: number) => {
 const onWidthChangeListPane = (width: number) => {
   PaneWidthList.value = width
 }
-// ========== resizer end ==========
+// ---------- resizer end ----------
 
 </script>
 

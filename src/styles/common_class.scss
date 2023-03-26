@@ -251,6 +251,11 @@
   line-height: 0.9rem !important;
 }
 
+.text-break-all {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 .direction-ltr {
   direction: ltr;
 }
@@ -311,6 +316,10 @@
 
 .vertical-align-middle {
   vertical-align: middle !important;
+}
+
+.select-none {
+  user-select: none;
 }
 
 //md

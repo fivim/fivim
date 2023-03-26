@@ -97,7 +97,7 @@ import { initAtFirst } from '@/libs/init/at_first'
 import { i18n, getLanguageMeta, setLocale } from '@/libs/init/i18n'
 import { initCoreDirs } from '@/libs/init/dirs'
 import { saveDefaultEntryFile } from '@/libs/user_data/entry_file'
-import { genFileNamingRuleDemoHtml, genTimeHashedSign, TimeHashedSignType, genMasterPasswordSha256 } from '@/utils/hash'
+import { genFileNamingRuleDemoHtml, genFileNameByTime, TimeHashedSignType, genMasterPasswordSha256 } from '@/utils/hash'
 import { elOptionArrSort } from '@/utils/array'
 import { getAvailableLocale } from '@/utils/locale'
 import { isMobileScreen, OsThemeIsDark } from '@/utils/media_query'
@@ -131,8 +131,6 @@ const getDefalutTheme = () => {
   return res
 }
 
-const getEntryFileName = (fileNameRule: TimeHashedSignType, dateTimeFormat: string, fileExt: string) => genTimeHashedSign(fileNameRule, dateTimeFormat, fileExt)
-
 const appStore = useAppStore()
 const settingStore = useSettingStore()
 const { t } = useI18n()
@@ -149,7 +147,7 @@ const ruleForm = reactive({
   workDir: '',
   fileExt: DefaultFileExt,
   fileNameRule: DefaultFileNameRule,
-  entryFileName: getEntryFileName(DefaultFileNameRule, DefaultTimeFormat, DefaultFileExt)
+  entryFileName: genFileNameByTime(DefaultFileNameRule, DefaultTimeFormat, DefaultFileExt)
 })
 
 // Custom validator for Master password.
@@ -198,7 +196,7 @@ const rules = reactive<FormRules>({
     {
       required: true,
       validator: validateMasterPassword,
-      trigger: 'blur'
+      trigger: 'change'
     }
   ],
   dateTimeFormat: [
@@ -212,7 +210,7 @@ const rules = reactive<FormRules>({
     {
       required: true,
       validator: validateRequired,
-      trigger: 'blur'
+      trigger: 'change'
     }
   ],
   fileExt: [{
@@ -230,7 +228,7 @@ const rules = reactive<FormRules>({
     {
       required: true,
       validator: validateRequired,
-      trigger: 'blur'
+      trigger: 'change'
     }
   ]
 })
@@ -257,11 +255,11 @@ const onChangeTheme = (newTheme: string) => {
 }
 
 const onInputFileExt = (detail: string) => {
-  ruleForm.entryFileName = genTimeHashedSign(ruleForm.fileNameRule, ruleForm.dateTimeFormat, detail)
+  ruleForm.entryFileName = genFileNameByTime(ruleForm.fileNameRule, ruleForm.dateTimeFormat, detail)
 }
 
 const onInputFileNamingRule = (detail: keyof typeof TimeHashedSignType) => {
-  ruleForm.entryFileName = genTimeHashedSign(detail, ruleForm.dateTimeFormat, ruleForm.fileExt)
+  ruleForm.entryFileName = genFileNameByTime(detail, ruleForm.dateTimeFormat, ruleForm.fileExt)
 }
 
 const onSelectWorkDir = () => {
@@ -303,25 +301,25 @@ const onSave = () => {
 
   setTheme(ruleForm.theme)
 
-  const settingData = settingStore.data
-  settingData.normal.workDir = ruleForm.workDir
-  settingData.encryption.entryFileName = ruleForm.entryFileName
-  settingData.encryption.fileExt = ruleForm.fileExt
-  settingData.encryption.fileNameRule = ruleForm.fileNameRule
-  settingData.encryption.entryFileName = genTimeHashedSign(ruleForm.fileNameRule, ruleForm.dateTimeFormat, ruleForm.fileExt)
-  settingData.encryption.syncLockFileName = genTimeHashedSign(ruleForm.fileNameRule, ruleForm.dateTimeFormat, ruleForm.fileExt)
-  settingData.encryption.masterPassword = genMasterPasswordSha256(ruleForm.masterPassword, MasterPasswordSalt)
-  settingData.appearance.dateTimeFormat = ruleForm.dateTimeFormat
-  settingData.appearance.locale = ruleForm.locale
-  settingData.appearance.listColSortBy = DefaultListColSortBy
-  settingData.appearance.listColSortOrder = DefaultListColSortOrder
-  settingData.appearance.theme = ruleForm.theme
-  settingData.sync.intervalSeconds = DefaultSyncIntervalSeconds
+  const settings = settingStore.data
+  settings.normal.workDir = ruleForm.workDir
+  settings.encryption.entryFileName = ruleForm.entryFileName
+  settings.encryption.fileExt = ruleForm.fileExt
+  settings.encryption.fileNameRule = ruleForm.fileNameRule
+  settings.encryption.entryFileName = genFileNameByTime(ruleForm.fileNameRule, ruleForm.dateTimeFormat, ruleForm.fileExt)
+  settings.encryption.syncLockFileName = genFileNameByTime(ruleForm.fileNameRule, ruleForm.dateTimeFormat, ruleForm.fileExt)
+  settings.encryption.masterPassword = genMasterPasswordSha256(ruleForm.masterPassword, MasterPasswordSalt)
+  settings.appearance.dateTimeFormat = ruleForm.dateTimeFormat
+  settings.appearance.locale = ruleForm.locale
+  settings.appearance.listColSortBy = DefaultListColSortBy
+  settings.appearance.listColSortOrder = DefaultListColSortOrder
+  settings.appearance.theme = ruleForm.theme
+  settings.sync.intervalSeconds = DefaultSyncIntervalSeconds
 
   // initCoreDirs before settingStore save config
   initCoreDirs().then(() => {
-    settingStore.setData(settingData, true).then(() => {
-      const pwdSha256 = genMasterPasswordSha256(settingData.encryption.masterPassword, MasterPasswordSalt)
+    settingStore.setData(settings, true).then(() => {
+      const pwdSha256 = genMasterPasswordSha256(settings.encryption.masterPassword, MasterPasswordSalt)
       initAtFirst(pwdSha256, false).then((initRes) => {
         saveDefaultEntryFile()
         // TODO save sync lock file

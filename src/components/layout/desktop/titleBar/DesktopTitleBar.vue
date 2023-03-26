@@ -49,7 +49,7 @@ const props = defineProps({
 const isMacOs = ref(false)
 
 const checkIsMacOs = () => {
-  CmdAdapter.isMacOs().then((trueOrFalse: boolean) => {
+  CmdAdapter.isMacOs().then((trueOrFalse) => {
     isMacOs.value = trueOrFalse
   })
 }

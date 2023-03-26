@@ -1,35 +1,71 @@
+import { TypeFile } from '@/constants'
 import { tmplPaneData } from '@/components/pane/types_template'
 
-import { NoteAttrsArrKey, NotebookAttrsArrKey, FileMetaValue, EntryFileSource, NotebookSource, ParsedEntryFileRes } from './types'
+import {
+  AttrsArrKeyOfFile, AttrsArrKeyOfNote, AttrsArrKeyOfNotebook,
+  EntryFileSource, NotebookSource, EntryFileSourceParsedRes, FileInfo, TagInfo
+} from './types'
+
+export const tmplFileAttrsArr = [
+  // common
+  'ctimeUtc',
+  'mtimeUtc',
+  'sign',
+  'tagsSign',
+  'title',
+  // other
+  'content',
+  'dtimeUtc',
+  'sha256'
+] as AttrsArrKeyOfFile[]
 
 export const tmplNotebookAttrsArr = [
-  'title',
-  'icon',
-  'hashedSign',
+  // common
+  'ctimeUtc',
   'mtimeUtc',
-  'tagsHashedSign'
-] as NotebookAttrsArrKey[]
+  'sign',
+  'tagsSign',
+  'title',
+  // other
+  'icon'
+] as AttrsArrKeyOfNotebook[]
 
 export const tmplNoteAttrsArr = [
-  'hashedSign',
-  'title',
-  'icon',
-  'type',
-  'content',
-  'mtimeUtc',
+  // common
   'ctimeUtc',
-  'tagsHashedSign'
-] as NoteAttrsArrKey[]
+  'mtimeUtc',
+  'sign',
+  'tagsSign',
+  'title',
+  // other
+  'content',
+  'icon',
+  'type'
+] as AttrsArrKeyOfNote[]
 
-export const tmplFileMeta = {
-  dtimeUtc: 0,
-  mtimeUtc: 0,
-  sha256: ''
-} as FileMetaValue
+export const tmplFileInfo: FileInfo = {
+  ctimeUtc: new Date(), // create timestamp(in milliseconds)
+  mtimeUtc: new Date(), // modify timestamp(in milliseconds)
+  dtimeUtc: new Date(), // delete timestamp(in milliseconds)
+  content: '', // remark content
+  sha256: '',
+  sign: '',
+  size: 0,
+  title: '',
+  tagsArr: [],
+  type: TypeFile
+}
 
-export const tmplMmanifestData: ParsedEntryFileRes = {
+export const tmplTagInfo: TagInfo = {
+  title: '',
+  icon: '',
+  sign: '',
+  mtimeUtc: new Date(),
+  ctimeUtc: new Date()
+}
+
+export const tmplMmanifestData: EntryFileSourceParsedRes = {
   paneData: tmplPaneData,
-  fileMetaMapping: {},
   syncLockFileName: ''
 }
 
@@ -43,15 +79,10 @@ export const tmplEntryFileData: EntryFileSource = {
     attrsArr: tmplNotebookAttrsArr,
     dataArr: []
   },
-  attachments: {
-    attrsArr: [],
+  files: {
+    attrsArr: tmplFileAttrsArr,
     dataArr: []
   },
-  // files: {
-  //   attrsArr: [],
-  //   dataArr: []
-  // },
-  fileMetaMapping: {},
   syncLockFileName: ''
 }
 

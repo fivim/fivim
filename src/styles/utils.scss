@@ -37,3 +37,7 @@
 .el-popper.is-customized .el-popper__arrow::before {
   display: none;
 }
+
+.el-input.is-disabled .el-input__wrapper {
+  background-color: var(--enas-background-primary-color) !important;
+}

@@ -1,5 +1,6 @@
 import { AppMode } from '@/types'
 import { useAppStore } from '@/pinia/modules/app'
+import { useSettingStore } from '@/pinia/modules/settings'
 import { CmdInvoke, CmdAdapter } from '@/libs/commands'
 import { i18n } from '@/libs/init/i18n'
 import { initWithConfFile, InitError } from '@/libs/init/conf_file'
@@ -11,22 +12,22 @@ import { isMobileScreen } from '@/utils/media_query'
 
 const initAppData = () => {
   const appStore = useAppStore()
-  const appData = appStore.data
+  const ad = appStore.data
   if (runInTauri()) {
-    appData.isWebPage = false
+    ad.isWebPage = false
   } else {
-    appData.isWebPage = true
+    ad.isWebPage = true
   }
 
   if (isMobileScreen()) {
-    appData.appMode = AppMode.Mobile
+    ad.appMode = AppMode.Mobile
   } else {
-    appData.appMode = AppMode.Desktop
+    ad.appMode = AppMode.Desktop
   }
 
-  appData.changeLocaleTimestamp = new Date().getTime()
-  appStore.setData(appData) // save app data
-  return appData
+  ad.changeLocaleTimestamp = new Date().getTime()
+  appStore.setData(ad) // save app data
+  return ad
 }
 
 // Initialize other after configuration file initialization.

@@ -1,9 +1,10 @@
 import { ElMessageBox } from 'element-plus'
 
 import { ErrorMessages } from '@/types'
+
 import { getDataDirs } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
-import { usePaneDataStore } from '@/pinia/modules/pane_data'
+import { usePanesStore } from '@/pinia/modules/panes'
 import { useSettingStore } from '@/pinia/modules/settings'
 
 import { tmplEntryFileData } from '@/types_template'
@@ -17,7 +18,7 @@ import { writeUserData } from './utils'
 
 export const initEntryFile = async () => {
   const appStore = useAppStore()
-  const paneDataStore = usePaneDataStore()
+  const panesStore = usePanesStore()
   const settingStore = useSettingStore()
 
   const settings = settingStore.data
@@ -27,7 +28,7 @@ export const initEntryFile = async () => {
   const entryFileName = encrytpSetting.entryFileName
   const path = dir + entryFileName
 
-  return CmdInvoke.readUserDataFile(settings.encryption.masterPassword, path, true).then((fileData: UserDataFile) => {
+  return CmdInvoke.readUserDataFile('', path, true, 'string', '').then((fileData) => {
     if (fileData.crc32 !== fileData.crc32_check) {
       const msg = ErrorMessages.FileVerificationFailed
       CmdInvoke.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
@@ -57,16 +58,12 @@ export const initEntryFile = async () => {
     }
 
     const ret = parseEntryFile(jsonStr)
-    paneDataStore.setData(ret.paneData)
+    panesStore.setData(ret.paneData)
 
     if (import.meta.env.TAURI_DEBUG) {
       console.log('>>> Entry file data:: ', jsonStr)
       console.log('>>> Entry file data after parsed:: ', ret.paneData)
     }
-
-    const appData = appStore.data
-    appData.fileMetaMapping = ret.fileMetaMapping
-    appStore.setData(appData)
   })
 }
 

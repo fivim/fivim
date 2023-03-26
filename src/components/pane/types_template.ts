@@ -1,22 +1,26 @@
+import { TypeNote } from '@/constants'
+
 import { PaneData } from './types'
 
 export const tmplPaneData: PaneData = {
   navigationCol: {
+    files: [],
     notebooks: [],
     tags: []
   },
   listCol: {
-    hashedSign: '',
+    sign: '',
     icon: '',
     list: [],
     title: '',
-    type: 'notebook',
+    type: TypeNote,
     tagsArr: []
   },
   editorCol: {
     content: '',
-    hashedSign: '',
+    sign: '',
     title: '',
-    type: 'note'
+    type: TypeNote,
+    tagsArr: []
   }
 }

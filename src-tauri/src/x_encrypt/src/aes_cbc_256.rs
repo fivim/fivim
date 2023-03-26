@@ -59,8 +59,8 @@ pub fn decrypt_large_file(
     Ok(())
 }
 
-
-pub fn test() {
+#[test]
+pub fn test_aes_cbc_256() {
     let key = b"gtwadzkhjtfokdtcmqkdagotqfntbjws";
     let plain = b"This is not a password";
     let (ct, iv) = encrypt_u8_vec(key, plain);

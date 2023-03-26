@@ -5,9 +5,9 @@
 
 #[macro_use]
 extern crate lazy_static;
+extern crate custom_error;
 
 use std::path::Path;
-
 use tauri::Manager;
 use window_shadows::set_shadow;
 
@@ -17,17 +17,17 @@ mod data_file_parse;
 mod i18n;
 mod menu;
 mod utils;
+use xutils;
 
 fn main() {
-    // xencrypt::aes_cbc::test();
-    utils::dir::set_app_dir();
+    utils::tauri::set_app_dir();
 
     // init logger
     let mut log_file_name = "".to_string();
-    let app_name = utils::tauri_config::app_name();
+    let app_name = utils::tauri::app_name();
     log_file_name += &app_name;
     log_file_name += &conf::LOG_FILE_EXT;
-    utils::logger::init_logger(utils::tauri_config::home_app_dir().as_str(), &log_file_name);
+    xutils::logger::init_logger(utils::tauri::home_app_dir().as_str(), &log_file_name);
 
     let app = tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -56,9 +56,7 @@ fn main() {
             // log
             commands::log,
             // encrypt
-            // commands::decrypt_file,
             commands::decrypt_string,
-            // commands::encrypt_file,
             commands::encrypt_string,
             commands::string_crc32,
             // user data file
@@ -92,7 +90,7 @@ fn main() {
                     i18n::set_locales_dir(locales_dir);
                     i18n::init_dict();
                 }
-                None => todo!(),
+                None => {}
             }
 
             Ok(())
