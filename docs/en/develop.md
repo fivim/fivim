@@ -1,18 +1,5 @@
 # Develop
 
-## Naming methods
-
-- CSS class prefix:`.enas`, like: `.enas-list`
-- CSS varable prefix: `--enas-`, like: `--enas-border-color` 
-- TS event prefix: `on`, like: `onClickButton`
-- Editor attachments path prefix: `attaches://`, like: `attaches://ebfa511124ae8a7b3f4f0252e846954d`
-
-Time about file and data:
-
-- ctimeUtc: create timestamp(UTC time)
-- dtimeUtc: delete timestamp(UTC time)
-- mtimeUtc: modify timestamp(UTC time)
-
 ## Technology stack
 
 ### Backend
@@ -84,6 +71,34 @@ Check eol:
 ```sh
 git ls-files --eol
 ```
+
+## Encryption
+
+Default encryption Algorithm is **XChaCha20Poly1305**. Because it saves memory when encrypting large files
+
+Refer [XChaCha20 Encryption vs AES-256: What’s the Difference?](https://nordpass.com/blog/xchacha20-encryption-vs-aes-256/)
+
+### Custom encryption
+
+* Modify the params of **Encryption Algorithm**
+  * Modify the **gen_key** and **gen_nonce** function in `src-tauri\src\utils\encrypt.rs`
+
+* Change encryption Algorithm
+  * Modify all the **encrypt_xxx** and **decrypt_xxx** function in `src-tauri\src\utils\encrypt.rs`
+
+## Naming methods
+
+- CSS class prefix:`.enas`, like: `.enas-list`
+- CSS varable prefix: `--enas-`, like: `--enas-border-color` 
+- TS event prefix: `on`, like: `onClickButton`
+- TS struct name with a "Info" postfix, like: `StructNameInfo`
+- Editor attachments path prefix: `attaches://`, like: `attaches://ebfa511124ae8a7b3f4f0252e846954d`
+
+Time about file and data:
+
+- ctimeUtc: create timestamp(UTC time)
+- dtimeUtc: delete timestamp(UTC time)
+- mtimeUtc: modify timestamp(UTC time)
 
 ## File struct and inner data struct
 
