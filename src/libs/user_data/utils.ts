@@ -1,56 +1,54 @@
 import { ElMessage } from 'element-plus'
 
-import { ErrorMessages } from '@/types'
+import { ErrorMessagesInfo } from '@/types'
 import { StrSignOk, StrSignErr } from '@/constants'
 import { getDataDirs } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
-import { usePanesStore } from '@/pinia/modules/panes'
-import { CmdInvoke } from '@/libs/commands'
-import { stringToUint8Array } from '@/utils/string'
+import { genFilePwd } from '@/libs/commands'
+import { invoker } from '@/libs/commands/invoke'
 import { i18n } from '@/libs/init/i18n'
 
 import { parseNotebookJson } from './parser_decode'
 import { saveNotebookFile, saveEntryFile, genNotebookFileContent, saveNotebookFileWithContent } from './parser_encode'
 
 export const getEntryFileName = () => {
-  const settingStore = useSettingStore()
-  return settingStore.data.encryption.entryFileName
+  const appStore = useAppStore()
+  return appStore.data.settings.encryption.entryFileName
 }
 
 export const genCurrentNotebookFileName = () => {
-  const settingStore = useSettingStore()
-  const panesStore = usePanesStore()
-  const sign = panesStore.data.listCol.sign
-  const senc = settingStore.data.encryption
+  const appStore = useAppStore()
+  const sign = appStore.data.listCol.sign
+  const senc = appStore.data.settings.encryption
   return `${sign}${senc.fileExt}`
 }
 
 export const getNotebookFilePath = async (sign: string) => {
-  const settingStore = useSettingStore()
+  const appStore = useAppStore()
   const p = await getDataDirs()
-  return p.pathOfCurrentDir + sign + settingStore.data.encryption.fileExt
+  return p.pathOfCurrentDir + sign + appStore.data.settings.encryption.fileExt
 }
 
-export const writeEncryptedUserDataToFile = (dir: string, fileName: string, content: string) => {
+export const writeEncryptedUserDataToFile = (dir: string, fileName: string, content: object) => {
   if (import.meta.env.TAURI_DEBUG) {
-    console.log('>>> writeEncryptedUserDataToFile content:: ', JSON.parse(content))
+    console.log('>>> writeEncryptedUserDataToFile content:: ', content)
   }
 
-  return CmdInvoke.writeUserDataFile('', dir + fileName, fileName, stringToUint8Array(content), '')
+  return invoker.writeUserDataFile(genFilePwd(''), dir + fileName, fileName, content, '')
 }
 
 export const readNotebookdata = async (sign: string) => {
-  const fileData = await CmdInvoke.readUserDataFile('', await getNotebookFilePath(sign), true, 'string', '')
+  const path = await getNotebookFilePath(sign)
+  const fileData = await invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '')
 
   if (fileData.crc32 !== fileData.crc32_check) {
-    const msg = ErrorMessages.FileVerificationFailed
-    CmdInvoke.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
+    const msg = ErrorMessagesInfo.FileVerificationFailed
+    invoker.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
     // return Promise.reject(new Error(msg))
   }
 
   if (fileData.file_data_str.length === 0) {
-    CmdInvoke.logError('>>> readNotebookdata readUserDataFile get empty content')
+    invoker.logError('>>> readNotebookdata readUserDataFile get empty content')
   }
   const jsonStr = fileData.file_data_str
 
@@ -61,45 +59,74 @@ export const readNotebookdata = async (sign: string) => {
   return parseNotebookJson(jsonStr) // call JSON.parse to get a JSON string
 }
 
-export const writeUserData = (filePath: string, fileName: string, fileContent: Uint8Array) => {
-  return CmdInvoke.writeUserDataFile('', filePath, fileName, fileContent, '')
+export const writeUserData = (filePath: string, fileName: string, fileContent: object) => {
+  return invoker.writeUserDataFile(genFilePwd(''), filePath, fileName, fileContent, '')
+}
+
+export const addFileMeta = async (dir: string, fileName: string) => {
+  const appStore = useAppStore()
+  const ad = appStore.data
+
+  const meta = await invoker.getFileMeta(dir + fileName)
+  ad.userData.filesMeta.push({
+    ctimeUtc: new Date(),
+    mtimeUtc: new Date(0),
+    dtimeUtc: new Date(0),
+    sign: fileName,
+    sha256: meta.sha256,
+    size: meta.size
+  })
+  appStore.setData(ad)
 }
 
 export const updateFileMeta = async (dir: string, fileName: string) => {
-  const panesStore = usePanesStore()
-  const pd = panesStore.data
+  const appStore = useAppStore()
+  const ad = appStore.data
 
-  const files = pd.navigationCol.files
+  const files = ad.userData.filesMeta
+  const meta = await invoker.getFileMeta(dir + fileName)
+  let exist = false
   for (const item of files) {
     if (item.sign === fileName) {
       item.mtimeUtc = new Date()
-      if (dir !== '') {
-        item.sha256 = await CmdInvoke.sha256ByFilePath(dir + fileName)
-      }
+      item.sha256 = meta.sha256
+      item.size = meta.size
+      exist = true
       break
     }
   }
-  panesStore.setData(pd)
+  if (!exist) {
+    ad.userData.filesMeta.push({
+      ctimeUtc: new Date(0),
+      mtimeUtc: new Date(),
+      dtimeUtc: new Date(0),
+      sign: fileName,
+      sha256: meta.sha256,
+      size: meta.size
+    })
+    invoker.logError(`>>> updateFileMeta can not found file info: ${fileName}, add a new info.`)
+  }
+  appStore.setData(ad)
 }
 
+// Only update dtimeUtc, do not delete record.
 export const deleteFileMeta = async (fileName: string) => {
-  const panesStore = usePanesStore()
-  const pd = panesStore.data
+  const appStore = useAppStore()
+  const ad = appStore.data
 
-  const files = pd.navigationCol.files
-  for (const item of files) {
+  for (const item of ad.userData.filesMeta) {
     if (item.sign === fileName) {
       item.dtimeUtc = new Date()
       break
     }
   }
-  panesStore.setData(pd)
+  appStore.setData(ad)
 }
 
 const deleteFileInCurrentDir = async (fileName: string) => {
   const p = await getDataDirs()
   const filePath = p.pathOfCurrentDir + fileName
-  return await CmdInvoke.deleteFile(filePath)
+  return await invoker.deleteFile(filePath)
 }
 
 export const saveToEntryFile = async () => {
@@ -112,12 +139,12 @@ export const saveToEntryFile = async () => {
 }
 
 export const saveCurrentNotebook = async (): Promise<string> => {
-  const panesStore = usePanesStore()
+  const appStore = useAppStore()
   const t = i18n.global.t
 
   // Save current notebook, and record the sha256 into entry file
   return saveNotebookFile(true, '').then((saveNotebookRes) => {
-    if (panesStore.data.listCol.list.length > 0) {
+    if (appStore.data.listCol.noteList.length > 0) {
       if (!saveNotebookRes) {
         return t('&Failed to save file:', { fileName: genCurrentNotebookFileName() })
       }
@@ -159,13 +186,13 @@ export const saveCurrentNotebookData = async () => {
 }
 
 export const deleteNotebook = async (sign: string) => {
-  const panesStore = usePanesStore()
-  const navColData = panesStore.data.navigationCol
+  const appStore = useAppStore()
+  const navColData = appStore.data.userData
   for (let index = 0; index < navColData.notebooks.length; index++) {
     // delete the data in paneData
     if (navColData.notebooks[index].sign === sign) {
       navColData.notebooks.splice(index, 1)
-      panesStore.setNavigationColData(navColData)
+      appStore.setUserDataMapData(navColData)
     }
   }
 
@@ -187,31 +214,33 @@ export const deleteNotebook = async (sign: string) => {
 }
 
 export const deleteTag = async (sign: string) => {
-  const panesStore = usePanesStore()
-  const navColData = panesStore.data.navigationCol
-  const listColData = panesStore.data.listCol
-  for (let ti = 0; ti < navColData.tags.length; ti++) {
+  const appStore = useAppStore()
+  const userDataMap = appStore.data.userData
+  const listColData = appStore.data.listCol
+  const p = await getDataDirs()
+
+  for (let ti = 0; ti < userDataMap.tags.length; ti++) {
     // Loop and delete tag of notebooks and notes
-    for (let nbi = 0; nbi < navColData.notebooks.length; nbi++) {
-      const nb = navColData.notebooks[nbi]
+    for (let nbi = 0; nbi < userDataMap.notebooks.length; nbi++) {
+      const nb = userDataMap.notebooks[nbi]
       const nbti = nb.tagsArr.indexOf(sign)
       // Delete tag of notebook
       if (nbti >= 0) {
         nb.tagsArr.splice(nbti, 1)
-        navColData.notebooks[nbi] = nb
+        userDataMap.notebooks[nbi] = nb
       }
 
       // Delete tag of note
       // If the notebook is opened, just modify the pane data.
       if (listColData.sign === nb.sign) {
-        for (let ici = 0; ici < listColData.list.length; ici++) {
-          const item = listColData.list[ici]
+        for (let ici = 0; ici < listColData.noteList.length; ici++) {
+          const item = listColData.noteList[ici]
           const iii = item.tagsArr.indexOf(sign)
           if (iii >= 0) {
-            listColData.list[ici].tagsArr.splice(iii, 1)
+            listColData.noteList[ici].tagsArr.splice(iii, 1)
           }
         }
-        panesStore.setListColData(listColData)
+        appStore.setListColData(listColData)
       } else {
         // Open the notebook file, loop and delete tag of notes.
         readNotebookdata(nb.sign).then((notes) => {
@@ -226,19 +255,19 @@ export const deleteTag = async (sign: string) => {
         })
       }
 
-      updateFileMeta('', nb.sign)
+      updateFileMeta(p.pathOfCurrentDir, nb.sign)
     }
 
     // Loop and delete tag of attachments
 
     // delete the data in navigationColumn
-    const tag = navColData.tags[ti]
+    const tag = userDataMap.tags[ti]
     if (tag.sign === sign) {
-      navColData.tags.splice(ti, 1)
+      userDataMap.tags.splice(ti, 1)
     }
   }
 
-  panesStore.setNavigationColData(navColData)
+  appStore.setUserDataMapData(userDataMap)
 
   saveCurrentNotebookData()
   if (await saveToEntryFile() === StrSignOk) {

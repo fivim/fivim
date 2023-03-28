@@ -8,7 +8,7 @@
       <div class="group-title">
         {{ t('Sort') }}
       </div>
-      <el-radio-group v-model="settingStore.data.appearance.listColSortBy">
+      <el-radio-group v-model="appStore.data.settings.appearance.listColSortBy">
         <el-radio label="title">{{ t('Sort by title') }}</el-radio>
         <el-radio label="mtimeUtc">{{ t('Sort by update time') }}</el-radio>
         <el-radio label="ctimeUtc">{{ t('Sort by create time') }}</el-radio>
@@ -19,14 +19,14 @@
           <div class="disp-flex flex-grow">{{ t('Sort order') }}</div>
           <div class="disp-flex flex-grow justify-content-right">
             <div class="px-1 cur-ptr">
-              <el-icon @click="settingStore.data.appearance.listColSortOrder = 'ASC'"
-                :class="`${settingStore.data.appearance.listColSortOrder !== 'DESC' ? 'highlight font-bold' : ''}`">
+              <el-icon @click="appStore.data.settings.appearance.listColSortOrder = 'ASC'"
+                :class="`${appStore.data.settings.appearance.listColSortOrder !== 'DESC' ? 'highlight font-bold' : ''}`">
                 <SortDown />
               </el-icon>
             </div>
             <div class="px-1 cur-ptr">
-              <el-icon @click="settingStore.data.appearance.listColSortOrder = 'DESC'"
-                :class="`${settingStore.data.appearance.listColSortOrder === 'DESC' ? 'highlight font-bold' : ''}`">
+              <el-icon @click="appStore.data.settings.appearance.listColSortOrder = 'DESC'"
+                :class="`${appStore.data.settings.appearance.listColSortOrder === 'DESC' ? 'highlight font-bold' : ''}`">
                 <SortUp />
               </el-icon>
             </div>
@@ -42,8 +42,8 @@ import { Sort, SortUp, SortDown } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 import XPopover from '@/components/widget/XPopover.vue'
-import { useSettingStore } from '@/pinia/modules/settings'
+import { useAppStore } from '@/pinia/modules/app'
 
 const { t } = useI18n()
-const settingStore = useSettingStore()
+const appStore = useAppStore()
 </script>

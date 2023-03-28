@@ -15,13 +15,14 @@
               <span class="font-bold">{{ t('Notebook') }}</span>
             </div>
             <div class="right">
-              <el-button :icon="Plus" size="small" color="var(--enas-border-color)" circle @click="visibleAddNb = true" />
+              <el-button :icon="Plus" size="small" color="var(--enas-border-color)" circle
+                @click="tempNb.visible = true" />
             </div>
           </div>
         </div>
 
-        <template v-if="panesStore.data.navigationCol.notebooks.length > 0">
-          <div class="nb-name" v-for="(item, index) in panesStore.data.navigationCol.notebooks" v-bind:key="index">
+        <template v-if="appStore.data.userData.notebooks.length > 0">
+          <div class="nb-name" v-for="(item, index) in appStore.data.userData.notebooks" v-bind:key="index">
             <div class="info">
               <div class="icon" @click="onListNb(index)">
                 {{ item.icon }}
@@ -49,13 +50,13 @@
             </div>
             <div class="right">
               <el-button :icon="Plus" size="small" color="var(--enas-border-color)" circle
-                @click="visibleAddEditTag = true" />
+                @click="tempTag.visible = true" />
             </div>
           </div>
         </div>
-        <template v-if="panesStore.data.navigationCol.tags.length > 0">
+        <template v-if="appStore.data.userData.tags.length > 0">
           <div class="tags">
-            <template v-for="(item, index) in panesStore.data.navigationCol.tags" v-bind:key="index">
+            <template v-for="(item, index) in appStore.data.userData.tags" v-bind:key="index">
               <el-popover placement="left-start" trigger="click">
                 <template #reference>
                   <span class="tag-btn m-2">
@@ -66,7 +67,9 @@
 
                 <div class="enas-list cur-ptr">
                   <div class="list-item" @click="onOpenDialogTag(item)"> {{ t('Edit') }} </div>
+                  <!-- TODO
                   <div class="list-item" @click="onListTag(item)"> {{ t('Show list') }} </div>
+                  -->
                   <div class="list-item" @click="onDeleteTag(item)"> {{ t('Delete') }} </div>
                 </div>
               </el-popover>
@@ -92,35 +95,37 @@
 
     <slot name="default"></slot>
 
-    <el-dialog v-model="visibleAddNb" :title="getDialogTitleAddEditNb()" @closed="resetTempNb">
-      <el-input v-model="tempNbTitle" />
+    <!-- Notebook dialog -->
+    <el-dialog v-model="tempNb.visible" :title="getDialogTitleAddEditNb()" @closed="resetTempNb">
+      <el-input v-model="tempNb.title" />
 
       <div class="py-2">
-        <SelectEmojiButton :icon="tempNbIcon" @onClick="onNbEmojiClick"></SelectEmojiButton>
+        <SelectEmojiButton :icon="tempNb.icon" @onClick="onNbEmojiClick"></SelectEmojiButton>
         <SelectTagButton :tagExist="tempNbTagExist" :useIcon="false" @onClick="onNewNbAddTag"> </SelectTagButton>
       </div>
 
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="visibleAddNb = false">{{ t('Cancel') }}</el-button>
-          <el-button type="primary" @click="onDialogCloseNb">
+          <el-button @click="tempNb.visible = false">{{ t('Cancel') }}</el-button>
+          <el-button type="primary" @click="onDialogConfirmNb">
             {{ t('Confirm') }}
           </el-button>
         </span>
       </template>
     </el-dialog>
 
-    <el-dialog v-model="visibleAddEditTag" :title="getDialogTitleAddEditTag()" @closed="resetTempTag">
-      <el-input v-model="tempTagText" />
+    <!-- Tag dialog -->
+    <el-dialog v-model="tempTag.visible" :title="getDialogTitleAddEditTag()" @closed="resetTempTag">
+      <el-input v-model="tempTag.text" />
 
       <div class="py-2">
-        <SelectEmojiButton :icon="tempTagIcon" @onClick="onTagEmojiClick"></SelectEmojiButton>
+        <SelectEmojiButton :icon="tempTag.icon" @onClick="onTagEmojiClick"></SelectEmojiButton>
       </div>
 
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="visibleAddEditTag = false">{{ t('Cancel') }}</el-button>
-          <el-button type="primary" @click="onDialogCloseTag">
+          <el-button @click="tempTag.visible = false">{{ t('Cancel') }}</el-button>
+          <el-button type="primary" @click="onDialogConfirmTag">
             {{ t('Confirm') }}
           </el-button>
         </span>
@@ -144,15 +149,17 @@ import ThemeButton from '@/components/button/Theme.vue'
 
 import { TypeFile, TypeNote, TypeTag, StrSignOk } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
-import { usePanesStore } from '@/pinia/modules/panes'
+import { getDataDirs } from '@/libs/init/dirs'
 import { CmdAdapter } from '@/libs/commands'
-import { saveCurrentNotebookAndCreateNotebookFile, deleteNotebook, deleteTag, readNotebookdata } from '@/libs/user_data/utils'
+import {
+  saveCurrentNotebookAndCreateNotebookFile, deleteNotebook, deleteTag,
+  readNotebookdata, addFileMeta
+} from '@/libs/user_data/utils'
 import { NoteInfo, NotebookInfo, TagInfo } from '@/libs/user_data/types'
 import { genFileName, restEditorCol } from '@/utils/pinia_related'
 
 const { t } = useI18n()
 const appStore = useAppStore()
-const panesStore = usePanesStore()
 
 const isWebPage = () => {
   return appStore.data.isWebPage
@@ -162,84 +169,92 @@ const DIALOG_TYPE_ADD = 'ADD'
 const DIALOG_TYPE_EDIT = 'EDIT'
 
 // ---------- add / edit notebook ----------
-const dialogTypeAddEditNb = ref(DIALOG_TYPE_ADD)
-const visibleAddNb = ref(false)
-const tempNbHashedSign = ref('')
-const tempNbIcon = ref('')
-const tempNbTitle = ref('')
-const tempNbTagHashedSign = ref<string[]>([])
+const tempNb = ref({
+  dialogType: DIALOG_TYPE_ADD,
+  visible: false,
+  sign: '',
+  icon: '',
+  title: '',
+  tagsSign: [] as string[]
+})
 
-const onDialogCloseNb = async () => {
-  visibleAddNb.value = false
-  const pd = panesStore.data
+const resetTempNb = () => {
+  tempNb.value.title = ''
+  tempNb.value.icon = ''
+  tempNb.value.dialogType = DIALOG_TYPE_ADD
+  tempNb.value.visible = false
+  tempNb.value.sign = ''
+  tempNb.value.tagsSign = []
+}
 
-  if (dialogTypeAddEditNb.value === DIALOG_TYPE_ADD) {
+const onDialogConfirmNb = async () => {
+  tempNb.value.visible = false
+  const ad = appStore.data
+
+  if (tempNb.value.dialogType === DIALOG_TYPE_ADD) {
     const sign = genFileName()
-    pd.navigationCol.notebooks.push({
-      title: tempNbTitle.value,
-      icon: tempNbIcon.value,
+    ad.userData.notebooks.push({
+      title: tempNb.value.title,
+      icon: tempNb.value.icon,
       sign,
       ctimeUtc: new Date(),
       mtimeUtc: new Date(),
-      tagsArr: tempNbTagHashedSign.value
+      tagsArr: tempNb.value.tagsSign
     })
 
     resetTempNb()
+
+    const p = await getDataDirs()
+    addFileMeta(p.pathOfCurrentDir, sign)
+
     // Save new notebook data file at first, then open it.
     if (await saveCurrentNotebookAndCreateNotebookFile(sign) === StrSignOk) {
-      onListNb(pd.navigationCol.notebooks.length - 1)
+      onListNb(ad.userData.notebooks.length - 1)
     }
-  } else if (dialogTypeAddEditNb.value === DIALOG_TYPE_EDIT) {
-    for (const i of pd.navigationCol.notebooks) {
-      if (i.sign === tempNbHashedSign.value) {
-        i.icon = tempNbIcon.value
-        i.title = tempNbTitle.value
+  } else if (tempNb.value.dialogType === DIALOG_TYPE_EDIT) {
+    for (const i of ad.userData.notebooks) {
+      if (i.sign === tempNb.value.sign) {
+        i.icon = tempNb.value.icon
+        i.title = tempNb.value.title
         i.mtimeUtc = new Date()
         // i.tagsArr = tempNbTagHashedSign.value // It has been directly modified when operating the tag
         break
       }
     }
 
-    panesStore.setData(pd)
+    appStore.setData(ad)
   }
 }
 
-const resetTempNb = () => {
-  tempNbTitle.value = ''
-  tempNbIcon.value = ''
-  dialogTypeAddEditNb.value = DIALOG_TYPE_ADD
-}
-
 const onNbEmojiClick = (detail: EmojiClickEventDetail) => {
-  tempNbIcon.value = detail.unicode || ''
+  tempNb.value.icon = detail.unicode || ''
 }
 
 const onOpenDialogNb = (detail: NotebookInfo) => {
-  dialogTypeAddEditNb.value = DIALOG_TYPE_EDIT
-  visibleAddNb.value = true
-  tempNbTitle.value = detail.title
-  tempNbIcon.value = detail.icon
-  tempNbHashedSign.value = detail.sign
+  tempNb.value.dialogType = DIALOG_TYPE_EDIT
+  tempNb.value.visible = true
+  tempNb.value.title = detail.title
+  tempNb.value.icon = detail.icon
+  tempNb.value.sign = detail.sign
 }
 
 const onNewNbAddTag = (detail: TagInfo) => {
   const sign = detail.sign
-  if (dialogTypeAddEditNb.value === DIALOG_TYPE_ADD) {
-    const arr = tempNbTagHashedSign.value
+  if (tempNb.value.dialogType === DIALOG_TYPE_ADD) {
+    const arr = tempNb.value.tagsSign
     const index = arr.indexOf(sign)
 
     if (index >= 0) { // If exist delete it
       arr.splice(index, 1)
-      tempNbTagHashedSign.value = arr
+      tempNb.value.tagsSign = arr
     } else {
-      tempNbTagHashedSign.value.push(sign)
+      tempNb.value.tagsSign.push(sign)
     }
-  } else if (dialogTypeAddEditNb.value === DIALOG_TYPE_EDIT) {
-    const pd = panesStore.data
-    // const notebooks = paneData.navigationCol.notebooks
-    for (let index = 0; index < pd.navigationCol.notebooks.length; index++) {
-      const nb = pd.navigationCol.notebooks[index]
-      if (nb.sign === tempNbHashedSign.value) {
+  } else if (tempNb.value.dialogType === DIALOG_TYPE_EDIT) {
+    const ad = appStore.data
+    for (let index = 0; index < ad.userData.notebooks.length; index++) {
+      const nb = ad.userData.notebooks[index]
+      if (nb.sign === tempNb.value.sign) {
         const arr = nb.tagsArr
         const ih = arr.indexOf(sign)
 
@@ -248,44 +263,52 @@ const onNewNbAddTag = (detail: TagInfo) => {
         } else {
           arr.push(sign)
         }
-        pd.navigationCol.notebooks[index].tagsArr = arr
+        ad.userData.notebooks[index].tagsArr = arr
       }
     }
-    panesStore.setData(pd)
+    appStore.setData(ad)
   }
 }
 
 const getDialogTitleAddEditNb = () => {
-  return dialogTypeAddEditNb.value === DIALOG_TYPE_EDIT ? t('Edit notebook') : t('Add notebook')
+  return tempNb.value.dialogType === DIALOG_TYPE_EDIT ? t('Edit notebook') : t('Add notebook')
 }
 
 const tempNbTagExist = (sign: string) => {
-  for (const nb of panesStore.data.navigationCol.notebooks) {
-    if (nb.sign === tempNbHashedSign.value && nb.tagsArr.indexOf(sign) >= 0) {
+  if (tempNb.value.dialogType === DIALOG_TYPE_ADD) {
+    if (tempNb.value.tagsSign.indexOf(sign) >= 0) {
       return true
     }
+  } else if (tempNb.value.dialogType === DIALOG_TYPE_EDIT) {
+    for (const nb of appStore.data.userData.notebooks) {
+      if (nb.sign === tempNb.value.sign && nb.tagsArr.indexOf(sign) >= 0) {
+        return true
+      }
+    }
+    return false
+  } else {
+    CmdAdapter().notification(t('Unknow action: '), tempNb.value.dialogType, '')
   }
-  return false
 }
 
 const onListNb = (index: number) => {
-  const nb = panesStore.data.navigationCol.notebooks[index]
+  const nb = appStore.data.userData.notebooks[index]
   readNotebookdata(nb.sign).then((notes) => {
-    panesStore.setListColData({
+    appStore.setListColData({
       title: nb.title,
       icon: nb.icon,
       sign: nb.sign,
       tagsArr: nb.tagsArr,
       type: TypeNote,
-      list: notes
+      noteList: notes
     })
     // TODO: save the value of the editor
 
-    panesStore.resetEditorColData()
+    appStore.resetEditor()
     restEditorCol()
   }).catch((err: Error) => {
     const typeName = t('Notebook')
-    CmdAdapter.notification(t('&Error initializing file', { name: typeName }), t(err.message), '')
+    CmdAdapter().notification(t('&Error initializing file', { name: typeName }), t(err.message), '')
     return false
   })
 }
@@ -309,68 +332,71 @@ const onDeleteNotebook = (detail: NotebookInfo) => {
 // ---------- add / edit notebook end ----------
 
 // ---------- add / edit tag ----------
-const dialogTypeAddEditTag = ref(DIALOG_TYPE_ADD)
-const visibleAddEditTag = ref(false)
-const tempTagText = ref('')
-const tempTagIcon = ref('')
-const tempTagHashedSign = ref('')
-const onDialogCloseTag = () => {
-  visibleAddEditTag.value = false
-  const pd = panesStore.data
-  if (dialogTypeAddEditTag.value === DIALOG_TYPE_ADD) {
-    pd.navigationCol.tags.push({
-      title: tempTagText.value,
-      icon: tempTagIcon.value,
+const tempTag = ref({
+  dialogType: DIALOG_TYPE_ADD,
+  visible: false,
+  text: '',
+  icon: '',
+  tagsSign: ''
+})
+
+const onDialogConfirmTag = () => {
+  tempTag.value.visible = false
+  const ad = appStore.data
+  if (tempTag.value.dialogType === DIALOG_TYPE_ADD) {
+    ad.userData.tags.push({
+      title: tempTag.value.text,
+      icon: tempTag.value.icon,
       sign: genFileName(),
       ctimeUtc: new Date(),
       mtimeUtc: new Date()
     })
-  } else if (dialogTypeAddEditTag.value === DIALOG_TYPE_EDIT) {
-    for (const i of pd.navigationCol.tags) {
-      if (i.sign === tempTagHashedSign.value) {
-        i.icon = tempTagIcon.value
-        i.title = tempTagText.value
+  } else if (tempTag.value.dialogType === DIALOG_TYPE_EDIT) {
+    for (const i of ad.userData.tags) {
+      if (i.sign === tempTag.value.tagsSign) {
+        i.icon = tempTag.value.icon
+        i.title = tempTag.value.text
         i.mtimeUtc = new Date()
         break
       }
     }
   }
 
-  panesStore.setData(pd)
+  appStore.setData(ad)
   resetTempTag()
 }
 const resetTempTag = () => {
-  tempTagText.value = ''
-  tempTagIcon.value = ''
-  dialogTypeAddEditTag.value = DIALOG_TYPE_ADD
+  tempTag.value.text = ''
+  tempTag.value.icon = ''
+  tempTag.value.dialogType = DIALOG_TYPE_ADD
 }
 const onTagEmojiClick = (detail: EmojiClickEventDetail) => {
-  tempTagIcon.value = detail.unicode || ''
+  tempTag.value.icon = detail.unicode || ''
 }
 
 const onOpenDialogTag = (detail: TagInfo) => {
-  dialogTypeAddEditTag.value = DIALOG_TYPE_EDIT
-  visibleAddEditTag.value = true
-  tempTagIcon.value = detail.icon
-  tempTagText.value = detail.title
-  tempTagHashedSign.value = detail.sign
+  tempTag.value.dialogType = DIALOG_TYPE_EDIT
+  tempTag.value.visible = true
+  tempTag.value.icon = detail.icon
+  tempTag.value.text = detail.title
+  tempTag.value.tagsSign = detail.sign
 }
 
 const getDialogTitleAddEditTag = () => {
-  return dialogTypeAddEditTag.value === DIALOG_TYPE_EDIT ? t('Edit tag') : t('Add tag')
+  return tempTag.value.dialogType === DIALOG_TYPE_EDIT ? t('Edit tag') : t('Add tag')
 }
 
 const onListTag = (tag: TagInfo) => {
   const items: NoteInfo[] = []
   // TODO: loop all the data, find the same tag
 
-  panesStore.setListColData({
+  appStore.setListColData({
     title: tag.title,
     icon: tag.icon,
     sign: tag.sign,
     tagsArr: [],
     type: TypeTag,
-    list: items
+    noteList: items
   })
   restEditorCol()
 }
@@ -395,15 +421,15 @@ const onDeleteTag = (detail: TagInfo) => {
 
 // ---------- add / edit files ----------
 const onListFiles = () => {
-  // List of files will read data from panesStore.data.navigationCol.files,
+  // List of files will read data from appStore.data.userDataMap.files,
   // do not need real data, only set title.
-  panesStore.setListColData({
+  appStore.setListColData({
     title: t('File'),
     icon: '',
     sign: '>>>file list<<<',
     tagsArr: [],
     type: TypeFile,
-    list: []
+    noteList: []
   })
 
   restEditorCol()

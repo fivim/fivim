@@ -35,22 +35,24 @@ import { UnlockOutlined } from '@ant-design/icons-vue'
 
 import { MasterPasswordSalt } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
 import { initAtFirst } from '@/libs/init/at_first'
+import { i18n } from '@/libs/init/i18n'
+import { CmdAdapter } from '@/libs/commands'
+import { initEntryFile } from '@/libs/user_data/entry_file'
 import { initWithStartUpConfFile } from '@/libs/init/conf_file'
-import { CmdInvoke } from '@/libs/commands'
+import { invoker } from '@/libs/commands/invoke'
 import { genMasterPasswordSha256 } from '@/utils/hash'
 
 const appStore = useAppStore()
-const settingStore = useSettingStore()
 const { t } = useI18n()
 
 const password = ref('')
 const masterPasswordWrong = ref(false)
+
 const checkPassword = () => {
   const pwdSha256 = genMasterPasswordSha256(password.value, MasterPasswordSalt)
   initAtFirst(pwdSha256, true).then(() => {
-    if (pwdSha256 === settingStore.data.encryption.masterPassword) {
+    if (pwdSha256 === appStore.data.settings.encryption.masterPassword) {
       const data = appStore.data
       data.lockscreen = false
       appStore.setData(data)
@@ -58,14 +60,23 @@ const checkPassword = () => {
       masterPasswordWrong.value = false
       password.value = ''
 
-      CmdInvoke.logInfo('Unlock succeeded.')
+      invoker.logInfo('Unlock succeeded.')
+
+      initEntryFile().then(() => {
+        return true
+      }).catch((err: Error) => {
+        const t = i18n.global.t
+        const typeName = t('configuration')
+        CmdAdapter().notification(t('&Error initializing file', { name: typeName }), t(err.message), '')
+        return false
+      })
     } else {
       masterPasswordWrong.value = true
     }
   })
 }
 
-if (settingStore.data.normal.workDir === '') {
+if (appStore.data.settings.normal.workDir === '') {
   initWithStartUpConfFile()
 }
 </script>

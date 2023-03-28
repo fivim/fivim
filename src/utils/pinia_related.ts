@@ -1,7 +1,5 @@
 import { DefaultFileNameRule, TypeNone } from '@/constants'
-import { usePanesStore } from '@/pinia/modules/panes'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
 import { TagInfo } from '@/libs/user_data/types'
 import { tmplTagInfo } from '@/libs/user_data/types_templates'
 import { genFileNameByTime } from '@/utils/hash'
@@ -10,15 +8,15 @@ import { formatDateTime } from '@/utils/string'
 import { jsonCopy } from './utils'
 
 export const genFileName = () => {
-  const settingStore = useSettingStore()
-  const settings = settingStore.data
+  const appStore = useAppStore()
+  const settings = appStore.data.settings
   return genFileNameByTime(settings.encryption.fileNameRule || DefaultFileNameRule, settings.appearance.dateTimeFormat, settings.encryption.fileExt)
 }
 
 export const getTagData = (sign: string): TagInfo => {
-  const panesStore = usePanesStore()
+  const appStore = useAppStore()
   let res: TagInfo = jsonCopy(tmplTagInfo)
-  const tagsArr = panesStore.data.navigationCol.tags
+  const tagsArr = appStore.data.userData.tags
   if (tagsArr) {
     for (const i of tagsArr) {
       if (i.sign === sign) {
@@ -39,17 +37,17 @@ export const getFileNameFromPath = (path: string) => {
 }
 
 export const formatTime = (time: Date) => {
-  const settingStore = useSettingStore()
-  return formatDateTime(time, settingStore.data.appearance.dateTimeFormat)
+  const appStore = useAppStore()
+  return formatDateTime(time, appStore.data.settings.appearance.dateTimeFormat)
 }
 
 export const restEditorCol = () => {
-  const panesStore = usePanesStore()
-  const pde = panesStore.data.editorCol
+  const appStore = useAppStore()
+  const pde = appStore.data.currentFile
   pde.type = TypeNone
   pde.sign = ''
 
-  panesStore.setEditorColData(pde)
+  appStore.setCurrentFile(pde)
 }
 
 export const pathJoin = async (dirs: string[]) => {

@@ -1,9 +1,11 @@
 import { TypeFile } from '@/constants'
-import { tmplPaneData } from '@/components/pane/types_template'
+
+import { tmplUserDataMap } from '@/types_template'
 
 import {
-  AttrsArrKeyOfFile, AttrsArrKeyOfNote, AttrsArrKeyOfNotebook,
-  EntryFileSource, NotebookSource, EntryFileSourceParsedRes, FileInfo, TagInfo
+  AttrsArrKeyOfFile, AttrsArrKeyOfNote, AttrsArrKeyOfNotebook, AttrsArrKeyOfUserDataFileMeta,
+  EntryFileSourceInfo, NotebookSourceInfo, EntryFileSourceInfoParsedRes,
+  FileInfo, UserFileMetaInfo, TagInfo
 } from './types'
 
 export const tmplFileAttrsArr = [
@@ -15,8 +17,8 @@ export const tmplFileAttrsArr = [
   'title',
   // other
   'content',
-  'dtimeUtc',
-  'sha256'
+  'originalSize',
+  'originalSha256'
 ] as AttrsArrKeyOfFile[]
 
 export const tmplNotebookAttrsArr = [
@@ -43,17 +45,37 @@ export const tmplNoteAttrsArr = [
   'type'
 ] as AttrsArrKeyOfNote[]
 
+export const tmplUserDataMetaAttrsArr = [
+  // common
+  'ctimeUtc',
+  'mtimeUtc',
+  'sign',
+  'title',
+  // other
+  'dtimeUtc',
+  'size',
+  'sha256'
+] as AttrsArrKeyOfUserDataFileMeta[]
+
 export const tmplFileInfo: FileInfo = {
   ctimeUtc: new Date(), // create timestamp(in milliseconds)
   mtimeUtc: new Date(), // modify timestamp(in milliseconds)
-  dtimeUtc: new Date(), // delete timestamp(in milliseconds)
   content: '', // remark content
-  sha256: '',
   sign: '',
-  size: 0,
+  originalSize: 0,
+  originalSha256: '',
   title: '',
   tagsArr: [],
   type: TypeFile
+}
+
+export const tmplUserDataFilesMeta: UserFileMetaInfo = {
+  ctimeUtc: new Date(), // create timestamp(in milliseconds)
+  mtimeUtc: new Date(), // modify timestamp(in milliseconds)
+  dtimeUtc: new Date(), // delete timestamp(in milliseconds)
+  sign: '',
+  sha256: '',
+  size: 0
 }
 
 export const tmplTagInfo: TagInfo = {
@@ -64,12 +86,12 @@ export const tmplTagInfo: TagInfo = {
   ctimeUtc: new Date()
 }
 
-export const tmplMmanifestData: EntryFileSourceParsedRes = {
-  paneData: tmplPaneData,
+export const tmplMmanifestData: EntryFileSourceInfoParsedRes = {
+  userDataMap: tmplUserDataMap,
   syncLockFileName: ''
 }
 
-export const tmplEntryFileData: EntryFileSource = {
+export const tmplEntryFileData: EntryFileSourceInfo = {
   dataVersion: 1,
   noteBooks: {
     attrsArr: tmplNotebookAttrsArr,
@@ -83,10 +105,14 @@ export const tmplEntryFileData: EntryFileSource = {
     attrsArr: tmplFileAttrsArr,
     dataArr: []
   },
+  userDataFilesMeta: {
+    attrsArr: [],
+    dataArr: []
+  },
   syncLockFileName: ''
 }
 
-export const tmplNotebook: NotebookSource = {
+export const tmplNotebook: NotebookSourceInfo = {
   dataVersion: 1,
   attrsArr: tmplNoteAttrsArr,
   dataArr: []

@@ -1,54 +1,43 @@
 import { TypeFile, TypeTag, TypeNote } from '@/constants'
-import { NoteInfo, NotebookInfo, FileInfo, TagInfo, DocType, FileType } from '@/libs/user_data/types'
+import { NoteInfo, DocTypeInfo, FileTypeInfo } from '@/libs/user_data/types'
 
-export type ListColType = typeof TypeFile | typeof TypeTag | typeof TypeNote
+export type ListColTypeInfo = typeof TypeFile | typeof TypeTag | typeof TypeNote
 
-export enum PaneIds {
+export enum PaneIdsInfo {
   EditorCol = 'editor-column',
   ListCol = 'list-column',
   NavigationCol = 'navigation-column'
 }
 
-export enum PaneResizeType {
+export enum PaneResizeTypeInfo {
   WidthOnly = 'WidthOnly',
   WidthAndOffset = 'WidthAndOffset',
 }
 
-export enum PaneSide {
+export enum PaneSideInfo {
   Left = 'left',
   Right = 'right',
 }
 
-export type PaneController = {
+export type PaneControllerInfo = {
   focusModeEnabled: boolean,
   panesNameArr: string[]
 }
 
-export type EditorColData = {
+export type CurrentFileInfo = {
+  sign: string // hashed file name of currently opened
+  indexInList: number // the index in list of the list column
+  type: DocTypeInfo | FileTypeInfo
   content: string
-  sign: string
   title: string
-  type: DocType | FileType
   tagsArr: string[]
 }
 
-export type ListColData = {
+export type ListColInfo = {
   sign: string
   icon: string
-  list: NoteInfo[]
+  noteList: NoteInfo[]
   title: string
   tagsArr: string[]
-  type: ListColType
-}
-
-export type NavigationColData = {
-  files: FileInfo[]
-  notebooks: NotebookInfo[]
-  tags: TagInfo[]
-}
-
-export type PaneData = {
-  editorCol: EditorColData
-  listCol: ListColData
-  navigationCol: NavigationColData
+  type: ListColTypeInfo
 }

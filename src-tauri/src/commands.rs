@@ -1,15 +1,16 @@
 use tauri::Manager;
+use xutils::dir as xu_dir;
+use xutils::file as xx_file;
+use xutils::hash as xu_hash;
+use xutils::logger as xu_logger;
 
 use crate::conf as x_conf;
 use crate::data_file_parse as x_parser;
 use crate::i18n as x_i18n;
 use crate::menu as x_menu;
 use crate::utils::encrypt as x_encrypt;
+use crate::utils::file as x_file;
 use crate::utils::tauri as x_tauri;
-use xutils::dir as x_dir;
-use xutils::file as x_file;
-use xutils::hash as x_hash;
-use xutils::logger as x_logger;
 
 /*
 The tauri.windows in tauri.conf.json should have:
@@ -49,7 +50,7 @@ pub fn get_app_core_conf() -> x_tauri::AppCoreConf {
 
 #[tauri::command]
 pub fn read_file_to_string(file_path: String) -> String {
-    match x_file::read_to_string(file_path.as_str()) {
+    match xx_file::read_to_string(file_path.as_str()) {
         Ok(content) => return content,
         Err(_) => return "".to_string(),
     }
@@ -57,7 +58,7 @@ pub fn read_file_to_string(file_path: String) -> String {
 
 #[tauri::command]
 pub fn read_file_to_bytes(file_path: String) -> Vec<u8> {
-    match x_file::read_to_bytes(file_path.as_str()) {
+    match xx_file::read_to_bytes(file_path.as_str()) {
         Ok(content) => return content,
         Err(_) => return [].to_vec(),
     }
@@ -65,12 +66,12 @@ pub fn read_file_to_bytes(file_path: String) -> Vec<u8> {
 
 #[tauri::command]
 pub fn write_base64_into_file(file_path: String, file_content_base64: String) -> bool {
-    return x_file::write_base64_str(file_path.as_str(), file_content_base64.as_str());
+    return xx_file::write_base64_str(file_path.as_str(), file_content_base64.as_str());
 }
 
 #[tauri::command]
 pub fn write_bytes_into_file(file_path: String, file_content: Vec<u8>) -> bool {
-    match x_file::write_bytes(file_path.as_str(), &file_content) {
+    match xx_file::write_bytes(file_path.as_str(), &file_content) {
         Ok(_) => return true,
         Err(_) => return false,
     }
@@ -78,7 +79,7 @@ pub fn write_bytes_into_file(file_path: String, file_content: Vec<u8>) -> bool {
 
 #[tauri::command]
 pub fn write_string_into_file(file_path: String, file_content: String) -> bool {
-    match x_file::write_str(file_path.as_str(), file_content.as_str()) {
+    match xx_file::write_str(file_path.as_str(), file_content.as_str()) {
         Ok(_) => return true,
         Err(_) => return false,
     }
@@ -100,8 +101,18 @@ pub fn set_locale(locale: String) {
 }
 
 #[tauri::command]
+pub fn get_file_meta(file_path: String) -> x_file::FileMeta {
+    return x_file::get_file_meta(file_path.as_str());
+}
+
+#[tauri::command]
+pub fn sha256_by_file_path(file_path: String) -> String {
+    return xu_hash::sha256_by_file_path(file_path.as_str());
+}
+
+#[tauri::command]
 pub fn get_file_bytes(file_path: String) -> Vec<u8> {
-    match x_file::read_to_bytes(file_path.as_str()) {
+    match xx_file::read_to_bytes(file_path.as_str()) {
         Ok(c) => {
             return c;
         }
@@ -113,37 +124,32 @@ pub fn get_file_bytes(file_path: String) -> Vec<u8> {
 
 #[tauri::command]
 pub fn exist_file(file_path: String) -> bool {
-    return x_file::exists(file_path.as_str());
+    return xx_file::exists(file_path.as_str());
 }
 
 #[tauri::command]
 pub fn copy_file(file_path: String, target_file_path: String) -> bool {
-    return !x_file::copy(&file_path, &target_file_path);
+    return !xx_file::copy(&file_path, &target_file_path);
 }
 
 #[tauri::command]
 pub fn delete_file(file_path: String) -> bool {
-    return x_file::delete(&file_path);
+    return xx_file::delete(&file_path);
 }
 
 #[tauri::command]
 pub fn delete_dir(dir_path: String) -> bool {
-    return x_dir::delete(&dir_path);
+    return xu_dir::delete(&dir_path);
 }
 
 #[tauri::command]
 pub fn get_dir_size(dir_path: String) -> u64 {
-    return x_dir::get_size(&dir_path);
+    return xu_dir::get_size(&dir_path);
 }
 
 #[tauri::command]
-pub fn list_dir_children(dir_path: String) -> Vec<x_dir::DirChildren> {
-    return x_dir::get_children_list(dir_path.as_str());
-}
-
-#[tauri::command]
-pub fn sha256_by_file_path(file_path: String) -> String {
-    return x_hash::sha256_by_file_path(file_path.as_str());
+pub fn list_dir_children(dir_path: String) -> Vec<xu_dir::DirChildren> {
+    return xu_dir::get_children_list(dir_path.as_str());
 }
 
 #[tauri::command]
@@ -197,7 +203,7 @@ pub fn write_user_data_file(
             return res;
         }
         Err(e) => {
-            x_logger::log_error(&format!(
+            xu_logger::log_error(&format!(
                 ">>> write_user_data_file error: {}, file_path:{}\n",
                 e, file_path
             ));
@@ -212,14 +218,14 @@ pub fn log(level: String, content: String) {
     let content_str = content.as_str();
 
     match level_string {
-        "ERROR" => x_logger::log_error(content_str),
-        "INFO" => x_logger::log_info(content_str),
-        "DEBUG" => x_logger::log_debug(content_str),
+        "ERROR" => xu_logger::log_error(content_str),
+        "INFO" => xu_logger::log_info(content_str),
+        "DEBUG" => xu_logger::log_debug(content_str),
         &_ => (),
     }
 }
 
 #[tauri::command]
 pub fn string_crc32(string: String) -> u32 {
-    return x_hash::crc32_by_bytes(string.as_bytes());
+    return xu_hash::crc32_by_bytes(string.as_bytes());
 }

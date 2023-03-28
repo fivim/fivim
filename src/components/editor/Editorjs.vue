@@ -6,7 +6,7 @@
 import { ref, onMounted } from 'vue'
 import EditorJS, { OutputData } from '@editorjs/editorjs'
 
-import { CmdInvoke } from '@/libs/commands'
+import { invoker } from '@/libs/commands/invoke'
 import { mergeConfig } from '@/libs/editorjs/conf'
 import { Props } from '@/libs/editorjs/types'
 
@@ -33,7 +33,7 @@ let saveTimer: number
 
 const init = (jsonStr: string) => {
   if (!destroy()) {
-    CmdInvoke.logError('editorDestroy error')
+    invoker.logError('editorDestroy error')
   }
 
   const conf = mergeConfig({
@@ -65,7 +65,7 @@ const save = () => {
         const json = JSON.stringify(outputObj)
         emits('onUpdate', json)
       }).catch((error) => {
-        CmdInvoke.logError('editorSave failed: ' + error)
+        invoker.logError('editorSave failed: ' + error)
       })
     } catch (error) {
 
@@ -93,7 +93,7 @@ const setContent = (jsonStr: string) => {
       save()
       init(jsonStr)
     } catch (error) {
-      CmdInvoke.logError('editorSetContent failed: ' + error)
+      invoker.logError('editorSetContent failed: ' + error)
     }
   }
 }

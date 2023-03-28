@@ -1,35 +1,37 @@
 import { TypeFile, TypeNote } from '@/constants'
-import { PaneData } from '@/components/pane/types'
-import { tmplPaneData } from '@/components/pane/types_template'
-import { CmdInvoke } from '@/libs/commands'
+
+import { tmplUserDataMap } from '@/types_template'
+import { invoker } from '@/libs/commands/invoke'
 import { jsonCopy } from '@/utils/utils'
+import { getDateByTmStr } from '@/utils/time'
 
 import {
-  EntryFileSource, NotebookSource, EntryFileSourceParsedRes,
-  FileInfo, NotebookInfo, NoteInfo, TagInfo
+  EntryFileSourceInfo, NotebookSourceInfo, EntryFileSourceInfoParsedRes,
+  FileInfo, NotebookInfo, NoteInfo, TagInfo, UserDataInfo, UserFileMetaInfo
 } from './types'
 import { tmplMmanifestData } from './types_templates'
 
-export const parseEntryFile = (jsonStr: string): EntryFileSourceParsedRes => {
-  const res: EntryFileSourceParsedRes = jsonCopy(tmplMmanifestData)
+export const parseEntryFile = (jsonStr: string): EntryFileSourceInfoParsedRes => {
+  const res: EntryFileSourceInfoParsedRes = jsonCopy(tmplMmanifestData)
 
   try {
-    const data: EntryFileSource = JSON.parse(jsonStr)
+    const data: EntryFileSourceInfo = JSON.parse(jsonStr)
     if (data.dataVersion === 1) {
-      res.paneData = parseNavColDataV1(data)
+      const nnn = parseNavColDataV1(data)
+      res.userDataMap = nnn
       res.syncLockFileName = data.syncLockFileName
       return res
     }
   } catch (error) {
-    CmdInvoke.logError('>>> parseManifest error: ' + error)
+    invoker.logError('>>> parseManifest error: ' + error)
     return res
   }
 
   return res
 }
 
-export const parseNavColDataV1 = (data: EntryFileSource): PaneData => {
-  const res = tmplPaneData
+export const parseNavColDataV1 = (data: EntryFileSourceInfo): UserDataInfo => {
+  const res: UserDataInfo = jsonCopy(tmplUserDataMap)
 
   // ---------- notebooks ----------
   const noteBooksData = data.noteBooks
@@ -48,8 +50,32 @@ export const parseNavColDataV1 = (data: EntryFileSource): PaneData => {
       } as NotebookInfo)
     }
   }
-  res.navigationCol.notebooks = resNotebookArr
+  res.notebooks = resNotebookArr
   // ---------- notebooks end ----------
+
+  // ---------- files ----------
+  const filesData = data.files
+  const fAttrsArr = filesData.attrsArr
+  const fDataArr = filesData.dataArr
+  const resFileArr: FileInfo[] = []
+  if (fDataArr.length > 0) {
+    for (const i of fDataArr) {
+      resFileArr.push({
+        ctimeUtc: getDateByTmStr(i[fAttrsArr.indexOf('ctimeUtc')]),
+        mtimeUtc: getDateByTmStr(i[fAttrsArr.indexOf('mtimeUtc')]),
+        sign: i[fAttrsArr.indexOf('sign')],
+        originalSize: parseFloat(i[fAttrsArr.indexOf('originalSize')]),
+        originalSha256: i[fAttrsArr.indexOf('originalSha256')],
+        sha256: i[fAttrsArr.indexOf('sha256')],
+        title: i[fAttrsArr.indexOf('title')],
+        tagsArr: getTagsArr(i[fAttrsArr.indexOf('tagsSign')]),
+        content: i[fAttrsArr.indexOf('content')],
+        type: TypeFile
+      } as FileInfo)
+    }
+  }
+  res.files = resFileArr
+  // ---------- files end ----------
 
   // ---------- tags ----------
   const tagsData = data.tags
@@ -67,32 +93,27 @@ export const parseNavColDataV1 = (data: EntryFileSource): PaneData => {
       } as TagInfo)
     }
   }
-  res.navigationCol.tags = resTagsArr
+  res.tags = resTagsArr
   // ---------- tags end ----------
 
-  // ---------- files ----------
-  const filesData = data.files
-  const fAttrsArr = filesData.attrsArr
-  const fDataArr = filesData.dataArr
-  const resFileArr: FileInfo[] = []
+  // ---------- userDataFilesMeta ----------
+  const udfData = data.userDataFilesMeta
+  const udfAttrsArr = udfData.attrsArr
+  const udfDataArr = udfData.dataArr
+  const resUdfArr: UserFileMetaInfo[] = []
   if (fDataArr.length > 0) {
-    for (const i of fDataArr) {
-      resFileArr.push({
-        ctimeUtc: getDateByTmStr(i[fAttrsArr.indexOf('ctimeUtc')]),
-        dtimeUtc: getDateByTmStr(i[fAttrsArr.indexOf('dtimeUtc')]),
-        mtimeUtc: getDateByTmStr(i[fAttrsArr.indexOf('mtimeUtc')]),
-        sign: i[fAttrsArr.indexOf('sign')],
-        size: parseFloat(i[fAttrsArr.indexOf('size')]),
-        sha256: i[fAttrsArr.indexOf('sha256')],
-        title: i[fAttrsArr.indexOf('title')],
-        tagsArr: getTagsArr(i[fAttrsArr.indexOf('tagsSign')]),
-        content: i[fAttrsArr.indexOf('content')],
-        type: TypeFile
-      } as FileInfo)
+    for (const i of udfDataArr) {
+      resUdfArr.push({
+        ctimeUtc: getDateByTmStr(i[udfAttrsArr.indexOf('ctimeUtc')]),
+        dtimeUtc: getDateByTmStr(i[udfAttrsArr.indexOf('dtimeUtc')]),
+        mtimeUtc: getDateByTmStr(i[udfAttrsArr.indexOf('mtimeUtc')]),
+        size: parseInt(i[udfAttrsArr.indexOf('size')]),
+        sha256: i[udfAttrsArr.indexOf('sha256')]
+      } as UserFileMetaInfo)
     }
   }
-  res.navigationCol.files = resFileArr
-  // ---------- files end ----------
+  res.filesMeta = resUdfArr
+  // ---------- userDataFilesMeta end ----------
 
   return res
 }
@@ -104,15 +125,15 @@ export const parseNotebookJson = (jsonStr: string): NoteInfo[] => {
   }
 
   try {
-    const data: NotebookSource = JSON.parse(jsonStr)
+    const data: NotebookSourceInfo = JSON.parse(jsonStr)
     return parseNotebookSourceV1(data)
   } catch (error) {
-    CmdInvoke.logError('>>> parseNotebook error: ' + error)
+    invoker.logError('>>> parseNotebook error: ' + error)
     return res
   }
 }
 
-export const parseNotebookSourceV1 = (data: NotebookSource): NoteInfo[] => {
+export const parseNotebookSourceV1 = (data: NotebookSourceInfo): NoteInfo[] => {
   const res: NoteInfo[] = []
   const attrsArr = data.attrsArr
   const dataArr = data.dataArr
@@ -147,8 +168,4 @@ const getTagsArr = (tagsSign: string) => {
     }
   }
   return tagsHashedSignArr
-}
-
-const getDateByTmStr = (tmStr: string) => {
-  return new Date(tmStr)
 }

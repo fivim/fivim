@@ -2,7 +2,7 @@ import { sha256 } from './hash'
 import { getPageWidth } from './media_query'
 
 // Make a password to encrypt/decrypt file with a salt.
-export const genFilePwd = (pwdSha256: string, salt: string) => {
+export const genFilePwdWithSalt = (pwdSha256: string, salt: string) => {
   if (pwdSha256 === '') {
     return ''
   }
@@ -73,7 +73,7 @@ export const setTheme = (themeName: string) => {
   document.documentElement.setAttribute('theme', themeName)
 }
 
-export const grnDialogWidth = () => {
+export const genDialogWidth = () => {
   // mobile version use "fullscreen" attr
   // if (isMobileScreen()) {
   //     return "100%"

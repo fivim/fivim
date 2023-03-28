@@ -1,13 +1,13 @@
-import { ExtDataPath } from '@/types'
+import { ExtDataPathInfo } from '@/types'
 import { ConfigFileName, ConfigStartUpFileName } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
-import { CmdAdapter, CmdInvoke } from '@/libs/commands'
+import { CmdAdapter } from '@/libs/commands'
+import { invoker } from '@/libs/commands/invoke'
 import { jsonCopy } from '@/utils/utils'
 
 export const initCoreDirs = async () => {
-  const separator = await CmdAdapter.isWindows() ? '\\' : '/'
-  const appCoreConf = await CmdInvoke.getAppCoreConf()
+  const separator = await CmdAdapter().isWindows() ? '\\' : '/'
+  const appCoreConf = await invoker.getAppCoreConf()
 
   const appStore = useAppStore()
   const ad = appStore.data
@@ -32,16 +32,15 @@ export const getDataDirs = async () => {
   const separator = dataPath.separator
   const pathOfHomeAppData = dataPath.pathOfHomeAppData
 
-  const settingStore = useSettingStore()
-  const settings = settingStore.data
-  const masterPassword = settingStore.data.encryption.masterPassword
+  const settings = appStore.data.settings
+  const masterPassword = appStore.data.settings.encryption.masterPassword
 
   const pathOfCustomStyle = `${pathOfHomeAppData}${separator}style${separator}`
   // Encrypt dir name, use flat directory structure
-  const currentDir = await CmdInvoke.stringCrc32(masterPassword + '#current')
-  const syncDir = await CmdInvoke.stringCrc32(masterPassword + '#sync')
-  const syncCacheDir = await CmdInvoke.stringCrc32(masterPassword + '#sync/cache')
-  const syncDownloadDir = await CmdInvoke.stringCrc32(masterPassword + '#sync/download')
+  const currentDir = await invoker.stringCrc32(masterPassword + '#current')
+  const syncDir = await invoker.stringCrc32(masterPassword + '#sync')
+  const syncCacheDir = await invoker.stringCrc32(masterPassword + '#sync/cache')
+  const syncDownloadDir = await invoker.stringCrc32(masterPassword + '#sync/download')
 
   // workDir
   let workDir = settings.normal.workDir
@@ -61,5 +60,5 @@ export const getDataDirs = async () => {
     // style
     pathOfCustomStyle,
     pathOfCustomBackgroundImage: `${pathOfCustomStyle}custom_background_image.jpg`
-  } as ExtDataPath
+  } as ExtDataPathInfo
 }

@@ -2,7 +2,8 @@
   <!-- desktop title bar -->
   <DesktopTitleBar :showExtButtons="true" v-if="isDesktopMode() && !isMobileMode()">
     <template #titleName>
-      {{ appStore.data.currentFile.name ? appStore.data.currentFile.name + " - " + appStore.data.appName : appStore.data.appName }}
+      {{ appStore.data.currentFile.title ? appStore.data.currentFile.title + " - " + appStore.data.appName :
+        appStore.data.appName }}
     </template>
   </DesktopTitleBar>
 
@@ -17,31 +18,31 @@
     <div id="app" :class="`app ${isDesktopMode() ? 'disp-grid' : ''}`" :style="{ ...computeStylesForContainer() }">
       <template v-for="(item, index) in paneController.panesNameArr" v-bind:key="index">
         <!-- navigation -->
-        <PaneNavigation ref="navigationRef" v-if="(item === PaneIds.NavigationCol)"
+        <PaneNavigation ref="navigationRef" v-if="(item === PaneIdsInfo.NavigationCol)"
           :className="classNames(computePaneClasses(false), item)">
 
           <template #default>
             <LazyPaneResizer v-if="isDesktopMode()" :collapsable="true" :defaultWidth="PaneWidthNavigation" :left="0"
-              :minWidth="PANE_NAVIGATION_MIN_WIDTH" :modifyElementWidth="false" :side="PaneSide.Right"
-              :type="PaneResizeType.WidthOnly" :width="PaneWidthNavigation" :pane="navigationRef"
+              :minWidth="PANE_NAVIGATION_MIN_WIDTH" :modifyElementWidth="false" :side="PaneSideInfo.Right"
+              :type="PaneResizeTypeInfo.WidthOnly" :width="PaneWidthNavigation" :pane="navigationRef"
               @onWidthChange="onWidthChangeNavigationPane" />
           </template>
         </PaneNavigation>
 
         <!-- list -->
-        <PaneList ref="listRef" v-if="(item === PaneIds.ListCol)"
+        <PaneList ref="listRef" v-if="(item === PaneIdsInfo.ListCol)"
           :className="classNames(computePaneClasses(false), item)">
 
           <template #default>
             <LazyPaneResizer v-if="isDesktopMode()" :collapsable="true" :defaultWidth="PaneWidthList" :left="0"
-              :minWidth="PANE_LIST_MIN_WIDTH" :modifyElementWidth="false" :side="PaneSide.Right"
-              :type="PaneResizeType.WidthOnly" :width="PaneWidthList" :pane="listRef"
+              :minWidth="PANE_LIST_MIN_WIDTH" :modifyElementWidth="false" :side="PaneSideInfo.Right"
+              :type="PaneResizeTypeInfo.WidthOnly" :width="PaneWidthList" :pane="listRef"
               @onWidthChange="onWidthChangeListPane" />
           </template>
         </PaneList>
 
         <!-- editor -->
-        <PaneEditor ref="editorContentRef" v-if="(item === PaneIds.EditorCol)"
+        <PaneEditor ref="editorContentRef" v-if="(item === PaneIdsInfo.EditorCol)"
           :className="classNames(computePaneClasses(true), item)">
 
         </PaneEditor>
@@ -54,13 +55,13 @@
 import { ref, defineAsyncComponent } from 'vue'
 
 import DesktopTitleBar from '@/components/layout/desktop/titleBar/DesktopTitleBar.vue'
-import type { PaneController } from '@/components/pane/types'
-import { PaneIds, PaneSide, PaneResizeType } from '@/components/pane/types'
+import type { PaneControllerInfo } from '@/components/pane/types'
+import { PaneIdsInfo, PaneSideInfo, PaneResizeTypeInfo } from '@/components/pane/types'
 import PaneNavigation from '@/components/pane/PaneNavigation.vue'
 import PaneList from '@/components/pane/PaneList.vue'
 import PaneEditor from '@/components/pane/PaneEditor.vue'
 
-import { AppMode } from '@/types'
+import { AppModeInfo } from '@/types'
 import { isTabletScreen } from '@/utils/media_query'
 import { classNames } from '@/utils/string'
 import { useAppStore } from '@/pinia/modules/app'
@@ -68,8 +69,8 @@ import { useAppStore } from '@/pinia/modules/app'
 const appStore = useAppStore()
 
 // ---------- panes ----------
-const paneController: PaneController = {
-  panesNameArr: [PaneIds.NavigationCol, PaneIds.ListCol, PaneIds.EditorCol],
+const paneController: PaneControllerInfo = {
+  panesNameArr: [PaneIdsInfo.NavigationCol, PaneIdsInfo.ListCol, PaneIdsInfo.EditorCol],
   focusModeEnabled: false
 }
 
@@ -79,7 +80,7 @@ const PaneWidthNavigation = ref(200)
 const PaneWidthList = ref(PANE_LIST_MIN_WIDTH)
 
 const isDesktopMode = () => {
-  return appStore.data.appMode === AppMode.Desktop
+  return appStore.data.appMode === AppModeInfo.Desktop
 }
 const isMobileMode = () => {
   return appStore.data.isWebPage
@@ -110,7 +111,7 @@ const computeStylesForContainer = () => {
           gridTemplateColumns: '1fr 2fr'
         }
       } else {
-        if (panesNameArr[0] === PaneIds.NavigationCol) {
+        if (panesNameArr[0] === PaneIdsInfo.NavigationCol) {
           return {
             gridTemplateColumns: `${PaneWidthNavigation.value}px auto`
           }

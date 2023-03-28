@@ -1,12 +1,12 @@
 import { TypeNote } from '@/constants'
-import { usePanesStore } from '@/pinia/modules/panes'
-import { CmdInvoke } from '@/libs/commands'
+import { useAppStore } from '@/pinia/modules/app'
+import { invoker } from '@/libs/commands/invoke'
 import { getDataDirs } from '@/libs/init/dirs'
 import { OrderedFieldArrayTable } from '@/utils/array'
 import { jsonCopy } from '@/utils/utils'
 
-import { AttrsArrKeyOfNotebook, EntryFileSource, NotebookSource, NoteInfo } from './types'
-import { tmplFileAttrsArr, tmplNotebookAttrsArr, tmplNoteAttrsArr, tmplEntryFileData, tmplNotebook } from './types_templates'
+import { AttrsArrKeyOfNotebook, AttrsArrKeyOfUserDataFileMeta, EntryFileSourceInfo, NotebookSourceInfo, NoteInfo } from './types'
+import { tmplFileAttrsArr, tmplNotebookAttrsArr, tmplNoteAttrsArr, tmplUserDataMetaAttrsArr, tmplEntryFileData, tmplNotebook } from './types_templates'
 import { getEntryFileName, genCurrentNotebookFileName, updateFileMeta, writeEncryptedUserDataToFile } from './utils'
 
 const ofatTagArrCallback = (item: string[], currentObj: object) => {
@@ -32,26 +32,25 @@ const ofatNumberCallback = (item: number, currentObj: object) => {
 }
 
 export const saveEntryFile = async () => {
-  const panesStore = usePanesStore()
+  const appStore = useAppStore()
 
-  const content: EntryFileSource = jsonCopy(tmplEntryFileData)
+  const content: EntryFileSourceInfo = jsonCopy(tmplEntryFileData)
 
   // ---------- notebooks ----------
-  const notebooksData = panesStore.data.navigationCol.notebooks
+  const notebooksData = appStore.data.userData.notebooks
   // Notebook data has a tagsArr need to join with ',', as a string.
   // Need special handling for tagsArr.
-  const nbaa = jsonCopy(tmplNotebookAttrsArr) as string[]
-  nbaa.push('tagsArr') // Add tagsArr, as the last field, remove it later
-  const ofatnb = new OrderedFieldArrayTable(nbaa)
-  // const nbData = jsonCopy(notebooksData) // Get the value of Proxy
-  const nbData = notebooksData
-  ofatnb.fromObjectArray(nbData, {
+  const attrsNb = jsonCopy(tmplNotebookAttrsArr) as string[]
+  attrsNb.push('tagsArr') // Add tagsArr, as the last field, remove it later
+  const ofatNb = new OrderedFieldArrayTable(attrsNb)
+  const dataNb = notebooksData
+  ofatNb.fromObjectArray(dataNb, {
     ctimeUtc: ofatTimeCallback,
     mtimeUtc: ofatTimeCallback,
     tagsArr: ofatTagArrCallback
   })
   // Remove the tagsArr filed
-  const ofatnbva = ofatnb.toFieldArray().valuesArr as string[][]
+  const ofatnbva = ofatNb.toFieldArray().valuesArr as string[][]
   for (let index = 0; index < ofatnbva.length; index++) {
     const element = ofatnbva[index]
     element.pop()
@@ -59,32 +58,22 @@ export const saveEntryFile = async () => {
   }
   // ---------- notebooks end ----------
 
-  // ---------- tags ----------
-  const ofatt = new OrderedFieldArrayTable([])
-  const tagsData = panesStore.data.navigationCol.tags
-  ofatt.fromObjectArray(tagsData, {})
-  content.tags.attrsArr = ofatt.toFieldArray().keysArr as AttrsArrKeyOfNotebook[]
-  content.tags.dataArr = ofatt.toFieldArray().valuesArr as string[][]
-  // ---------- tags end ----------
-
   // ---------- files ----------
-  const filesData = panesStore.data.navigationCol.files
+  const files = appStore.data.userData.files
   // Notebook data has a tagsArr need to join with ',', as a string.
   // Need special handling for tagsArr.
-  const faa = jsonCopy(tmplFileAttrsArr) as string[]
-  faa.push('tagsArr') // Add tagsArr, as the last field, remove it later
-  const ofatf = new OrderedFieldArrayTable(faa)
-  // const fData = jsonCopy(filesData) // Get the value of Proxy
-  const fData = filesData
-  ofatf.fromObjectArray(fData, {
+  const attrsFiles = jsonCopy(tmplFileAttrsArr) as string[]
+  attrsFiles.push('tagsArr') // Add tagsArr, as the last field, remove it later
+  const ofatFiles = new OrderedFieldArrayTable(attrsFiles)
+  const dataFiles = files
+  ofatFiles.fromObjectArray(dataFiles, {
     ctimeUtc: ofatTimeCallback,
-    dtimeUtc: ofatTimeCallback,
     mtimeUtc: ofatTimeCallback,
     tagsArr: ofatTagArrCallback,
-    size: ofatNumberCallback
+    originalSize: ofatNumberCallback
   })
   // Remove the tagsArr filed
-  const ofatfva = ofatf.toFieldArray().valuesArr as string[][]
+  const ofatfva = ofatFiles.toFieldArray().valuesArr as string[][]
   for (let index = 0; index < ofatfva.length; index++) {
     const element = ofatfva[index]
     element.pop()
@@ -92,12 +81,34 @@ export const saveEntryFile = async () => {
   }
   // ---------- files end ----------
 
+  // ---------- tags ----------
+  const ofatTag = new OrderedFieldArrayTable([])
+  const dataTag = appStore.data.userData.tags
+  ofatTag.fromObjectArray(dataTag, {})
+  content.tags.attrsArr = ofatTag.toFieldArray().keysArr as AttrsArrKeyOfNotebook[]
+  content.tags.dataArr = ofatTag.toFieldArray().valuesArr as string[][]
+  // ---------- tags end ----------
+
+  // ---------- userDataFilesMeta ----------
+  const attrsUdf = jsonCopy(tmplUserDataMetaAttrsArr) as string[]
+  const dataUdf = appStore.data.userData.filesMeta
+  const ofatUdf = new OrderedFieldArrayTable(attrsUdf)
+  ofatUdf.fromObjectArray(dataUdf, {
+    ctimeUtc: ofatTimeCallback,
+    dtimeUtc: ofatTimeCallback,
+    mtimeUtc: ofatTimeCallback,
+    size: ofatNumberCallback
+  })
+  content.userDataFilesMeta.attrsArr = ofatUdf.toFieldArray().keysArr as AttrsArrKeyOfUserDataFileMeta[]
+  content.userDataFilesMeta.dataArr = ofatUdf.toFieldArray().valuesArr as string[][]
+  // ---------- userDataFilesMeta end ----------
+
   const p = await getDataDirs()
-  return writeEncryptedUserDataToFile(p.pathOfCurrentDir, getEntryFileName(), JSON.stringify(content))
+  return writeEncryptedUserDataToFile(p.pathOfCurrentDir, getEntryFileName(), content)
 }
 
 export const genNotebookFileContent = (notes: NoteInfo[]) => {
-  const content: NotebookSource = jsonCopy(tmplNotebook)
+  const content: NotebookSourceInfo = jsonCopy(tmplNotebook)
 
   // Note data has a tagsArr need to join with ',', as a string.
   // Need special handling for tagsArr.
@@ -122,32 +133,32 @@ export const genNotebookFileContent = (notes: NoteInfo[]) => {
   return content
 }
 
-export const saveNotebookFileWithContent = async (fileName: string, content: NotebookSource) => {
+export const saveNotebookFileWithContent = async (fileName: string, content: NotebookSourceInfo) => {
   const p = await getDataDirs()
-  return await writeEncryptedUserDataToFile(p.pathOfCurrentDir, fileName, JSON.stringify(content))
+  return await writeEncryptedUserDataToFile(p.pathOfCurrentDir, fileName, content)
 }
 
 // Set a fileName while isCurrent is true
 export const saveNotebookFile = async (isCurrent: boolean, fileName: string) => {
-  const panesStore = usePanesStore()
-  if (panesStore.data.listCol.type !== TypeNote) {
-    CmdInvoke.logDebug('saveNotebookFile but listCol.type is not TypeNote :: ' + panesStore.data.listCol.type)
+  const appStore = useAppStore()
+  if (appStore.data.listCol.type !== TypeNote) {
+    invoker.logDebug('saveNotebookFile but listCol.type is not TypeNote :: ' + appStore.data.listCol.type)
     return Promise.resolve(true)
   }
 
-  let content: NotebookSource
+  let content: NotebookSourceInfo
 
   // save the data of the notebook opened currently
   if (isCurrent) {
-    if (panesStore.data.listCol.list.length === 0) {
+    if (appStore.data.listCol.noteList.length === 0) {
       return Promise.resolve(true)
     }
 
     fileName = genCurrentNotebookFileName()
-    content = genNotebookFileContent(panesStore.data.listCol.list as NoteInfo[])
+    content = genNotebookFileContent(appStore.data.listCol.noteList as NoteInfo[])
   } else {
     if (fileName === '') {
-      CmdInvoke.logError('saveNotebookFile but fileName is empty!')
+      invoker.logError('saveNotebookFile but fileName is empty!')
       return
     }
     content = genNotebookFileContent([])

@@ -1,9 +1,10 @@
-import { DocType, FileType } from '@/libs/user_data/types'
+import { UserDataInfo } from '@/libs/user_data/types'
+import { CurrentFileInfo, ListColInfo } from '@/components/pane/types'
 import { TimeHashedSignType } from '@/utils/hash'
 
-export type TextDirection = 'LTR' | 'RTL'
+export type TextDirectionInfo = 'LTR' | 'RTL'
 
-export enum AppMode {
+export enum AppModeInfo {
     App = 'app',
     Web = 'web',
     Desktop = 'desktop',
@@ -11,7 +12,7 @@ export enum AppMode {
     Mobile = 'mobile'
 }
 
-export type AppCoreConf = {
+export type AppCoreConfInfo = {
     appName: string
     defaultLanguage: string,
     defaultLanguageInNative: string,
@@ -20,14 +21,7 @@ export type AppCoreConf = {
     version: string
 }
 
-export type CurrentFile = {
-    sign: string // hashed file name of currently opened
-    indexInList: number // the index in list of the list column
-    name: string // file name of currently opened
-    type: DocType | FileType
-}
-
-export type ChangeMasterPasswordStatus = {
+export type ChangeMasterPasswordStatusInfo = {
     action: string
     percent: number
 
@@ -35,18 +29,18 @@ export type ChangeMasterPasswordStatus = {
     totalNumber: number
 }
 
-export type ChangeMasterPasswordProcessItem = {
+export type ChangeMasterPasswordProcessItemInfo = {
     percent: number
     color: string
 }
 
-export type DataPath = {
+export type DataPathInfo = {
     separator: string,
     pathOfHomeAppData: string;
     pathOfHome: string;
 }
 
-export type ExtDataPath = {
+export type ExtDataPathInfo = {
     pathOfHome: string,
     pathOfHomeAppData: string,
     pathOfConfig: string,
@@ -60,25 +54,7 @@ export type ExtDataPath = {
     pathOfCustomBackgroundImage: string
 }
 
-export type AppInfo = {
-    appMode: AppMode // desktop mode or mobile mode
-    appName: string
-    changeLocaleTimestamp: number // record timestamp for editor i18n
-    changeMasterPasswordStatus: ChangeMasterPasswordStatus
-    currentFile: CurrentFile
-    currentTheme: string
-    dataPath: DataPath
-    defaultLocale: string,
-    defaultLocaleInNative: string,
-    editorFullScreen: boolean
-    existConfigFile: boolean
-    isWebPage: boolean
-    lockscreen: boolean
-    textDirection: TextDirection
-    version: string
-}
-
-export type Setting = {
+export type SettingInfo = {
     normal: {
         showFileSavingStatus: boolean
         spellCheck: boolean
@@ -103,13 +79,34 @@ export type Setting = {
     }
 }
 
-export type SettingOfStartUp = {
+export type SettingOfStartUpInfo = {
     appearance: {
         locale: string
         theme: string
     },
 }
 
-export enum ErrorMessages {
+export type AppInfo = {
+    appMode: AppModeInfo // desktop mode or mobile mode
+    appName: string
+    changeLocaleTimestamp: number // record timestamp for editor i18n
+    changeMasterPasswordStatus: ChangeMasterPasswordStatusInfo
+    currentFile: CurrentFileInfo
+    currentTheme: string
+    dataPath: DataPathInfo
+    defaultLocale: string,
+    defaultLocaleInNative: string,
+    editorFullScreen: boolean
+    existConfigFile: boolean
+    isWebPage: boolean
+    listCol: ListColInfo
+    lockscreen: boolean
+    settings: SettingInfo
+    textDirection: TextDirectionInfo
+    userData: UserDataInfo
+    version: string
+}
+
+export enum ErrorMessagesInfo {
     FileVerificationFailed = 'File verification failed' // TODO add translate
 }

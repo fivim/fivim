@@ -91,8 +91,7 @@ import {
 } from '@/constants'
 import { settingOptions } from '@/conf'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
-import { CmdInvoke } from '@/libs/commands'
+import { invoker } from '@/libs/commands/invoke'
 import { initAtFirst } from '@/libs/init/at_first'
 import { i18n, getLanguageMeta, setLocale } from '@/libs/init/i18n'
 import { initCoreDirs } from '@/libs/init/dirs'
@@ -107,9 +106,9 @@ const getAvailableDefaultLocale = () => {
   const defaultLocale = getAvailableLocale(i18n.global.availableLocales, appStore.data.defaultLocale)
   setLocale(defaultLocale)
 
-  const data = settingStore.data
+  const data = appStore.data.settings
   data.appearance.locale = defaultLocale
-  settingStore.setData(data, false)
+  appStore.setSettingData(data, false)
 
   return defaultLocale
 }
@@ -132,7 +131,6 @@ const getDefalutTheme = () => {
 }
 
 const appStore = useAppStore()
-const settingStore = useSettingStore()
 const { t } = useI18n()
 const ruleFormRef = ref<FormInstance>()
 
@@ -156,7 +154,7 @@ const validateMasterPassword = (rule: any, value: any, callback: any) => {
     callback(new Error(t('Please input')))
   }
 
-  if (!settingStore.checkMasterPasswordLength(value)) {
+  if (!appStore.checkMasterPasswordLength(value)) {
     callback(new Error(t('&Master password length tip', { minLength: MasterPasswordMinLength, maxLength: MasterPasswordMaxLength })))
   }
 }
@@ -283,7 +281,7 @@ const onInputWorkDir = (detail: string) => {
 
 const onSave = () => {
   // Check master password.
-  showErrorMsg.value = !settingStore.checkMasterPasswordLength(ruleForm.masterPassword)
+  showErrorMsg.value = !appStore.checkMasterPasswordLength(ruleForm.masterPassword)
   if (showErrorMsg.value) {
     errorMsg.value = t('&Master password length tip', { minLength: MasterPasswordMinLength, maxLength: MasterPasswordMaxLength })
     return
@@ -297,11 +295,8 @@ const onSave = () => {
 
   const appData = appStore.data
   appData.existConfigFile = true
-  appStore.setData(appData)
 
-  setTheme(ruleForm.theme)
-
-  const settings = settingStore.data
+  const settings = appData.settings
   settings.normal.workDir = ruleForm.workDir
   settings.encryption.entryFileName = ruleForm.entryFileName
   settings.encryption.fileExt = ruleForm.fileExt
@@ -314,17 +309,19 @@ const onSave = () => {
   settings.appearance.listColSortBy = DefaultListColSortBy
   settings.appearance.listColSortOrder = DefaultListColSortOrder
   settings.appearance.theme = ruleForm.theme
-  settings.sync.intervalSeconds = DefaultSyncIntervalSeconds
+  appStore.setData(appData)
 
-  // initCoreDirs before settingStore save config
+  setTheme(ruleForm.theme)
+
+  // initCoreDirs before appStore save config
   initCoreDirs().then(() => {
-    settingStore.setData(settings, true).then(() => {
+    appStore.setSettingData(settings, true).then(() => {
       const pwdSha256 = genMasterPasswordSha256(settings.encryption.masterPassword, MasterPasswordSalt)
       initAtFirst(pwdSha256, false).then((initRes) => {
         saveDefaultEntryFile()
         // TODO save sync lock file
 
-        CmdInvoke.logInfo('SetupWizard finished.')
+        invoker.logInfo('SetupWizard finished.')
       })
     })
   })

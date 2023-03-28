@@ -6,7 +6,7 @@ const LazyPaneResizer = defineAsyncComponent({
 -->
 
 <template>
-  <div :class="classNames('pane-resizer', props.side === PaneSide.Left && 'left-0 right-auto',)" @mousedown="onMouseDown"
+  <div :class="classNames('pane-resizer', props.side === PaneSideInfo.Left && 'left-0 right-auto',)" @mousedown="onMouseDown"
     ref="resizerElementRef" />
 </template>
 
@@ -14,7 +14,7 @@ const LazyPaneResizer = defineAsyncComponent({
 import { ref, toRefs, onMounted, onBeforeUnmount, onUpdated } from 'vue'
 import type { PropType } from 'vue'
 
-import { PaneSide, PaneResizeType } from './types'
+import { PaneSideInfo, PaneResizeTypeInfo } from './types'
 import { debounce } from '@/utils/utils'
 import { classNames } from '@/utils/string'
 
@@ -44,11 +44,11 @@ const props = defineProps({
     required: true
   },
   side: {
-    type: String as PropType<PaneSide>,
+    type: String as PropType<PaneSideInfo>,
     required: true
   },
   type: {
-    type: String as PropType<PaneResizeType>,
+    type: String as PropType<PaneResizeTypeInfo>,
     required: true
   },
   modifyElementWidth: {
@@ -107,7 +107,7 @@ const init = () => {
   document.addEventListener('mouseup', onMouseUp)
   document.addEventListener('mousemove', onMouseMove)
   debouncedResizeHandler = debounce(handleResize, 250)
-  if (props.type === PaneResizeType.WidthAndOffset) {
+  if (props.type === PaneResizeTypeInfo.WidthAndOffset) {
     window.addEventListener('resize', debouncedResizeHandler)
   }
 }
@@ -160,7 +160,7 @@ const onMouseMove = (event: MouseEvent) => {
     return
   }
   event.preventDefault()
-  if (props.side === PaneSide.Left) {
+  if (props.side === PaneSideInfo.Left) {
     handleEventLeft(event)
   } else {
     handleEventWidth(event)
@@ -254,7 +254,7 @@ const setWidth = (width: number, finish = false): number => {
   const isFullWidth = Math.round(width + lastLeft) === Math.round(parentRect.width)
   if (props.modifyElementWidth) {
     if (isFullWidth) {
-      if (props.type === PaneResizeType.WidthOnly) {
+      if (props.type === PaneResizeTypeInfo.WidthOnly) {
         pane.style.removeProperty('width')
       } else {
         pane.style.width = `calc(100% - ${lastLeft}px)`

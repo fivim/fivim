@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="panesStore.data.editorCol.sign === ''">
+    <div v-if="appStore.data.currentFile.sign === ''">
       <div class="empty py-2"> {{ t('&No content') }} </div>
     </div>
     <div v-else class="section max-h-full">
@@ -8,7 +8,7 @@
         <div class="box mb-0 flex-nowrap gap-4">
           <div class="left">
             <div class="title">
-              <el-input v-model="panesStore.data.editorCol.title" class="input" @input="onTitleInputNote"
+              <el-input v-model="appStore.data.currentFile.title" class="input" @input="onTitleInputNote"
                 :disabled="isFile()" />
             </div>
           </div>
@@ -23,7 +23,7 @@
 
       <div class="editor-box">
         <template v-if="isNote()">
-          <EditorEditorjs ref="editorRef" class="note" :content="panesStore.data.editorCol.content || '{}'"
+          <EditorEditorjs ref="editorRef" class="note" :content="appStore.data.currentFile.content || '{}'"
             @onUpdate="onEditorUpdate" />
         </template>
         <template v-else-if="isFile()">
@@ -37,7 +37,12 @@
               </el-form-item>
               <el-form-item label="sha256">
                 <div class="text-break-all">
-                  {{ fileInfo.sha256 }}
+                  {{ fileInfo.originalSha256 }}
+                </div>
+              </el-form-item>
+              <el-form-item label="size">
+                <div class="text-break-all">
+                  {{ happybytes(fileInfo.originalSize || 0, false) }} ({{ fileInfo.originalSize }})
                 </div>
               </el-form-item>
               <el-form-item :label="t('Tag')">
@@ -73,18 +78,17 @@ import SmallTagList from '@/components/widget/SmallTagList.vue'
 
 import { TypeFile } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
-import { usePanesStore } from '@/pinia/modules/panes'
-import { useSettingStore } from '@/pinia/modules/settings'
-import { CmdInvoke } from '@/libs/commands'
+import { genFilePwd } from '@/libs/commands'
+import { invoker } from '@/libs/commands/invoke'
 import { getDataDirs } from '@/libs/init/dirs'
 import { TagInfo, TypeNote, FileInfo } from '@/libs/user_data/types'
 import { tmplFileInfo } from '@/libs/user_data/types_templates'
+import { deleteFileMeta } from '@/libs/user_data/utils'
 import { formatTime, restEditorCol, pathJoin } from '@/utils/pinia_related'
+import { happybytes } from '@/utils/bytes'
 import { jsonCopy } from '@/utils/utils'
 
 const appStore = useAppStore()
-const panesStore = usePanesStore()
-const settingStore = useSettingStore()
 const { t } = useI18n()
 
 let lastFileSign = ''
@@ -92,11 +96,15 @@ appStore.$subscribe((mutation, state) => {
   const info = state.data
   const currentFileSign = info.currentFile.sign
 
-  if (isNote()) {
+  if (state.data.currentFile.type === TypeNote) {
     // If file changed, update content.
     if (currentFileSign !== lastFileSign) {
-      editorRef.value?.setContent(panesStore.data.editorCol.content || '{}')
+      editorRef.value?.setContent(appStore.data.currentFile.content || '{}')
     }
+  }
+
+  if (state.data.currentFile.type === TypeFile) {
+    getFileInfo()
   }
 
   lastFileSign = currentFileSign
@@ -104,42 +112,43 @@ appStore.$subscribe((mutation, state) => {
 
 // ---------- note ----------
 const isNote = () => {
-  return panesStore.data.editorCol.type === TypeNote
+  return appStore.data.currentFile.type === TypeNote
 }
+
 const editorRef = ref<InstanceType<typeof EditorEditorjs>>()
 
 const onTitleInputNote = (str: string) => {
-  const info = appStore.data
-  info.currentFile.name = str
-  appStore.setData(info)
+  const ad = appStore.data
+  ad.currentFile.title = str
+  appStore.setData(ad)
 
-  const index = info.currentFile.indexInList
-  const icd = panesStore.data.listCol
-  icd.list[index].title = str
-  panesStore.setListColData(icd)
+  const index = ad.currentFile.indexInList
+  const icd = appStore.data.listCol
+  icd.noteList[index].title = str
+  appStore.setListColData(icd)
 }
 
 const onEditorUpdate = (str: string) => {
-  const icd = panesStore.data.listCol
+  const icd = appStore.data.listCol
 
-  if (icd.list.length === 0) {
+  if (icd.noteList.length === 0) {
     // alert('Please create a new note first') // TODO: add translate
   } else {
     const index = appStore.data.currentFile.indexInList
-    icd.list[index].content = str
-    icd.list[index].mtimeUtc = new Date()
-    panesStore.setListColData(icd)
+    icd.noteList[index].content = str
+    icd.noteList[index].mtimeUtc = new Date()
+    appStore.setListColData(icd)
   }
 }
 // ---------- note end ----------
 
 // ---------- tag ----------
 const tagExist = (sign: string) => {
-  return panesStore.data.editorCol.tagsArr.indexOf(sign) >= 0
+  return appStore.data.currentFile.tagsArr.indexOf(sign) >= 0
 }
 
 const onClickTag = (detail: TagInfo) => {
-  const data = panesStore.data.editorCol
+  const data = appStore.data.currentFile
   const arr = data.tagsArr
   const index = arr.indexOf(detail.sign)
 
@@ -149,20 +158,20 @@ const onClickTag = (detail: TagInfo) => {
     arr.push(detail.sign)
   }
 
-  panesStore.setEditorColData(data)
+  appStore.setCurrentFile(data)
 }
 // ---------- tag end ----------
 
 // ---------- file ----------
 const isFile = () => {
-  return panesStore.data.editorCol.type === TypeFile
+  return appStore.data.currentFile.type === TypeFile
 }
 const fileInfo = ref<FileInfo>(jsonCopy(tmplFileInfo))
 const outPutDir = ref('')
 
 const getFileInfo = () => {
   const ad = appStore.data
-  const file = panesStore.data.navigationCol.files[ad.currentFile.indexInList] as FileInfo
+  const file = ad.userData.files[ad.currentFile.indexInList] as FileInfo
   fileInfo.value = file
 
   // TODO preview images
@@ -174,14 +183,25 @@ const onDeleteFile = () => {
       if (fileInfo.value.sign) {
         const p = await getDataDirs()
 
-        CmdInvoke.deleteFile(p.pathOfCurrentDir + fileInfo.value.sign).then((success) => {
+        invoker.deleteFile(p.pathOfCurrentDir + fileInfo.value.sign).then((success) => {
           if (success) {
-            const ad = appStore.data
-            const pd = panesStore.data
-            pd.navigationCol.files.splice(ad.currentFile.indexInList, 1)
-            panesStore.setData(pd)
-
-            restEditorCol()
+            doDeleteFile(fileInfo.value.sign)
+          } else {
+            ElMessageBox.confirm(
+              'Failed to delete the file, do you want to delete the recorded information?',
+              t('Warning'),
+              {
+                confirmButtonText: t('OK'),
+                cancelButtonText: t('Cancel'),
+                type: 'warning'
+              }
+            )
+              .then(() => {
+                doDeleteFile(fileInfo.value.sign)
+              })
+              .catch(() => {
+                //
+              })
           }
         })
       } else {
@@ -191,6 +211,15 @@ const onDeleteFile = () => {
     .catch(() => {
       // catch error
     })
+}
+
+const doDeleteFile = (fileName: string) => {
+  const ad = appStore.data
+  ad.userData.files.splice(ad.currentFile.indexInList, 1)
+  appStore.setData(ad)
+
+  deleteFileMeta(fileName)
+  restEditorCol()
 }
 
 const onExportFile = () => {
@@ -203,7 +232,7 @@ const onExportFile = () => {
       const filePath = p.pathOfCurrentDir + fileInfo.value.sign
       const targetPath = await pathJoin([outPutDir.value, fileInfo.value.title])
 
-      CmdInvoke.readUserDataFile('', filePath, false, 'bin', targetPath).then((fileData) => {
+      invoker.readUserDataFile(genFilePwd(''), filePath, false, 'none', targetPath).then((fileData) => {
         console.log('>>> ExportFile ::', fileData)
         // TODO
       })
@@ -212,12 +241,6 @@ const onExportFile = () => {
 }
 
 // ---------- file end ----------
-
-panesStore.$subscribe((mutation, state) => {
-  if (state.data.editorCol.type === TypeFile) {
-    getFileInfo()
-  }
-})
 </script>
 
 <style lang="scss" scoped>

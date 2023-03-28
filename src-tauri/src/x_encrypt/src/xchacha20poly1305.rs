@@ -13,7 +13,7 @@ use std::{
     io::{Read, Seek, SeekFrom, Write},
 };
 
-use xutils::{array_like as x_array, file as x_file, string as x_string};
+use xutils::{array_like as xu_array, file as xu_file, string as xu_string};
 
 pub const SIZE_KEY: usize = 32;
 const SIZE_NONCE_SMALL: usize = 24;
@@ -30,7 +30,7 @@ pub struct EncryptRes {
 }
 
 fn nonce_to_small(nonce: &Nonce) -> NonceSmall {
-    let nnn = x_array::fill_arr_u8(nonce, SIZE_NONCE_SMALL, true);
+    let nnn = xu_array::fill_arr_u8(nonce, SIZE_NONCE_SMALL, true);
     let mut ns: NonceSmall = [0u8; SIZE_NONCE_SMALL];
     for n in 0..SIZE_NONCE_SMALL {
         ns[n] = nnn[n]
@@ -42,8 +42,8 @@ fn nonce_to_small(nonce: &Nonce) -> NonceSmall {
 /// eycrypt bytes or file
 /// If vec is not empty, encrypt as bytes in memory.
 /// If vec is empty, file_path and dist_path are not empty, it will be treated as a large file.
-/// 
-/// If file_header and/or file_tail are/is not empty, 
+///
+/// If file_header and/or file_tail are/is not empty,
 /// they will write to the header or tail of the dist file(by dist_path).
 pub fn encrypt(
     key: &Key,
@@ -59,8 +59,10 @@ pub fn encrypt(
         dist_vec: [].to_vec(),
         encrypted_data_len: 0,
     };
+    let use_vec = file_path == "" && dist_path == "";
+    let vec_len = vec.len();
 
-    if vec.len() < BUFFER_LEN && file_path == "" && dist_path == "" {
+    if use_vec && vec_len < BUFFER_LEN {
         let cipher = XChaCha20Poly1305::new(key.into());
         match cipher.encrypt(&nonce_to_small(nonce).into(), vec.as_ref()) {
             Ok(r) => {
@@ -82,15 +84,16 @@ pub fn encrypt(
     let mut buffer = [0u8; BUFFER_LEN];
     let mut data_length: usize = 0;
 
-    if vec.len() > 0 && file_path == "" && dist_path == "" {
+    if use_vec && vec_len > 0 {
         // Process by vector
-        let bytes_size = vec.len();
-        let mut start = 0;
-        let mut end = start + BUFFER_LEN;
+        let mut step_start = 0;
+        let mut step_end = step_start + BUFFER_LEN;
         let mut res_buffer: Vec<u8> = [].to_vec();
+        let bytes_size = vec_len;
+
         loop {
-            if end < bytes_size {
-                buffer[..].clone_from_slice(&vec[start..end]);
+            if step_end < bytes_size {
+                buffer[..].clone_from_slice(&vec[step_start..step_end]);
                 let cipher_vec =
                     stream_encryptor
                         .encrypt_next(buffer.as_slice())
@@ -100,25 +103,25 @@ pub fn encrypt(
                 data_length += &cipher_vec.len();
                 res_buffer = [res_buffer, cipher_vec].concat();
 
-                start += BUFFER_LEN;
-                end += BUFFER_LEN;
+                step_start += BUFFER_LEN;
+                step_end += BUFFER_LEN;
             } else {
                 // The last buffer
-                let last = &vec[start..bytes_size];
-                let last_filled = x_array::fill_arr_u8(&last, BUFFER_LEN, false);
+                let last = &vec[step_start..bytes_size];
+                let last_filled = xu_array::fill_arr_u8(&last, BUFFER_LEN, false);
                 buffer[..].clone_from_slice(&last_filled);
                 let cipher_vec = stream_encryptor
-                    .encrypt_last(&buffer[..bytes_size - start])
+                    .encrypt_last(&buffer[..bytes_size - step_start])
                     .map_err(|err| {
                         anyhow!("Encrypt bytes last buffer: {:?}, error: {}", buffer, err)
                     })?;
                 data_length += &cipher_vec.len();
                 res_buffer = [res_buffer, cipher_vec].concat();
+                res.dist_vec = res_buffer;
 
                 break;
             }
         }
-        res.dist_vec = res_buffer;
     } else {
         // Process by file
         let mut source_file = File::open(file_path)?;
@@ -165,7 +168,7 @@ pub fn encrypt(
 /// decrypt bytes or file
 /// If vec is not empty, decrypt as bytes in memory.
 /// If vec is empty, file_path and dist_path are not empty, it will be treated as a large file.
-/// 
+///
 /// start and end
 /// Thay are the postion of file data.
 /// file size - end = tail, the tail size should less then BUFFER_LEN(516).
@@ -183,10 +186,27 @@ pub fn decrypt(
         dist_vec: [].to_vec(),
         encrypted_data_len: 0,
     };
+    let use_vec = file_path == "" && dist_path == "";
+    let vec_len = vec.len();
 
-    if vec.len() < BUFFER_LEN && file_path == "" && dist_path == "" {
+    // Process all vec contents directly.
+    if use_vec && vec_len < BUFFER_LEN {
+        if end > vec_len {
+            return Err(anyhow!(
+                "Decrypt file tail(end position: {}) greater then vec size {}",
+                end,
+                vec_len
+            ));
+        }
+
+        let mut stop = vec_len;
+        if end > 0 {
+            stop = end;
+        }
+        let final_vec = &vec[start..stop];
+
         let cipher = XChaCha20Poly1305::new(key.into());
-        match cipher.decrypt(&nonce_to_small(nonce).into(), vec.as_ref()) {
+        match cipher.decrypt(&nonce_to_small(nonce).into(), final_vec.as_ref()) {
             Ok(r) => {
                 res.dist_vec = r;
                 return Ok(res);
@@ -201,6 +221,7 @@ pub fn decrypt(
         };
     }
 
+    // Use stream to process vec or file.
     let aead = XChaCha20Poly1305::new(key.as_ref().into());
     let mut stream_decryptor = stream::DecryptorBE32::from_aead(aead, nonce.as_ref().into());
     let mut buffer = [0u8; BUFFER_LEN];
@@ -210,16 +231,19 @@ pub fn decrypt(
         enable_limit = true;
     }
 
-    if vec.len() > 0 && file_path == "" && dist_path == "" {
+    // Use stream to process vec content.
+    if use_vec && vec_len > 0 {
         // Process by vector.
-        let bytes_size = vec.len();
-        let tail_length: usize = bytes_size - end;
-        if tail_length > BUFFER_LEN {
-            return Err(anyhow!(
-                "Decrypt file tail(end position: {}) greater then buffer size{}",
-                end,
-                BUFFER_LEN
-            ));
+        let bytes_size = vec_len;
+        if end > 0 {
+            let tail_length: usize = bytes_size - end;
+            if tail_length > BUFFER_LEN {
+                return Err(anyhow!(
+                    "Decrypt file tail(end position: {}) greater then buffer size {}",
+                    end,
+                    BUFFER_LEN
+                ));
+            }
         }
 
         let mut step_start = 0;
@@ -240,45 +264,46 @@ pub fn decrypt(
             } else {
                 // The last buffer
                 #[warn(unused_assignments)]
-                let mut last_end = 0;
+                let mut final_end = 0;
                 if enable_limit {
                     // Remove the tail.
-                    last_end = bytes_size - end;
+                    final_end = bytes_size - end;
                 } else {
-                    last_end = bytes_size - step_start;
+                    final_end = bytes_size - step_start;
                     // Fill the buffer.
                     let last = &vec[step_start..bytes_size];
-                    let last_filled = x_array::fill_arr_u8(&last, BUFFER_LEN, false);
+                    let last_filled = xu_array::fill_arr_u8(&last, BUFFER_LEN, false);
                     buffer[..].clone_from_slice(&last_filled);
                 }
 
                 let last = &vec[step_start..bytes_size];
-                let last_filled = x_array::fill_arr_u8(&last, BUFFER_LEN, false);
+                let last_filled = xu_array::fill_arr_u8(&last, BUFFER_LEN, false);
                 buffer[..].clone_from_slice(&last_filled);
-                let plaintext =
-                    stream_decryptor
-                        .decrypt_last(&buffer[..last_end])
-                        .map_err(|err| {
-                            anyhow!("Decrypt bytes last buffer: {:?}, error: {}", buffer, err)
-                        })?;
+                let plaintext = stream_decryptor
+                    .decrypt_last(&buffer[..final_end])
+                    .map_err(|err| {
+                        anyhow!("Decrypt bytes last buffer: {:?}, error: {}", buffer, err)
+                    })?;
                 data_length += &plaintext.len();
                 res.dist_vec = [res.dist_vec, plaintext].concat();
+                res.encrypted_data_len = res.dist_vec.len();
 
                 break;
             }
-
-            res.encrypted_data_len = res.dist_vec.len()
         }
     } else {
         // Process by file
-        let file_size = x_file::get_size(&file_path);
-        let tail_length: usize = file_size as usize - end;
-        if tail_length > BUFFER_LEN {
-            return Err(anyhow!(
-                "Decrypt file tail(end position: {}) greater then buffer size{}",
-                end,
-                BUFFER_LEN
-            ));
+        let file_size = xu_file::get_size(&file_path);
+        let mut tail_length = 0;
+        if end > 0 {
+            tail_length = file_size as usize - end;
+            if tail_length > BUFFER_LEN {
+                return Err(anyhow!(
+                    "Decrypt file tail(end position: {}) greater then buffer size{}",
+                    end,
+                    BUFFER_LEN
+                ));
+            }
         }
 
         let mut source_file = File::open(file_path)?;
@@ -306,24 +331,24 @@ pub fn decrypt(
                 break;
             } else {
                 // The last buffer
-                let mut last_end = 0;
+                #[warn(unused_assignments)]
+                let mut final_end = 0;
                 if enable_limit {
                     // Remove the tail.
-                    last_end = read_count - tail_length;
+                    final_end = read_count - tail_length;
                 } else {
-                    last_end = read_count;
+                    final_end = read_count;
                 }
 
-                let plaintext =
-                    stream_decryptor
-                        .decrypt_last(&buffer[..last_end])
-                        .map_err(|err| {
-                            anyhow!(
-                                "Decrypt file last buffer with limit: {:?}, error: {}",
-                                buffer,
-                                err
-                            )
-                        })?;
+                let plaintext = stream_decryptor
+                    .decrypt_last(&buffer[..final_end])
+                    .map_err(|err| {
+                        anyhow!(
+                            "Decrypt file last buffer with limit: {:?}, error: {}",
+                            buffer,
+                            err
+                        )
+                    })?;
                 dist_file.write(&plaintext)?;
                 data_length += plaintext.len();
                 break;
@@ -361,7 +386,7 @@ pub fn test_string(text: &str) {
         Err(e) => return print!("test decrypt error {}\n", e),
     };
 
-    let dec_text_str = x_string::bytes_to_string(&dec_text.dist_vec);
+    let dec_text_str = xu_string::bytes_to_string(&dec_text.dist_vec);
 
     print!(">>> text len :{} \n", text.len());
     print!(

@@ -21,6 +21,7 @@ export const ReFileExt = /^(\.+[A-Za-z0-9]+)$/ // if not empty string
 export const StrSignOk = 'OK'
 export const StrSignErr = 'Err'
 export const SyncLockTimeoutSeconds = 3600
+export const TypeMarkdown = 'markdown'
 export const TypeNote = 'note'
 export const TypeNone = 'none'
 export const TypeFile = 'file'

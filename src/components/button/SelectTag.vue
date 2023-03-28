@@ -5,8 +5,8 @@
       <el-button v-else>{{ t('Tag') }}</el-button>
     </template>
 
-    <template v-if="panesStore.data.navigationCol.tags.length > 0">
-      <div v-for="(item, index) in panesStore.data.navigationCol.tags" v-bind:key="index">
+    <template v-if="appStore.data.userData.tags.length > 0">
+      <div v-for="(item, index) in appStore.data.userData.tags" v-bind:key="index">
         <div class="py-2" @click="onClick(item)">
           <span :class="`${tagExist(item.sign) ? 'font-bold' : ''}`">
             {{ item.icon }}{{ item.title }}
@@ -25,7 +25,7 @@ import { useI18n } from 'vue-i18n'
 import { CollectionTag } from '@element-plus/icons-vue'
 
 import XPopover from '@/components/widget/XPopover.vue'
-import { usePanesStore } from '@/pinia/modules/panes'
+import { useAppStore } from '@/pinia/modules/app'
 import { TagInfo } from '@/libs/user_data/types'
 
 const props = defineProps({
@@ -45,7 +45,7 @@ interface emitType {
 
 const emits = defineEmits<emitType>()
 const { t } = useI18n()
-const panesStore = usePanesStore()
+const appStore = useAppStore()
 
 const onClick = (detail: TagInfo) => {
   emits('onClick', detail)

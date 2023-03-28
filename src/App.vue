@@ -3,7 +3,6 @@ import { RouterView } from 'vue-router'
 
 import { envIsDev } from '@/conf'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
 import { initCoreDirs } from '@/libs/init/dirs'
 import { checkConfFileExist } from '@/libs/init/conf_file'
 import { disableRightCilckAndDevTool } from '@/utils/utils'
@@ -16,7 +15,6 @@ if (!envIsDev) {
 }
 
 const appStore = useAppStore()
-const settingStore = useSettingStore()
 
 initCoreDirs().then(() => {
   checkConfFileExist()
@@ -35,7 +33,7 @@ initCoreDirs().then(() => {
 
     <template v-else>
       <!-- setup wizard -->
-      <template v-if="settingStore.data.encryption.masterPassword === ''">
+      <template v-if="appStore.data.settings.encryption.masterPassword === ''">
         <DesktopSetupWizard />
       </template>
       <template v-else>

@@ -41,3 +41,7 @@
 .el-input.is-disabled .el-input__wrapper {
   background-color: var(--enas-background-primary-color) !important;
 }
+
+.el-button+.el-button {
+  margin-left: 0.5rem !important;
+}

@@ -1,7 +1,4 @@
-import { InvokeArgs } from '@tauri-apps/api/tauri'
-
 export interface Commands {
-    invoke(name: string, args: InvokeArgs): unknown;
     notification(title: string, body: string, icon: string): Promise<void>;
     getPlatformName(): Promise<string>;
     getAppVersion(): Promise<string>;
@@ -27,5 +24,10 @@ export type UserDataFile = {
     file_data_str: string,
 }
 
-// 'string' means normal string, 'base64' means base64 string, 'bin' means binary
-export type UserDataParseAs = 'string' | 'base64' | 'bin'
+// 'string' means normal string, 'base64' means base64 string, 'bin' means binary, '' means none
+export type UserDataParseAs = 'string' | 'base64' | 'bin' | 'none'
+
+export type FileMeta = {
+    sha256: string,
+    size: number,
+}

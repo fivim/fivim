@@ -1,11 +1,11 @@
-import { AppMode } from '@/types'
+import { AppModeInfo } from '@/types'
 import { useAppStore } from '@/pinia/modules/app'
 
 const showTitleBar = (): boolean => {
   const appStore = useAppStore()
   const appData = appStore.data
 
-  if (appData.appMode === AppMode.Desktop && !appData.isWebPage) {
+  if (appData.appMode === AppModeInfo.Desktop && !appData.isWebPage) {
     return true
   }
   return false

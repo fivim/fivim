@@ -5,13 +5,13 @@
     </el-button>
   </div>
 
-  <el-dialog v-model="dialogVisible" :title="t('Setting')" :width="grnDialogWidth()" :fullscreen="isMobileScreen()">
+  <el-dialog v-model="dialogVisible" :title="t('Setting')" :width="genDialogWidth()" :fullscreen="isMobileScreen()">
     <el-tabs tab-position="left">
       <el-tab-pane :label="t('General')">
-        <el-form :model="settingStore.data" label-width="150px" :label-position="genLabelPosition()">
+        <el-form :model="appStore.data" label-width="150px" :label-position="genLabelPosition()">
           <el-form-item :label="t('Working directory')">
             <div class="w-full">
-              <el-input v-model="settingStore.data.normal.workDir" />
+              <el-input v-model="appStore.data.settings.normal.workDir" />
             </div>
             <div class="w-full mt-2">
               <el-alert :title="t('Warning')"
@@ -25,10 +25,10 @@
             2022-12-12
           </el-form-item>
           <el-form-item :label="t('Spell check')">
-            <el-switch v-model="settingStore.data.normal.spellCheck" size="small" />
+            <el-switch v-model="appStore.data.settings.normal.spellCheck" size="small" />
           </el-form-item>
           <el-form-item :label="t('Show saving status')">
-            <el-switch v-model="settingStore.data.normal.showFileSavingStatus" size="small" />
+            <el-switch v-model="appStore.data.settings.normal.showFileSavingStatus" size="small" />
             <el-alert type="info" show-icon :closable="false">
               {{ t('&Show saving status') }}
             </el-alert>
@@ -39,9 +39,9 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane :label="t('Appearance')">
-        <el-form :model="settingStore.data" label-width="150px" :label-position="genLabelPosition()">
+        <el-form :model="appStore.data" label-width="150px" :label-position="genLabelPosition()">
           <el-form-item :label="t('Language')">
-            <el-select v-model="settingStore.data.appearance.locale" class="m-2" :placeholder="t('Select')" filterable>
+            <el-select v-model="appStore.data.settings.appearance.locale" class="m-2" :placeholder="t('Select')" filterable>
               <el-option v-for="(item, index) in settingOptions.locale.sort(elOptionArrSort)" :key="index"
                 :label="item.label + ' - ' + getLanguageMeta(item.value).nativeName" :value="item.value">
                 <span class="fl">{{ item.label }}</span>
@@ -50,7 +50,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="t('Date time format')">
-            <el-select v-model="settingStore.data.appearance.dateTimeFormat" :placeholder="t('Select')">
+            <el-select v-model="appStore.data.settings.appearance.dateTimeFormat" :placeholder="t('Select')">
               <el-option v-for="item in settingOptions.dateFormat" :key="item.value" :label="item.label"
                 :value="item.value" />
             </el-select>
@@ -58,16 +58,15 @@
 
           <!-- list column -->
           <el-form-item :label="t('Show create time')">
-            <el-switch v-model="settingStore.data.appearance.listColShowCreateTime" />
+            <el-switch v-model="appStore.data.settings.appearance.listColShowCreateTime" />
           </el-form-item>
           <el-form-item :label="t('Show update time')">
-            <el-switch v-model="settingStore.data.appearance.listColShowUpdateTime" />
+            <el-switch v-model="appStore.data.settings.appearance.listColShowUpdateTime" />
           </el-form-item>
-
         </el-form>
       </el-tab-pane>
       <el-tab-pane :label="t('Encryption')">
-        <el-form :model="settingStore.data" label-width="150px" :label-position="genLabelPosition()">
+        <el-form :model="appStore.data" label-width="150px" :label-position="genLabelPosition()">
           <el-form-item :label="t('Master password')">
             <el-button @click="onToggleChangeMasterPassword()">{{ t('Change master password') }}</el-button>
           </el-form-item>
@@ -75,7 +74,7 @@
             <div class="mb-2">
               <el-alert type="warning" show-icon :closable="false">{{ t('&Master password modified tip') }}</el-alert>
             </div>
-            <el-form-item :label="t('Old password')" v-if="settingStore.data.encryption.masterPassword !== ''">
+            <el-form-item :label="t('Old password')" v-if="appStore.data.settings.encryption.masterPassword !== ''">
               <el-input v-model="masterPasswordOld" class="w-auto" type="password" />
             </el-form-item>
             <el-form-item :label="t('New password')">
@@ -94,13 +93,13 @@
             </div>
           </div>
           <el-form-item :label="t('Entry file name')" class="mb-2">
-            <el-input v-model="settingStore.data.encryption.entryFileName" />
+            <el-input v-model="appStore.data.settings.encryption.entryFileName" />
           </el-form-item>
           <div class="mb-2">
             <el-alert type="info" show-icon :closable="false">{{ t('&Valid for new files') }}</el-alert>
           </div>
           <el-form-item :label="t('File extension')">
-            <el-input v-model="settingStore.data.encryption.fileExt" @input="onInputFileExt"
+            <el-input v-model="appStore.data.settings.encryption.fileExt" @input="onInputFileExt"
               :placeholder="t('Can be empty')" class="w-auto" />
             <div class="ml-4 disp-inline">
               <el-tooltip :content="t('&File extension tip')" raw-content effect="customized">
@@ -110,14 +109,14 @@
           </el-form-item>
           <el-form-item :label="t('File naming rule')">
             <div class="m-2 w-full">
-              <el-select v-model="settingStore.data.encryption.fileNameRule" :placeholder="t('Select')">
+              <el-select v-model="appStore.data.settings.encryption.fileNameRule" :placeholder="t('Select')">
                 <el-option v-for="item in settingOptions.fileNameRule" :key="item.value" :label="t(item.label)"
                   :value="item.value" />
               </el-select>
 
               <div class="ml-4 disp-inline">
                 <el-tooltip
-                  :content="genFileNamingRuleDemoHtml(t, settingStore.data.appearance.dateTimeFormat, settingStore.data.encryption.fileExt)"
+                  :content="genFileNamingRuleDemoHtml(t, appStore.data.settings.appearance.dateTimeFormat, appStore.data.settings.encryption.fileExt)"
                   raw-content effect="customized">
                   <el-button>{{ t('Show example') }}</el-button>
                 </el-tooltip>
@@ -145,23 +144,20 @@ import { SettingOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
 import { ReFileExt, MasterPasswordSalt } from '@/constants'
 import { ElPrecessItem } from '@/types_common'
 import { settingOptions, changeMasterPasswordProcessData } from '@/conf'
 import { i18n, getLanguageMeta, setLocale } from '@/libs/init/i18n'
-import { CmdInvoke } from '@/libs/commands'
-import { initSync } from '@/libs/init/at_first'
+import { invoker } from '@/libs/commands/invoke'
 import { getDataDirs } from '@/libs/init/dirs'
 import { elOptionArrSort } from '@/utils/array'
 import { happybytes } from '@/utils/bytes'
 import { isMobileScreen } from '@/utils/media_query'
-import { grnDialogWidth } from '@/utils/utils'
+import { genDialogWidth } from '@/utils/utils'
 import { genFileNamingRuleDemoHtml, sha256, genMasterPasswordSha256 } from '@/utils/hash'
 
 const { t } = useI18n()
 const appStore = useAppStore()
-const settingStore = useSettingStore()
 
 const masterPasswordOld = ref('')
 const masterPasswordNew = ref('')
@@ -169,7 +165,7 @@ const allFileSize = ref('0')
 
 const getAllFileSize = async () => {
   const p = await getDataDirs()
-  const size = await CmdInvoke.getDirSize(p.pathOfCurrentDir)
+  const size = await invoker.getDirSize(p.pathOfCurrentDir)
   allFileSize.value = happybytes(size, false)
 }
 
@@ -194,7 +190,7 @@ const dialogVisible = ref(false)
 const localeOld = ref('')
 const onOpen = () => {
   dialogVisible.value = true
-  localeOld.value = settingStore.data.appearance.locale
+  localeOld.value = appStore.data.settings.appearance.locale
 
   getAllFileSize()
 }
@@ -204,19 +200,14 @@ const onSave = (close: boolean) => {
     dialogVisible.value = false
   }
 
-  const sd = settingStore.data
-  settingStore.setData(sd, true)
-
-  initSync()
-
   // If locale changed
-  const localeNew = settingStore.data.appearance.locale
+  const localeNew = appStore.data.settings.appearance.locale
   if (localeNew !== localeOld.value) {
     if (i18n.global.availableLocales.indexOf(localeNew) >= 0) { // Check if the new locale is allowed
       setLocale(localeNew)
       localeOld.value = localeNew
 
-      CmdInvoke.systemTrayUpdateText()
+      invoker.systemTrayUpdateText()
 
       // changeLocaleTimestamp
       const appData = appStore.data
@@ -241,7 +232,7 @@ const onToggleChangeMasterPassword = () => {
   changeMasterPasswordVisible.value = !changeMasterPasswordVisible.value
 }
 const onSaveMasterPassword = () => {
-  const setting = settingStore.data
+  const setting = appStore.data.settings
   if (setting.encryption.masterPassword !== '' && setting.encryption.masterPassword !== sha256(masterPasswordOld.value)) {
     return false
   }
@@ -256,7 +247,7 @@ const onSaveMasterPassword = () => {
   // TODO: decrypt, and use the new password to encrypt,need a lock file.
 
   setting.encryption.masterPassword = newPassword
-  settingStore.setData(setting, true)
+  appStore.setSettingData(setting, true)
 }
 
 const onInputFileExt = (detail: string) => {

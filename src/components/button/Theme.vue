@@ -43,35 +43,25 @@ import { useI18n } from 'vue-i18n'
 
 import { AvailableThemes } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
 import XPopover from '@/components/widget/XPopover.vue'
 import { saveConfToFile } from '@/libs/init/conf_file'
 import { setTheme } from '@/utils/utils'
 
 const { t } = useI18n()
 const appStore = useAppStore()
-const settingStore = useSettingStore()
 
 const onChangeTheme = (themeName: string) => {
   setTheme(themeName)
 
-  const setting = settingStore.data
+  const setting = appStore.data.settings
   setting.appearance.theme = themeName
-  settingStore.setData(setting, true)
+  appStore.setSettingData(setting, true)
 
   const appData = appStore.data
   appData.currentTheme = themeName
   appStore.setData(appData)
 
   saveConfToFile()
-
-  if (settingStore.data.appearance.customBackagroundImg) {
-    ElMessage({
-      message: t('&Restart program'),
-      type: 'info',
-      showClose: true
-    })
-  }
 }
 </script>
 

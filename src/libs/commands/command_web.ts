@@ -1,12 +1,5 @@
 
-import { InvokeArgs } from '@tauri-apps/api/tauri'
-
 export class CommandsWeb {
-  invoke = async (name: string, args: InvokeArgs): Promise<unknown> => {
-    console.log('CommandsWeb.invoke NOT IMPLEMENTED')
-    return Promise.resolve(null)
-  }
-
   notification = async (title: string, body: string, icon: string): Promise<void> => {
     console.log('CommandsWeb.notification NOT IMPLEMENTED')
   }

@@ -3,8 +3,8 @@ use xencrypt::xchacha20poly1305::{
 };
 
 use xutils::{
-    array_like as x_array, errors::EaError as x_error, file as x_file, hash as x_hash,
-    logger as x_logger, string as x_string,
+    array_like as xu_array, errors::EaError as xu_error, file as xu_file, hash as xu_hash,
+    logger as xu_logger, string as xu_string,
 };
 
 // Convert a slice as an array
@@ -18,14 +18,14 @@ fn u8_array_nonce(input: &[u8]) -> [u8; SIZE_NONCE] {
 }
 
 pub fn gen_key(pwd: &str) -> [u8; SIZE_KEY] {
-    let binding = x_array::fill_arr_u8(pwd.as_bytes(), SIZE_KEY, true);
+    let binding = xu_array::fill_arr_u8(pwd.as_bytes(), SIZE_KEY, true);
 
     return u8_array_key(binding.as_slice());
 }
 
 pub fn gen_nonce(pwd: &str) -> [u8; SIZE_NONCE] {
-    let md5 = x_hash::md5_bytes(pwd); // TODO too short
-    let binding = x_array::fill_arr_u8(&md5, SIZE_NONCE, true);
+    let md5 = xu_hash::md5_bytes(pwd); // TODO too short
+    let binding = xu_array::fill_arr_u8(&md5, SIZE_NONCE, true);
     return u8_array_nonce(binding.as_slice());
 }
 
@@ -42,8 +42,13 @@ pub fn encrypt_bytes(pwd: &str, content: &Vec<u8>) -> Vec<u8> {
         &[].to_vec(),
         &[].to_vec(),
     ) {
-        Ok(d) => return d.dist_vec,
-        Err(_) => return vec![],
+        Ok(d) => {
+            return d.dist_vec;
+        }
+        Err(e) => {
+            xu_logger::log_error(&format!("encrypt_bytes error:{:?}\n", e));
+            return vec![];
+        }
     };
 }
 
@@ -53,13 +58,16 @@ pub fn decrypt_bytes(pwd: &str, content: &Vec<u8>) -> Vec<u8> {
 
     match decrypt(&kkk, &nnn, &content, "".to_string(), "".to_string(), 0, 0) {
         Ok(de) => return de.dist_vec,
-        Err(_) => return [].to_vec(),
+        Err(e) => {
+            xu_logger::log_error(&format!("decrypt_bytes error:{:?}\n", e));
+            return [].to_vec();
+        }
     };
 }
 
 pub fn decrypt_bytes_to_string(pwd: &str, content: &Vec<u8>) -> String {
     let dec = decrypt_bytes(pwd, content);
-    return x_string::bytes_to_string(&dec);
+    return xu_string::bytes_to_string(&dec);
 }
 
 pub fn encrypt_file(pwd: &str, source_path: &str, dist_path: &str) -> EncryptRes {
@@ -77,11 +85,11 @@ pub fn encrypt_file(pwd: &str, source_path: &str, dist_path: &str) -> EncryptRes
     ) {
         Ok(d) => return d,
         Err(e) => {
-            let eee = x_error::EncryptFileError {
+            let eee = xu_error::EncryptFileError {
                 path: source_path.to_owned(),
                 error: e,
             };
-            x_logger::log_error(&format!("encrypt_file:: error: {}\n", eee));
+            xu_logger::log_error(&format!("encrypt_file:: error: {}\n", eee));
 
             let res = EncryptRes {
                 dist_vec: [].to_vec(),
@@ -115,11 +123,11 @@ pub fn decrypt_file(
     ) {
         Ok(d) => return d,
         Err(e) => {
-            let eee = x_error::DecryptFileError {
+            let eee = xu_error::DecryptFileError {
                 path: source_path.to_owned(),
                 error: e,
             };
-            x_logger::log_error(&format!("decrypt_file:: error: {}\n", eee));
+            xu_logger::log_error(&format!("decrypt_file:: error: {}\n", eee));
 
             let res = EncryptRes {
                 dist_vec: [].to_vec(),

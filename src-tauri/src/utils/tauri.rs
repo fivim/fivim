@@ -1,7 +1,7 @@
-use serde::{Deserialize, Serialize};
 use std::env;
 use std::path::Path;
 
+use serde::{Deserialize, Serialize};
 use tauri::api::path as t_path;
 use tauri::utils::assets::EmbeddedAssets;
 

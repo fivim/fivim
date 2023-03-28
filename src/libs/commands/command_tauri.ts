@@ -1,14 +1,8 @@
-import { invoke as invokeTauriCmd, InvokeArgs } from '@tauri-apps/api/tauri'
 import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification'
 import { platform } from '@tauri-apps/api/os'
 import { getVersion, getName } from '@tauri-apps/api/app'
 
 export class CommandsTauri {
-  invoke = async (name: string, args: InvokeArgs): Promise<unknown> => {
-    if (!args) { args = {} }
-    return await invokeTauriCmd(name, args)
-  }
-
   notification = async (title: string, body: string, icon: string): Promise<void> => {
     let permissionGranted = await isPermissionGranted()
     if (!permissionGranted) {

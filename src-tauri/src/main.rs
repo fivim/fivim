@@ -42,6 +42,7 @@ fn main() {
             commands::copy_file,
             commands::delete_file,
             commands::get_file_bytes,
+            commands::get_file_meta,
             commands::exist_file,
             commands::read_file_to_bytes,
             commands::read_file_to_string,

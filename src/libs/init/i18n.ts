@@ -1,9 +1,9 @@
 import { createI18n } from 'vue-i18n'
 
-import { TextDirection } from '@/types'
+import { TextDirectionInfo } from '@/types'
 import { settingOptions } from '@/conf'
 import { getOsLocale } from '@/utils/locale'
-import { InitCommandsAdapter, CmdInvoke } from '@/libs/commands'
+import { invoker } from '@/libs/commands/invoke'
 import { useAppStore } from '@/pinia/modules/app'
 
 type Dict = { [key: string]: string }
@@ -11,7 +11,7 @@ type Dict = { [key: string]: string }
 type LangPackMeta = {
   name: string,
   nativeName: string
-  direction: TextDirection
+  direction: TextDirectionInfo
 }
 
 type LangPackJson = {
@@ -27,12 +27,10 @@ type LangDict = {
   [key: string]: Dict
 }
 
-InitCommandsAdapter()
-
 const languageMeta: { [key: string]: LangPackMeta } = {}
 
 const getDictJson = async () => {
-  const data = await CmdInvoke.getDictJson()
+  const data = await invoker.getDictJson()
   return data
 }
 
@@ -61,10 +59,10 @@ const getDict = async () => {
 }
 
 const getLoclae = async () => {
-  let data = await CmdInvoke.getLocale()
+  let data = await invoker.getLocale()
   if (!data) {
     data = getOsLocale(getDefaultLoclae())
-    CmdInvoke.setLocale(data)
+    invoker.setLocale(data)
   }
   return data
 }
@@ -99,14 +97,14 @@ export const setLocale = (locale: string) => {
         appStore.data.textDirection = textDirection
 
         i18n.global.locale.value = locale
-        CmdInvoke.setLocale(locale)
+        invoker.setLocale(locale)
         break
       }
     }
   }
 }
 
-export const currentLocaleDirection = (): TextDirection => {
+export const currentLocaleDirection = (): TextDirectionInfo => {
   if (dict) {
     for (const key in dict) {
       if (Object.prototype.hasOwnProperty.call(dict, key)) {

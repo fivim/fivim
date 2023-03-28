@@ -1,11 +1,10 @@
-import type { Setting, SettingOfStartUp } from '@/types'
+import type { SettingOfStartUpInfo, SettingInfo } from '@/types'
 import { MasterPasswordSalt, ConfigStartUpPwd } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
-import { useSettingStore } from '@/pinia/modules/settings'
 import { getDataDirs } from '@/libs/init/dirs'
-import { CmdInvoke } from '@/libs/commands'
+import { invoker } from '@/libs/commands/invoke'
 import { i18n, setLocale } from '@/libs/init/i18n'
-import { setTheme, genFilePwd } from '@/utils/utils'
+import { setTheme, genFilePwdWithSalt } from '@/utils/utils'
 import { getAvailableLocale } from '@/utils/locale'
 
 export enum InitError {
@@ -13,18 +12,18 @@ export enum InitError {
   noSyncLockFileName
 }
 
-const genPwd = (pwdSha256: string) => genFilePwd(pwdSha256, MasterPasswordSalt)
+const genPwd = (pwdSha256: string) => genFilePwdWithSalt(pwdSha256, MasterPasswordSalt)
 
 export const initWithStartUpConfFile = async () => {
   const p = await getDataDirs()
-  return CmdInvoke.decryptFileToString(ConfigStartUpPwd, p.pathOfConfigStartUp).then(async (data: string) => {
+  return invoker.decryptFileToString(ConfigStartUpPwd, p.pathOfConfigStartUp).then(async (data: string) => {
     if (data === '') {
       return false
     }
 
-    const conf = JSON.parse(data as string) as SettingOfStartUp
-    const settingStore = useSettingStore()
-    const settings = settingStore.data
+    const conf = JSON.parse(data as string) as SettingOfStartUpInfo
+    const appStore = useAppStore()
+    const settings = appStore.data.settings
 
     // locale
     const locale = conf.appearance.locale
@@ -34,7 +33,6 @@ export const initWithStartUpConfFile = async () => {
     }
 
     // Theme
-    const appStore = useAppStore()
     const ad = appStore.data
     const themeName = conf.appearance.theme
     if (themeName !== '') {
@@ -43,45 +41,45 @@ export const initWithStartUpConfFile = async () => {
       settings.appearance.theme = themeName
     }
 
-    await appStore.setData(ad)
-    settingStore.setData(settings, false)
+    appStore.setData(ad)
+    appStore.setSettingData(settings, false)
   })
 }
 
 export const saveStartUpConfFile = async () => {
-  const settingStore = useSettingStore()
-  const settings = settingStore.data
+  const appStore = useAppStore()
+  const settings = appStore.data.settings
   const p = await getDataDirs()
 
-  const content: SettingOfStartUp = {
+  const content: SettingOfStartUpInfo = {
     appearance: {
       locale: settings.appearance.locale,
       theme: settings.appearance.theme
     }
   }
 
-  CmdInvoke.encryptStringToFile(ConfigStartUpPwd, p.pathOfConfigStartUp, JSON.stringify(content))
+  invoker.encryptObjectToFile(ConfigStartUpPwd, p.pathOfConfigStartUp, content)
 }
 
 export const initWithConfFile = async (pwdSha256: string, successCallback: CallableFunction | null, failedCallback: (err: InitError) => unknown | null) => {
-  const appStore = useAppStore()
-  const settingStore = useSettingStore()
-
   const p = await getDataDirs()
-  return CmdInvoke.decryptFileToString(genPwd(pwdSha256), p.pathOfConfig).then(async (data: string) => {
+  return invoker.decryptFileToString(genPwd(pwdSha256), p.pathOfConfig).then(async (data: string) => {
     if (data === '') {
       return false
     }
 
-    const conf = JSON.parse(data as string) as Setting
-    setLocale(getAvailableLocale(i18n.global.availableLocales, appStore.data.defaultLocale))
+    const appStore = useAppStore()
+    const ad = appStore.data
+    const settings = ad.settings
+    const conf = JSON.parse(data as string) as SettingInfo
+
+    setLocale(getAvailableLocale(i18n.global.availableLocales, ad.defaultLocale))
 
     // Verify the contents of the configuration file
     if (Object.keys(conf).length === 0) {
       // Set necessary properties
-      const data = settingStore.data
-      data.encryption.masterPassword = ''
-      settingStore.setData(data, false)
+      settings.encryption.masterPassword = ''
+      appStore.setSettingData(settings, false)
 
       if (failedCallback) {
         failedCallback(InitError.noConfFile)
@@ -96,24 +94,8 @@ export const initWithConfFile = async (pwdSha256: string, successCallback: Calla
       return false
     }
 
-    const locale = conf.appearance.locale
-    if (locale) {
-      setLocale(locale)
-    }
-
-    await settingStore.setData(conf, false)
-
-    // Theme
-    const ad = appStore.data
-    const themeName = conf.appearance.theme
-    if (themeName !== '') {
-      setTheme(themeName)
-      ad.currentTheme = themeName
-    }
-
-    await appStore.setData(ad)
-
-    if (successCallback) {
+    const setSuccess = await appStore.setSettingData(conf, false)
+    if (setSuccess && successCallback) {
       successCallback()
     }
 
@@ -122,17 +104,19 @@ export const initWithConfFile = async (pwdSha256: string, successCallback: Calla
 }
 
 export const saveConfToFile = async () => {
-  const settingStore = useSettingStore()
+  const appStore = useAppStore()
+  const settings = appStore.data.settings
   const p = await getDataDirs()
 
-  CmdInvoke.encryptStringToFile(genPwd(settingStore.data.encryption.masterPassword), p.pathOfConfig, JSON.stringify(settingStore.data))
+  const pwdSha256 = settings.encryption.masterPassword
+  invoker.encryptObjectToFile(genPwd(pwdSha256), p.pathOfConfig, settings)
 }
 
 export const checkConfFileExist = async () => {
   const appStore = useAppStore()
-  const ad = appStore.data
   const p = await getDataDirs()
-  CmdInvoke.existFile(p.pathOfConfig).then((exist: boolean) => {
+  invoker.existFile(p.pathOfConfig).then((exist: boolean) => {
+    const ad = appStore.data
     ad.existConfigFile = exist
     appStore.setData(ad)
   })

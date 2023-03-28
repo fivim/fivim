@@ -1,37 +1,30 @@
 import { ElMessageBox } from 'element-plus'
 
-import { ErrorMessages } from '@/types'
-
+import { ErrorMessagesInfo } from '@/types'
 import { getDataDirs } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
-import { usePanesStore } from '@/pinia/modules/panes'
-import { useSettingStore } from '@/pinia/modules/settings'
-
 import { tmplEntryFileData } from '@/types_template'
-import { CmdInvoke } from '@/libs/commands'
-import { UserDataFile } from '@/libs/commands/types'
+import { genFilePwd } from '@/libs/commands'
+import { invoker } from '@/libs/commands/invoke'
 import { i18n } from '@/libs/init/i18n'
-import { stringToUint8Array } from '@/utils/string'
 
 import { parseEntryFile } from './parser_decode'
 import { writeUserData } from './utils'
 
 export const initEntryFile = async () => {
   const appStore = useAppStore()
-  const panesStore = usePanesStore()
-  const settingStore = useSettingStore()
 
-  const settings = settingStore.data
+  const settings = appStore.data.settings
   const encrytpSetting = settings.encryption
   const p = await getDataDirs()
   const dir = p.pathOfCurrentDir
   const entryFileName = encrytpSetting.entryFileName
   const path = dir + entryFileName
 
-  return CmdInvoke.readUserDataFile('', path, true, 'string', '').then((fileData) => {
+  return invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '').then((fileData) => {
     if (fileData.crc32 !== fileData.crc32_check) {
-      const msg = ErrorMessages.FileVerificationFailed
-      CmdInvoke.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
+      const msg = ErrorMessagesInfo.FileVerificationFailed
+      invoker.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
       // return Promise.reject(new Error(msg))
     }
 
@@ -58,19 +51,19 @@ export const initEntryFile = async () => {
     }
 
     const ret = parseEntryFile(jsonStr)
-    panesStore.setData(ret.paneData)
+    appStore.setUserDataMapData(ret.userDataMap)
 
     if (import.meta.env.TAURI_DEBUG) {
       console.log('>>> Entry file data:: ', jsonStr)
-      console.log('>>> Entry file data after parsed:: ', ret.paneData)
+      console.log('>>> Entry file data after parsed:: ', ret.userDataMap)
     }
   })
 }
 
 export const saveDefaultEntryFile = async () => {
-  const settingStore = useSettingStore()
-  const fileName = settingStore.data.encryption.entryFileName
+  const appStore = useAppStore()
+  const fileName = appStore.data.settings.encryption.entryFileName
   const p = await getDataDirs()
 
-  writeUserData(p.pathOfCurrentDir + fileName, fileName, stringToUint8Array(JSON.stringify(tmplEntryFileData)))
+  writeUserData(p.pathOfCurrentDir + fileName, fileName, tmplEntryFileData)
 }

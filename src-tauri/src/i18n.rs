@@ -5,17 +5,15 @@ use std::sync::RwLock;
 
 use serde::{Deserialize, Serialize};
 use serde_json;
+use xutils::{dir as xu_dir, file as xu_file, logger as xu_logger, path as xu_path};
 
 use crate::conf as x_conf;
-use xutils::dir as x_dir;
-use xutils::file as x_file;
-use xutils::logger as x_logger;
-use xutils::path as x_path;
 
 pub struct Conf {
     locale: String,
     locales_dir: String,
 }
+
 impl Conf {
     pub fn set_locale(&mut self, lang: String) {
         self.locale = lang;
@@ -87,15 +85,15 @@ pub fn init_dict() {
     for lang_name in locales_list {
         //Read language package
         let file_path = Path::new(&dir).join(format!("{}{}", &lang_name, x_conf::LOCALES_FILE_EXT));
-        let json_str = match x_file::read_to_string(x_path::path_buf_to_string(file_path).as_str())
-        {
-            Ok(f) => f,
-            Err(e) => {
-                let msg = format!("Reading language package exception:{}", e);
-                x_logger::log_error(&msg);
-                panic!("{}", msg);
-            }
-        };
+        let json_str =
+            match xu_file::read_to_string(xu_path::path_buf_to_string(file_path).as_str()) {
+                Ok(f) => f,
+                Err(e) => {
+                    let msg = format!("Reading language package exception:{}", e);
+                    xu_logger::log_error(&msg);
+                    panic!("{}", msg);
+                }
+            };
 
         insert_dict(lang_name, json_str);
     }
@@ -106,7 +104,7 @@ pub fn get_locales_list() -> Vec<String> {
     let locals_dir = get_locales_dir();
 
     if locals_dir != "" {
-        for key in x_dir::get_file_list(&locals_dir) {
+        for key in xu_dir::get_file_list(&locals_dir) {
             let new_key = key.replace(x_conf::LOCALES_FILE_EXT, ""); // remove extension
             res.push(new_key);
         }

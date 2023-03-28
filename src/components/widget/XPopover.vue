@@ -8,7 +8,7 @@
     </template>
 
     <!-- Title bar -->
-    <div class="pop-title disp-flex" v-if="appStore.data.appMode === AppMode.Mobile">
+    <div class="pop-title disp-flex" v-if="appStore.data.appMode === AppModeInfo.Mobile">
       <div class="disp-flex"> {{ propTitle }} </div>
       <div class="disp-flex"> <el-button v-if="isMobileMode()" :icon="Close" circle @click="onClosePop"></el-button>
       </div>
@@ -23,7 +23,7 @@
 import { ref, unref, PropType } from 'vue'
 import { Close } from '@element-plus/icons-vue'
 
-import { AppMode } from '@/types'
+import { AppModeInfo } from '@/types'
 import { ElPropPlacement, ElPropTrigger } from '@/types_common'
 import { useAppStore } from '@/pinia/modules/app'
 
@@ -57,7 +57,7 @@ const appStore = useAppStore()
 const popoverRef = ref()
 
 const isMobileMode = () => {
-  return appStore.data.appMode === AppMode.Mobile
+  return appStore.data.appMode === AppModeInfo.Mobile
 }
 // To accomplish the mobile version full-screen display, need a class, and also sets the width to 100%
 const fullscreenClass = () => {

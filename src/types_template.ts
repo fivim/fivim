@@ -1,42 +1,16 @@
-import { AppInfo, AppMode, Setting } from '@/types'
+import { AppInfo, AppModeInfo, SettingInfo } from '@/types'
 import { TypeNote } from '@/constants'
 
-import { EntryFileSource } from '@/libs/user_data/types'
+import { EntryFileSourceInfo, UserDataInfo } from '@/libs/user_data/types'
 
-export const tmplAppData: AppInfo = {
-  appMode: AppMode.Empty,
-  appName: '',
-  changeLocaleTimestamp: 0,
-  changeMasterPasswordStatus: {
-    action: '',
-    percent: 0,
-
-    currentNumber: 0,
-    totalNumber: 0
-  },
-  currentFile: {
-    sign: '',
-    indexInList: 0,
-    name: '',
-    type: TypeNote
-  },
-  currentTheme: '',
-  dataPath: {
-    separator: '/',
-    pathOfHome: '',
-    pathOfHomeAppData: ''
-  },
-  defaultLocale: '',
-  defaultLocaleInNative: '',
-  editorFullScreen: false,
-  existConfigFile: false,
-  isWebPage: true,
-  lockscreen: true,
-  textDirection: 'LTR',
-  version: ''
+export const tmplUserDataMap: UserDataInfo = {
+  files: [],
+  notebooks: [],
+  tags: [],
+  filesMeta: []
 }
 
-export const tmplSettingData: Setting = {
+export const tmplSetting: SettingInfo = {
   normal: {
     showFileSavingStatus: true,
     spellCheck: false,
@@ -61,7 +35,52 @@ export const tmplSettingData: Setting = {
   }
 }
 
-export const tmplEntryFileData: EntryFileSource = {
+export const tmplAppData: AppInfo = {
+  appMode: AppModeInfo.Empty,
+  appName: '',
+  changeLocaleTimestamp: 0,
+  changeMasterPasswordStatus: {
+    action: '',
+    percent: 0,
+
+    currentNumber: 0,
+    totalNumber: 0
+  },
+  currentTheme: '',
+  dataPath: {
+    separator: '/',
+    pathOfHome: '',
+    pathOfHomeAppData: ''
+  },
+  defaultLocale: '',
+  defaultLocaleInNative: '',
+  editorFullScreen: false,
+  existConfigFile: false,
+  isWebPage: true,
+  lockscreen: true,
+  textDirection: 'LTR',
+  version: '',
+  userData: tmplUserDataMap,
+  listCol: {
+    sign: '',
+    icon: '',
+    noteList: [],
+    title: '',
+    type: TypeNote,
+    tagsArr: []
+  },
+  currentFile: {
+    content: '',
+    sign: '',
+    title: '',
+    type: TypeNote,
+    tagsArr: [],
+    indexInList: 0
+  },
+  settings: tmplSetting
+}
+
+export const tmplEntryFileData: EntryFileSourceInfo = {
   dataVersion: 0,
   noteBooks: {
     attrsArr: [],
@@ -72,6 +91,10 @@ export const tmplEntryFileData: EntryFileSource = {
     dataArr: []
   },
   files: {
+    attrsArr: [],
+    dataArr: []
+  },
+  userDataFilesMeta: {
     attrsArr: [],
     dataArr: []
   },
