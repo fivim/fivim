@@ -28,12 +28,16 @@ Editor function:
 
 ![file_manager](../images/user_manual/file_manager.png)
 
-There are some buttons on the top left corner:
+At the top, it is the title bar, when encrypt/decrypt big file,it also shows the progress.
+
+There are some buttons on the top left corner in the above image:
 
 - Setting button: Open `settings` dialog.
 - Theme button: Change `theme`.
 - Save button: `Save` right now.
 - Lockscreen button: `Lockscreen` right now.
+
+The main part of the app has navigation column / list column / editor column.
 
 ### Theme and appearance
 We provide some built-in themes. Please click the **Theme** button to switch it.
