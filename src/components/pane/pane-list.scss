@@ -118,7 +118,7 @@
       .main {
         flex-grow: 1;
         min-width: 0px;
-        height: $item-height;
+        line-height: $item-height;
 
         .title {
           line-height: $item-height;

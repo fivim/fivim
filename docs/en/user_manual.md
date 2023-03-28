@@ -20,24 +20,23 @@ Editor function:
 ## Desktop
 ### User Interface
 
+#### Note:
+
+![default](../images/user_manual/note.png)
+
+#### File manager:
+
+![default](../images/user_manual/file_manager.png)
+
 There are some buttons on the top left corner:
 
 - Setting button: Open `settings` dialog.
 - Theme button: Change `theme`.
-- Save button: `Save current data` right now.
-- Synchronization button: `Synchronization` right now.
+- Save button: `Save` right now.
+- Lockscreen button: `Lockscreen` right now.
 
 ### Theme and appearance
-We provide some built-in themes. Please click the **Theme** button to switch.
-
-#### Customize the background image
-Open the `settings` dialog, click the **Appearance** tab, and select a **jpg** format image. 
-
-You can also adjust the opacity.
-
-### Set synchronization
-
-Open the `settings` dialog, click the **Synchronization** tab.
+We provide some built-in themes. Please click the **Theme** button to switch it.
 
 ### Set encryption
 

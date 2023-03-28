@@ -43,7 +43,7 @@
         </template>
 
         <!-- Tags -->
-        <div class="section-title-bar">
+        <div class="section-title-bar mb-2">
           <div class="section-title-bar-header">
             <div class="title text-sm">
               <span class="font-bold">{{ t('Tag') }}</span>
