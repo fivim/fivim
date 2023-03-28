@@ -54,7 +54,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage, ElLoading } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { FileTextOutlined, TableOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
@@ -64,8 +64,8 @@ import XPopover from '@/components/widget/XPopover.vue'
 import SelectTagButton from '@/components/button/SelectTag.vue'
 import SmallTagList from '@/components/widget/SmallTagList.vue'
 
-import { ExtDataPathInfo } from '@/types'
-import { TypeNote, TypeFile } from '@/constants'
+import { ExtDataPathInfo, ErrorMessagesInfo } from '@/types'
+import { TypeNote, TypeFile, TaskEncrypt } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { NoteInfo, TagInfo } from '@/libs/user_data/types'
 import { getDataDirs } from '@/libs/init/dirs'
@@ -73,10 +73,9 @@ import { genFilePwd } from '@/libs/commands'
 import { invoker } from '@/libs/commands/invoke'
 import { saveToEntryFile, addFileMeta } from '@/libs/user_data/utils'
 import { genFileName, getFileNameFromPath } from '@/utils/pinia_related'
+import { genUuidv4 } from '@/utils/hash'
+import { round } from '@/utils/number'
 import { genDialogWidth } from '@/utils/utils'
-
-// import AddFileWorker from '@/libs/worker/add_file.ts?worker'
-// import { AddFileEventParam } from '@/libs/worker/types'
 
 const appStore = useAppStore()
 const { t } = useI18n()
@@ -105,11 +104,11 @@ const addItem = (itemType: typeof TypeNote) => {
     tagsArr: []
   }
 
-  ad.listCol.noteList.push(newItem)
+  ad.listCol.listOfNote.push(newItem)
   ad.currentFile.title = newItem.title
   ad.currentFile.content = newItem.content
   ad.currentFile.sign = newItem.sign
-  ad.currentFile.indexInList = appStore.data.listCol.noteList.length - 1
+  ad.currentFile.indexInList = appStore.data.listCol.listOfNote.length - 1
   ad.currentFile.type = newItem.type
   appStore.setData(ad)
 }
@@ -157,14 +156,17 @@ const onAddFileSelectFIle = () => {
 }
 
 const doAddFile = async (sourcePath: string, p: ExtDataPathInfo, fileName: string) => {
+  // process bar
+  if (appStore.data.currentProgress.percent > 0) {
+    ElMessage(t(ErrorMessagesInfo.FileStillInProcess))
+    return
+  }
+  const processName = genUuidv4()
+
   const dir = p.pathOfCurrentDir
 
-  // TODO writeUserDataFile will be blocked !!! Show a Loading
-  const loadingInstance = ElLoading.service({ fullscreen: true, text: t('Processing'), background: 'var(--enas-background-primary-color)' })
-  invoker.writeUserDataFile(genFilePwd(''), dir + fileName, fileName, {}, sourcePath).then(async (success) => {
+  invoker.writeUserDataFile(genFilePwd(''), dir + fileName, fileName, {}, sourcePath, processName).then(async (success) => {
     if (success) {
-      loadingInstance.close()
-
       const ad = appStore.data
       if (!ad.userData.files) {
         ad.userData.files = []
@@ -189,19 +191,21 @@ const doAddFile = async (sourcePath: string, p: ExtDataPathInfo, fileName: strin
     }
   })
 
-  // TODO test using worker
-  // const worker = new AddFileWorker()
-  // const param: AddFileEventParam = {
-  //   pwd: genFilePwd(''),
-  //   path: dir + fileName,
-  //   fileName,
-  //   sourcePath
-  // }
-  // worker.postMessage(param)
-  // worker.onmessage = function (event) {
-  //   console.log('>>> worker returns ::', event)
-  // }
-  // console.log('>>> worker end ::')
+  // process bar
+  appStore.data.currentProgress.taskName = TaskEncrypt
+  const itmerProcess = setInterval(async () => {
+    invoker.getProcess(processName).then((data) => {
+      const pct = data.percentage * 100
+      const ad = appStore.data
+      ad.currentProgress.percent = pct
+
+      if (round(pct) === 100) {
+        clearInterval(itmerProcess)
+        ad.currentProgress.percent = 0
+      }
+      appStore.setData(ad)
+    })
+  }, 500)
 }
 
 const tagExist = (sign: string) => {

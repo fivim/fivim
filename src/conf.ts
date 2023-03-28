@@ -1,5 +1,5 @@
 import { ElOptionItem } from '@/types_common'
-import { ChangeMasterPasswordProcessItemInfo } from './types'
+import { ProcessItemInfo } from './types'
 import { TimeFormatYyyyMmDdHhMmSs } from './constants'
 import { getOptionFileNameRule } from '@/utils/hash'
 
@@ -64,7 +64,26 @@ export const settingOptions: { [key: string]: ElOptionItem[] } = {
   fileNameRule: getOptionFileNameRule()
 }
 
-export const changeMasterPasswordProcessData: ChangeMasterPasswordProcessItemInfo[] = [
+export const fileOperateProcessData: ProcessItemInfo[] = [
+  {
+    percent: 20,
+    color: 'rgb(151,49,254)'
+  },
+  {
+    percent: 40,
+    color: 'rgb(36,34,255)'
+  },
+  {
+    percent: 60,
+    color: 'rgb(70,254,244)'
+  },
+  {
+    percent: 80,
+    color: 'rgb(64,192,89)'
+  }
+]
+
+export const changeMasterPasswordProcessData: ProcessItemInfo[] = [
   {
     percent: 5, // Sync remote entry file, merge it into temp dir, 5%
     color: '#f56c6c'

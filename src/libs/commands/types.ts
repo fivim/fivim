@@ -31,3 +31,8 @@ export type FileMeta = {
     sha256: string,
     size: number,
 }
+
+export type ProcessStatus = {
+    percentage: number,
+    step_name: string,
+}

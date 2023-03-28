@@ -23,7 +23,7 @@
 
         <template v-if="appStore.data.userData.notebooks.length > 0">
           <div class="nb-name" v-for="(item, index) in appStore.data.userData.notebooks" v-bind:key="index">
-            <div class="info">
+            <div :class="appStore.data.navCol.sign === item.sign ? 'info item-selected' : 'info'">
               <div class="icon" @click="onListNb(index)">
                 {{ item.icon }}
               </div>
@@ -83,7 +83,8 @@
     </div>
 
     <div class="bottom-action">
-      <div class="disp-flex" @click="onListFiles">
+      <div :class="appStore.data.navCol.sign === TypeSignFile ? 'disp-flex item-selected' : 'disp-flex'"
+        @click="onListFiles">
         <span class="font-bold">{{ t('File manager') }}</span>
         <div class="disp-flex flex-grow justify-content-right">
           <el-icon>
@@ -147,7 +148,7 @@ import SelectTagButton from '@/components/button/SelectTag.vue'
 import SettingButton from '@/components/button/Setting.vue'
 import ThemeButton from '@/components/button/Theme.vue'
 
-import { TypeFile, TypeNote, TypeTag, StrSignOk } from '@/constants'
+import { TypeFile, TypeNote, TypeTag, StrSignOk, TypeSignFile, TypeSignTag } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { getDataDirs } from '@/libs/init/dirs'
 import { CmdAdapter } from '@/libs/commands'
@@ -300,11 +301,12 @@ const onListNb = (index: number) => {
       sign: nb.sign,
       tagsArr: nb.tagsArr,
       type: TypeNote,
-      noteList: notes
+      listOfNote: notes,
+      listOfTag: []
     })
     // TODO: save the value of the editor
 
-    appStore.resetEditor()
+    appStore.data.navCol.sign = nb.sign
     restEditorCol()
   }).catch((err: Error) => {
     const typeName = t('Notebook')
@@ -396,8 +398,12 @@ const onListTag = (tag: TagInfo) => {
     sign: tag.sign,
     tagsArr: [],
     type: TypeTag,
-    noteList: items
+    listOfNote: items,
+    listOfTag: []
   })
+
+  appStore.data.navCol.sign = TypeSignTag
+
   restEditorCol()
 }
 
@@ -426,11 +432,14 @@ const onListFiles = () => {
   appStore.setListColData({
     title: t('File'),
     icon: '',
-    sign: '>>>file list<<<',
+    sign: TypeSignFile,
     tagsArr: [],
     type: TypeFile,
-    noteList: []
+    listOfNote: [],
+    listOfTag: []
   })
+
+  appStore.data.navCol.sign = TypeSignFile
 
   restEditorCol()
 }

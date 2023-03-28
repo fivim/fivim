@@ -46,6 +46,10 @@ export const tmplAppData: AppInfo = {
     currentNumber: 0,
     totalNumber: 0
   },
+  currentProgress: {
+    percent: 0,
+    taskName: ''
+  },
   currentTheme: '',
   dataPath: {
     separator: '/',
@@ -64,10 +68,14 @@ export const tmplAppData: AppInfo = {
   listCol: {
     sign: '',
     icon: '',
-    noteList: [],
+    listOfNote: [],
+    listOfTag: [],
     title: '',
     type: TypeNote,
     tagsArr: []
+  },
+  navCol: {
+    sign: ''
   },
   currentFile: {
     content: '',

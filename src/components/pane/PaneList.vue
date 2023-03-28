@@ -36,13 +36,13 @@
         </div>
 
         <!-- content -->
-        <template v-if="appStore.data.listCol.noteList">
+        <template v-if="appStore.data.listCol.listOfNote">
           <!-- for note list -->
           <template v-if="appStore.data.listCol.type === TypeNote">
             <div class="content-list">
-              <div v-for="(item, index) in appStore.data.listCol.noteList" v-bind:key="index" @click="onClickNote(index)"
+              <div v-for="(item, index) in appStore.data.listCol.listOfNote" v-bind:key="index" @click="onClickNote(index)"
                 class="content-list-item">
-                <div :class="item.sign === appStore.data.currentFile.sign ? 'selected p-2' : 'p-2'">
+                <div :class="item.sign === appStore.data.currentFile.sign ? 'item-selected p-2' : 'p-2'">
                   <div class="disp-flex">
                     <div class="left">
                       <el-icon class="item-icon" v-if="item.type === TypeNote">
@@ -77,12 +77,14 @@
               </div>
             </div>
           </template>
+
           <!-- for tag list -->
           <template v-else-if="appStore.data.listCol.type === TypeTag">
             <!-- TODO -->
-            <!-- notebook -->
+            <!-- loop listOfTag.listOfTag -->
           </template>
-          <!-- for file list -->
+
+          <!-- for files list -->
           <template v-else-if="appStore.data.listCol.type === TypeFile">
             <ListShareButton></ListShareButton>
             <div class="content-list">
@@ -121,7 +123,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Tickets } from '@element-plus/icons-vue'
+import { Tickets, Grid } from '@element-plus/icons-vue'
 
 import ListAddButton from '@/components/button/ListAdd.vue'
 import ListShareButton from '@/components/button/ListShareFile.vue'
@@ -180,16 +182,16 @@ const listSort = (a: NoteInfo | FileInfo, b: NoteInfo | FileInfo) => {
   return 0
 }
 
-const list = ref(appStore.data.listCol.noteList)
+const list = ref(appStore.data.listCol.listOfNote)
 
 appStore.$subscribe((mutation, state) => {
   list.value = list.value.sort(listSort)
-  list.value = state.data.listCol.noteList.sort(listSort)
+  list.value = state.data.listCol.listOfNote.sort(listSort)
 })
 
 // -------- note --------
 const onClickNote = (index: number) => {
-  const note = appStore.data.listCol.noteList[index]
+  const note = appStore.data.listCol.listOfNote[index]
   const adc = appStore.data.currentFile
   adc.content = note.content
   adc.title = note.title

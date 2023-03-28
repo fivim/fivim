@@ -1,9 +1,11 @@
-import { DefaultFileNameRule, TypeNone } from '@/constants'
+import { DefaultFileNameRule } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { TagInfo } from '@/libs/user_data/types'
 import { tmplTagInfo } from '@/libs/user_data/types_templates'
 import { genFileNameByTime } from '@/utils/hash'
 import { formatDateTime } from '@/utils/string'
+import { tmplAppData } from '@/types_template'
+import { AppInfo } from '@/types'
 
 import { jsonCopy } from './utils'
 
@@ -43,11 +45,12 @@ export const formatTime = (time: Date) => {
 
 export const restEditorCol = () => {
   const appStore = useAppStore()
-  const pde = appStore.data.currentFile
-  pde.type = TypeNone
-  pde.sign = ''
+  const data = appStore.data
 
-  appStore.setCurrentFile(pde)
+  const defaultData = jsonCopy(tmplAppData) as AppInfo
+  data.currentFile = defaultData.currentFile
+
+  appStore.setData(data)
 }
 
 export const pathJoin = async (dirs: string[]) => {

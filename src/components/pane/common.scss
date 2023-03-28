@@ -35,6 +35,12 @@
     }
 }
 
+.item-selected {
+    border-left: 2px solid var(--enas-highlight-color);
+    background-color: var(--enas-background-secondary-color);
+    color: var(--enas-highlight-color);
+  }
+
 .empty {
     display: flex;
     justify-content: center;

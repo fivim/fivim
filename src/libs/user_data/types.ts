@@ -1,7 +1,8 @@
-import { TypeFile, TypeMarkdown, TypeNone, TypeNote } from '@/constants'
+import { TypeFile, TypeMarkdown, TypeNone, TypeNote, TypeTag } from '@/constants'
 
-export type DocTypeInfo = typeof TypeMarkdown | typeof TypeNote | typeof TypeNone
-export type FileTypeInfo = typeof TypeFile
+export type TypeDocInfo = typeof TypeMarkdown | typeof TypeNote | typeof TypeNone
+export type TypeFileInfo = typeof TypeFile
+export type TypeTagListItemInfo = typeof TypeTag | typeof TypeFile | typeof TypeMarkdown | typeof TypeNote
 
 export type FileInfo = {
     // common
@@ -14,7 +15,7 @@ export type FileInfo = {
     content: string // remark content
     originalSize: number, // Original size
     originalSha256: string, // Original sha256
-    type: FileTypeInfo
+    type: TypeFileInfo
 }
 
 export type NotebookInfo = {
@@ -38,7 +39,7 @@ export type NoteInfo = {
     // other
     content: string
     icon: string
-    type: DocTypeInfo
+    type: TypeDocInfo
 }
 
 export type TagInfo = {
@@ -126,4 +127,12 @@ export type MergeEntryFileMetaInfo = {
     syncLockFileName: string
 }
 
-export { TypeNote }
+// For tag list, it will contain various types of data.
+export type TagListItemInfo = {
+    sign: string
+    tagsArr: string[]
+    title: string
+    type: TypeTagListItemInfo
+    icon: string
+    parentSign: string // for notebook file
+}

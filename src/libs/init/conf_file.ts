@@ -109,6 +109,7 @@ export const saveConfToFile = async () => {
   const p = await getDataDirs()
 
   const pwdSha256 = settings.encryption.masterPassword
+
   invoker.encryptObjectToFile(genPwd(pwdSha256), p.pathOfConfig, settings)
 }
 

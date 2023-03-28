@@ -28,7 +28,7 @@
         </template>
         <template v-else-if="isFile()">
           <div class="file">
-            <el-form label-width="100px" v-if="fileInfo.sign">
+            <el-form label-width="100px" class="small" v-if="fileInfo.sign">
               <el-form-item :label="t('Created')">
                 {{ formatTime(fileInfo.ctimeUtc) }}
               </el-form-item>
@@ -40,7 +40,7 @@
                   {{ fileInfo.originalSha256 }}
                 </div>
               </el-form-item>
-              <el-form-item label="size">
+              <el-form-item :label="t('Size')">
                 <div class="text-break-all">
                   {{ happybytes(fileInfo.originalSize || 0, false) }} ({{ fileInfo.originalSize }})
                 </div>
@@ -54,12 +54,17 @@
             </el-form>
 
             <div class="p-2">
-              <p></p>
               <el-button type="primary" @click="onExportFile">{{ t('Export data') }}</el-button>
               <el-button type="primary" @click="onDeleteFile">{{ t('Delete') }}</el-button>
+
+              <el-popover v-if="showPreviewBtn" placement="top" :width="200" trigger="click">
+                <template #reference>
+                  <el-button style="margin-right: 16px">{{ t('Preview') }}</el-button>
+                </template>
+                <el-image style="width: 200px; max-height: 200px" :src="fileBase64" fit="scale-down" />
+              </el-popover>
             </div>
           </div>
-
         </template>
       </div>
     </div>
@@ -69,24 +74,27 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { open as openDialog } from '@tauri-apps/api/dialog'
 
 import EditorEditorjs from '@/components/editor/Editorjs.vue'
 import SelectTagButton from '@/components/button/SelectTag.vue'
 import SmallTagList from '@/components/widget/SmallTagList.vue'
 
-import { TypeFile } from '@/constants'
+import { TypeFile, TypeNote, RreviewFileSizeMax, TaskDecrypt } from '@/constants'
+import { ErrorMessagesInfo } from '@/types'
 import { useAppStore } from '@/pinia/modules/app'
 import { genFilePwd } from '@/libs/commands'
 import { invoker } from '@/libs/commands/invoke'
 import { getDataDirs } from '@/libs/init/dirs'
-import { TagInfo, TypeNote, FileInfo } from '@/libs/user_data/types'
+import { TagInfo, FileInfo } from '@/libs/user_data/types'
 import { tmplFileInfo } from '@/libs/user_data/types_templates'
 import { deleteFileMeta } from '@/libs/user_data/utils'
 import { formatTime, restEditorCol, pathJoin } from '@/utils/pinia_related'
 import { happybytes } from '@/utils/bytes'
-import { jsonCopy } from '@/utils/utils'
+import { genUuidv4 } from '@/utils/hash'
+import { round } from '@/utils/number'
+import { jsonCopy, fileNameIsImage, getFileNameExt } from '@/utils/utils'
 
 const appStore = useAppStore()
 const { t } = useI18n()
@@ -124,19 +132,19 @@ const onTitleInputNote = (str: string) => {
 
   const index = ad.currentFile.indexInList
   const icd = appStore.data.listCol
-  icd.noteList[index].title = str
+  icd.listOfNote[index].title = str
   appStore.setListColData(icd)
 }
 
 const onEditorUpdate = (str: string) => {
   const icd = appStore.data.listCol
 
-  if (icd.noteList.length === 0) {
+  if (icd.listOfNote.length === 0) {
     // alert('Please create a new note first') // TODO: add translate
   } else {
     const index = appStore.data.currentFile.indexInList
-    icd.noteList[index].content = str
-    icd.noteList[index].mtimeUtc = new Date()
+    icd.listOfNote[index].content = str
+    icd.listOfNote[index].mtimeUtc = new Date()
     appStore.setListColData(icd)
   }
 }
@@ -168,13 +176,26 @@ const isFile = () => {
 }
 const fileInfo = ref<FileInfo>(jsonCopy(tmplFileInfo))
 const outPutDir = ref('')
+const fileBase64 = ref('')
+const showPreviewBtn = ref(false)
 
-const getFileInfo = () => {
+const getFileInfo = async () => {
   const ad = appStore.data
   const file = ad.userData.files[ad.currentFile.indexInList] as FileInfo
   fileInfo.value = file
 
-  // TODO preview images
+  if (fileNameIsImage(file.title) && file.originalSize < RreviewFileSizeMax) {
+    showPreviewBtn.value = true
+
+    const p = await getDataDirs()
+    const filePath = p.pathOfCurrentDir + fileInfo.value.sign
+    invoker.readUserDataFile(genFilePwd(''), filePath, false, 'base64', '', '').then((fileData) => {
+      fileBase64.value = `data:image/${getFileNameExt(file.title)};base64,${fileData.file_data_str}`
+    })
+  } else {
+    showPreviewBtn.value = false
+    fileBase64.value = ''
+  }
 }
 
 const onDeleteFile = () => {
@@ -223,6 +244,13 @@ const doDeleteFile = (fileName: string) => {
 }
 
 const onExportFile = () => {
+  // process bar
+  if (appStore.data.currentProgress.percent > 0) {
+    ElMessage(t(ErrorMessagesInfo.FileStillInProcess))
+    return
+  }
+  const processName = genUuidv4()
+
   openDialog({
     directory: true
   }).then(async (selected) => {
@@ -232,10 +260,25 @@ const onExportFile = () => {
       const filePath = p.pathOfCurrentDir + fileInfo.value.sign
       const targetPath = await pathJoin([outPutDir.value, fileInfo.value.title])
 
-      invoker.readUserDataFile(genFilePwd(''), filePath, false, 'none', targetPath).then((fileData) => {
-        console.log('>>> ExportFile ::', fileData)
-        // TODO
+      invoker.readUserDataFile(genFilePwd(''), filePath, false, 'none', targetPath, processName).then((fileData) => {
+        //
       })
+
+      // process bar
+      appStore.data.currentProgress.taskName = TaskDecrypt
+      const itmerProcess = setInterval(async () => {
+        invoker.getProcess(processName).then((data) => {
+          const pct = data.percentage * 100
+          const ad = appStore.data
+          ad.currentProgress.percent = pct
+
+          if (round(pct) === 100) {
+            clearInterval(itmerProcess)
+            ad.currentProgress.percent = 0
+          }
+          appStore.setData(ad)
+        })
+      }, 500)
     }
   })
 }

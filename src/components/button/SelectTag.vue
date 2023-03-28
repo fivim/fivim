@@ -8,7 +8,7 @@
     <template v-if="appStore.data.userData.tags.length > 0">
       <div v-for="(item, index) in appStore.data.userData.tags" v-bind:key="index">
         <div class="py-2" @click="onClick(item)">
-          <span :class="`${tagExist(item.sign) ? 'font-bold' : ''}`">
+          <span :class="`${tagExist(item.sign) ? 'highlight font-bold' : ''}`">
             {{ item.icon }}{{ item.title }}
           </span>
         </div>

@@ -116,7 +116,7 @@ const onShareConfirm = async () => {
 
   // TODO writeUserDataFile will be blocked !!! Show a Loading
   const loadingInstance = ElLoading.service({ fullscreen: true, text: t('Processing'), background: 'var(--enas-background-primary-color)' })
-  invoker.writeUserDataFile(genFilePwd(tempShare.value.pwd), outputPath, fileName, {}, sourcePath).then(async (success) => {
+  invoker.writeUserDataFile(genFilePwd(tempShare.value.pwd), outputPath, fileName, {}, sourcePath, '').then(async (success) => {
     if (success) {
       loadingInstance.close()
     }
@@ -167,13 +167,10 @@ const onOpenConfirm = async () => {
   const dir = tempOpen.value.outputDir
   const outputPath = await pathJoin([dir, fileName])
 
-  // TODO writeUserDataFile will be blocked !!! Show a Loading
   const loadingInstance = ElLoading.service({ fullscreen: true, text: t('Processing'), background: 'var(--enas-background-primary-color)' })
-  invoker.readUserDataFile(genFilePwd(tempOpen.value.pwd), sourcePath, false, 'none', outputPath).then(async (fileData) => {
+  invoker.readUserDataFile(genFilePwd(tempOpen.value.pwd), sourcePath, false, 'none', outputPath, '').then(async (fileData) => {
     loadingInstance.close()
-
-    console.log('>>> 解密后 fileData ::', fileData)
-    // TODO 没有解密出来
+    // TODO
   })
 
   // TODO test using worker

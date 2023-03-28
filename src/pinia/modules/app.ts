@@ -30,6 +30,11 @@ export const useAppStore = defineStore('appStore', () => {
     // Ensure that the local directory path ends with a slash
     const separator = await CmdAdapter().isWindows() ? '\\' : '/'
 
+    const remoteDirPath = val.sync.localDisk.remoteDirPath
+    if (remoteDirPath !== '' && !remoteDirPath.endsWith(separator)) {
+      val.sync.localDisk.remoteDirPath = remoteDirPath + separator
+    }
+
     const workDir = val.normal.workDir
     if (workDir !== '' && !workDir.endsWith(separator)) {
       val.normal.workDir = workDir + separator
@@ -59,16 +64,10 @@ export const useAppStore = defineStore('appStore', () => {
     localStorage.clear()
   }
 
-  const resetEditor = () => {
-    const defaultData = jsonCopy(tmplAppData) as AppInfo
-    data.value.currentFile = defaultData.currentFile
-  }
-
   return {
     data,
     checkMasterPasswordLength,
     clearStorage,
-    resetEditor,
     setCurrentFile,
     setData,
     setListColData,

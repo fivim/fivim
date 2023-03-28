@@ -21,7 +21,7 @@ export const initEntryFile = async () => {
   const entryFileName = encrytpSetting.entryFileName
   const path = dir + entryFileName
 
-  return invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '').then((fileData) => {
+  return invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '', '').then((fileData) => {
     if (fileData.crc32 !== fileData.crc32_check) {
       const msg = ErrorMessagesInfo.FileVerificationFailed
       invoker.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)

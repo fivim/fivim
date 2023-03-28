@@ -1,7 +1,7 @@
 .desktop-title-bar {
   color: var(--enas-title-bar-foreground-color) !important;
   margin-top: 1px;
-
+  z-index: var(--enas-z-index-title-bar);
   cursor: pointer;
   -webkit-app-region: drag;
   padding: 0;
@@ -10,12 +10,23 @@
   line-height: calc(var(--enas-desktop-title-bar-height) - 1px);
   vertical-align: middle;
   background-color: var(--enas-title-bar-background-color) !important;
-  border-bottom: 1px solid var(--enas-border-color);
-  display: flex;
-  justify-content: space-between;
   position: absolute;
   width: 100%;
   top: 0;
+
+  .content {
+    position: relative;
+    z-index: var(--enas-z-index-title-bar-content);
+    width: 100%;
+    height: 100%;
+
+    .inner {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--enas-border-color);
+    }
+  }
+
 
   .btn {
     -webkit-app-region: no-drag;
