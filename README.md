@@ -36,11 +36,10 @@
 - 🎨 Various themes.
 - 🔗 Share the encrypted data with your friends.
 
-The following two screenshots are the **default** theme and the **material** theme. [More themes](./docs/en/themes.md)
+| Note                                        | File manager                                                |
+| ------------------------------------------- | ----------------------------------------------------------- |
+| ![note](./docs/images/user_manual/note.png) | ![file_manager](./docs/images/user_manual/file_manager.png) |
 
-| default theme                               | material theme                                |
-| ------------------------------------------- | --------------------------------------------- |
-| ![default theme](./docs/images/themes/default.png) | ![material theme](./docs/images/themes/material.png) |
 
 ## Table of Contents
 
@@ -49,6 +48,14 @@ The following two screenshots are the **default** theme and the **material** the
 - [develop](./docs/en/develop.md)
   - [file format](./docs/en/file_format.md)
   - [user data struct](./docs/en/user_data_struct.md)
+
+## Theme
+
+The following two screenshots are the **default** theme and the **material** theme. [More themes](./docs/en/themes.md)
+
+| default theme                                      | material theme                                       |
+| -------------------------------------------------- | ---------------------------------------------------- |
+| ![default theme](./docs/images/themes/default.png) | ![material theme](./docs/images/themes/material.png) |
 
 ## Product positioning 
 

@@ -22,11 +22,11 @@ Editor function:
 
 #### Note:
 
-![default](../images/user_manual/note.png)
+![note](../images/user_manual/note.png)
 
 #### File manager:
 
-![default](../images/user_manual/file_manager.png)
+![file_manager](../images/user_manual/file_manager.png)
 
 There are some buttons on the top left corner:
 
