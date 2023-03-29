@@ -144,7 +144,7 @@
         "Working directory": "werkmap",
         "configuration": "configuratie",
         "initialization error": "initialiseringsfeil",
-        "is in progress": "{naam} is bezig",
+        "is in progress": "{name} is bezig",
         "NoteEditor": {
             "Add a link": "Legg til en lenke",
             "Add": "Legg til",

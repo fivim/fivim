@@ -39,7 +39,7 @@
         "&cannot find sync lock file": "ไม่พบไฟล์ล็อคการซิงโครไนซ์",
         "&confirm delete file information": "ไม่สามารถลบไฟล์ได้ คุณต้องการลบข้อมูลที่บันทึกไว้หรือไม่",
         "&confirm delete file?": "คุณแน่ใจหรือที่จะลบไฟล์นี้: {name} ?",
-        "&confirm delete note?": "คุณแน่ใจหรือที่จะลบบันทึกนี้: {ชื่อ} ?",
+        "&confirm delete note?": "คุณแน่ใจหรือที่จะลบบันทึกนี้: {name} ?",
         "&delete notebook comfirm tip": "คุณแน่ใจหรือไม่ว่าต้องการลบสมุดบันทึกนี้: {name} ?",
         "&delete tag comfirm tip": "คุณแน่ใจหรือที่จะลบแท็กนี้: {name} ?",
         "&have task in progress": "ยังมีงานที่อยู่ระหว่างดำเนินการ โปรดลองอีกครั้งในภายหลัง",

@@ -38,7 +38,7 @@
         "&cannot find conf file": "impossible de trouver le fichier de configuration.",
         "&cannot find sync lock file": "impossible de trouver le fichier de verrouillage de synchronisation.",
         "&confirm delete file information": "Échec de la suppression du fichier, voulez-vous supprimer les informations enregistrées",
-        "&confirm delete file?": "Êtes-vous sûr de vouloir supprimer ce fichier : {nom} ?",
+        "&confirm delete file?": "Êtes-vous sûr de vouloir supprimer ce fichier : {name} ?",
         "&confirm delete note?": "Êtes-vous sûr de vouloir supprimer cette note : {name} ?",
         "&delete notebook comfirm tip": "Voulez-vous vraiment supprimer ce bloc-notes : {name} ?",
         "&delete tag comfirm tip": "Voulez-vous vraiment supprimer ce tag : {name} ?",
@@ -144,7 +144,7 @@
         "Working directory": "directeur de travail",
         "configuration": "configuration",
         "initialization error": "erreur d'initialisation",
-        "is in progress": "{nom} est en cours",
+        "is in progress": "{name} est en cours",
         "NoteEditor": {
             "Add a link": "Ajouter un lien",
             "Add": "Ajouter",

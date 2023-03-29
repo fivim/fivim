@@ -11,7 +11,7 @@
         "&Configure sync settings first": "Harap konfigurasikan pengaturan sinkronisasi terlebih dahulu.",
         "&Confirm exit": "Apakah Anda ingin keluar?",
         "&Entry file reinitialize tip": "Data file entri kosong, apakah Anda ingin menginisialisasi ulang file entri?",
-        "&Error initializing file": "Terjadi kesalahan saat menginisialisasi file {nama}",
+        "&Error initializing file": "Terjadi kesalahan saat menginisialisasi file {name}",
         "&Fail-safe": "Gagal-aman: Jangan hapus data lokal saat target sinkronisasi kosong (sering kali akibat kesalahan konfigurasi atau bug)",
         "&Failed to save file:": "Gagal menyimpan file {fileName}",
         "&Failed to verify downloaded file:": "Gagal memverifikasi file yang diunduh {fileName}",

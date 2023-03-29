@@ -144,7 +144,7 @@
         "Working directory": "कार्यकारी डाइरेक्टरी",
         "configuration": "विन्यास",
         "initialization error": "प्रारंभिक त्रुटि",
-        "is in progress": "{नाम} प्रक्रिया में है",
+        "is in progress": "{name} प्रक्रिया में है",
         "NoteEditor": {
             "Add a link": "एक लिंक जोड़ें",
             "Add": "जोड़ना",

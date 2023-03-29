@@ -144,7 +144,7 @@
         "Working directory": "Working directory",
         "configuration": "configuration",
         "initialization error": "initialization error",
-        "is in progress": "is in progress",
+        "is in progress": "{name} is in progress",
         "NoteEditor": {
             "Add a link": "Add a link",
             "Add": "Add",
