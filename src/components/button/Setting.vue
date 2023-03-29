@@ -15,7 +15,7 @@
             </div>
             <div class="w-full mt-2">
               <el-alert :title="t('Warning')"
-                description="If you modify the working directory, you need to move the files in the original directory to the new directory and restart the app."
+                :description="t('&Change working directory tip')"
                 type="warning" show-icon />
             </div>
             <div class="w-full">{{ t('&Total size of all files', { size: allFileSize }) }}</div>
@@ -41,7 +41,8 @@
       <el-tab-pane :label="t('Appearance')">
         <el-form :model="appStore.data" label-width="150px" :label-position="genLabelPosition()">
           <el-form-item :label="t('Language')">
-            <el-select v-model="appStore.data.settings.appearance.locale" class="m-2" :placeholder="t('Select')" filterable>
+            <el-select v-model="appStore.data.settings.appearance.locale" class="m-2" :placeholder="t('Select')"
+              filterable>
               <el-option v-for="(item, index) in settingOptions.locale.sort(elOptionArrSort)" :key="index"
                 :label="item.label + ' - ' + getLanguageMeta(item.value).nativeName" :value="item.value">
                 <span class="fl">{{ item.label }}</span>
@@ -65,6 +66,7 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <!-- TODO
       <el-tab-pane :label="t('Encryption')">
         <el-form :model="appStore.data" label-width="150px" :label-position="genLabelPosition()">
           <el-form-item :label="t('Master password')">
@@ -84,7 +86,6 @@
               <el-button @click="onToggleChangeMasterPassword()">{{ t('Cancel') }}</el-button>
               <el-button type="primary" @click="onSaveMasterPassword()"> {{ t('Confirm') }} </el-button>
             </el-form-item>
-            <!-- TODO: -->
             <div v-if="appStore.data.changeMasterPasswordStatus.percent > 0">
               <el-progress :text-inside="true" :stroke-width="15"
                 :percentage="appStore.data.changeMasterPasswordStatus.percent"
@@ -125,6 +126,7 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+    -->
     </el-tabs>
 
     <template #footer>
@@ -146,10 +148,11 @@ import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/pinia/modules/app'
 import { ReFileExt, MasterPasswordSalt } from '@/constants'
 import { ElPrecessItem } from '@/types_common'
-import { settingOptions, changeMasterPasswordProcessData } from '@/conf'
+import { settingOptions, changeMasterPasswordProgressData } from '@/conf'
 import { i18n, getLanguageMeta, setLocale } from '@/libs/init/i18n'
 import { invoker } from '@/libs/commands/invoke'
 import { getDataDirs } from '@/libs/init/dirs'
+import { saveConfToFile, saveStartUpConfFile } from '@/libs/init/conf_file'
 import { elOptionArrSort } from '@/utils/array'
 import { happybytes } from '@/utils/bytes'
 import { isMobileScreen } from '@/utils/media_query'
@@ -171,7 +174,7 @@ const getAllFileSize = async () => {
 
 // ---------- Change master password ----------
 const changeMasterPasswordProgressColor: ElPrecessItem[] = []
-for (const i of changeMasterPasswordProcessData) {
+for (const i of changeMasterPasswordProgressData) {
   changeMasterPasswordProgressColor.push({ color: i.color, percentage: i.percent })
 }
 
@@ -215,6 +218,9 @@ const onSave = (close: boolean) => {
       appStore.setData(appData)
     }
   }
+
+  saveConfToFile()
+  saveStartUpConfFile()
 }
 
 const genLabelPosition = () => {

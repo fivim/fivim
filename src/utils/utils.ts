@@ -88,3 +88,11 @@ export const genDialogWidth = () => {
     return '50%'
   }
 }
+
+export const getFileNameExt = (fileName: string) => {
+  return fileName.split('.').pop() || ''
+}
+
+export const fileNameIsImage = (fileName: string) => {
+  return ['bmp', 'jpg', 'jpeg', 'png', 'gif'].indexOf(getFileNameExt(fileName).toLowerCase()) >= 0
+}

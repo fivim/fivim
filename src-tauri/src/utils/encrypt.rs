@@ -29,7 +29,7 @@ pub fn gen_nonce(pwd: &str) -> [u8; SIZE_NONCE] {
     return u8_array_nonce(binding.as_slice());
 }
 
-pub fn encrypt_bytes(pwd: &str, content: &Vec<u8>) -> Vec<u8> {
+pub fn encrypt_bytes(pwd: &str, content: &Vec<u8>, progress_name: &str) -> Vec<u8> {
     let kkk = gen_key(pwd);
     let nnn = gen_nonce(pwd);
 
@@ -41,6 +41,7 @@ pub fn encrypt_bytes(pwd: &str, content: &Vec<u8>) -> Vec<u8> {
         "".to_string(),
         &[].to_vec(),
         &[].to_vec(),
+        progress_name.to_owned(),
     ) {
         Ok(d) => {
             return d.dist_vec;
@@ -52,11 +53,20 @@ pub fn encrypt_bytes(pwd: &str, content: &Vec<u8>) -> Vec<u8> {
     };
 }
 
-pub fn decrypt_bytes(pwd: &str, content: &Vec<u8>) -> Vec<u8> {
+pub fn decrypt_bytes(pwd: &str, content: &Vec<u8>, progress_name: &str) -> Vec<u8> {
     let kkk = gen_key(pwd);
     let nnn = gen_nonce(pwd);
 
-    match decrypt(&kkk, &nnn, &content, "".to_string(), "".to_string(), 0, 0) {
+    match decrypt(
+        &kkk,
+        &nnn,
+        &content,
+        "".to_string(),
+        "".to_string(),
+        0,
+        0,
+        progress_name.to_owned(),
+    ) {
         Ok(de) => return de.dist_vec,
         Err(e) => {
             xu_logger::log_error(&format!("decrypt_bytes error:{:?}\n", e));
@@ -65,12 +75,17 @@ pub fn decrypt_bytes(pwd: &str, content: &Vec<u8>) -> Vec<u8> {
     };
 }
 
-pub fn decrypt_bytes_to_string(pwd: &str, content: &Vec<u8>) -> String {
-    let dec = decrypt_bytes(pwd, content);
+pub fn decrypt_bytes_to_string(pwd: &str, content: &Vec<u8>, progress_name: &str) -> String {
+    let dec = decrypt_bytes(pwd, content, &progress_name.to_string());
     return xu_string::bytes_to_string(&dec);
 }
 
-pub fn encrypt_file(pwd: &str, source_path: &str, dist_path: &str) -> EncryptRes {
+pub fn encrypt_file(
+    pwd: &str,
+    source_path: &str,
+    dist_path: &str,
+    progress_name: &str,
+) -> EncryptRes {
     let kkk = gen_key(pwd);
     let nnn = gen_nonce(pwd);
 
@@ -82,6 +97,7 @@ pub fn encrypt_file(pwd: &str, source_path: &str, dist_path: &str) -> EncryptRes
         dist_path.to_owned(),
         &[].to_vec(),
         &[].to_vec(),
+        progress_name.to_string(),
     ) {
         Ok(d) => return d,
         Err(e) => {
@@ -106,6 +122,7 @@ pub fn decrypt_file(
     dist_path: &str,
     start: usize,
     end: usize,
+    progress_name: &str,
 ) -> EncryptRes {
     let kkk = gen_key(pwd);
     let nnn = gen_nonce(pwd);
@@ -120,6 +137,7 @@ pub fn decrypt_file(
         dist_path.to_owned(),
         start,
         end,
+        progress_name.to_string(),
     ) {
         Ok(d) => return d,
         Err(e) => {

@@ -107,6 +107,7 @@ defineExpose({ setContent })
 
 <style lang="scss">
 .codex-editor {
+  overflow-x: hidden;
 
   .ce-block__content,
   .ce-toolbar__content {

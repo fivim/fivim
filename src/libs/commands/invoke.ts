@@ -1,5 +1,5 @@
 //
-// The code in this file can be run independently of other code in the project, so that workers can call it normally.
+// The code in this file can be run independently of other code in the project.
 //
 
 import { invoke } from '@tauri-apps/api/tauri'
@@ -7,7 +7,7 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { AppCoreConfInfo } from '@/types'
 import { stringToUint8Array } from '@/utils/string'
 
-import { WriteFileRes, UserDataFile, UserDataParseAs, FileMeta } from './types'
+import { WriteFileRes, UserDataFile, UserDataParseAs, FileMeta, ProgressStatus } from './types'
 
 export type SyncListResItemLocalDisk = {
   file_name: string,
@@ -87,15 +87,19 @@ export const invoker = {
   stringCrc32: (str: string) =>
     invoke('string_crc32', { string: str }) as Promise<number>,
 
+  // other
+  getProgress: (progressName: string) =>
+    invoke('get_progress', { progressName }) as Promise<ProgressStatus>,
+
   // user data file
   // In the following read/write user data funcfions,
   // param pwd should call genFilePwd(in src/libs/commands/index.ts) first.
-  readUserDataFile: (pwd: string, filePath: string, alwaysOpenInMemory: boolean, parseAs: UserDataParseAs, targetFilePath: string) => {
-    return invoke('read_user_data_file', { pwd, filePath, alwaysOpenInMemory, parseAs, targetFilePath }) as Promise<UserDataFile>
+  readUserDataFile: (pwd: string, filePath: string, alwaysOpenInMemory: boolean, parseAs: UserDataParseAs, targetFilePath: string, progressName: string) => {
+    return invoke('read_user_data_file', { pwd, filePath, alwaysOpenInMemory, parseAs, targetFilePath, progressName }) as Promise<UserDataFile>
   },
-  writeUserDataFile: (pwd: string, filePath: string, fileName: string, content: object, sourceOfLargeFilePath: string) => {
+  writeUserDataFile: (pwd: string, filePath: string, fileName: string, content: object, sourceOfLargeFilePath: string, progressName: string) => {
     const fileContent = Array.from(stringToUint8Array(JSON.stringify(content)))
-    return invoke('write_user_data_file', { pwd, filePath, fileName, fileContent, sourceOfLargeFilePath }) as Promise<boolean>
+    return invoke('write_user_data_file', { pwd, filePath, fileName, fileContent, sourceOfLargeFilePath, progressName }) as Promise<boolean>
   },
 
   // ---------- combined functions ----------

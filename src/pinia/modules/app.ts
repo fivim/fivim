@@ -59,16 +59,10 @@ export const useAppStore = defineStore('appStore', () => {
     localStorage.clear()
   }
 
-  const resetEditor = () => {
-    const defaultData = jsonCopy(tmplAppData) as AppInfo
-    data.value.currentFile = defaultData.currentFile
-  }
-
   return {
     data,
     checkMasterPasswordLength,
     clearStorage,
-    resetEditor,
     setCurrentFile,
     setData,
     setListColData,

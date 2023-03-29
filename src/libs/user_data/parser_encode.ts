@@ -150,12 +150,12 @@ export const saveNotebookFile = async (isCurrent: boolean, fileName: string) => 
 
   // save the data of the notebook opened currently
   if (isCurrent) {
-    if (appStore.data.listCol.noteList.length === 0) {
+    if (appStore.data.listCol.listOfNote.length === 0) {
       return Promise.resolve(true)
     }
 
     fileName = genCurrentNotebookFileName()
-    content = genNotebookFileContent(appStore.data.listCol.noteList as NoteInfo[])
+    content = genNotebookFileContent(appStore.data.listCol.listOfNote as NoteInfo[])
   } else {
     if (fileName === '') {
       invoker.logError('saveNotebookFile but fileName is empty!')

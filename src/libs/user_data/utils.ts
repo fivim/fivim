@@ -1,6 +1,6 @@
 import { ElMessage } from 'element-plus'
 
-import { ErrorMessagesInfo } from '@/types'
+import { MessagesInfo } from '@/types'
 import { StrSignOk, StrSignErr } from '@/constants'
 import { getDataDirs } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
@@ -34,15 +34,15 @@ export const writeEncryptedUserDataToFile = (dir: string, fileName: string, cont
     console.log('>>> writeEncryptedUserDataToFile content:: ', content)
   }
 
-  return invoker.writeUserDataFile(genFilePwd(''), dir + fileName, fileName, content, '')
+  return invoker.writeUserDataFile(genFilePwd(''), dir + fileName, fileName, content, '', '')
 }
 
 export const readNotebookdata = async (sign: string) => {
   const path = await getNotebookFilePath(sign)
-  const fileData = await invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '')
+  const fileData = await invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '', '')
 
   if (fileData.crc32 !== fileData.crc32_check) {
-    const msg = ErrorMessagesInfo.FileVerificationFailed
+    const msg = MessagesInfo.FileVerificationFailed
     invoker.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
     // return Promise.reject(new Error(msg))
   }
@@ -60,7 +60,7 @@ export const readNotebookdata = async (sign: string) => {
 }
 
 export const writeUserData = (filePath: string, fileName: string, fileContent: object) => {
-  return invoker.writeUserDataFile(genFilePwd(''), filePath, fileName, fileContent, '')
+  return invoker.writeUserDataFile(genFilePwd(''), filePath, fileName, fileContent, '', '')
 }
 
 export const addFileMeta = async (dir: string, fileName: string) => {
@@ -144,7 +144,7 @@ export const saveCurrentNotebook = async (): Promise<string> => {
 
   // Save current notebook, and record the sha256 into entry file
   return saveNotebookFile(true, '').then((saveNotebookRes) => {
-    if (appStore.data.listCol.noteList.length > 0) {
+    if (appStore.data.listCol.listOfNote.length > 0) {
       if (!saveNotebookRes) {
         return t('&Failed to save file:', { fileName: genCurrentNotebookFileName() })
       }
@@ -233,11 +233,11 @@ export const deleteTag = async (sign: string) => {
       // Delete tag of note
       // If the notebook is opened, just modify the pane data.
       if (listColData.sign === nb.sign) {
-        for (let ici = 0; ici < listColData.noteList.length; ici++) {
-          const item = listColData.noteList[ici]
+        for (let ici = 0; ici < listColData.listOfNote.length; ici++) {
+          const item = listColData.listOfNote[ici]
           const iii = item.tagsArr.indexOf(sign)
           if (iii >= 0) {
-            listColData.noteList[ici].tagsArr.splice(iii, 1)
+            listColData.listOfNote[ici].tagsArr.splice(iii, 1)
           }
         }
         appStore.setListColData(listColData)

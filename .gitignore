@@ -24,4 +24,4 @@ coverage
 *.sln
 *.sw?
 
-pnpm-lock.yaml
+# pnpm-lock.yaml

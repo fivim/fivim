@@ -13,7 +13,9 @@ use std::{
     io::{Read, Seek, SeekFrom, Write},
 };
 
-use xutils::{array_like as xu_array, file as xu_file, string as xu_string};
+use xutils::{
+    array_like as xu_array, file as xu_file, progress as xu_progress, string as xu_string,
+};
 
 pub const SIZE_KEY: usize = 32;
 const SIZE_NONCE_SMALL: usize = 24;
@@ -53,6 +55,7 @@ pub fn encrypt(
     dist_path: String,
     file_header: &Vec<u8>,
     file_tail: &Vec<u8>,
+    progress_name: String,
 ) -> Result<EncryptRes, anyhow::Error> {
     const BUFFER_LEN: usize = 500;
     let mut res = EncryptRes {
@@ -84,9 +87,12 @@ pub fn encrypt(
     let mut buffer = [0u8; BUFFER_LEN];
     let mut data_length: usize = 0;
 
+    xu_progress::insert_progress_new(&progress_name);
+    let mut read_length: usize = 0;
+
     if use_vec && vec_len > 0 {
         // Process by vector
-        let mut step_start = 0;
+        let mut step_start: usize = 0;
         let mut step_end = step_start + BUFFER_LEN;
         let mut res_buffer: Vec<u8> = [].to_vec();
         let bytes_size = vec_len;
@@ -105,6 +111,8 @@ pub fn encrypt(
 
                 step_start += BUFFER_LEN;
                 step_end += BUFFER_LEN;
+
+                xu_progress::set_progress(&progress_name, (step_end / bytes_size) as f32, "");
             } else {
                 // The last buffer
                 let last = &vec[step_start..bytes_size];
@@ -119,11 +127,13 @@ pub fn encrypt(
                 res_buffer = [res_buffer, cipher_vec].concat();
                 res.dist_vec = res_buffer;
 
+                xu_progress::set_progress(&progress_name, 1.0, "");
                 break;
             }
         }
     } else {
         // Process by file
+        let file_size = xu_file::get_size(&file_path) as usize;
         let mut source_file = File::open(file_path)?;
         let mut dist_file = File::create(dist_path)?;
 
@@ -142,6 +152,13 @@ pub fn encrypt(
                         })?;
                 dist_file.write(&cipher_vec)?;
                 data_length += cipher_vec.len();
+                
+                xu_progress::set_progress(
+                    &progress_name,
+                    read_length as f32 / file_size as f32,
+                    "",
+                );
+                read_length += BUFFER_LEN;
             } else {
                 // The last buffer
                 let cipher_vec = stream_encryptor
@@ -151,6 +168,8 @@ pub fn encrypt(
                     })?;
                 dist_file.write(&cipher_vec)?;
                 data_length += cipher_vec.len();
+
+                xu_progress::set_progress(&progress_name, 1.0, "");
                 break;
             }
         }
@@ -180,6 +199,7 @@ pub fn decrypt(
     dist_path: String,
     start: usize,
     end: usize,
+    progress_name: String,
 ) -> Result<EncryptRes, anyhow::Error> {
     const BUFFER_LEN: usize = 500 + 16;
     let mut res = EncryptRes {
@@ -231,6 +251,9 @@ pub fn decrypt(
         enable_limit = true;
     }
 
+    xu_progress::insert_progress_new(&progress_name);
+    let mut read_length: usize = 0;
+
     // Use stream to process vec content.
     if use_vec && vec_len > 0 {
         // Process by vector.
@@ -261,6 +284,8 @@ pub fn decrypt(
 
                 step_start += BUFFER_LEN;
                 step_end += BUFFER_LEN;
+
+                xu_progress::set_progress(&progress_name, (step_end / bytes_size) as f32, "");
             } else {
                 // The last buffer
                 #[warn(unused_assignments)]
@@ -288,12 +313,14 @@ pub fn decrypt(
                 res.dist_vec = [res.dist_vec, plaintext].concat();
                 res.encrypted_data_len = res.dist_vec.len();
 
+                xu_progress::set_progress(&progress_name, 1.0, "");
+
                 break;
             }
         }
     } else {
         // Process by file
-        let file_size = xu_file::get_size(&file_path);
+        let file_size = xu_file::get_size(&file_path) as usize;
         let mut tail_length = 0;
         if end > 0 {
             tail_length = file_size as usize - end;
@@ -327,6 +354,13 @@ pub fn decrypt(
 
                 dist_file.write(&plaintext)?;
                 data_length += plaintext.len();
+
+                xu_progress::set_progress(
+                    &progress_name,
+                    read_length as f32 / file_size as f32,
+                    "",
+                );
+                read_length += BUFFER_LEN;
             } else if read_count == 0 {
                 break;
             } else {
@@ -351,6 +385,9 @@ pub fn decrypt(
                     })?;
                 dist_file.write(&plaintext)?;
                 data_length += plaintext.len();
+
+                xu_progress::set_progress(&progress_name, 1.0, "");
+                read_length += read_count;
                 break;
             }
         }
@@ -376,12 +413,22 @@ pub fn test_string(text: &str) {
         "".to_string(),
         &[].to_vec(),
         &[].to_vec(),
+        "".to_string(),
     ) {
         Ok(d) => d.dist_vec,
         Err(e) => return print!("test encrypt error {}\n", e),
     };
 
-    let dec_text = match decrypt(&kkk, &nnn, &enc_text, "".to_string(), "".to_string(), 0, 0) {
+    let dec_text = match decrypt(
+        &kkk,
+        &nnn,
+        &enc_text,
+        "".to_string(),
+        "".to_string(),
+        0,
+        0,
+        "".to_string(),
+    ) {
         Ok(de) => de,
         Err(e) => return print!("test decrypt error {}\n", e),
     };
@@ -419,6 +466,7 @@ pub fn test_file(
         enc_dist_path.to_owned(),
         header,
         tail,
+        "".to_string(),
     ) {
         Ok(d) => d,
         Err(e) => {
@@ -435,6 +483,7 @@ pub fn test_file(
         dec_dist_path.to_owned(),
         header.len(),
         tail.len(),
+        "".to_string(),
     ) {
         Ok(d) => d,
         Err(e) => {

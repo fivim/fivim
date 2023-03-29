@@ -45,3 +45,9 @@
 .el-button+.el-button {
   margin-left: 0.5rem !important;
 }
+
+.small {
+  .el-form-item {
+    margin-bottom: 0 !important;
+  }
+}

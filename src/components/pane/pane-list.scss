@@ -91,13 +91,7 @@
       border: none;
       cursor: pointer;
       width: 100%;
-      $item-height: 1.5rem;
-
-      .selected {
-        border-left: 2px solid var(--enas-highlight-color);
-        background-color: var(--enas-background-secondary-color);
-        color: var(--enas-highlight-color);
-      }
+      $item-height: 1.5rem;     
 
       @media screen and (hover: hover) {
         &:hover {

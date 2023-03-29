@@ -1,5 +1,5 @@
 import { UserDataInfo } from '@/libs/user_data/types'
-import { CurrentFileInfo, ListColInfo } from '@/components/pane/types'
+import { CurrentFileInfo, ListColInfo, NavColInfo } from '@/components/pane/types'
 import { TimeHashedSignType } from '@/utils/hash'
 
 export type TextDirectionInfo = 'LTR' | 'RTL'
@@ -29,9 +29,14 @@ export type ChangeMasterPasswordStatusInfo = {
     totalNumber: number
 }
 
-export type ChangeMasterPasswordProcessItemInfo = {
+export type ProgressItemInfo = {
     percent: number
     color: string
+}
+
+export type CurrentProgressInfo = {
+    percent: number
+    taskName: string
 }
 
 export type DataPathInfo = {
@@ -92,6 +97,7 @@ export type AppInfo = {
     changeLocaleTimestamp: number // record timestamp for editor i18n
     changeMasterPasswordStatus: ChangeMasterPasswordStatusInfo
     currentFile: CurrentFileInfo
+    currentProgress: CurrentProgressInfo
     currentTheme: string
     dataPath: DataPathInfo
     defaultLocale: string,
@@ -100,6 +106,7 @@ export type AppInfo = {
     existConfigFile: boolean
     isWebPage: boolean
     listCol: ListColInfo
+    navCol: NavColInfo
     lockscreen: boolean
     settings: SettingInfo
     textDirection: TextDirectionInfo
@@ -107,6 +114,7 @@ export type AppInfo = {
     version: string
 }
 
-export enum ErrorMessagesInfo {
-    FileVerificationFailed = 'File verification failed' // TODO add translate
+export enum MessagesInfo {
+    FileVerificationFailed = 'File verification failed',
+    FileStillInProgress = '&have task in progress'
 }

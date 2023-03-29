@@ -21,6 +21,8 @@ const insertStyleSheet = (style: string) => {
 }
 
 export const initStyle = () => {
+  const appStore = useAppStore()
+
   if (!showTitleBar()) {
     insertStyleSheet(`
       #desktop-title-bar { 

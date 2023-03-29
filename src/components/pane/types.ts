@@ -1,5 +1,5 @@
 import { TypeFile, TypeTag, TypeNote } from '@/constants'
-import { NoteInfo, DocTypeInfo, FileTypeInfo } from '@/libs/user_data/types'
+import { NoteInfo, TypeDocInfo, TypeFileInfo, TagListItemInfo } from '@/libs/user_data/types'
 
 export type ListColTypeInfo = typeof TypeFile | typeof TypeTag | typeof TypeNote
 
@@ -27,7 +27,7 @@ export type PaneControllerInfo = {
 export type CurrentFileInfo = {
   sign: string // hashed file name of currently opened
   indexInList: number // the index in list of the list column
-  type: DocTypeInfo | FileTypeInfo
+  type: TypeDocInfo | TypeFileInfo
   content: string
   title: string
   tagsArr: string[]
@@ -36,8 +36,13 @@ export type CurrentFileInfo = {
 export type ListColInfo = {
   sign: string
   icon: string
-  noteList: NoteInfo[]
+  listOfNote: NoteInfo[]
+  listOfTag: TagListItemInfo[]
   title: string
   tagsArr: string[]
   type: ListColTypeInfo
+}
+
+export type NavColInfo = {
+  sign: string
 }
