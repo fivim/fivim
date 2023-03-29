@@ -2,8 +2,7 @@
   <!-- desktop title bar -->
   <DesktopTitleBar :showExtButtons="true" v-if="isDesktopMode() && !isMobileMode()">
     <template #titleName>
-      {{ appStore.data.currentFile.title ? appStore.data.currentFile.title + " - " + appStore.data.appName :
-        appStore.data.appName }}
+      {{ genTitleText() }}
     </template>
   </DesktopTitleBar>
 
@@ -53,6 +52,7 @@
 
 <script setup lang="ts">
 import { ref, defineAsyncComponent } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DesktopTitleBar from '@/components/layout/desktop/titleBar/DesktopTitleBar.vue'
 import type { PaneControllerInfo } from '@/components/pane/types'
@@ -67,6 +67,21 @@ import { classNames } from '@/utils/string'
 import { useAppStore } from '@/pinia/modules/app'
 
 const appStore = useAppStore()
+const { t } = useI18n()
+
+const genTitleText = () => {
+  let title = appStore.data.appName
+  if (appStore.data.currentFile.title) {
+    title = appStore.data.currentFile.title + ' - ' + title
+  }
+
+  if (appStore.data.currentProgress.percent > 0) {
+    const name = t(appStore.data.currentProgress.taskName)
+    title += `(${t('is in progress', { name })})`
+  }
+
+  return title
+}
 
 // ---------- panes ----------
 const paneController: PaneControllerInfo = {

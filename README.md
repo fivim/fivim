@@ -3,7 +3,6 @@
   enassi
 </h1>
 
-
 <h4 align="center">Enassi is your data encryption assistant.</h4>
 
 <div align="center">
@@ -23,8 +22,6 @@
       <img src="https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg">
   </a>
 </div>
-
-> ⚠️ So far, this project is still under development.
 
 ## Features
 
@@ -91,17 +88,17 @@ Tauri currently supports development and distribution on the following platforms
 - Debian (Ubuntu 18.04 and above or equivalent)
 - Fedora (latest 2 versions)
 
-## Roadmap
+## Todo
+
+[ ] change master password
 
 [ ] list tag items
 
-[ ] change master password
+[ ] sync
 
 [ ] import / export note data
 
 [ ] optimize the style of emoji-picker 
-
-[ ] sync
 
 [ ] add shortcut key 
 

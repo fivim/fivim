@@ -1,6 +1,6 @@
 import { ElMessageBox } from 'element-plus'
 
-import { ErrorMessagesInfo } from '@/types'
+import { MessagesInfo } from '@/types'
 import { getDataDirs } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
 import { tmplEntryFileData } from '@/types_template'
@@ -23,7 +23,7 @@ export const initEntryFile = async () => {
 
   return invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '', '').then((fileData) => {
     if (fileData.crc32 !== fileData.crc32_check) {
-      const msg = ErrorMessagesInfo.FileVerificationFailed
+      const msg = MessagesInfo.FileVerificationFailed
       invoker.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
       // return Promise.reject(new Error(msg))
     }

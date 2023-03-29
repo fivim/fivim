@@ -32,7 +32,7 @@ export type FileMeta = {
     size: number,
 }
 
-export type ProcessStatus = {
+export type ProgressStatus = {
     percentage: number,
     step_name: string,
 }

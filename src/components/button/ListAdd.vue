@@ -6,7 +6,7 @@
   <template v-else-if="appStore.data.listCol.type === TypeNote">
     <XPopover refId="listAddBtnPop" placement="top-start" trigger="click" :propTitle="t('Add')">
       <template #reference>
-        <ElButton :icon="Plus" circle />
+        <el-button :icon="Plus" circle />
       </template>
 
       <div class="enas-list">
@@ -18,7 +18,7 @@
   </template>
 
   <!-- add file dialog -->
-  <el-dialog v-model="tempAddFile.visible" :title="t('Add')" :width="genDialogWidth()">
+  <el-dialog v-model="tempAddFile.visible" :title="t('Add file')" :width="genDialogWidth()">
     <el-form :model="appStore.data" label-width="150px">
       <el-form-item :label="t('File')">
         <div class="w-full">
@@ -56,7 +56,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import { FileTextOutlined, TableOutlined } from '@ant-design/icons-vue'
+import { FileTextOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { open as openDialog } from '@tauri-apps/api/dialog'
 
@@ -64,7 +64,7 @@ import XPopover from '@/components/widget/XPopover.vue'
 import SelectTagButton from '@/components/button/SelectTag.vue'
 import SmallTagList from '@/components/widget/SmallTagList.vue'
 
-import { ExtDataPathInfo, ErrorMessagesInfo } from '@/types'
+import { ExtDataPathInfo, MessagesInfo } from '@/types'
 import { TypeNote, TypeFile, TaskEncrypt } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { NoteInfo, TagInfo } from '@/libs/user_data/types'
@@ -72,9 +72,8 @@ import { getDataDirs } from '@/libs/init/dirs'
 import { genFilePwd } from '@/libs/commands'
 import { invoker } from '@/libs/commands/invoke'
 import { saveToEntryFile, addFileMeta } from '@/libs/user_data/utils'
-import { genFileName, getFileNameFromPath } from '@/utils/pinia_related'
+import { genFileName, getFileNameFromPath, listenProgressStatus } from '@/utils/pinia_related'
 import { genUuidv4 } from '@/utils/hash'
-import { round } from '@/utils/number'
 import { genDialogWidth } from '@/utils/utils'
 
 const appStore = useAppStore()
@@ -156,16 +155,16 @@ const onAddFileSelectFIle = () => {
 }
 
 const doAddFile = async (sourcePath: string, p: ExtDataPathInfo, fileName: string) => {
-  // process bar
+  // progress bar
   if (appStore.data.currentProgress.percent > 0) {
-    ElMessage(t(ErrorMessagesInfo.FileStillInProcess))
+    ElMessage(t(MessagesInfo.FileStillInProgress))
     return
   }
-  const processName = genUuidv4()
+  const progressName = genUuidv4()
+  listenProgressStatus(progressName, TaskEncrypt)
 
   const dir = p.pathOfCurrentDir
-
-  invoker.writeUserDataFile(genFilePwd(''), dir + fileName, fileName, {}, sourcePath, processName).then(async (success) => {
+  invoker.writeUserDataFile(genFilePwd(''), dir + fileName, fileName, {}, sourcePath, progressName).then(async (success) => {
     if (success) {
       const ad = appStore.data
       if (!ad.userData.files) {
@@ -190,22 +189,6 @@ const doAddFile = async (sourcePath: string, p: ExtDataPathInfo, fileName: strin
       saveToEntryFile()
     }
   })
-
-  // process bar
-  appStore.data.currentProgress.taskName = TaskEncrypt
-  const itmerProcess = setInterval(async () => {
-    invoker.getProcess(processName).then((data) => {
-      const pct = data.percentage * 100
-      const ad = appStore.data
-      ad.currentProgress.percent = pct
-
-      if (round(pct) === 100) {
-        clearInterval(itmerProcess)
-        ad.currentProgress.percent = 0
-      }
-      appStore.setData(ad)
-    })
-  }, 500)
 }
 
 const tagExist = (sign: string) => {

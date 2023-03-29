@@ -1,5 +1,5 @@
 :root {
-  --enas-z-index-title-bar-process-bar: 8;
+  --enas-z-index-title-bar-progress-bar: 8;
   --enas-z-index-title-bar-content: 9;
   --enas-z-index-editor-title-bar: 10;
   --enas-z-index-resizer-overlay: 11;
@@ -35,7 +35,12 @@
   --enas-ring-offset-shadow: 0 0 #0000;
   --enas-ring-shadow: 0 0 #0000;
 
-  // Color of each part
+  // progress-bar
+  --enas-progress-bar-start-color: rgb(128, 0, 255);
+  --enas-progress-bar-middle-color: rgb(39, 158, 255);
+  --enas-progress-bar-end-color: rgb(0, 178, 0);
+
+  // Color of columns
   --enas-title-bar-background-color: var(--enas-background-secondary-color);
   --enas-title-bar-foreground-color: var(--enas-foreground-primary-color);
 

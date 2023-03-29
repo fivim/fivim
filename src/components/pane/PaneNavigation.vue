@@ -287,8 +287,6 @@ const tempNbTagExist = (sign: string) => {
       }
     }
     return false
-  } else {
-    CmdAdapter().notification(t('Unknow action: '), tempNb.value.dialogType, '')
   }
 }
 

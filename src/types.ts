@@ -29,7 +29,7 @@ export type ChangeMasterPasswordStatusInfo = {
     totalNumber: number
 }
 
-export type ProcessItemInfo = {
+export type ProgressItemInfo = {
     percent: number
     color: string
 }
@@ -114,7 +114,7 @@ export type AppInfo = {
     version: string
 }
 
-export enum ErrorMessagesInfo {
-    FileVerificationFailed = 'File verification failed', // TODO add translate
-    FileStillInProcess = 'There is still task in progress, please try again later.'
+export enum MessagesInfo {
+    FileVerificationFailed = 'File verification failed',
+    FileStillInProgress = '&have task in progress'
 }

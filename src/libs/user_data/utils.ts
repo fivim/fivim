@@ -1,6 +1,6 @@
 import { ElMessage } from 'element-plus'
 
-import { ErrorMessagesInfo } from '@/types'
+import { MessagesInfo } from '@/types'
 import { StrSignOk, StrSignErr } from '@/constants'
 import { getDataDirs } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
@@ -42,7 +42,7 @@ export const readNotebookdata = async (sign: string) => {
   const fileData = await invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '', '')
 
   if (fileData.crc32 !== fileData.crc32_check) {
-    const msg = ErrorMessagesInfo.FileVerificationFailed
+    const msg = MessagesInfo.FileVerificationFailed
     invoker.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
     // return Promise.reject(new Error(msg))
   }

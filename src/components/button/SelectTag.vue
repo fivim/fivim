@@ -1,5 +1,5 @@
 <template>
-  <XPopover refId="notebookIconBtnPop" placement="bottom-start" trigger="click" :propTitle="t('Icon')" :widthAuto="true">
+  <XPopover refId="selectTagBtnPop" placement="bottom-start" trigger="click" :propTitle="t('Icon')" :widthAuto="true">
     <template #reference>
       <el-button v-if="useIcon" :icon="CollectionTag" circle />
       <el-button v-else>{{ t('Tag') }}</el-button>

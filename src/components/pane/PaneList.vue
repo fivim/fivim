@@ -40,8 +40,8 @@
           <!-- for note list -->
           <template v-if="appStore.data.listCol.type === TypeNote">
             <div class="content-list">
-              <div v-for="(item, index) in appStore.data.listCol.listOfNote" v-bind:key="index" @click="onClickNote(index)"
-                class="content-list-item">
+              <div v-for="(item, index) in appStore.data.listCol.listOfNote" v-bind:key="index"
+                @click="onClickNote(index)" class="content-list-item">
                 <div :class="item.sign === appStore.data.currentFile.sign ? 'item-selected p-2' : 'p-2'">
                   <div class="disp-flex">
                     <div class="left">
@@ -123,7 +123,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Tickets, Grid } from '@element-plus/icons-vue'
+import { Tickets } from '@element-plus/icons-vue'
 
 import ListAddButton from '@/components/button/ListAdd.vue'
 import ListShareButton from '@/components/button/ListShareFile.vue'
@@ -207,14 +207,14 @@ const onClickNote = (index: number) => {
 const onClickFile = (index: number) => {
   const file = appStore.data.userData.files[index]
 
-  const adc = appStore.data.currentFile
-  adc.content = file.content
-  adc.title = file.title
-  adc.sign = file.sign
-  adc.tagsArr = file.tagsArr
-  adc.indexInList = index
-  adc.type = TypeFile
-  appStore.setCurrentFile(adc)
+  const ad = appStore.data
+  ad.currentFile.content = file.content
+  ad.currentFile.title = file.title
+  ad.currentFile.sign = file.sign
+  ad.currentFile.tagsArr = file.tagsArr
+  ad.currentFile.indexInList = index
+  ad.currentFile.type = TypeFile
+  appStore.setData(ad)
 }
 // -------- file end --------
 

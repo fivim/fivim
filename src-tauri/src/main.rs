@@ -64,7 +64,7 @@ fn main() {
             commands::read_user_data_file,
             commands::write_user_data_file,
             // other
-            commands::get_process
+            commands::get_progress
         ])
         .setup(|app| {
             menu::make_tray_menu(app)?;

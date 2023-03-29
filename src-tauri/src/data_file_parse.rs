@@ -211,7 +211,7 @@ pub fn read_file(
     always_open_in_memory: bool,
     parse_as: &str,
     target_file_path: &str,
-    process_name: String
+    progress_name: String
 ) -> Result<UserFileData, xu_error> {
     let meta = get_file_meta(file_path);
     let file_size_kb: usize = (meta.file_data_len / 1024).try_into().unwrap();
@@ -222,11 +222,11 @@ pub fn read_file(
         match xu_file::read_to_bytes(&file_path) {
             Ok(content) => {
                 let mut psd = parse_small_data(&content);
-                let bin = x_encrypt::decrypt_bytes(pwd, &psd.file_data, &process_name);
+                let bin = x_encrypt::decrypt_bytes(pwd, &psd.file_data, &progress_name);
 
                 // parse data
                 if parse_as == "string" {
-                    psd.file_data_str = x_encrypt::decrypt_bytes_to_string(pwd, &psd.file_data, &process_name);
+                    psd.file_data_str = x_encrypt::decrypt_bytes_to_string(pwd, &psd.file_data, &progress_name);
                 } else {
                     if parse_as == "base64" {
                         let b64 = &b64_STANDARD;
@@ -269,7 +269,7 @@ pub fn read_file(
             target_file_path,
             meta.file_data_start_pos,
             meta.file_data_end_pos,
-            &process_name,
+            &progress_name,
         );
     }
 
@@ -290,7 +290,7 @@ pub fn write_file(
     file_name: &str,
     vec_data: Vec<u8>,
     large_file_source_path: &str,
-    process_name: String
+    progress_name: String
 ) -> Result<bool, xu_error> {
     // First encrypt the file directly.
     // If the file is not too large, operate directly in memory,
@@ -298,7 +298,7 @@ pub fn write_file(
 
     if large_file_source_path == "" {
         // Operate all data in memory.
-        let enc_data = x_encrypt::encrypt_bytes(pwd, &vec_data, &process_name);
+        let enc_data = x_encrypt::encrypt_bytes(pwd, &vec_data, &progress_name);
         let [header, item_tail] =
             gen_file_meta(file_name, sha256_crc32_bytes(&enc_data), enc_data.len());
         let res = [header, enc_data, item_tail.to_vec()].concat();
@@ -314,7 +314,7 @@ pub fn write_file(
             pwd,
             large_file_source_path,
             dist_path,
-            &process_name,
+            &progress_name,
         );
         if enc_data.encrypted_data_len > 0 {
             let [header, tail] = gen_file_meta(

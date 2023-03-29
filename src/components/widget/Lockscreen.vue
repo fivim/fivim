@@ -67,6 +67,7 @@ const checkPassword = () => {
       }).catch((err: Error) => {
         const t = i18n.global.t
         const typeName = t('configuration')
+        invoker.logError('initEntryFile error: ' + err)
         CmdAdapter().notification(t('&Error initializing file', { name: typeName }), t(err.message), '')
         return false
       })

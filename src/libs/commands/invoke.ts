@@ -7,7 +7,8 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { AppCoreConfInfo } from '@/types'
 import { stringToUint8Array } from '@/utils/string'
 
-import { WriteFileRes, UserDataFile, UserDataParseAs, FileMeta, ProcessStatus } from './types'
+import { WriteFileRes, UserDataFile, UserDataParseAs, FileMeta, ProgressStatus } from './types'
+
 export type SyncListResItemLocalDisk = {
   file_name: string,
   is_dir: boolean,
@@ -87,18 +88,18 @@ export const invoker = {
     invoke('string_crc32', { string: str }) as Promise<number>,
 
   // other
-  getProcess: (processName: string) =>
-    invoke('get_process', { processName }) as Promise<ProcessStatus>,
+  getProgress: (progressName: string) =>
+    invoke('get_progress', { progressName }) as Promise<ProgressStatus>,
 
   // user data file
   // In the following read/write user data funcfions,
   // param pwd should call genFilePwd(in src/libs/commands/index.ts) first.
-  readUserDataFile: (pwd: string, filePath: string, alwaysOpenInMemory: boolean, parseAs: UserDataParseAs, targetFilePath: string, processName: string) => {
-    return invoke('read_user_data_file', { pwd, filePath, alwaysOpenInMemory, parseAs, targetFilePath, processName }) as Promise<UserDataFile>
+  readUserDataFile: (pwd: string, filePath: string, alwaysOpenInMemory: boolean, parseAs: UserDataParseAs, targetFilePath: string, progressName: string) => {
+    return invoke('read_user_data_file', { pwd, filePath, alwaysOpenInMemory, parseAs, targetFilePath, progressName }) as Promise<UserDataFile>
   },
-  writeUserDataFile: (pwd: string, filePath: string, fileName: string, content: object, sourceOfLargeFilePath: string, processName: string) => {
+  writeUserDataFile: (pwd: string, filePath: string, fileName: string, content: object, sourceOfLargeFilePath: string, progressName: string) => {
     const fileContent = Array.from(stringToUint8Array(JSON.stringify(content)))
-    return invoke('write_user_data_file', { pwd, filePath, fileName, fileContent, sourceOfLargeFilePath, processName }) as Promise<boolean>
+    return invoke('write_user_data_file', { pwd, filePath, fileName, fileContent, sourceOfLargeFilePath, progressName }) as Promise<boolean>
   },
 
   // ---------- combined functions ----------

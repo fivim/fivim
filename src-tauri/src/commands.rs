@@ -170,7 +170,7 @@ pub async fn read_user_data_file(
     always_open_in_memory: bool,
     parse_as: String,
     target_file_path: String,
-    process_name: String,
+    progress_name: String,
 ) -> x_parser::UserFileData {
     match x_parser::read_file(
         pwd.as_str(),
@@ -178,7 +178,7 @@ pub async fn read_user_data_file(
         always_open_in_memory,
         parse_as.as_str(),
         target_file_path.as_str(),
-        process_name.to_string(),
+        progress_name.to_string(),
     ) {
         Ok(res) => return res,
         Err(_) => {
@@ -194,7 +194,7 @@ pub async fn write_user_data_file(
     file_name: String,
     file_content: Vec<u8>,
     source_of_large_file_path: String,
-    process_name: String,
+    progress_name: String,
 ) -> bool {
     match x_parser::write_file(
         pwd.as_str(),
@@ -202,7 +202,7 @@ pub async fn write_user_data_file(
         file_name.as_str(),
         file_content,
         source_of_large_file_path.as_str(),
-        process_name.to_string(),
+        progress_name.to_string(),
     ) {
         Ok(res) => {
             return res;
@@ -218,8 +218,8 @@ pub async fn write_user_data_file(
 }
 
 #[tauri::command]
-pub async fn get_process(process_name: String) -> xu_progress::Status {
-    return xu_progress::get_progress(&process_name);
+pub async fn get_progress(progress_name: String) -> xu_progress::Status {
+    return xu_progress::get_progress(&progress_name);
 }
 
 #[tauri::command]

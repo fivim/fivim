@@ -21,6 +21,10 @@ export const initWithStartUpConfFile = async () => {
       return false
     }
 
+    if (import.meta.env.TAURI_DEBUG) {
+      console.log('>>> initWithStartUpConfFile data:: ', JSON.parse(data))
+    }
+
     const conf = JSON.parse(data as string) as SettingOfStartUpInfo
     const appStore = useAppStore()
     const settings = appStore.data.settings
@@ -58,6 +62,10 @@ export const saveStartUpConfFile = async () => {
     }
   }
 
+  if (import.meta.env.TAURI_DEBUG) {
+    console.log('>>> saveStartUpConfFile data:: ', content)
+  }
+
   invoker.encryptObjectToFile(ConfigStartUpPwd, p.pathOfConfigStartUp, content)
 }
 
@@ -66,6 +74,10 @@ export const initWithConfFile = async (pwdSha256: string, successCallback: Calla
   return invoker.decryptFileToString(genPwd(pwdSha256), p.pathOfConfig).then(async (data: string) => {
     if (data === '') {
       return false
+    }
+
+    if (import.meta.env.TAURI_DEBUG) {
+      console.log('>>> initWithConfFile data:: ', JSON.parse(data))
     }
 
     const appStore = useAppStore()
@@ -94,6 +106,9 @@ export const initWithConfFile = async (pwdSha256: string, successCallback: Calla
       return false
     }
 
+    setLocale(conf.appearance.locale)
+    setTheme(conf.appearance.theme)
+
     const setSuccess = await appStore.setSettingData(conf, false)
     if (setSuccess && successCallback) {
       successCallback()
@@ -108,8 +123,11 @@ export const saveConfToFile = async () => {
   const settings = appStore.data.settings
   const p = await getDataDirs()
 
-  const pwdSha256 = settings.encryption.masterPassword
+  if (import.meta.env.TAURI_DEBUG) {
+    console.log('>>> saveConfToFile data:: ', settings)
+  }
 
+  const pwdSha256 = settings.encryption.masterPassword
   invoker.encryptObjectToFile(genPwd(pwdSha256), p.pathOfConfig, settings)
 }
 
