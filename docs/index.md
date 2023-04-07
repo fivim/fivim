@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: enassi
-  text: An editor for encrypted notes and files.
+  text: An assistant for encryption.
   image:
     src: /images/logo.png
     alt: enassi logo
