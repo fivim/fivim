@@ -1,3 +1,18 @@
-.dark {
-  --vp-sidebar-bg-color: #333333;
-}
+ :root {
+   --vp-c-blue: rgb(54, 136, 252);
+   --vp-c-blue-light: rgb(30, 158, 252);
+   --vp-c-blue-lighter: rgb(51, 173, 255);
+   --vp-c-blue-dark: rgb(43, 98, 253);
+   --vp-c-blue-darker: rgb(33, 52, 226);
+
+   --vp-c-brand: var(--vp-c-blue);
+   --vp-c-brand-light: var(--vp-c-blue-light);
+   --vp-c-brand-lighter: var(--vp-c-blue-lighter);
+   --vp-c-brand-dark: var(--vp-c-blue-dark);
+   --vp-c-brand-darker: var(--vp-c-blue-darker);
+ }
+
+
+ .dark {
+   --vp-sidebar-bg-color: #333333;
+ }

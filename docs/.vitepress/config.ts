@@ -9,6 +9,9 @@ export default defineConfig({
   lang: 'en-US',
   title: 'enassi',
   description: 'Enassi is your data encryption assistant.',
+  titleTemplate: 'your data encryption assistant',
+
+  lastUpdated: true,
 
   themeConfig: {
     logo: '/images/logo.png',
@@ -21,6 +24,7 @@ export default defineConfig({
         items: [
           { text: 'Getting started', link: '/en/user_guide/getting_started' },
           { text: 'Themes', link: '/en/user_guide/themes' },
+          { text: 'Desktop', link: '/en/user_guide/desktop' },
           { text: 'FAQ', link: '/en/faq' },
         ]
       },
