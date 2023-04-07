@@ -1,29 +1,28 @@
+
 <h1 align="center">
-  <img src="./src-tauri/icons/Square150x150Logo.png" width=200 height=200/><br>
+  <img src="/images/logo.png" width=200 height=200/><br>
   enassi
 </h1>
 
 <h4 align="center">Enassi is your data encryption assistant.</h4>
-
-<div align="center">
-  <a href="https://github.com/enassi/enassi" target="_blank">
+<br/>
+<div>
+  <a href="https://github.com/enassi/enassi" target="_blank" style="float:left">
     <img src="https://img.shields.io/github/stars/enassi?style=social" />
   </a>
   <a href="https://github.com/enassi/enassi" target="_blank">
-    <img src="https://img.shields.io/github/followers/enassi?style=social" />
+    <img src="https://img.shields.io/github/followers/enassi?style=social" style="float:left"/>
   </a>
   <a href="https://github.com/enassi/enassi" target="_blank">
-    <img src="https://img.shields.io/github/watchers/enassi/enassi?style=social" />
+    <img src="https://img.shields.io/github/watchers/enassi/enassi?style=social" style="float:left"/>
   </a>
-  <a href="https://discord.gg/2yrMRAnV3M" target="_blank">
+  <a href="https://discord.gg/2yrMRAnV3M" target="_blank" style="float:left">
       <img src="https://img.shields.io/badge/chat-discord-7289da.svg">
   </a>
-   <a href="https://opencollective.com/enassi" target="_blank">
+   <a href="https://opencollective.com/enassi" target="_blank" style="float:left">
       <img src="https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg">
   </a>
 </div>
-
-[Document site](https://enassi.github.io/enassi/)
 
 ## Features
 
@@ -35,24 +34,32 @@
 - 🎨 Various themes.
 - 🔗 Share the encrypted data with your friends.
 
-| Note                                              | File manager                                                   |
-| ------------------------------------------------- | -------------------------------------------------------------- |
-| ![note](./docs/public/images/user_guide/note.png) | ![file_manager](./docs/public/images/user_guide/file_safe.png) |
+Note:
 
+![note](/images/user_guide/note.png)
+
+File safe:
+
+![file_safe](/images/user_guide/file_safe.png)
 
 ## Theme
 
-The following two screenshots are the **default** theme and the **material** theme. [More themes](https://enassi.github.io/enassi/en/user_guide/themes)
+[All built-in themes](/en/user_guide/themes)
 
-| default theme                                             | material theme                                              |
-| --------------------------------------------------------- | ----------------------------------------------------------- |
-| ![default theme](./docs/public/images/themes/default.png) | ![material theme](./docs/public/images/themes/material.png) |
+The following two screenshots are the **default** theme and the **material** theme.
+
+default theme:
+
+![default theme](/images/themes/default.png)
+
+material theme :
+
+![material theme](/images/themes/material.png)
 
 ## Product positioning 
 
 - Encrypted storage of personal privacy data.
 - Do not actively access the network.
-- [License](./LICENSE)
 
 ## Dante
 
@@ -64,7 +71,7 @@ The following two screenshots are the **default** theme and the **material** the
 * SOL: BbrRkLArfTeAieAtDpvBHNE4KBKX9fmbjPb5JDmKHWE7
 * ETH: 0xA59186a08424BE262FBacA922E87Ab82F3C5245B
 
-### Platforms
+## Platforms
 
 Tauri currently supports development and distribution on the following platforms:
 
@@ -76,7 +83,7 @@ Tauri currently supports development and distribution on the following platforms
 | iOS/iPadOS | coming soon     |
 | Android    | coming soon     |
 
-#### Linux Support
+### Linux Support
 
 - Arch
 - Debian (Ubuntu 18.04 and above or equivalent)
