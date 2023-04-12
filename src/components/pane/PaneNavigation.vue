@@ -143,6 +143,9 @@ import { useI18n } from 'vue-i18n'
 
 import SelectEmojiButton from '@/components/button/SelectEmoji.vue'
 import SelectTagButton from '@/components/button/SelectTag.vue'
+// import SyncButton from '@/components/button/Sync.vue'
+// import SettingButton from '@/components/button/Setting.vue'
+// import ThemeButton from '@/components/button/Theme.vue'
 
 import { TypeFile, TypeNote, TypeTag } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
@@ -453,7 +456,6 @@ const onListFiles = () => {
   })
 
   appStore.data.navCol.sign = TypeFile
-
   restEditorCol()
 }
 // ---------- add / edit files end ----------
