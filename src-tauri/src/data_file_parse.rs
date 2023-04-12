@@ -2,12 +2,13 @@ use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::Read;
 
-use base64::engine::{general_purpose::STANDARD as b64_STANDARD, Engine as b_Engine};
+use base64::engine::{general_purpose::STANDARD as b64_STANDARD, Engine};
 use xutils::{
     errors::EaError as xu_error, file as xu_file, hash as xu_hash, logger as xu_logger,
     sys as xu_sys,
 };
 
+use crate::conf as x_conf;
 use crate::utils::encrypt as x_encrypt;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -58,7 +59,7 @@ fn do_in_memory(mut file_size_kb: u64, file_path: &str) -> bool {
     }
 
     let mem_state = xu_sys::get_memory_info();
-    return mem_state.free > file_size_kb * 20;
+    return mem_state.free > file_size_kb * 10;
 }
 
 fn get_file_meta(file_path: &str) -> UserFileData {
@@ -211,7 +212,7 @@ pub fn read_file(
     always_open_in_memory: bool,
     parse_as: &str,
     target_file_path: &str,
-    progress_name: String
+    progress_name: &str,
 ) -> Result<UserFileData, xu_error> {
     let meta = get_file_meta(file_path);
     let file_size_kb: usize = (meta.file_data_len / 1024).try_into().unwrap();
@@ -225,13 +226,13 @@ pub fn read_file(
                 let bin = x_encrypt::decrypt_bytes(pwd, &psd.file_data, &progress_name);
 
                 // parse data
-                if parse_as == "string" {
-                    psd.file_data_str = x_encrypt::decrypt_bytes_to_string(pwd, &psd.file_data, &progress_name);
+                if parse_as == x_conf::TYPE_STRING {
+                    psd.file_data_str =
+                        x_encrypt::decrypt_bytes_to_string(pwd, &psd.file_data, &progress_name);
                 } else {
-                    if parse_as == "base64" {
-                        let b64 = &b64_STANDARD;
-                        psd.file_data_str = b64.encode(&bin);
-                    } else if parse_as == "bin" {
+                    if parse_as == x_conf::TYPE_BASE64 {
+                        psd.file_data_str = b64_STANDARD.encode(&bin);
+                    } else if parse_as == x_conf::TYPE_BINARY {
                         psd.file_data = (&*bin).to_vec();
                     }
                 }
@@ -290,7 +291,7 @@ pub fn write_file(
     file_name: &str,
     vec_data: Vec<u8>,
     large_file_source_path: &str,
-    progress_name: String
+    progress_name: &str,
 ) -> Result<bool, xu_error> {
     // First encrypt the file directly.
     // If the file is not too large, operate directly in memory,
@@ -310,18 +311,11 @@ pub fn write_file(
 
         // TODO Maybe we can write all the data first, and finally modify the crc32 and length.
 
-        let enc_data = x_encrypt::encrypt_file(
-            pwd,
-            large_file_source_path,
-            dist_path,
-            &progress_name,
-        );
+        let enc_data =
+            x_encrypt::encrypt_file(pwd, large_file_source_path, dist_path, &progress_name);
         if enc_data.encrypted_data_len > 0 {
-            let [header, tail] = gen_file_meta(
-                file_name,
-                sha256_crc32_file_path(large_file_source_path),
-                enc_data.encrypted_data_len,
-            );
+            let crc32 = sha256_crc32_file_path(large_file_source_path);
+            let [header, tail] = gen_file_meta(file_name, crc32, enc_data.encrypted_data_len);
 
             xu_file::add_head(dist_path, &header)?;
             xu_file::add_tail(dist_path, &tail.to_vec())?;
@@ -329,6 +323,40 @@ pub fn write_file(
     }
 
     Ok(true)
+}
+
+// Re-encrypt files
+pub fn re_encrypt_file(
+    pwd: &str,
+    new_pwd: &str,
+    file_path: &str,
+    file_name: &str,
+    target_file_path: &str,
+    progress_name: &str,
+) -> Result<bool, xu_error> {
+    let meta = get_file_meta(file_path);
+
+    let rel = x_encrypt::re_encrypt_file(
+        pwd,
+        new_pwd,
+        file_path,
+        target_file_path,
+        meta.file_data_start_pos,
+        meta.file_data_end_pos,
+        &progress_name,
+    );
+
+    if rel > 0 {
+        let crc32 = sha256_crc32_file_path(target_file_path);
+        let [header, tail] = gen_file_meta(file_name, crc32, rel);
+
+        xu_file::add_head(target_file_path, &header)?;
+        xu_file::add_tail(target_file_path, &tail.to_vec())?;
+
+        return Ok(true);
+    }
+
+    Ok(false)
 }
 
 pub fn timestamp_bytes() -> [u8; 8] {

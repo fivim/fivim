@@ -9,7 +9,7 @@ use ccm::{
 use serde::Deserialize;
 use std::str;
 
-use xsjcl::{decrypt_json, encrypt, SjclParams};
+// use xsjcl::{decrypt_json, encrypt, SjclParams};
 
 // Refer: https://users.rust-lang.org/t/is-there-any-pure-rust-code-to-decrypt-an-aes-ccm-data/90138/2
 // Note: Key is not the password.
@@ -87,7 +87,7 @@ pub fn test_aes_ccm_decrypt() {
     let ddd = match decrypt_json(input.to_string(), password.to_string(), None) {
         Ok(ddd) => ddd,
         Err(e) => {
-            print!(">>>  decrypt_json error: {}\n", e);
+            println!(">>>  decrypt_json error: {}", e);
             return;
         }
     };

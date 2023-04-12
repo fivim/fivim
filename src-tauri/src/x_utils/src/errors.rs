@@ -1,9 +1,9 @@
 use std::io;
 
+use anyhow;
 use base64;
 use custom_error::custom_error;
 use fs_extra;
-use anyhow;
 
 custom_error! {pub EaError
     // dir
@@ -29,7 +29,9 @@ custom_error! {pub EaError
     DecryptFileError{path:String, error: anyhow::Error} = "Decrypt error: >>>{error}<<<, path: >>>{path}<<<",
     EncryptBytesError{bytes:String, error: anyhow::Error} = "Encrypt error: >>>{error}<<<, path: >>>{bytes}<<<",
     DecryptBytesError{bytes:String, error: anyhow::Error} = "Decrypt error: >>>{error}<<<, path: >>>{bytes}<<<",
+    ReEncryptFileError{source_path:String, dist_path:String, error: anyhow::Error} = "Re-encrypt error: >>>{error}<<<, source_path: >>>{source_path}<<<, dist_path:>>>{dist_path}<<<",
 
     // path
     ParentDirNotFoundError{path:String} = "Parent dir not found, path: >>>{path}<<<",
+    ReNameError{old_path:String, new_path:String, error: io::Error} = "Rename error: >>>{error}<<<, old_path: >>>{new_path}<<<, dist_path:>>>{new_path}<<<",
 }
