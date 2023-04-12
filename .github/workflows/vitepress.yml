@@ -1,5 +1,4 @@
-name: Deploy
-
+name: Vitepress
 on:
   push:
     branches:
