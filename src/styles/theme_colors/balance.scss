@@ -3,14 +3,14 @@
 // There are several special treatments.
 
 :root {
-  --enas-background-primary-color_balance: rgb(224,233,236);
+  --enas-background-primary-color_balance: rgb(224, 233, 236);
   --enas-foreground-primary-color_balance: rgb(61, 60, 64);
   --enas-highlight-color_balance: rgb(158, 162, 248);
 }
 
 :root[theme='balance'] {
   --enas-background-primary-color: var(--enas-background-primary-color_balance);
-  --enas-background-secondary-color: rgb(17,42,61);
+  --enas-background-secondary-color: rgb(17, 42, 61);
 
   --enas-foreground-primary-color: var(--enas-foreground-primary-color_balance);
   --enas-foreground-secondary-color: var(--enas-foreground-primary-color_balance);
