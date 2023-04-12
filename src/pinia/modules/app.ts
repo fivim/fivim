@@ -8,10 +8,9 @@ import { CmdAdapter } from '@/libs/commands'
 import { ListColInfo, CurrentFileInfo } from '@/components/pane/types'
 import { saveConfToFile, saveStartUpConfFile } from '@/libs/init/conf_file'
 import { UserDataInfo } from '@/libs/user_data/types'
-import { jsonCopy } from '@/utils/utils'
 
 export const useAppStore = defineStore('appStore', () => {
-  const data = ref<AppInfo>(jsonCopy(tmplAppData))
+  const data = ref<AppInfo>(tmplAppData())
 
   const setData = (val: AppInfo) => {
     data.value = val
@@ -45,7 +44,7 @@ export const useAppStore = defineStore('appStore', () => {
     return true
   }
 
-  const setUserDataMapData = (val: UserDataInfo) => {
+  const setUserData = (val: UserDataInfo) => {
     data.value.userData = val
   }
 
@@ -67,6 +66,6 @@ export const useAppStore = defineStore('appStore', () => {
     setData,
     setListColData,
     setSettingData,
-    setUserDataMapData
+    setUserData
   }
 })

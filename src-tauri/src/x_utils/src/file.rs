@@ -10,7 +10,7 @@ use crate::errors::EaError as x_error;
 use crate::logger as x_logger;
 use crate::path as x_path;
 
-use base64;
+use base64::engine::{general_purpose::STANDARD as b64_STANDARD, Engine};
 
 pub fn get_size(file_path: &str) -> u64 {
     match fs::metadata(&file_path) {
@@ -135,7 +135,7 @@ pub fn write_bytes(file_path: &str, file_content: &Vec<u8>) -> Result<bool, x_er
 }
 
 pub fn write_base64_str(file_path: &str, file_content_base64: &str) -> bool {
-    let mut file_content_string = "".to_string();
+    let file_content_string: String;
 
     // Remove the prefix of base64 string, such as: "data:image/png;base64,"
     let separator = ";base64,";
@@ -150,7 +150,7 @@ pub fn write_base64_str(file_path: &str, file_content_base64: &str) -> bool {
         file_content_string = file_content_base64.to_owned();
     }
 
-    match base64::decode(file_content_string) {
+    match b64_STANDARD.decode(file_content_string) {
         Ok(d) => {
             match write_bytes(file_path, &d) {
                 Ok(_) => return true,
@@ -158,7 +158,7 @@ pub fn write_base64_str(file_path: &str, file_content_base64: &str) -> bool {
             };
         }
         Err(e) => {
-            let eee = x_error::Base64DecodeError { error: e };
+            let eee = x_error::Base64DecodeError { error: e.clone() };
             x_logger::log_error(&format!("write_base64_str:: {}\n", eee));
 
             return false;
@@ -239,7 +239,7 @@ pub fn add_head(file_path: &str, data: &Vec<u8>) -> Result<bool, x_error> {
 
     // Write the data to the beginning
     let copy = match io::copy(&mut src, &mut tmp) {
-        Ok(res) => res,
+        Ok(_) => true,
         Err(e) => {
             let eee = x_error::FileCopyError {
                 source_path: file_path.to_owned(),
@@ -253,7 +253,7 @@ pub fn add_head(file_path: &str, data: &Vec<u8>) -> Result<bool, x_error> {
 
     // Copy the rest of the source file
     let remove = match fs::remove_file(&file_path) {
-        Ok(res) => res,
+        Ok(_) => true,
         Err(e) => {
             let eee = x_error::FileRemoveError {
                 path: temp_ptah.to_owned(),
@@ -265,7 +265,7 @@ pub fn add_head(file_path: &str, data: &Vec<u8>) -> Result<bool, x_error> {
     };
 
     let rename = match fs::rename(&temp_ptah, &file_path) {
-        Ok(res) => res,
+        Ok(_) => true,
         Err(e) => {
             let eee = x_error::FileRenameError {
                 path: temp_ptah.to_owned(),
@@ -276,7 +276,7 @@ pub fn add_head(file_path: &str, data: &Vec<u8>) -> Result<bool, x_error> {
         }
     };
 
-    Ok(true)
+    Ok(copy && remove && rename)
 }
 
 pub fn add_tail(file_path: &str, data: &Vec<u8>) -> Result<bool, x_error> {

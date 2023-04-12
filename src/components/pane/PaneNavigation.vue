@@ -1,9 +1,11 @@
 <template>
   <div class="navigation-column">
+    <!--
     <div id="web-nav-btns" v-if="isWebPage()">
       <SettingButton />
       <ThemeButton />
     </div>
+    -->
 
     <div class="navigation-pane">
       <section class="section">
@@ -67,9 +69,6 @@
 
                 <div class="enas-list cur-ptr">
                   <div class="list-item" @click="onOpenDialogTag(item)"> {{ t('Edit') }} </div>
-                  <!-- TODO
-                  <div class="list-item" @click="onListTag(item)"> {{ t('Show list') }} </div>
-                  -->
                   <div class="list-item" @click="onDeleteTag(item)"> {{ t('Delete') }} </div>
                 </div>
               </el-popover>
@@ -83,9 +82,8 @@
     </div>
 
     <div class="bottom-action">
-      <div :class="appStore.data.navCol.sign === TypeSignFile ? 'disp-flex item-selected' : 'disp-flex'"
-        @click="onListFiles">
-        <span class="font-bold">{{ t('File manager') }}</span>
+      <div :class="appStore.data.navCol.sign === TypeFile ? 'disp-flex item-selected' : 'disp-flex'" @click="onListFiles">
+        <span class="font-bold">{{ t('File safe') }}</span>
         <div class="disp-flex flex-grow justify-content-right">
           <el-icon>
             <ArrowRight />
@@ -102,7 +100,7 @@
 
       <div class="py-2">
         <SelectEmojiButton :icon="tempNb.icon" @onClick="onNbEmojiClick"></SelectEmojiButton>
-        <SelectTagButton :tagExist="tempNbTagExist" :useIcon="false" @onClick="onNewNbAddTag"> </SelectTagButton>
+        <SelectTagButton :tagExist="tempNbTagExist" :useIcon="false" @onClick="onClickNbTag"> </SelectTagButton>
       </div>
 
       <template #footer>
@@ -145,19 +143,21 @@ import { useI18n } from 'vue-i18n'
 
 import SelectEmojiButton from '@/components/button/SelectEmoji.vue'
 import SelectTagButton from '@/components/button/SelectTag.vue'
-import SettingButton from '@/components/button/Setting.vue'
-import ThemeButton from '@/components/button/Theme.vue'
+// import SyncButton from '@/components/button/Sync.vue'
+// import SettingButton from '@/components/button/Setting.vue'
+// import ThemeButton from '@/components/button/Theme.vue'
 
-import { TypeFile, TypeNote, TypeTag, StrSignOk, TypeSignFile, TypeSignTag } from '@/constants'
+import { TypeFile, TypeNote, TypeTag } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { getDataDirs } from '@/libs/init/dirs'
 import { CmdAdapter } from '@/libs/commands'
 import {
   saveCurrentNotebookAndCreateNotebookFile, deleteNotebook, deleteTag,
-  readNotebookdata, addFileMeta
+  readNotebookdata, addFileMeta, updateFileMeta, saveToEntryFile, saveCurrentNotebookData
 } from '@/libs/user_data/utils'
 import { NoteInfo, NotebookInfo, TagInfo } from '@/libs/user_data/types'
 import { genFileName, restEditorCol } from '@/utils/pinia_related'
+import { CurrentFileInfo } from './types'
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -191,6 +191,7 @@ const resetTempNb = () => {
 const onDialogConfirmNb = async () => {
   tempNb.value.visible = false
   const ad = appStore.data
+  const p = await getDataDirs()
 
   if (tempNb.value.dialogType === DIALOG_TYPE_ADD) {
     const sign = genFileName()
@@ -205,11 +206,9 @@ const onDialogConfirmNb = async () => {
 
     resetTempNb()
 
-    const p = await getDataDirs()
-    addFileMeta(p.pathOfCurrentDir, sign)
-
     // Save new notebook data file at first, then open it.
-    if (await saveCurrentNotebookAndCreateNotebookFile(sign) === StrSignOk) {
+    if (await saveCurrentNotebookAndCreateNotebookFile(sign)) {
+      addFileMeta(p.pathOfCurrentDir, sign)
       onListNb(ad.userData.notebooks.length - 1)
     }
   } else if (tempNb.value.dialogType === DIALOG_TYPE_EDIT) {
@@ -224,6 +223,11 @@ const onDialogConfirmNb = async () => {
     }
 
     appStore.setData(ad)
+
+    // update file meta
+    if (await saveToEntryFile()) {
+      updateFileMeta(tempNb.value.sign)
+    }
   }
 }
 
@@ -239,7 +243,7 @@ const onOpenDialogNb = (detail: NotebookInfo) => {
   tempNb.value.sign = detail.sign
 }
 
-const onNewNbAddTag = (detail: TagInfo) => {
+const onClickNbTag = (detail: TagInfo) => {
   const sign = detail.sign
   if (tempNb.value.dialogType === DIALOG_TYPE_ADD) {
     const arr = tempNb.value.tagsSign
@@ -290,8 +294,22 @@ const tempNbTagExist = (sign: string) => {
   }
 }
 
-const onListNb = (index: number) => {
-  const nb = appStore.data.userData.notebooks[index]
+const onListNb = async (index: number) => {
+  if (!await saveCurrentNotebookData(false)) {
+    return
+  }
+
+  const ad = appStore.data
+  const nb = ad.userData.notebooks[index]
+  const currentFile: CurrentFileInfo = {
+    content: '',
+    sign: nb.sign,
+    subSign: '',
+    tagsArr: [],
+    title: '',
+    type: TypeNote
+  }
+
   readNotebookdata(nb.sign).then((notes) => {
     appStore.setListColData({
       title: nb.title,
@@ -302,10 +320,10 @@ const onListNb = (index: number) => {
       listOfNote: notes,
       listOfTag: []
     })
-    // TODO: save the value of the editor
 
-    appStore.data.navCol.sign = nb.sign
-    restEditorCol()
+    ad.navCol.sign = nb.sign
+    ad.currentFile = currentFile
+    appStore.setData(ad)
   }).catch((err: Error) => {
     const typeName = t('Notebook')
     CmdAdapter().notification(t('&Error initializing file', { name: typeName }), t(err.message), '')
@@ -400,7 +418,7 @@ const onListTag = (tag: TagInfo) => {
     listOfTag: []
   })
 
-  appStore.data.navCol.sign = TypeSignTag
+  appStore.data.navCol.sign = TypeTag
 
   restEditorCol()
 }
@@ -430,15 +448,14 @@ const onListFiles = () => {
   appStore.setListColData({
     title: t('File'),
     icon: '',
-    sign: TypeSignFile,
+    sign: TypeFile,
     tagsArr: [],
     type: TypeFile,
     listOfNote: [],
     listOfTag: []
   })
 
-  appStore.data.navCol.sign = TypeSignFile
-
+  appStore.data.navCol.sign = TypeFile
   restEditorCol()
 }
 // ---------- add / edit files end ----------

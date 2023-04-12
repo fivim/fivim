@@ -24,4 +24,5 @@ coverage
 *.sln
 *.sw?
 
-# pnpm-lock.yaml
+docs/.vitepress/cache/
+docs/.vitepress/dist/

@@ -1,4 +1,8 @@
-# Inner file data struct
+# User data structure
+
+The data structure of the entry file and notebook file are shown here.
+
+For files in the file safe, the encrypted binary content will be directly stored instead of JSON string.
 
 ## Entry file
 

@@ -1,8 +1,12 @@
+
+import { TypeNone, TaskEncrypt, TaskDecrypt, TaskReEncrypt, TaskChangeMasterPassword, TaskUpdateFilesSha256 } from '@/constants'
 import { UserDataInfo } from '@/libs/user_data/types'
 import { CurrentFileInfo, ListColInfo, NavColInfo } from '@/components/pane/types'
 import { TimeHashedSignType } from '@/utils/hash'
 
 export type TextDirectionInfo = 'LTR' | 'RTL'
+export type TypeTask = typeof TypeNone | typeof TaskEncrypt | typeof TaskDecrypt | typeof TaskReEncrypt |
+    typeof TaskChangeMasterPassword | typeof TaskUpdateFilesSha256
 
 export enum AppModeInfo {
     App = 'app',
@@ -18,44 +22,55 @@ export type AppCoreConfInfo = {
     defaultLanguageInNative: string,
     homeAppDir: string
     homeDir: string
+    logFilePath: string
+    repo: string
     version: string
 }
 
-export type ChangeMasterPasswordStatusInfo = {
-    action: string
-    percent: number
-
-    currentNumber: number
-    totalNumber: number
-}
-
-export type ProgressItemInfo = {
+export type ProgressColorInfo = {
     percent: number
     color: string
 }
 
-export type CurrentProgressInfo = {
+export type ProgressCommonInfo = {
     percent: number
-    taskName: string
+    taskName: TypeTask
+    isFailure: boolean
+    isSuccess: boolean
+    message: string
+}
+
+export type ProgressChangeMasterPasswordInfo = {
+    totalFilesCount: number
+    currentFileIndex: number
+    currentFileName: string
+    currentFileSize: number
+}
+
+export type ProgressInfo = {
+    currentTask: ProgressCommonInfo
+    changeMasterPassword: ProgressChangeMasterPasswordInfo
 }
 
 export type DataPathInfo = {
-    separator: string,
-    pathOfHomeAppData: string;
-    pathOfHome: string;
+    separator: string
+    pathOfHomeAppData: string
+    pathOfHome: string
+    pathOfLogFile: string
 }
 
 export type ExtDataPathInfo = {
-    pathOfHome: string,
-    pathOfHomeAppData: string,
-    pathOfConfig: string,
-    pathOfConfigStartUp: string,
-    pathOfCurrentDir: string,
-    pathOfSyncDir: string,
-    pathOfSyncCachedDir: string,
-    pathOfSyncDownloadDir: string,
+    pathOfHome: string
+    pathOfHomeAppData: string
+    pathOfConfig: string
+    pathOfConfigStartUp: string
+    pathOfChangeMasterPasswordDir: string
+    pathOfCurrentDir: string
+    pathOfSyncDir: string
+    pathOfSyncCachedDir: string
+    pathOfSyncDownloadDir: string
     // style
-    pathOfCustomStyle: string,
+    pathOfCustomStyle: string
     pathOfCustomBackgroundImage: string
 }
 
@@ -64,10 +79,12 @@ export type SettingInfo = {
         showFileSavingStatus: boolean
         spellCheck: boolean
         workDir: string
+        locale: string
     },
     appearance: {
+        customBackagroundImg: string
+        customBackagroundOpacity: number
         dateTimeFormat: string
-        locale: string
         listColShowCreateTime: boolean
         listColShowUpdateTime: boolean
         listColSortBy: 'title' | 'mtimeUtc' | 'ctimeUtc'
@@ -80,13 +97,16 @@ export type SettingInfo = {
         entryFileName: string
         fileExt: string
         fileNameRule: keyof typeof TimeHashedSignType
-        syncLockFileName: string
-    }
+        lockFileName: string
+    },
+    startupTask: ProgressCommonInfo
 }
 
 export type SettingOfStartUpInfo = {
-    appearance: {
+    normal: {
         locale: string
+    },
+    appearance: {
         theme: string
     },
 }
@@ -94,20 +114,20 @@ export type SettingOfStartUpInfo = {
 export type AppInfo = {
     appMode: AppModeInfo // desktop mode or mobile mode
     appName: string
+    appRepo: string
     changeLocaleTimestamp: number // record timestamp for editor i18n
-    changeMasterPasswordStatus: ChangeMasterPasswordStatusInfo
     currentFile: CurrentFileInfo
-    currentProgress: CurrentProgressInfo
     currentTheme: string
     dataPath: DataPathInfo
-    defaultLocale: string,
-    defaultLocaleInNative: string,
+    defaultLocale: string
+    defaultLocaleInNative: string
     editorFullScreen: boolean
     existConfigFile: boolean
     isWebPage: boolean
     listCol: ListColInfo
     navCol: NavColInfo
     lockscreen: boolean
+    progress: ProgressInfo
     settings: SettingInfo
     textDirection: TextDirectionInfo
     userData: UserDataInfo

@@ -74,11 +74,6 @@ export const setTheme = (themeName: string) => {
 }
 
 export const genDialogWidth = () => {
-  // mobile version use "fullscreen" attr
-  // if (isMobileScreen()) {
-  //     return "100%"
-  // }
-
   const width = getPageWidth()
   if (width < 768) {
     return '100%'
@@ -86,6 +81,17 @@ export const genDialogWidth = () => {
     return '95%'
   } else if (width >= 1024) {
     return '50%'
+  }
+}
+
+export const genDialogWidthSmall = () => {
+  const width = getPageWidth()
+  if (width < 768) {
+    return '100%'
+  } else if (width < 1024) {
+    return '60%'
+  } else if (width >= 1024) {
+    return '40%'
   }
 }
 

@@ -4,7 +4,7 @@
       <el-button :icon="Sort" circle />
     </template>
 
-    <div class="enas-list">
+    <div class="enas-list cur-ptr">
       <div class="group-title">
         {{ t('Sort') }}
       </div>
@@ -18,13 +18,13 @@
         <div class="disp-flex">
           <div class="disp-flex flex-grow">{{ t('Sort order') }}</div>
           <div class="disp-flex flex-grow justify-content-right">
-            <div class="px-1 cur-ptr">
+            <div class="px-1">
               <el-icon @click="appStore.data.settings.appearance.listColSortOrder = 'ASC'"
                 :class="`${appStore.data.settings.appearance.listColSortOrder !== 'DESC' ? 'highlight font-bold' : ''}`">
                 <SortDown />
               </el-icon>
             </div>
-            <div class="px-1 cur-ptr">
+            <div class="px-1">
               <el-icon @click="appStore.data.settings.appearance.listColSortOrder = 'DESC'"
                 :class="`${appStore.data.settings.appearance.listColSortOrder === 'DESC' ? 'highlight font-bold' : ''}`">
                 <SortUp />

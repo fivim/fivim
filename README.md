@@ -1,24 +1,25 @@
+
 <h1 align="center">
-  <img src="./src-tauri/icons/Square150x150Logo.png" width=200 height=200/><br>
+  <img src="./docs/public/images/logo.png" width=200 height=200/><br>
   enassi
 </h1>
 
 <h4 align="center">Enassi is your data encryption assistant.</h4>
-
-<div align="center">
-  <a href="https://github.com/enassi/enassi" target="_blank">
+<br/>
+<div>
+  <a href="https://github.com/enassi/enassi" target="_blank" style="float:left">
     <img src="https://img.shields.io/github/stars/enassi?style=social" />
   </a>
   <a href="https://github.com/enassi/enassi" target="_blank">
-    <img src="https://img.shields.io/github/followers/enassi?style=social" />
+    <img src="https://img.shields.io/github/followers/enassi?style=social" style="float:left"/>
   </a>
   <a href="https://github.com/enassi/enassi" target="_blank">
-    <img src="https://img.shields.io/github/watchers/enassi/enassi?style=social" />
+    <img src="https://img.shields.io/github/watchers/enassi/enassi?style=social" style="float:left"/>
   </a>
-  <a href="https://discord.gg/2yrMRAnV3M" target="_blank">
+  <a href="https://discord.gg/2yrMRAnV3M" target="_blank" style="float:left">
       <img src="https://img.shields.io/badge/chat-discord-7289da.svg">
   </a>
-   <a href="https://opencollective.com/enassi" target="_blank">
+   <a href="https://opencollective.com/enassi" target="_blank" style="float:left">
       <img src="https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg">
   </a>
 </div>
@@ -33,32 +34,32 @@
 - 🎨 Various themes.
 - 🔗 Share the encrypted data with your friends.
 
-| Note                                        | File manager                                                |
-| ------------------------------------------- | ----------------------------------------------------------- |
-| ![note](./docs/images/user_manual/note.png) | ![file_manager](./docs/images/user_manual/file_manager.png) |
+Note:
 
+![note](./docs/public/images/user_guide/note.png)
 
-## Table of Contents
+File safe:
 
-- [user manual](./docs/en/user_manual.md)
-- [themes](./docs/en/themes.md)
-- [develop](./docs/en/develop.md)
-  - [file format](./docs/en/file_format.md)
-  - [user data struct](./docs/en/user_data_struct.md)
+![file_safe](./docs/public/images/user_guide/file_safe.png)
 
 ## Theme
 
-The following two screenshots are the **default** theme and the **material** theme. [More themes](./docs/en/themes.md)
+[All built-in themes](https://enassi.github.io/enassi/en/user_guide/themes.html)
 
-| default theme                                      | material theme                                       |
-| -------------------------------------------------- | ---------------------------------------------------- |
-| ![default theme](./docs/images/themes/default.png) | ![material theme](./docs/images/themes/material.png) |
+The following two screenshots are the **pretty** theme and the **material** theme.
+
+pretty theme:
+
+![pretty theme](./docs/public/images/themes/pretty.png)
+
+material theme :
+
+![material theme](./docs/public/images/themes/material.png)
 
 ## Product positioning 
 
 - Encrypted storage of personal privacy data.
 - Do not actively access the network.
-- [License](./LICENSE)
 
 ## Dante
 
@@ -70,7 +71,7 @@ The following two screenshots are the **default** theme and the **material** the
 * SOL: BbrRkLArfTeAieAtDpvBHNE4KBKX9fmbjPb5JDmKHWE7
 * ETH: 0xA59186a08424BE262FBacA922E87Ab82F3C5245B
 
-### Platforms
+## Platforms
 
 Tauri currently supports development and distribution on the following platforms:
 
@@ -82,51 +83,8 @@ Tauri currently supports development and distribution on the following platforms
 | iOS/iPadOS | coming soon     |
 | Android    | coming soon     |
 
-#### Linux Support
+### Linux Support
 
 - Arch
 - Debian (Ubuntu 18.04 and above or equivalent)
 - Fedora (latest 2 versions)
-
-## Todo
-
-[ ] change master password
-
-[ ] list tag items
-
-[ ] sync
-
-[ ] import / export note data
-
-[ ] optimize the style of emoji-picker 
-
-[ ] add shortcut key 
-
-[ ] support for custom css files
-
-[ ] add more language
-
-## FAQ
-
-- How to share encrypted files with friends
-  - Encrypt your file:
-  
-    1. Click the **file manager** in the navigation column.
-    2. Click the **Share** button in the list column.
-    3. Select the file and set the password.
-    4. You will see the encrypted file in the specified output directory.
-
-  - Send this file to your friends.
-  - Your friends open it:
-  
-    1. Click the **file manager** in the navigation column.
-    2. Click the **Open** button in the list column.
-    3. Input an output directory and the same password to decrypt it.
-
-- Windows 10/11 missing emoji flag support
-  - On Windows 10/11, we rely on Edge, currently render flags as letters, not flags. 
-  - Firefox has fixed this using their own flag emoji.
-  - [more](https://github.com/nolanlawson/emoji-picker-element/issues/269)
-
-- Translation error found
-  - Due to the use of automatic translation, there may be some problems, please feedback to us.

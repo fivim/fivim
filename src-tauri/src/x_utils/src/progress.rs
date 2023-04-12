@@ -36,20 +36,20 @@ lazy_static! {
     });
 }
 
-pub fn insert_progress(k: &str, v: Status) {
+pub fn insert(key: &str, value: Status) {
     let mut gpw = STATUS_LOCK.write().unwrap();
-    gpw.insert(k.to_string(), v);
+    gpw.insert(key.to_string(), value);
 }
 
-pub fn insert_progress_new(k: &str) {
-    insert_progress(k, Status::new())
+pub fn insert_new(key: &str) {
+    insert(key, Status::new())
 }
 
-pub fn get_progress(k: &str) -> Status {
+pub fn get(key: &str) -> Status {
     let gpr = STATUS_LOCK.read().unwrap();
     let mut res = Status::new();
 
-    match gpr.get(&k.to_string()) {
+    match gpr.get(&key.to_string()) {
         Some(r) => {
             let st = &*r;
             res.percentage = st.percentage;
@@ -61,10 +61,10 @@ pub fn get_progress(k: &str) -> Status {
     return res;
 }
 
-pub fn set_progress(k: &str, percentage: f32, step_name: &str) -> bool {
+pub fn set(key: &str, percentage: f32, step_name: &str) -> bool {
     let mut gpw = STATUS_LOCK.write().unwrap();
 
-    match gpw.get_mut(k) {
+    match gpw.get_mut(key) {
         Some(x) => {
             x.percentage = percentage;
             x.step_name = step_name.to_string();
@@ -77,10 +77,10 @@ pub fn set_progress(k: &str, percentage: f32, step_name: &str) -> bool {
     }
 }
 
-pub fn delete_progress(k: &str) {
+pub fn delete(key: &str) {
     let mut gpw = STATUS_LOCK.write().unwrap();
 
-    if gpw.contains_key(k) {
-        gpw.remove(&k.to_string());
+    if gpw.contains_key(key) {
+        gpw.remove(&key.to_string());
     }
 }

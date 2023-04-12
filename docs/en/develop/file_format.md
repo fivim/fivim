@@ -5,9 +5,10 @@ The `enassi` file format is a bit like the [ZIP file format](https://en.wikipedi
 It has 2 parts:
 
 - File header: only have one.
-- Item file: currently only one is used. [document](./user_data_struct.md)
+- Item file: currently only one is used. [document](./user_data_struct)
 
 ## File header (30 bytes)
+
 | usage                                | length   | remark                   |
 | ------------------------------------ | -------- | ------------------------ |
 | File header signature                | 4 bytes  | 'PK\x03\x04'             |
@@ -17,9 +18,8 @@ It has 2 parts:
 | File last modification UTC timestamp | 8 bytes  | Max: 2286-11-21 01:46:39 |
 | Empty                                | 10 bytes | 0                        |
 
-## Item file
+## Item header (50 bytes)
 
-### Header (50 bytes)
 | usage                                | length   | remark                      |
 | ------------------------------------ | -------- | --------------------------- |
 | Item header signature                | 4 bytes  | 'PK\x01\x02'                |
@@ -29,13 +29,15 @@ It has 2 parts:
 | Item file data length                | 4 bytes  | Max: 2147483647(2T)         |
 | Empty                                | 28 bytes | 0                           |
 
-### Body
+## Item body
+
 | usage          | length   | remark      |
 | -------------- | -------- | ----------- |
 | Item file name | variable | Can be none |
 | Item file data | variable | Can be none |
 
-### Tail (20 bytes)
+## Item tail (20 bytes)
+
 | usage                 | length   | remark       |
 | --------------------- | -------- | ------------ |
 | End of item signature | 4 bytes  | 'PK\x05\x06' |

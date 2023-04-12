@@ -33,7 +33,7 @@ export const invoker = {
   systemTrayUpdateText: () =>
     invoke('system_tray_update_text', {}) as Promise<boolean>,
 
-  // file and dir
+  // file
   copyFile: (filePath: string, targetFilePath: string) =>
     invoke('copy_file', { filePath, targetFilePath }) as Promise<boolean>,
   deleteFile: (filePath: string) =>
@@ -65,6 +65,10 @@ export const invoker = {
   listDirChildren: (dirPath: string) =>
     invoke('list_dir_children', { dirPath }) as Promise<SyncListResItemLocalDisk[]>,
 
+  // rename
+  rename: (pathOld: string, pathNew: string) =>
+    invoke('rename', { pathOld, pathNew }) as Promise<boolean>,
+
   // log
   logInfo: (content: string) => {
     console.log('>>> log info::', content)
@@ -87,10 +91,6 @@ export const invoker = {
   stringCrc32: (str: string) =>
     invoke('string_crc32', { string: str }) as Promise<number>,
 
-  // other
-  getProgress: (progressName: string) =>
-    invoke('get_progress', { progressName }) as Promise<ProgressStatus>,
-
   // user data file
   // In the following read/write user data funcfions,
   // param pwd should call genFilePwd(in src/libs/commands/index.ts) first.
@@ -101,6 +101,14 @@ export const invoker = {
     const fileContent = Array.from(stringToUint8Array(JSON.stringify(content)))
     return invoke('write_user_data_file', { pwd, filePath, fileName, fileContent, sourceOfLargeFilePath, progressName }) as Promise<boolean>
   },
+  reEncryptFile: (pwd: string, pwdNew: string, filePath: string, fileName: string, targetFilePath: string, progressName: string) =>
+    invoke('re_encrypt_file', { pwd, pwdNew, filePath, fileName, targetFilePath, progressName }) as Promise<number>,
+
+  // other
+  downloadFile: (url: string, filePath: string) =>
+    invoke('download_file', { url, filePath }) as Promise<ProgressStatus>,
+  getProgress: (progressName: string) =>
+    invoke('get_progress', { progressName }) as Promise<ProgressStatus>,
 
   // ---------- combined functions ----------
   // encrypt

@@ -1,15 +1,16 @@
 import { ElMessageBox } from 'element-plus'
 
 import { MessagesInfo } from '@/types'
+import { TypeString } from '@/constants'
 import { getDataDirs } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
-import { tmplEntryFileData } from '@/types_template'
 import { genFilePwd } from '@/libs/commands'
 import { invoker } from '@/libs/commands/invoke'
 import { i18n } from '@/libs/init/i18n'
 
 import { parseEntryFile } from './parser_decode'
-import { writeUserData } from './utils'
+import { addFileMeta, saveToEntryFile, writeUserData } from './utils'
+import { tmplEntryFileData } from './types_template'
 
 export const initEntryFile = async () => {
   const appStore = useAppStore()
@@ -21,7 +22,7 @@ export const initEntryFile = async () => {
   const entryFileName = encrytpSetting.entryFileName
   const path = dir + entryFileName
 
-  return invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '', '').then((fileData) => {
+  return invoker.readUserDataFile(genFilePwd(''), path, true, TypeString, '', '').then((fileData) => {
     if (fileData.crc32 !== fileData.crc32_check) {
       const msg = MessagesInfo.FileVerificationFailed
       invoker.logError(msg + ` >>> crc32_check: ${fileData.crc32_check}, crc32: ${fileData.crc32}`)
@@ -51,11 +52,11 @@ export const initEntryFile = async () => {
     }
 
     const ret = parseEntryFile(jsonStr)
-    appStore.setUserDataMapData(ret.userDataMap)
+    appStore.setUserData(ret.userData)
 
     if (import.meta.env.TAURI_DEBUG) {
       console.log('>>> Entry file data:: ', jsonStr)
-      console.log('>>> Entry file data after parsed:: ', ret.userDataMap)
+      console.log('>>> Entry file data after parsed:: ', ret.userData)
     }
   })
 }
@@ -65,5 +66,9 @@ export const saveDefaultEntryFile = async () => {
   const fileName = appStore.data.settings.encryption.entryFileName
   const p = await getDataDirs()
 
-  writeUserData(p.pathOfCurrentDir + fileName, fileName, tmplEntryFileData)
+  if (await writeUserData(p.pathOfCurrentDir + fileName, fileName, tmplEntryFileData())) {
+    addFileMeta(p.pathOfCurrentDir, fileName).then((res) => {
+      saveToEntryFile()
+    })
+  }
 }

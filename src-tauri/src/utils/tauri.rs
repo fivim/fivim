@@ -6,6 +6,7 @@ use tauri::api::path as t_path;
 use tauri::utils::assets::EmbeddedAssets;
 
 use crate::conf as x_conf;
+use crate::utils as x_utils;
 use xutils::path as x_path;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -15,6 +16,8 @@ pub struct AppCoreConf {
     defaultLocaleInNative: String, // Javascript naming style
     homeAppDir: String,            // Javascript naming style
     homeDir: String,               // Javascript naming style
+    logFilePath: String,           // Javascript naming style
+    repo: String,
     version: String,
 }
 
@@ -78,6 +81,8 @@ pub fn get_app_core_conf() -> AppCoreConf {
         defaultLocaleInNative: x_conf::DEFAULT_LANGUAGE_IN_NATIVE_WORD.to_string(),
         homeAppDir: home_app_dir(),
         homeDir: home_dir(),
+        logFilePath: x_path::path_buf_to_string(x_utils::logger::gen_logger_file_path()),
+        repo: x_conf::PROJECT_REPO.to_string(),
         version: version(),
     };
 

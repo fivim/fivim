@@ -6,26 +6,22 @@ import { Commands } from './types'
 import { CommandsTauri } from './command_tauri'
 import { CommandsWeb } from './command_web'
 
-let adapter: Commands | null = null
-export const CmdAdapter = (): Commands => {
-  if (adapter === null) {
-    if (runInTauri()) {
-      adapter = new CommandsTauri()
-    } else {
-      adapter = new CommandsWeb()
-    }
-  }
+let adapter: Commands = new CommandsTauri()
+if (!runInTauri()) {
+  adapter = new CommandsWeb()
+}
 
+export const CmdAdapter = () => {
   return adapter
 }
 
 // If you want to share the file with friends or receive files from friends,
 // you don't need to pass the password parameter.
 export const genFilePwd = (pwd: string) => {
-  if (pwd) {
-    return genFilePwdWithSalt(pwd, '')
-  } else {
+  if (!pwd) {
     const appStore = useAppStore()
-    return genFilePwdWithSalt(appStore.data.settings.encryption.masterPassword, MasterPasswordSalt)
+    pwd = appStore.data.settings.encryption.masterPassword
   }
+
+  return genFilePwdWithSalt(pwd, MasterPasswordSalt)
 }

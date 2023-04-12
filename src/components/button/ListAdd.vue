@@ -9,7 +9,7 @@
         <el-button :icon="Plus" circle />
       </template>
 
-      <div class="enas-list">
+      <div class="enas-list cur-ptr">
         <div class="list-item" @click="onAddNote">
           <FileTextOutlined /> {{ t('Note') }}
         </div>
@@ -72,8 +72,7 @@ import { getDataDirs } from '@/libs/init/dirs'
 import { genFilePwd } from '@/libs/commands'
 import { invoker } from '@/libs/commands/invoke'
 import { saveToEntryFile, addFileMeta } from '@/libs/user_data/utils'
-import { genFileName, getFileNameFromPath, listenProgressStatus } from '@/utils/pinia_related'
-import { genUuidv4 } from '@/utils/hash'
+import { genFileName, getFileNameFromPath, startProgressBar } from '@/utils/pinia_related'
 import { genDialogWidth } from '@/utils/utils'
 
 const appStore = useAppStore()
@@ -106,8 +105,7 @@ const addItem = (itemType: typeof TypeNote) => {
   ad.listCol.listOfNote.push(newItem)
   ad.currentFile.title = newItem.title
   ad.currentFile.content = newItem.content
-  ad.currentFile.sign = newItem.sign
-  ad.currentFile.indexInList = appStore.data.listCol.listOfNote.length - 1
+  ad.currentFile.subSign = newItem.sign
   ad.currentFile.type = newItem.type
   appStore.setData(ad)
 }
@@ -156,12 +154,11 @@ const onAddFileSelectFIle = () => {
 
 const doAddFile = async (sourcePath: string, p: ExtDataPathInfo, fileName: string) => {
   // progress bar
-  if (appStore.data.currentProgress.percent > 0) {
+  if (appStore.data.progress.currentTask.percent > 0) {
     ElMessage(t(MessagesInfo.FileStillInProgress))
     return
   }
-  const progressName = genUuidv4()
-  listenProgressStatus(progressName, TaskEncrypt)
+  const progressName = startProgressBar(TaskEncrypt, true)
 
   const dir = p.pathOfCurrentDir
   invoker.writeUserDataFile(genFilePwd(''), dir + fileName, fileName, {}, sourcePath, progressName).then(async (success) => {
@@ -185,8 +182,9 @@ const doAddFile = async (sourcePath: string, p: ExtDataPathInfo, fileName: strin
       })
 
       appStore.setData(ad)
-      addFileMeta(dir, fileName)
-      saveToEntryFile()
+      addFileMeta(dir, fileName).then(() => {
+        saveToEntryFile()
+      })
     }
   })
 }

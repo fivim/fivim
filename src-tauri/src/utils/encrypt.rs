@@ -1,9 +1,10 @@
 use xencrypt::xchacha20poly1305::{
-    decrypt, encrypt, test_file, test_string, EncryptRes, SIZE_KEY, SIZE_NONCE,
+    decrypt as xu_decrypt, encrypt as xu_encrypt, re_encrypt_file as xu_re_encrypt_file, test_file,
+    test_string, EncryptRes, SIZE_KEY, SIZE_NONCE,
 };
 
 use xutils::{
-    array_like as xu_array, errors::EaError as xu_error, file as xu_file, hash as xu_hash,
+    array_like as xu_array, errors::EaError as xu_error, hash as xu_hash,
     logger as xu_logger, string as xu_string,
 };
 
@@ -33,7 +34,7 @@ pub fn encrypt_bytes(pwd: &str, content: &Vec<u8>, progress_name: &str) -> Vec<u
     let kkk = gen_key(pwd);
     let nnn = gen_nonce(pwd);
 
-    match encrypt(
+    match xu_encrypt(
         &kkk,
         &nnn,
         &content,
@@ -57,7 +58,7 @@ pub fn decrypt_bytes(pwd: &str, content: &Vec<u8>, progress_name: &str) -> Vec<u
     let kkk = gen_key(pwd);
     let nnn = gen_nonce(pwd);
 
-    match decrypt(
+    match xu_decrypt(
         &kkk,
         &nnn,
         &content,
@@ -89,7 +90,7 @@ pub fn encrypt_file(
     let kkk = gen_key(pwd);
     let nnn = gen_nonce(pwd);
 
-    match encrypt(
+    match xu_encrypt(
         &kkk,
         &nnn,
         &[].to_vec(),
@@ -129,7 +130,7 @@ pub fn decrypt_file(
 
     // TODO
 
-    match decrypt(
+    match xu_decrypt(
         &kkk,
         &nnn,
         &[].to_vec(),
@@ -156,6 +157,48 @@ pub fn decrypt_file(
     }
 }
 
+pub fn re_encrypt_file(
+    pwd: &str,
+    pwd_new: &str,
+    source_path: &str,
+    dist_path: &str,
+    start: usize,
+    end: usize,
+    progress_name: &str,
+) -> usize {
+    let kkk = gen_key(pwd);
+    let nnn = gen_nonce(pwd);
+
+    let kkk_new = gen_key(pwd_new);
+    let nnn_new = gen_nonce(pwd_new);
+
+    match xu_re_encrypt_file(
+        &kkk,
+        &nnn,
+        &kkk_new,
+        &nnn_new,
+        source_path,
+        start,
+        end,
+        dist_path,
+        &[].to_vec(),
+        &[].to_vec(),
+        progress_name.to_string(),
+    ) {
+        Ok(d) => return d,
+        Err(e) => {
+            let eee = xu_error::ReEncryptFileError {
+                source_path: source_path.to_owned(),
+                dist_path: dist_path.to_owned(),
+                error: e,
+            };
+            xu_logger::log_error(&format!("re_encrypt_file:: error: {}\n", eee));
+
+            return 0;
+        }
+    }
+}
+
 #[test]
 pub fn test() {
     let text = "vfE6IJRRnUCAzNqGHqFCdJ4bFQk4wqeKtQ5RXv5wyVQEaIZsj8Sic2L8Eze5DyN7GFMqAAnaRUBpqhposu4LHj1ZkGDJsgcv80AH3SOD0AlZ5arzfzL03T0J7UVS14xDgRKdVfhIxl2ZKEMZpAbSAtzD08r3D5sR4f41q9rnj9DZ91o8Yl9QPp3VkQ5GU2DfvjNwgwan8D3lXm9WK5yuJTGkwX8L3VBayPJuuCyAZhTwndnx2aRuKxZ04794sL7rX8B1ZBtjsPkFHqWheDSC3ARpqIi8P5yz0kCvGzUpwH5uubIANqIPUegSWZYJrJX94C9Tkp6Kx0LYcHAtY5hPJ4xqKWZ65XL7DFKIkkFK8uv1H3VsrBmBBrFcpauyR1KbimXHT6RkoeceQrKwPX7yhbI3216192B63q4TYYndAOVrTfMqxvqxBxjn9u994JfOHulFSYvQrZH5odfadoJzKseHZyrp487IhN9z51gFi6uNVB74d62";
@@ -170,5 +213,5 @@ pub fn test() {
     // let tail = [].to_vec();
     test_file(source_path, enc_dist_path, dec_dist_path, &header, &tail);
 
-    print!("check file \n\n")
+    println!("check file \n\n")
 }

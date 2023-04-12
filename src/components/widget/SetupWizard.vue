@@ -83,8 +83,7 @@ import { ElOptionItem } from '@/types_common'
 import {
   MasterPasswordSalt, MasterPasswordMinLength, MasterPasswordMaxLength,
   AvailableThemes, ReFileExt,
-  DefaultSyncIntervalSeconds,
-  DefaultTimeFormat,
+  DefaultSyncIntervalSeconds, DefaultTimeFormat,
   DefaultFileExt, DefaultFileNameRule,
   DefaultThemeDark, DefaultThemeLight,
   DefaultListColSortBy, DefaultListColSortOrder
@@ -107,7 +106,7 @@ const getAvailableDefaultLocale = () => {
   setLocale(defaultLocale)
 
   const data = appStore.data.settings
-  data.appearance.locale = defaultLocale
+  data.normal.locale = defaultLocale
   appStore.setSettingData(data, false)
 
   return defaultLocale
@@ -297,18 +296,19 @@ const onSave = () => {
   appData.existConfigFile = true
 
   const settings = appData.settings
+  settings.normal.locale = ruleForm.locale
   settings.normal.workDir = ruleForm.workDir
   settings.encryption.entryFileName = ruleForm.entryFileName
   settings.encryption.fileExt = ruleForm.fileExt
   settings.encryption.fileNameRule = ruleForm.fileNameRule
   settings.encryption.entryFileName = genFileNameByTime(ruleForm.fileNameRule, ruleForm.dateTimeFormat, ruleForm.fileExt)
-  settings.encryption.syncLockFileName = genFileNameByTime(ruleForm.fileNameRule, ruleForm.dateTimeFormat, ruleForm.fileExt)
+  settings.encryption.lockFileName = genFileNameByTime(ruleForm.fileNameRule, ruleForm.dateTimeFormat, ruleForm.fileExt)
   settings.encryption.masterPassword = genMasterPasswordSha256(ruleForm.masterPassword, MasterPasswordSalt)
   settings.appearance.dateTimeFormat = ruleForm.dateTimeFormat
-  settings.appearance.locale = ruleForm.locale
   settings.appearance.listColSortBy = DefaultListColSortBy
   settings.appearance.listColSortOrder = DefaultListColSortOrder
   settings.appearance.theme = ruleForm.theme
+  settings.sync.intervalSeconds = DefaultSyncIntervalSeconds
   appStore.setData(appData)
 
   setTheme(ruleForm.theme)

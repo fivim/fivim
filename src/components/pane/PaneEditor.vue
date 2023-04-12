@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="appStore.data.currentFile.sign === ''">
+    <div v-if="appStore.data.currentFile.subSign === ''">
       <div class="empty py-2"> {{ t('&No content') }} </div>
     </div>
     <div v-else class="section max-h-full">
@@ -22,7 +22,7 @@
 
       <div class="editor-box">
         <template v-if="isNote()">
-          <EditorEditorjs ref="editorRef" class="note" :content="appStore.data.currentFile.content || '{}'"
+          <EditorEditorjs ref="editorRef" :content="appStore.data.currentFile.content || '{}'" class="note"
             @onUpdate="onEditorUpdate" />
         </template>
         <template v-else-if="isFile()">
@@ -46,23 +46,10 @@ import { TypeNote } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { TagInfo } from '@/libs/user_data/types'
 import { isNote, isFile } from '@/utils/pinia_related'
+import { getCurrentNotebookIndexInList } from '@/libs/user_data/utils'
 
 const appStore = useAppStore()
 const { t } = useI18n()
-
-let lastFileSign = ''
-appStore.$subscribe((mutation, state) => {
-  const currentFileSign = state.data.currentFile.sign
-
-  if (state.data.currentFile.type === TypeNote) {
-    // If file changed, update content.
-    if (currentFileSign !== lastFileSign) {
-      editorRef.value?.setContent(appStore.data.currentFile.content || '{}')
-    }
-  }
-
-  lastFileSign = currentFileSign
-})
 
 // ---------- note ----------
 const editorRef = ref<InstanceType<typeof EditorEditorjs>>()
@@ -72,24 +59,34 @@ const onTitleInputNote = (str: string) => {
   ad.currentFile.title = str
   appStore.setData(ad)
 
-  const index = ad.currentFile.indexInList
+  const index = getCurrentNotebookIndexInList()
   const icd = appStore.data.listCol
   icd.listOfNote[index].title = str
   appStore.setListColData(icd)
 }
 
 const onEditorUpdate = (str: string) => {
-  const icd = appStore.data.listCol
+  const ad = appStore.data
+  const icd = ad.listCol
 
   if (icd.listOfNote.length === 0) {
     // alert('Please create a new note first') // TODO: add translate
   } else {
-    const index = appStore.data.currentFile.indexInList
+    const index = getCurrentNotebookIndexInList()
     icd.listOfNote[index].content = str
     icd.listOfNote[index].mtimeUtc = new Date()
     appStore.setListColData(icd)
   }
 }
+
+let lastSubSign = ''
+appStore.$subscribe((mutation, state) => {
+  if (state.data.currentFile.type === TypeNote && lastSubSign !== state.data.currentFile.subSign) {
+    editorRef.value?.setContent(appStore.data.currentFile.content)
+  }
+
+  lastSubSign = state.data.currentFile.subSign
+})
 // ---------- note end ----------
 
 // ---------- tag ----------

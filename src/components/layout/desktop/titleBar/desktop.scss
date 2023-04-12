@@ -7,7 +7,7 @@
   padding: 0;
   margin: 0;
   height: var(--enas-desktop-title-bar-height);
-  line-height: calc(var(--enas-desktop-title-bar-height) - 1px);
+  line-height: calc(var(--enas-desktop-title-bar-height));
   vertical-align: middle;
   background-color: var(--enas-title-bar-background-color) !important;
   position: absolute;

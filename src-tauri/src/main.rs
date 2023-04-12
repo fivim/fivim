@@ -21,13 +21,7 @@ use xutils;
 
 fn main() {
     utils::tauri::set_app_dir();
-
-    // init logger
-    let mut log_file_name = "".to_string();
-    let app_name = utils::tauri::app_name();
-    log_file_name += &app_name;
-    log_file_name += &conf::LOG_FILE_EXT;
-    xutils::logger::init_logger(utils::tauri::home_app_dir().as_str(), &log_file_name);
+    xutils::logger::init_logger(utils::logger::gen_logger_file_path());
 
     let app = tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -54,6 +48,8 @@ fn main() {
             commands::delete_dir,
             commands::get_dir_size,
             commands::list_dir_children,
+            // fs
+            commands::rename,
             // log
             commands::log,
             // encrypt
@@ -63,8 +59,10 @@ fn main() {
             // user data file
             commands::read_user_data_file,
             commands::write_user_data_file,
+            commands::re_encrypt_file,
             // other
-            commands::get_progress
+            commands::get_progress,
+            commands::download_file
         ])
         .setup(|app| {
             menu::make_tray_menu(app)?;

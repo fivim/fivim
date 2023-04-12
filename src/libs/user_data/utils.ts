@@ -1,15 +1,21 @@
 import { ElMessage } from 'element-plus'
+import { join as pathJoin } from '@tauri-apps/api/path'
 
 import { MessagesInfo } from '@/types'
-import { StrSignOk, StrSignErr } from '@/constants'
-import { getDataDirs } from '@/libs/init/dirs'
+import { TypeString, TaskChangeMasterPassword } from '@/constants'
+import { getDataDirs, getDataDirsByPwd } from '@/libs/init/dirs'
 import { useAppStore } from '@/pinia/modules/app'
-import { genFilePwd } from '@/libs/commands'
+import { genFilePwd, CmdAdapter } from '@/libs/commands'
 import { invoker } from '@/libs/commands/invoke'
 import { i18n } from '@/libs/init/i18n'
+import { UserFileMetaInfo } from '@/libs/user_data/types'
+import { startProgressBar, pathRemoveSlash, resetProgressBarWithoutTaskName } from '@/utils/pinia_related'
+import { genFormatedDate } from '@/utils/hash'
+import { jsonCopy } from '@/utils/utils'
 
 import { parseNotebookJson } from './parser_decode'
 import { saveNotebookFile, saveEntryFile, genNotebookFileContent, saveNotebookFileWithContent } from './parser_encode'
+import { tmplFileInfo, tmplNoteInfo } from './types_template'
 
 export const getEntryFileName = () => {
   const appStore = useAppStore()
@@ -21,6 +27,61 @@ export const genCurrentNotebookFileName = () => {
   const sign = appStore.data.listCol.sign
   const senc = appStore.data.settings.encryption
   return `${sign}${senc.fileExt}`
+}
+
+export const getCurrentNotebookIndexInList = () => {
+  const appStore = useAppStore()
+  const ad = appStore.data
+  const list = ad.listCol.listOfNote
+  let res = -1
+
+  for (let index = 0; index < list.length; index++) {
+    const item = list[index]
+    if (item.sign === ad.currentFile.subSign) {
+      res = index
+      break
+    }
+  }
+
+  return res
+}
+
+export const getCurrentNotebookInList = (sign: string) => {
+  const appStore = useAppStore()
+  const ad = appStore.data
+  const list = ad.listCol.listOfNote
+  let res = tmplNoteInfo()
+
+  if (sign === '') {
+    sign = ad.currentFile.sign
+  }
+
+  for (let index = 0; index < list.length; index++) {
+    const item = list[index]
+    if (item.sign === sign) {
+      res = item
+      break
+    }
+  }
+
+  return res
+}
+
+export const getCurrentFileInList = () => {
+  const appStore = useAppStore()
+  const ad = appStore.data
+  const list = ad.userData.files
+  let res = tmplFileInfo()
+
+  for (let index = 0; index < list.length; index++) {
+    const item = list[index]
+    if (item.sign === ad.currentFile.sign) {
+      res = item
+      break
+    }
+  }
+
+  return res
 }
 
 export const getNotebookFilePath = async (sign: string) => {
@@ -39,7 +100,7 @@ export const writeEncryptedUserDataToFile = (dir: string, fileName: string, cont
 
 export const readNotebookdata = async (sign: string) => {
   const path = await getNotebookFilePath(sign)
-  const fileData = await invoker.readUserDataFile(genFilePwd(''), path, true, 'string', '', '')
+  const fileData = await invoker.readUserDataFile(genFilePwd(''), path, true, TypeString, '', '')
 
   if (fileData.crc32 !== fileData.crc32_check) {
     const msg = MessagesInfo.FileVerificationFailed
@@ -79,34 +140,31 @@ export const addFileMeta = async (dir: string, fileName: string) => {
   appStore.setData(ad)
 }
 
-export const updateFileMeta = async (dir: string, fileName: string) => {
+export const updateFileMeta = async (fileName: string) => {
   const appStore = useAppStore()
   const ad = appStore.data
 
-  const files = ad.userData.filesMeta
-  const meta = await invoker.getFileMeta(dir + fileName)
   let exist = false
-  for (const item of files) {
+  for (let index = 0; index < ad.userData.filesMeta.length; index++) {
+    const item = ad.userData.filesMeta[index]
+
     if (item.sign === fileName) {
-      item.mtimeUtc = new Date()
-      item.sha256 = meta.sha256
-      item.size = meta.size
+      const p = await getDataDirs()
+      const meta = await invoker.getFileMeta(p.pathOfCurrentDir + fileName)
+
+      ad.userData.filesMeta[index].mtimeUtc = new Date()
+      ad.userData.filesMeta[index].sha256 = meta.sha256
+      ad.userData.filesMeta[index].size = meta.size
+
       exist = true
       break
     }
   }
   if (!exist) {
-    ad.userData.filesMeta.push({
-      ctimeUtc: new Date(0),
-      mtimeUtc: new Date(),
-      dtimeUtc: new Date(0),
-      sign: fileName,
-      sha256: meta.sha256,
-      size: meta.size
-    })
-    invoker.logError(`>>> updateFileMeta can not found file info: ${fileName}, add a new info.`)
+    invoker.logError(`>>> updateFileMeta can not found file info: ${fileName}.`)
   }
   appStore.setData(ad)
+  return true
 }
 
 // Only update dtimeUtc, do not delete record.
@@ -123,6 +181,14 @@ export const deleteFileMeta = async (fileName: string) => {
   appStore.setData(ad)
 }
 
+export const getAllFilesMeta = () => {
+  const appStore = useAppStore()
+  const ad = appStore.data
+  const allFilesArr = jsonCopy(ad.userData.filesMeta) as UserFileMetaInfo[]
+
+  return allFilesArr
+}
+
 const deleteFileInCurrentDir = async (fileName: string) => {
   const p = await getDataDirs()
   const filePath = p.pathOfCurrentDir + fileName
@@ -133,12 +199,15 @@ export const saveToEntryFile = async () => {
   const t = i18n.global.t
   const saveEntryFileRes = await saveEntryFile()
   if (!saveEntryFileRes) {
-    return t('&Failed to save file:', { fileName: getEntryFileName() })
+    const msg = t('&Failed to save file:', { fileName: getEntryFileName() })
+    CmdAdapter().notification(msg, '', '')
+    invoker.logError(msg)
   }
-  return StrSignOk
+
+  return saveEntryFileRes
 }
 
-export const saveCurrentNotebook = async (): Promise<string> => {
+export const saveCurrentNotebook = async () => {
   const appStore = useAppStore()
   const t = i18n.global.t
 
@@ -146,7 +215,11 @@ export const saveCurrentNotebook = async (): Promise<string> => {
   return saveNotebookFile(true, '').then((saveNotebookRes) => {
     if (appStore.data.listCol.listOfNote.length > 0) {
       if (!saveNotebookRes) {
-        return t('&Failed to save file:', { fileName: genCurrentNotebookFileName() })
+        const msg = t('&Failed to save file:', { fileName: genCurrentNotebookFileName() })
+        CmdAdapter().notification(msg, '', '')
+        invoker.logError(msg)
+      } else {
+        return true
       }
     }
 
@@ -154,35 +227,44 @@ export const saveCurrentNotebook = async (): Promise<string> => {
   })
 }
 
-export const saveCurrentNotebookAndCreateNotebookFile = async (fileName: string): Promise<string> => {
+export const saveCurrentNotebookAndCreateNotebookFile = async (fileName: string) => {
   const sur = await saveCurrentNotebook()
-  if (sur === StrSignOk) {
+  if (sur) {
     return saveNotebookFile(false, fileName).then((saveRes) => {
-      if (saveRes) {
-        return StrSignOk
-      } else {
-        return StrSignErr
-      }
+      return saveRes
     })
   }
 
   return sur
 }
 
-export const saveCurrentNotebookData = async () => {
+export const saveCurrentNotebookData = async (showMsg: boolean) => {
   const t = i18n.global.t
-  const errMsg = await saveCurrentNotebook()
-  if (errMsg === StrSignOk) {
-    ElMessage({
-      message: t('Operation succeeded'),
-      type: 'success'
-    })
+  const success = await saveCurrentNotebook()
+  if (success) {
+    if (showMsg) {
+      ElMessage({
+        message: t('Operation succeeded'),
+        type: 'success'
+      })
+    }
+
+    const success2 = await saveToEntryFile()
+    if (success2) {
+      const appStore = useAppStore()
+      updateFileMeta(appStore.data.currentFile.sign)
+    }
+
+    // setTimeout(updateCurrentNotebookFileMeta, 800)
   } else {
-    ElMessage({
-      message: errMsg,
-      type: 'error'
-    })
+    if (showMsg) {
+      ElMessage({
+        message: t('Operation failure'),
+        type: 'error'
+      })
+    }
   }
+  return success
 }
 
 export const deleteNotebook = async (sign: string) => {
@@ -192,7 +274,7 @@ export const deleteNotebook = async (sign: string) => {
     // delete the data in paneData
     if (navColData.notebooks[index].sign === sign) {
       navColData.notebooks.splice(index, 1)
-      appStore.setUserDataMapData(navColData)
+      appStore.setUserData(navColData)
     }
   }
 
@@ -215,19 +297,18 @@ export const deleteNotebook = async (sign: string) => {
 
 export const deleteTag = async (sign: string) => {
   const appStore = useAppStore()
-  const userDataMap = appStore.data.userData
+  const userData = appStore.data.userData
   const listColData = appStore.data.listCol
-  const p = await getDataDirs()
 
-  for (let ti = 0; ti < userDataMap.tags.length; ti++) {
+  for (let ti = 0; ti < userData.tags.length; ti++) {
     // Loop and delete tag of notebooks and notes
-    for (let nbi = 0; nbi < userDataMap.notebooks.length; nbi++) {
-      const nb = userDataMap.notebooks[nbi]
+    for (let nbi = 0; nbi < userData.notebooks.length; nbi++) {
+      const nb = userData.notebooks[nbi]
       const nbti = nb.tagsArr.indexOf(sign)
       // Delete tag of notebook
       if (nbti >= 0) {
         nb.tagsArr.splice(nbti, 1)
-        userDataMap.notebooks[nbi] = nb
+        userData.notebooks[nbi] = nb
       }
 
       // Delete tag of note
@@ -255,24 +336,111 @@ export const deleteTag = async (sign: string) => {
         })
       }
 
-      updateFileMeta(p.pathOfCurrentDir, nb.sign)
+      updateFileMeta(nb.sign)
     }
 
     // Loop and delete tag of attachments
 
     // delete the data in navigationColumn
-    const tag = userDataMap.tags[ti]
+    const tag = userData.tags[ti]
     if (tag.sign === sign) {
-      userDataMap.tags.splice(ti, 1)
+      userData.tags.splice(ti, 1)
     }
   }
 
-  appStore.setUserDataMapData(userDataMap)
+  appStore.setUserData(userData)
 
-  saveCurrentNotebookData()
-  if (await saveToEntryFile() === StrSignOk) {
-    return true
-  } else {
-    return false
+  saveCurrentNotebookData(false)
+
+  return await saveToEntryFile()
+}
+
+export const changeMasterPassword = async (newPassWord: string, fileVerification: boolean) => {
+  // DO NOT SAVE NOTEBOOK HERE, IT WILL CHANGE THE CONTENT OF THE NOTEBOOK FILE,
+  // AND THE SHA256 WILL BE CHANGED.
+  // saveCurrentNotebook()
+
+  const appStore = useAppStore()
+  const t = i18n.global.t
+  const ad = appStore.data
+  const entryFileSign = ad.settings.encryption.entryFileName
+
+  const p = await getDataDirs()
+  const pn = await getDataDirsByPwd(newPassWord)
+  const dateStr = genFormatedDate('___YYYY-MM-DD_HH-mm-ss')
+  const newDir = pathRemoveSlash(pn.pathOfCurrentDir)
+  const newTempDir = newDir + dateStr + '_new'
+
+  const allFilesArr = getAllFilesMeta()
+  const fileCount = allFilesArr.length
+  appStore.data.progress.changeMasterPassword.totalFilesCount = fileCount
+
+  let processedCount = 0
+  let lastProgressName = ''
+  for (const item of allFilesArr) {
+    // file has deleted
+    if (new Date(item.dtimeUtc).getTime() > 0) {
+      processedCount++
+      continue
+    }
+
+    const sourceFilePath = p.pathOfCurrentDir + item.sign
+    const outputPath = await pathJoin(newTempDir, item.sign)
+
+    let sha256Ok = true
+    let sha256 = ''
+    if (fileVerification) {
+      sha256 = await invoker.sha256ByFilePath(sourceFilePath)
+      sha256Ok = item.sha256 === sha256
+    }
+
+    appStore.data.progress.changeMasterPassword.currentFileName = item.sign
+    appStore.data.progress.changeMasterPassword.currentFileIndex = processedCount + 1
+    appStore.data.progress.changeMasterPassword.currentFileSize = item.size
+
+    if (item.sign === entryFileSign || sha256Ok) {
+      const progressName = startProgressBar(TaskChangeMasterPassword, false)
+      const success = await invoker.reEncryptFile(genFilePwd(''), genFilePwd(newPassWord), sourceFilePath, item.sign, outputPath, progressName)
+      if (success) {
+        processedCount++
+      } else {
+        invoker.logError('file re-encrypt error: ' + item.sign)
+      }
+      resetProgressBarWithoutTaskName(progressName)
+      lastProgressName = progressName
+    } else {
+      invoker.logError(`file SHA256 does not match,\n file: ${item.sign},\n recorded sha256:${item.sha256},\n calculated sha256:${sha256}`)
+    }
   }
+
+  resetProgressBarWithoutTaskName(lastProgressName)
+
+  const success = fileCount === processedCount
+  if (success) {
+    // Rename old dir
+    const originalOldDir = pathRemoveSlash(p.pathOfCurrentDir)
+    const backupDir = originalOldDir + dateStr + '_backup'
+    const successOldDir = await invoker.rename(originalOldDir, backupDir)
+    if (!successOldDir) {
+      const msg = t('&Failed to rename: {name}', { name: originalOldDir })
+      CmdAdapter().notification(msg, '', '')
+      invoker.logError(msg)
+    }
+
+    // Rename new dir
+    const successNewDir = await invoker.rename(newTempDir, newDir)
+    if (successNewDir) {
+      appStore.data.progress.currentTask.isSuccess = true
+      appStore.data.progress.currentTask.message = backupDir
+    } else {
+      const msg = t('&Failed to rename: {name}', { name: newTempDir })
+      CmdAdapter().notification(msg, '', '')
+      invoker.logError(msg)
+    }
+  } else {
+    const msg = t('&Please check the log: {path}', { path: appStore.data.dataPath.pathOfLogFile })
+    appStore.data.progress.currentTask.message = msg
+    appStore.data.progress.currentTask.isFailure = true
+  }
+  return success
 }
