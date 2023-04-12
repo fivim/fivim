@@ -1,6 +1,6 @@
 <template>
   <div class="desktop-title-bar">
-    <BackgroundProgressBar :percent="appStore.data.currentProgress.percent" />
+    <BackgroundProgressBar :percent="appStore.data.progress.currentTask.percent" />
 
     <div class="content">
       <div class="inner" data-tauri-drag-region>
@@ -11,16 +11,14 @@
           <slot name="titleName"></slot>
 
           <div class="title-bar-ext-buttons" v-if="showExtButtons">
-            <SettingButton />
-            <ThemeButton />
-            <SaveButton />
             <LockButton />
+            <SaveButton />
+            <WindowExtAction />
           </div>
         </template>
         <template v-else>
           <div class="title-bar-ext-buttons" v-if="showExtButtons">
-            <SettingButton />
-            <ThemeButton />
+            <WindowExtAction />
             <SaveButton />
             <LockButton />
           </div>
@@ -38,10 +36,9 @@
 import { ref } from 'vue'
 
 import BackgroundProgressBar from '@/components/widget/BackgroundProgressBar.vue'
+import WindowExtAction from '@/components/button/WindowExtAction.vue'
 import LockButton from '@/components/button/LockScreen.vue'
 import SaveButton from '@/components/button/Save.vue'
-import SettingButton from '@/components/button/Setting.vue'
-import ThemeButton from '@/components/button/Theme.vue'
 
 import { CmdAdapter } from '@/libs/commands'
 import { useAppStore } from '@/pinia/modules/app'

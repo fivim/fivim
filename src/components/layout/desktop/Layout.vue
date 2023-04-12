@@ -8,11 +8,6 @@
 
   <!-- main -->
   <div :class="`app-main ${isDesktopMode() ? 'windows-desktop' : ''}`">
-    <!-- full screen editor -->
-    <!-- <div v-if="appStore.data.editorFullScreen" id="app" class="app">
-      <EditorFullScreen />
-    </div> -->
-
     <!-- desktop panes -->
     <div id="app" :class="`app ${isDesktopMode() ? 'disp-grid' : ''}`" :style="{ ...computeStylesForContainer() }">
       <template v-for="(item, index) in paneController.panesNameArr" v-bind:key="index">
@@ -61,6 +56,7 @@ import PaneNavigation from '@/components/pane/PaneNavigation.vue'
 import PaneList from '@/components/pane/PaneList.vue'
 import PaneEditor from '@/components/pane/PaneEditor.vue'
 
+import { TypeNone } from '@/constants'
 import { AppModeInfo } from '@/types'
 import { isTabletScreen } from '@/utils/media_query'
 import { classNames } from '@/utils/string'
@@ -70,14 +66,20 @@ const appStore = useAppStore()
 const { t } = useI18n()
 
 const genTitleText = () => {
-  let title = appStore.data.appName
-  if (appStore.data.currentFile.title) {
-    title = appStore.data.currentFile.title + ' - ' + title
-  }
+  const appName = appStore.data.appName
+  let title = appName
 
-  if (appStore.data.currentProgress.percent > 0) {
-    const name = t(appStore.data.currentProgress.taskName)
-    title += `(${t('is in progress', { name })})`
+  if (appStore.data.progress.currentTask.taskName !== TypeNone) {
+    // use short title without appName
+    if (appStore.data.currentFile.title) {
+      title = appStore.data.currentFile.title
+    }
+    const name = t(appStore.data.progress.currentTask.taskName)
+    title = `${title}(${name} ${appStore.data.progress.currentTask.percent}%)`
+  } else {
+    if (appStore.data.currentFile.title) {
+      title = `${appStore.data.currentFile.title}-${appName}`
+    }
   }
 
   return title

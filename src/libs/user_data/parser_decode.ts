@@ -2,24 +2,23 @@ import { TypeFile, TypeNote } from '@/constants'
 
 import { tmplUserDataMap } from '@/types_template'
 import { invoker } from '@/libs/commands/invoke'
-import { jsonCopy } from '@/utils/utils'
 import { getDateByTmStr } from '@/utils/time'
 
 import {
   EntryFileSourceInfo, NotebookSourceInfo, EntryFileSourceInfoParsedRes,
   FileInfo, NotebookInfo, NoteInfo, TagInfo, UserDataInfo, UserFileMetaInfo
 } from './types'
-import { tmplMmanifestData } from './types_templates'
+import { tmplMmanifestData } from './types_template'
 
 export const parseEntryFile = (jsonStr: string): EntryFileSourceInfoParsedRes => {
-  const res: EntryFileSourceInfoParsedRes = jsonCopy(tmplMmanifestData)
+  const res: EntryFileSourceInfoParsedRes = tmplMmanifestData()
 
   try {
     const data: EntryFileSourceInfo = JSON.parse(jsonStr)
     if (data.dataVersion === 1) {
       const nnn = parseNavColDataV1(data)
-      res.userDataMap = nnn
-      res.syncLockFileName = data.syncLockFileName
+      res.userData = nnn
+      res.lockFileName = data.lockFileName
       return res
     }
   } catch (error) {
@@ -31,7 +30,7 @@ export const parseEntryFile = (jsonStr: string): EntryFileSourceInfoParsedRes =>
 }
 
 export const parseNavColDataV1 = (data: EntryFileSourceInfo): UserDataInfo => {
-  const res: UserDataInfo = jsonCopy(tmplUserDataMap)
+  const res: UserDataInfo = tmplUserDataMap()
 
   // ---------- notebooks ----------
   const noteBooksData = data.noteBooks
@@ -96,24 +95,25 @@ export const parseNavColDataV1 = (data: EntryFileSourceInfo): UserDataInfo => {
   res.tags = resTagsArr
   // ---------- tags end ----------
 
-  // ---------- userDataFilesMeta ----------
-  const udfData = data.userDataFilesMeta
-  const udfAttrsArr = udfData.attrsArr
-  const udfDataArr = udfData.dataArr
-  const resUdfArr: UserFileMetaInfo[] = []
-  if (fDataArr.length > 0) {
-    for (const i of udfDataArr) {
-      resUdfArr.push({
-        ctimeUtc: getDateByTmStr(i[udfAttrsArr.indexOf('ctimeUtc')]),
-        dtimeUtc: getDateByTmStr(i[udfAttrsArr.indexOf('dtimeUtc')]),
-        mtimeUtc: getDateByTmStr(i[udfAttrsArr.indexOf('mtimeUtc')]),
-        size: parseInt(i[udfAttrsArr.indexOf('size')]),
-        sha256: i[udfAttrsArr.indexOf('sha256')]
+  // ---------- filesMeta ----------
+  const fmData = data.filesMeta
+  const fmAttrsArr = fmData.attrsArr
+  const fmDataArr = fmData.dataArr
+  const resFmArr: UserFileMetaInfo[] = []
+  if (fmDataArr.length > 0) {
+    for (const i of fmDataArr) {
+      resFmArr.push({
+        ctimeUtc: getDateByTmStr(i[fmAttrsArr.indexOf('ctimeUtc')]),
+        dtimeUtc: getDateByTmStr(i[fmAttrsArr.indexOf('dtimeUtc')]),
+        mtimeUtc: getDateByTmStr(i[fmAttrsArr.indexOf('mtimeUtc')]),
+        size: parseInt(i[fmAttrsArr.indexOf('size')]),
+        sign: i[fmAttrsArr.indexOf('sign')],
+        sha256: i[fmAttrsArr.indexOf('sha256')]
       } as UserFileMetaInfo)
     }
   }
-  res.filesMeta = resUdfArr
-  // ---------- userDataFilesMeta end ----------
+  res.filesMeta = resFmArr
+  // ---------- filesMeta end ----------
 
   return res
 }

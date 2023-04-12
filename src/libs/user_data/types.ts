@@ -1,8 +1,9 @@
-import { TypeFile, TypeMarkdown, TypeNone, TypeNote, TypeTag } from '@/constants'
+import { TypeFile, TypeMarkdown, TypeNone, TypeNote, TypeTag, TaskUpdateFilesSha256 } from '@/constants'
 
 export type TypeDocInfo = typeof TypeMarkdown | typeof TypeNote | typeof TypeNone
 export type TypeFileInfo = typeof TypeFile
 export type TypeTagListItemInfo = typeof TypeTag | typeof TypeFile | typeof TypeMarkdown | typeof TypeNote
+export type TaskLock = typeof TaskUpdateFilesSha256
 
 export type FileInfo = {
     // common
@@ -81,7 +82,7 @@ export type UserDataInfo = {
 export type AttrsArrKeyOfFile = 'ctimeUtc' | 'mtimeUtc' | 'sign' | 'tagsSign' | 'title' | 'content' | 'sha256' | 'originalSize' | 'originalSha256'
 export type AttrsArrKeyOfNotebook = 'ctimeUtc' | 'mtimeUtc' | 'sign' | 'tagsSign' | 'title' | 'icon'
 export type AttrsArrKeyOfNote = 'ctimeUtc' | 'mtimeUtc' | 'sign' | 'tagsSign' | 'title' | 'content' | 'icon' | 'type'
-export type AttrsArrKeyOfUserDataFileMeta = 'ctimeUtc' | 'mtimeUtc' | 'dtimeUtc' | 'sign' | 'sha256' | 'size'
+export type AttrsArrKeyOfFilesMeta = 'ctimeUtc' | 'mtimeUtc' | 'dtimeUtc' | 'sign' | 'sha256' | 'size'
 
 // User's entry file data
 export type EntryFileSourceInfo = {
@@ -98,16 +99,16 @@ export type EntryFileSourceInfo = {
         attrsArr: AttrsArrKeyOfFile[]
         dataArr: string[][]
     },
-    userDataFilesMeta: {
-        attrsArr: AttrsArrKeyOfUserDataFileMeta[]
+    filesMeta: {
+        attrsArr: AttrsArrKeyOfFilesMeta[]
         dataArr: string[][]
     },
-    syncLockFileName: string
+    lockFileName: string
 }
 
 export type EntryFileSourceInfoParsedRes = {
-    userDataMap: UserDataInfo
-    syncLockFileName: string,
+    userData: UserDataInfo
+    lockFileName: string,
 }
 
 // User's note data
@@ -117,14 +118,19 @@ export type NotebookSourceInfo = {
     dataArr: string[][]
 }
 
-// User's sync lock data
-export type SyncLockSourceInfo = {
-    syncStartTimestamp: number
-    syncExpireTimestamp: number
+// User's lock file data
+export type LockSourceInfo = {
+    nextTask: {
+        name: TaskLock
+    },
+    sync: {
+        syncStartTimestamp: number
+        syncExpireTimestamp: number
+    }
 }
 
 export type MergeEntryFileMetaInfo = {
-    syncLockFileName: string
+    lockFileName: string
 }
 
 // For tag list, it will contain various types of data.

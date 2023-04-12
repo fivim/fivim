@@ -14,7 +14,7 @@
               <el-input v-model="password" type="password" :placeholder="t('&Input your master password')" autofocus />
             </div>
             <div class="py-2" v-if="masterPasswordWrong">
-              <el-alert :title="t('Invalid master password')" type="error" show-icon />
+              <el-alert :title="t('&Invalid master password')" type="error" show-icon />
             </div>
 
             <el-button type="primary" @click="checkPassword">
@@ -39,7 +39,6 @@ import { initAtFirst } from '@/libs/init/at_first'
 import { i18n } from '@/libs/init/i18n'
 import { CmdAdapter } from '@/libs/commands'
 import { initEntryFile } from '@/libs/user_data/entry_file'
-import { initWithStartUpConfFile } from '@/libs/init/conf_file'
 import { invoker } from '@/libs/commands/invoke'
 import { genMasterPasswordSha256 } from '@/utils/hash'
 
@@ -76,17 +75,10 @@ const checkPassword = () => {
     }
   })
 }
-
-if (appStore.data.settings.normal.workDir === '') {
-  initWithStartUpConfFile()
-}
 </script>
 
 <style lang="scss" scoped>
 .lockscreen {
-  // margin-top: var(--enas-desktop-title-bar-height);
-  // height: calc(100vh - var(--enas-desktop-title-bar-height) - 2px) !important;
-
   .el-row {
     height: 100%
   }

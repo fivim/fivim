@@ -40,9 +40,9 @@
           <!-- for note list -->
           <template v-if="appStore.data.listCol.type === TypeNote">
             <div class="content-list">
-              <div v-for="(item, index) in appStore.data.listCol.listOfNote" v-bind:key="index"
-                @click="onClickNote(index)" class="content-list-item">
-                <div :class="item.sign === appStore.data.currentFile.sign ? 'item-selected p-2' : 'p-2'">
+              <div v-for="(item, index) in appStore.data.listCol.listOfNote" v-bind:key="index" @click="onClickNote(item)"
+                class="content-list-item">
+                <div :class="item.sign === appStore.data.currentFile.subSign ? 'item-selected p-2' : 'p-2'">
                   <div class="disp-flex">
                     <div class="left">
                       <el-icon class="item-icon" v-if="item.type === TypeNote">
@@ -90,7 +90,7 @@
             <div class="content-list">
               <div v-for="(item, index) in appStore.data.userData.files" v-bind:key="index" @click="onClickFile(index)"
                 class="content-list-item">
-                <div :class="item.sign === appStore.data.currentFile.sign ? 'selected p-2' : 'p-2'">
+                <div :class="item.sign === appStore.data.currentFile.subSign ? 'item-selected p-2' : 'p-2'">
                   <div class="disp-flex">
                     <div class="left">
                       <el-icon class="item-icon">
@@ -123,7 +123,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Tickets } from '@element-plus/icons-vue'
+import { Tickets, Grid } from '@element-plus/icons-vue'
 
 import ListAddButton from '@/components/button/ListAdd.vue'
 import ListShareButton from '@/components/button/ListShareFile.vue'
@@ -134,6 +134,9 @@ import { TypeFile, TypeTag, TypeNote } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { NoteInfo, FileInfo } from '@/libs/user_data/types'
 import { formatTime } from '@/utils/pinia_related'
+
+import { CurrentFileInfo } from './types'
+import { getCurrentNotebookInList } from '@/libs/user_data/utils'
 
 const props = defineProps({
   className: {
@@ -183,23 +186,25 @@ const listSort = (a: NoteInfo | FileInfo, b: NoteInfo | FileInfo) => {
 }
 
 const list = ref(appStore.data.listCol.listOfNote)
-
 appStore.$subscribe((mutation, state) => {
   list.value = list.value.sort(listSort)
   list.value = state.data.listCol.listOfNote.sort(listSort)
 })
 
 // -------- note --------
-const onClickNote = (index: number) => {
-  const note = appStore.data.listCol.listOfNote[index]
-  const adc = appStore.data.currentFile
-  adc.content = note.content
-  adc.title = note.title
-  adc.sign = note.sign
-  adc.tagsArr = note.tagsArr
-  adc.indexInList = index
-  adc.type = note.type
-  appStore.setCurrentFile(adc)
+const onClickNote = (note: NoteInfo) => {
+  const ad = appStore.data
+  const currentFile: CurrentFileInfo = {
+    content: note.content,
+    subSign: note.sign,
+    tagsArr: note.tagsArr,
+    title: note.title,
+    type: TypeNote,
+    sign: ad.currentFile.sign
+  }
+
+  ad.currentFile = currentFile
+  appStore.setData(ad)
 }
 // -------- note end --------
 
@@ -208,12 +213,16 @@ const onClickFile = (index: number) => {
   const file = appStore.data.userData.files[index]
 
   const ad = appStore.data
-  ad.currentFile.content = file.content
-  ad.currentFile.title = file.title
-  ad.currentFile.sign = file.sign
-  ad.currentFile.tagsArr = file.tagsArr
-  ad.currentFile.indexInList = index
-  ad.currentFile.type = TypeFile
+  const currentFile: CurrentFileInfo = {
+    content: file.content,
+    title: file.title,
+    sign: file.sign,
+    tagsArr: file.tagsArr,
+    type: TypeFile,
+    subSign: file.sign
+  }
+
+  ad.currentFile = currentFile
   appStore.setData(ad)
 }
 // -------- file end --------

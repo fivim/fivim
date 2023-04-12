@@ -26,7 +26,7 @@ export type PaneControllerInfo = {
 
 export type CurrentFileInfo = {
   sign: string // hashed file name of currently opened
-  indexInList: number // the index in list of the list column
+  subSign: string // hashed name of note in notebook, or as same as file sign for file type.
   type: TypeDocInfo | TypeFileInfo
   content: string
   title: string

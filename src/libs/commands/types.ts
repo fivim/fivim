@@ -1,3 +1,5 @@
+import { TypeString, TypeBase64, TypeBinary, TypeNone } from '@/constants'
+
 export interface Commands {
     notification(title: string, body: string, icon: string): Promise<void>;
     getPlatformName(): Promise<string>;
@@ -24,8 +26,7 @@ export type UserDataFile = {
     file_data_str: string,
 }
 
-// 'string' means normal string, 'base64' means base64 string, 'bin' means binary, '' means none
-export type UserDataParseAs = 'string' | 'base64' | 'bin' | 'none'
+export type UserDataParseAs = typeof TypeString | typeof TypeBase64 | typeof TypeBinary | typeof TypeNone
 
 export type FileMeta = {
     sha256: string,

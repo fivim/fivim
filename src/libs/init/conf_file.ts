@@ -1,5 +1,6 @@
 import type { SettingOfStartUpInfo, SettingInfo } from '@/types'
-import { MasterPasswordSalt, ConfigStartUpPwd } from '@/constants'
+import { tmplSettinggStartup } from '@/types_template'
+import { MasterPasswordSalt, ConfigStartUpPwd, TypeNone } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { getDataDirs } from '@/libs/init/dirs'
 import { invoker } from '@/libs/commands/invoke'
@@ -27,17 +28,17 @@ export const initWithStartUpConfFile = async () => {
 
     const conf = JSON.parse(data as string) as SettingOfStartUpInfo
     const appStore = useAppStore()
-    const settings = appStore.data.settings
+    const ad = appStore.data
+    const settings = ad.settings
 
     // locale
-    const locale = conf.appearance.locale
+    const locale = conf.normal.locale
     if (locale) {
       setLocale(locale)
-      settings.appearance.locale = locale
+      settings.normal.locale = locale
     }
 
     // Theme
-    const ad = appStore.data
     const themeName = conf.appearance.theme
     if (themeName !== '') {
       setTheme(themeName)
@@ -47,20 +48,20 @@ export const initWithStartUpConfFile = async () => {
 
     appStore.setData(ad)
     appStore.setSettingData(settings, false)
+
+    return true
   })
 }
 
 export const saveStartUpConfFile = async () => {
   const appStore = useAppStore()
-  const settings = appStore.data.settings
+  const ad = appStore.data
+  const settings = ad.settings
   const p = await getDataDirs()
 
-  const content: SettingOfStartUpInfo = {
-    appearance: {
-      locale: settings.appearance.locale,
-      theme: settings.appearance.theme
-    }
-  }
+  const content: SettingOfStartUpInfo = tmplSettinggStartup()
+  content.normal.locale = settings.normal.locale
+  content.appearance.theme = settings.appearance.theme
 
   if (import.meta.env.TAURI_DEBUG) {
     console.log('>>> saveStartUpConfFile data:: ', content)
@@ -99,14 +100,14 @@ export const initWithConfFile = async (pwdSha256: string, successCallback: Calla
       return false
     }
 
-    if (!conf.encryption.syncLockFileName) {
+    if (!conf.encryption.lockFileName) {
       if (failedCallback) {
         failedCallback(InitError.noSyncLockFileName)
       }
       return false
     }
 
-    setLocale(conf.appearance.locale)
+    setLocale(conf.normal.locale)
     setTheme(conf.appearance.theme)
 
     const setSuccess = await appStore.setSettingData(conf, false)

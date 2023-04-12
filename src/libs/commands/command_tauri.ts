@@ -15,7 +15,7 @@ export class CommandsTauri {
   }
 
   getPlatformName = async () => {
-    return await platform()
+    return await platform() as string
   }
 
   getAppVersion = async () => {

@@ -5,9 +5,9 @@ import { getDataDirs } from '@/libs/init/dirs'
 import { OrderedFieldArrayTable } from '@/utils/array'
 import { jsonCopy } from '@/utils/utils'
 
-import { AttrsArrKeyOfNotebook, AttrsArrKeyOfUserDataFileMeta, EntryFileSourceInfo, NotebookSourceInfo, NoteInfo } from './types'
-import { tmplFileAttrsArr, tmplNotebookAttrsArr, tmplNoteAttrsArr, tmplUserDataMetaAttrsArr, tmplEntryFileData, tmplNotebook } from './types_templates'
-import { getEntryFileName, genCurrentNotebookFileName, updateFileMeta, writeEncryptedUserDataToFile } from './utils'
+import { AttrsArrKeyOfNotebook, AttrsArrKeyOfFilesMeta, EntryFileSourceInfo, NotebookSourceInfo, NoteInfo } from './types'
+import { tmplFileAttrsArr, tmplNotebookAttrsArr, tmplNoteAttrsArr, tmplUserDataMetaAttrsArr, tmplEntryFileData, tmplNotebookData } from './types_template'
+import { getEntryFileName, genCurrentNotebookFileName, writeEncryptedUserDataToFile } from './utils'
 
 const ofatTagArrCallback = (item: string[], currentObj: object) => {
   const newItemValue = item.join(',')
@@ -34,13 +34,13 @@ const ofatNumberCallback = (item: number, currentObj: object) => {
 export const saveEntryFile = async () => {
   const appStore = useAppStore()
 
-  const content: EntryFileSourceInfo = jsonCopy(tmplEntryFileData)
+  const content: EntryFileSourceInfo = tmplEntryFileData()
 
   // ---------- notebooks ----------
   const notebooksData = appStore.data.userData.notebooks
   // Notebook data has a tagsArr need to join with ',', as a string.
   // Need special handling for tagsArr.
-  const attrsNb = jsonCopy(tmplNotebookAttrsArr) as string[]
+  const attrsNb = tmplNotebookAttrsArr() as string[]
   attrsNb.push('tagsArr') // Add tagsArr, as the last field, remove it later
   const ofatNb = new OrderedFieldArrayTable(attrsNb)
   const dataNb = notebooksData
@@ -62,7 +62,7 @@ export const saveEntryFile = async () => {
   const files = appStore.data.userData.files
   // Notebook data has a tagsArr need to join with ',', as a string.
   // Need special handling for tagsArr.
-  const attrsFiles = jsonCopy(tmplFileAttrsArr) as string[]
+  const attrsFiles = tmplFileAttrsArr() as string[]
   attrsFiles.push('tagsArr') // Add tagsArr, as the last field, remove it later
   const ofatFiles = new OrderedFieldArrayTable(attrsFiles)
   const dataFiles = files
@@ -89,8 +89,8 @@ export const saveEntryFile = async () => {
   content.tags.dataArr = ofatTag.toFieldArray().valuesArr as string[][]
   // ---------- tags end ----------
 
-  // ---------- userDataFilesMeta ----------
-  const attrsUdf = jsonCopy(tmplUserDataMetaAttrsArr) as string[]
+  // ---------- filesMeta ----------
+  const attrsUdf = tmplUserDataMetaAttrsArr() as string[]
   const dataUdf = appStore.data.userData.filesMeta
   const ofatUdf = new OrderedFieldArrayTable(attrsUdf)
   ofatUdf.fromObjectArray(dataUdf, {
@@ -99,20 +99,20 @@ export const saveEntryFile = async () => {
     mtimeUtc: ofatTimeCallback,
     size: ofatNumberCallback
   })
-  content.userDataFilesMeta.attrsArr = ofatUdf.toFieldArray().keysArr as AttrsArrKeyOfUserDataFileMeta[]
-  content.userDataFilesMeta.dataArr = ofatUdf.toFieldArray().valuesArr as string[][]
-  // ---------- userDataFilesMeta end ----------
+  content.filesMeta.attrsArr = ofatUdf.toFieldArray().keysArr as AttrsArrKeyOfFilesMeta[]
+  content.filesMeta.dataArr = ofatUdf.toFieldArray().valuesArr as string[][]
+  // ---------- filesMeta end ----------
 
   const p = await getDataDirs()
   return writeEncryptedUserDataToFile(p.pathOfCurrentDir, getEntryFileName(), content)
 }
 
 export const genNotebookFileContent = (notes: NoteInfo[]) => {
-  const content: NotebookSourceInfo = jsonCopy(tmplNotebook)
+  const content: NotebookSourceInfo = tmplNotebookData()
 
   // Note data has a tagsArr need to join with ',', as a string.
   // Need special handling for tagsArr.
-  const arr = jsonCopy(tmplNoteAttrsArr) as string[]
+  const arr = tmplNoteAttrsArr() as string[]
   arr.push('tagsArr') // Add tagsArr, as the last field, remove it later
   const ofat = new OrderedFieldArrayTable(arr)
   const nData = jsonCopy(notes) // Get the value of Proxy
@@ -143,7 +143,7 @@ export const saveNotebookFile = async (isCurrent: boolean, fileName: string) => 
   const appStore = useAppStore()
   if (appStore.data.listCol.type !== TypeNote) {
     invoker.logDebug('saveNotebookFile but listCol.type is not TypeNote :: ' + appStore.data.listCol.type)
-    return Promise.resolve(true)
+    // return Promise.resolve(true)
   }
 
   let content: NotebookSourceInfo
@@ -168,11 +168,9 @@ export const saveNotebookFile = async (isCurrent: boolean, fileName: string) => 
     console.log('>>> saveNotebookFile content:: ', content)
   }
 
-  const p = await getDataDirs()
-  if (!saveNotebookFileWithContent(fileName, content)) {
-    return Promise.resolve(false)
-  } else {
-    updateFileMeta(p.pathOfCurrentDir, fileName)
+  if (await saveNotebookFileWithContent(fileName, content)) {
     return Promise.resolve(true)
+  } else {
+    return Promise.resolve(false)
   }
 }

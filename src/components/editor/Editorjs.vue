@@ -13,12 +13,12 @@ import { Props } from '@/libs/editorjs/types'
 const props = defineProps({
   content: {
     type: String,
-    default: () => ('{}'),
+    default: '{}',
     require: true
   },
   holder: {
     type: String,
-    default: () => 'editorjs-holder'
+    default: 'editorjs-holder'
   }
 })
 
@@ -29,9 +29,12 @@ interface emitType {
 
 const emits = defineEmits<emitType>()
 const editorJs = ref<EditorJS>()
-let saveTimer: number
 
 const init = (jsonStr: string) => {
+  if (jsonStr === '') {
+    return
+  }
+
   if (!destroy()) {
     invoker.logError('editorDestroy error')
   }
@@ -51,7 +54,6 @@ const init = (jsonStr: string) => {
     },
     // onChange callback
     onChange: (_api, event) => {
-      //
       save()
     }
   })
@@ -82,19 +84,18 @@ const destroy = () => {
     }
     editorJs.value = undefined
   }
-  clearInterval(saveTimer)
   return true
 }
 
 const setContent = (jsonStr: string) => {
   if (editorJs.value) {
     try {
-      // Save data and reinit
-      save()
       init(jsonStr)
     } catch (error) {
       invoker.logError('editorSetContent failed: ' + error)
     }
+  } else {
+    init(jsonStr)
   }
 }
 
@@ -102,7 +103,7 @@ onMounted(() => {
   init(props.content)
 })
 
-defineExpose({ setContent })
+defineExpose({ init, setContent })
 </script>
 
 <style lang="scss">

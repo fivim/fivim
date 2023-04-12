@@ -26,7 +26,7 @@
           <el-input v-model="tempShare.outputFileName" class="w-auto" type="shareOutputFileName" />
         </el-form-item>
         <el-form-item :label="t('Password')">
-          <el-input v-model="tempShare.pwd" class="w-auto" type="password" />
+          <el-input v-model="tempShare.pwd" class="w-auto" />
         </el-form-item>
       </el-form>
 
@@ -63,7 +63,7 @@
           <el-input v-model="tempOpen.outputFileName" class="w-auto" type="shareOutputFileName" />
         </el-form-item>
         <el-form-item :label="t('Password')">
-          <el-input v-model="tempOpen.pwd" class="w-auto" type="password" />
+          <el-input v-model="tempOpen.pwd" class="w-auto" />
         </el-form-item>
       </el-form>
 
@@ -85,14 +85,14 @@ import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import { Share, DocumentAdd } from '@element-plus/icons-vue'
 import { open as openDialog } from '@tauri-apps/api/dialog'
+import { join as pathJoin } from '@tauri-apps/api/path'
 
 import { MessagesInfo } from '@/types'
-import { TaskDecrypt, TaskEncrypt } from '@/constants'
+import { TaskDecrypt, TaskEncrypt, TypeNone } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { genFilePwd } from '@/libs/commands'
 import { invoker } from '@/libs/commands/invoke'
-import { genUuidv4 } from '@/utils/hash'
-import { pathJoin, listenProgressStatus } from '@/utils/pinia_related'
+import { startProgressBar } from '@/utils/pinia_related'
 import { genDialogWidth } from '@/utils/utils'
 
 const appStore = useAppStore()
@@ -113,18 +113,17 @@ const onShareFile = () => {
 
 const onShareConfirm = async () => {
   // progress bar
-  if (appStore.data.currentProgress.percent > 0) {
+  if (appStore.data.progress.currentTask.percent > 0) {
     ElMessage(t(MessagesInfo.FileStillInProgress))
     return
   }
-  const progressName = genUuidv4()
-  listenProgressStatus(progressName, TaskEncrypt)
+  const progressName = startProgressBar(TaskEncrypt, true)
 
   tempShare.value.visible = false
   const sourcePath = tempShare.value.filePath
   const fileName = tempShare.value.outputFileName
   const dir = tempShare.value.outputDir
-  const outputPath = await pathJoin([dir, fileName])
+  const outputPath = await pathJoin(dir, fileName)
 
   invoker.writeUserDataFile(genFilePwd(tempShare.value.pwd), outputPath, fileName, {}, sourcePath, progressName).then((success) => {
     console.log('>>> onShareConfirm success ::', success)
@@ -171,20 +170,19 @@ const onOpenFile = () => {
 
 const onOpenConfirm = async () => {
   // progress bar
-  if (appStore.data.currentProgress.percent > 0) {
+  if (appStore.data.progress.currentTask.percent > 0) {
     ElMessage(t(MessagesInfo.FileStillInProgress))
     return
   }
-  const progressName = genUuidv4()
-  listenProgressStatus(progressName, TaskDecrypt)
+  const progressName = startProgressBar(TaskDecrypt, true)
 
   tempOpen.value.visible = false
   const sourcePath = tempOpen.value.filePath
   const fileName = tempOpen.value.outputFileName
   const dir = tempOpen.value.outputDir
-  const outputPath = await pathJoin([dir, fileName])
+  const outputPath = await pathJoin(dir, fileName)
 
-  invoker.readUserDataFile(genFilePwd(tempOpen.value.pwd), sourcePath, false, 'none', outputPath, '').then(async (fileData) => {
+  invoker.readUserDataFile(genFilePwd(tempOpen.value.pwd), sourcePath, false, TypeNone, outputPath, progressName).then(async (fileData) => {
     console.log('>>> onOpenConfirm fileData ::', fileData)
   })
 }

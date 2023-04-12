@@ -2,7 +2,7 @@
 
 <template>
   <el-popover :placement="placement" :trigger="trigger" :width="genWidth()" :popper-class="fullscreenClass()"
-    ref="popoverRef">
+    ref="popoverRef" :visible="isItVisible()">
     <template #reference>
       <slot name="reference"></slot>
     </template>
@@ -32,6 +32,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  visible: {
+    type: Object,
+    defalut: { value: null }
+  },
   propTitle: {
     type: String
   },
@@ -55,6 +59,13 @@ const props = defineProps({
 
 const appStore = useAppStore()
 const popoverRef = ref()
+
+const isItVisible = () => {
+  if (props.visible && props.visible.value !== null) {
+    return props.visible.value
+  }
+  return null
+}
 
 const isMobileMode = () => {
   return appStore.data.appMode === AppModeInfo.Mobile
