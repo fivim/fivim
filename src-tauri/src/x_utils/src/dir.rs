@@ -59,7 +59,7 @@ pub fn get_file_list(dir: &str) -> Vec<String> {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DirChildren {
-    file_name: String,
+    name: String,
     is_dir: bool,
     modified_time_stamp: f64,
 }
@@ -73,7 +73,7 @@ pub fn get_children_list(dir: &str) -> Vec<DirChildren> {
             for entry in children {
                 let entry = entry.unwrap();
                 let item = DirChildren {
-                    file_name: entry.file_name().into_string().unwrap(),
+                    name: entry.file_name().into_string().unwrap(),
                     is_dir: entry.path().is_dir(),
                     modified_time_stamp: x_file::get_modified_time_f64(&entry),
                 };

@@ -2,10 +2,9 @@ use log::*;
 use simplelog::*;
 use time::macros::format_description;
 
-use std::{fs::File, path::Path};
+use std::{fs::File, path::PathBuf};
 
-pub fn init_logger(dir_path: &str, file_name: &str) {
-    let file_path = Path::new(dir_path).join(file_name);
+pub fn init_logger(file_path: PathBuf) {
     let config_write = ConfigBuilder::new()
         .set_time_format_custom(format_description!(
             "[year]-[month]-[day] [hour]:[minute]:[second].[subsecond]"

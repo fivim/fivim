@@ -3,7 +3,6 @@ use std::path::Path;
 use std::sync::Mutex;
 use std::sync::RwLock;
 
-use serde::{Deserialize, Serialize};
 use serde_json;
 use xutils::{dir as xu_dir, file as xu_file, logger as xu_logger, path as xu_path};
 

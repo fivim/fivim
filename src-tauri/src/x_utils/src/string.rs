@@ -5,7 +5,7 @@ pub fn bytes_to_string(vec: &Vec<u8>) -> String {
             return st;
         }
         Err(e) => {
-            print!(">>> bytes_to_string error: {:?} \n", e);
+            println!(">>> bytes_to_string error: {:?}", e);
             return "".to_string();
         }
     }

@@ -5,6 +5,7 @@ pub mod array_like;
 pub mod dir;
 pub mod errors;
 pub mod file;
+pub mod fs;
 pub mod hash;
 pub mod logger;
 pub mod path;
