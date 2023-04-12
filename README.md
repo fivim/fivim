@@ -44,13 +44,13 @@ File safe:
 
 ## Theme
 
-[All built-in themes](/en/user_guide/themes)
+[All built-in themes](https://enassi.github.io/enassi/en/user_guide/themes.html)
 
-The following two screenshots are the **default** theme and the **material** theme.
+The following two screenshots are the **pretty** theme and the **material** theme.
 
-default theme:
+pretty theme:
 
-![default theme](./docs/public/images/themes/default.png)
+![pretty theme](./docs/public/images/themes/pretty.png)
 
 material theme :
 

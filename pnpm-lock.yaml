@@ -41,7 +41,7 @@ specifiers:
   base128-encoding: ^2.0.1
   crypto-js: ^4.1.1
   date-and-time: ^2.4.3
-  element-plus: ^2.3.0
+  element-plus: ^2.3.3
   eslint: ^8.36.0
   eslint-config-codex: ^1.7.2
   eslint-config-prettier: ^8.7.0
@@ -92,7 +92,7 @@ dependencies:
   base128-encoding: 2.0.1
   crypto-js: 4.1.1
   date-and-time: 2.4.3
-  element-plus: 2.3.0_vue@3.2.47
+  element-plus: 2.3.3_vue@3.2.47
   eslint-config-codex: 1.7.2_vgl77cfdswitgr47lm5swmv43m
   happybytes: 0.0.22
   pinia: 2.0.33_hmuptsblhheur2tugfgucj7gc4
@@ -904,14 +904,14 @@ packages:
     resolution: {integrity: sha512-lxJ9R5ygVm8ZWgYdUweoq5ownDlJ4upvoWmO4eLxBYHdMo+vZ/Rx0EN6MbKWDJOSUGrqJy2Gt+Dyv/VKml0fjg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  /@floating-ui/core/1.2.4:
-    resolution: {integrity: sha512-SQOeVbMwb1di+mVWWJLpsUTToKfqVNioXys011beCAhyOIFtS+GQoW4EQSneuxzmQKddExDwQ+X0hLl4lJJaSQ==}
+  /@floating-ui/core/1.2.6:
+    resolution: {integrity: sha512-EvYTiXet5XqweYGClEmpu3BoxmsQ4hkj3QaYA6qEnigCWffTP3vNRwBReTdrwDwo7OoJ3wM8Uoe9Uk4n+d4hfg==}
     dev: false
 
-  /@floating-ui/dom/1.2.4:
-    resolution: {integrity: sha512-4+k+BLhtWj+peCU60gp0+rHeR8+Ohqx6kjJf/lHMnJ8JD5Qj6jytcq1+SZzRwD7rvHKRhR7TDiWWddrNrfwQLg==}
+  /@floating-ui/dom/1.2.6:
+    resolution: {integrity: sha512-02vxFDuvuVPs22iJICacezYJyf7zwwOCWkPNkWNBr1U0Qt1cKFYzWvxts0AmqcOQGwt/3KJWcWIgtbUU38keyw==}
     dependencies:
-      '@floating-ui/core': 1.2.4
+      '@floating-ui/core': 1.2.6
     dev: false
 
   /@hapi/hoek/9.3.0:
@@ -1214,11 +1214,11 @@ packages:
   /@types/lodash-es/4.17.7:
     resolution: {integrity: sha512-z0ptr6UI10VlU6l5MYhGwS4mC8DZyYer2mCoyysZtSF7p26zOX8UpbrV0YpNYLGS8K4PUFIyEr62IMFFjveSiQ==}
     dependencies:
-      '@types/lodash': 4.14.191
+      '@types/lodash': 4.14.192
     dev: false
 
-  /@types/lodash/4.14.191:
-    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
+  /@types/lodash/4.14.192:
+    resolution: {integrity: sha512-km+Vyn3BYm5ytMO13k9KTp27O75rbQ0NFw+U//g+PX7VZyjCioXaRFisqSIJRECljcTv73G3i6BpglNGHgUQ5A==}
     dev: false
 
   /@types/node/18.15.3:
@@ -2119,16 +2119,16 @@ packages:
     resolution: {integrity: sha512-YyE8+GKyGtPEP1/kpvqsdhD6rA/TP1DUFDN4uiU/YI52NzDxmwHkEb3qjId8hLBa5siJvG0sfC3O66501jMruQ==}
     dev: true
 
-  /element-plus/2.3.0_vue@3.2.47:
-    resolution: {integrity: sha512-3s3JO4+LHLi61tFwF2emIHx6nxwKKdj5YWcj3GUBoXKhbuRjhq6xqaxWpBlPk7jySr/8Eci5++T2THbvrpGn7A==}
+  /element-plus/2.3.3_vue@3.2.47:
+    resolution: {integrity: sha512-Zy61OXrG6b4FF3h29A9ZOUkaEQXjCuFwNa7DlpB3Vo+42Tw5zBbHe5a4BY7i56TVJG5xTbS9UQyA726J91pDqg==}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
       '@ctrl/tinycolor': 3.6.0
       '@element-plus/icons-vue': 2.1.0_vue@3.2.47
-      '@floating-ui/dom': 1.2.4
+      '@floating-ui/dom': 1.2.6
       '@popperjs/core': /@sxzz/popperjs-es/2.11.7
-      '@types/lodash': 4.14.191
+      '@types/lodash': 4.14.192
       '@types/lodash-es': 4.17.7
       '@vueuse/core': 9.13.0_vue@3.2.47
       async-validator: 4.2.5
