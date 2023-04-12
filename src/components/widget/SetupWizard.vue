@@ -308,7 +308,6 @@ const onSave = () => {
   settings.appearance.listColSortBy = DefaultListColSortBy
   settings.appearance.listColSortOrder = DefaultListColSortOrder
   settings.appearance.theme = ruleForm.theme
-  settings.sync.intervalSeconds = DefaultSyncIntervalSeconds
   appStore.setData(appData)
 
   setTheme(ruleForm.theme)
