@@ -7,7 +7,7 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { AppCoreConfInfo } from '@/types'
 import { stringToUint8Array } from '@/utils/string'
 
-import { WriteFileRes, UserDataFile, UserDataParseAs, FileMeta, ProgressStatus } from './types'
+import { WriteFileRes, UserDataFile, UserDataParseAs, FileMeta, ProgressStatus, HttpMethod, HttpResponse } from './types'
 
 export type SyncListResItemLocalDisk = {
   file_name: string,
@@ -109,6 +109,13 @@ export const invoker = {
     invoke('download_file', { url, filePath }) as Promise<ProgressStatus>,
   getProgress: (progressName: string) =>
     invoke('get_progress', { progressName }) as Promise<ProgressStatus>,
+
+  httpRequestText: (method: HttpMethod, url: string) =>
+    invoke('http_request', { method, url, respDataType: 'text' }) as Promise<HttpResponse>,
+  httpRespJson: (method: HttpMethod, url: string) =>
+    invoke('http_request', { method, url, respDataType: 'json' }) as Promise<HttpResponse>,
+  httpRespBinary: (method: HttpMethod, url: string) =>
+    invoke('http_request', { method, url, respDataType: 'binary' }) as Promise<HttpResponse>,
 
   // ---------- combined functions ----------
   // encrypt

@@ -2,6 +2,7 @@ import { AppInfo, AppModeInfo, SettingInfo, SettingOfStartUpInfo, ProgressInfo, 
 import { TypeNote, TypeNone } from '@/constants'
 
 import { UserDataInfo } from '@/libs/user_data/types'
+import { CurrentFileInfo } from '@/components/pane/types'
 
 export const tmplExtDataPathInfo = (): ExtDataPathInfo => {
   return {
@@ -43,7 +44,19 @@ export const tmplProgress = (): ProgressInfo => {
       currentFileIndex: 0,
       currentFileName: '',
       currentFileSize: 0
-    }
+    },
+    simpleTaskName: ''
+  }
+}
+
+export const tmplCurrentFile = (): CurrentFileInfo => {
+  return {
+    content: '',
+    sign: '',
+    subSign: '',
+    title: '',
+    type: TypeNote,
+    tagsArr: []
   }
 }
 
@@ -93,6 +106,7 @@ export const tmplSettinggStartup = (): SettingOfStartUpInfo => {
     }
   }
 }
+
 export const tmplAppData = (): AppInfo => {
   return {
     appMode: AppModeInfo.Empty,
@@ -128,14 +142,7 @@ export const tmplAppData = (): AppInfo => {
     navCol: {
       sign: ''
     },
-    currentFile: {
-      content: '',
-      sign: '',
-      subSign: '',
-      title: '',
-      type: TypeNote,
-      tagsArr: []
-    },
+    currentFile: tmplCurrentFile(),
     settings: tmplSetting()
   }
 }

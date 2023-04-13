@@ -60,9 +60,11 @@ fn main() {
             commands::read_user_data_file,
             commands::write_user_data_file,
             commands::re_encrypt_file,
+            // http
+            commands::http_request,
             // other
             commands::get_progress,
-            commands::download_file
+            commands::download_file,            
         ])
         .setup(|app| {
             menu::make_tray_menu(app)?;

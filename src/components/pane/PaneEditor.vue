@@ -81,11 +81,12 @@ const onEditorUpdate = (str: string) => {
 
 let lastSubSign = ''
 appStore.$subscribe((mutation, state) => {
-  if (state.data.currentFile.type === TypeNote && lastSubSign !== state.data.currentFile.subSign) {
-    editorRef.value?.setContent(appStore.data.currentFile.content)
+  const cf = state.data.currentFile
+  if ([TypeNote].indexOf(cf.type) > -1 && lastSubSign !== cf.subSign) {
+    editorRef.value?.setContent(cf.content || '{}')
   }
 
-  lastSubSign = state.data.currentFile.subSign
+  lastSubSign = cf.subSign
 })
 // ---------- note end ----------
 

@@ -16,14 +16,14 @@ export const jsonCopy = (data: any) => JSON.parse(JSON.stringify(data))
 // Refer: https://davidwalsh.name/javascript-debounce-function
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function debounce(this: any, func: any, wait: number, immediate = false) {
-  let timeout: number | undefined
+  let timeout: number
   return () => {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const context = this
     // eslint-disable-next-line prefer-rest-params
     const args = arguments
     const later = function () {
-      timeout = undefined
+      timeout = 0
       if (!immediate) {
         func.apply(context, args)
       }
@@ -32,7 +32,7 @@ export function debounce(this: any, func: any, wait: number, immediate = false) 
     if (timeout) {
       clearTimeout(timeout)
     }
-    timeout = setTimeout(later, wait)
+    timeout = setTimeout(later, wait) as unknown as number
     if (callNow) {
       func.apply(context, args)
     }

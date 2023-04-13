@@ -5,9 +5,15 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import EditorJS, { OutputData } from '@editorjs/editorjs'
+import { open as openDialog } from '@tauri-apps/api/dialog'
+import { join as pathJoin } from '@tauri-apps/api/path'
 
+import { TaskImportMd, TaskExportMd } from '@/constants'
+import { useAppStore } from '@/pinia/modules/app'
 import { invoker } from '@/libs/commands/invoke'
 import { mergeConfig } from '@/libs/editorjs/conf'
+import { exporter } from '@/libs/editorjs/plugins/markdown-parser/src/MarkdownExporter'
+import { importer, editorData } from '@/libs/editorjs/plugins/markdown-parser/src/MarkdownImporter'
 import { Props } from '@/libs/editorjs/types'
 
 const props = defineProps({
@@ -21,6 +27,8 @@ const props = defineProps({
     default: 'editorjs-holder'
   }
 })
+
+const appStore = useAppStore()
 
 // For better code hints. Refer: https://juejin.cn/post/7012814138145505287
 interface emitType {
@@ -98,6 +106,62 @@ const setContent = (jsonStr: string) => {
     init(jsonStr)
   }
 }
+
+// -------- import / export ---------
+
+const getMdPath = (useDirectory: boolean) => {
+  return openDialog({
+    directory: useDirectory
+  }).then((selected) => {
+    let path = ''
+    if (Array.isArray(selected)) {
+      // user selected multiple files
+      path = selected[0]
+    } else if (selected === null) {
+      // user cancelled the selection
+    } else {
+      // user selected a single file
+      path = selected
+    }
+    return path
+  })
+}
+
+const importMd = async (path: string) => {
+  const mdContent = await invoker.readFileToString(path)
+  importer(mdContent)
+
+  // clear the editor
+  editorJs.value?.blocks.clear()
+  // render the editor with imported markdown data
+  editorJs.value?.blocks.render({
+    blocks: editorData.filter((value) => Object.keys(value).length !== 0) // filter through array and remove empty objects
+  })
+
+  appStore.data.progress.simpleTaskName = ''
+}
+
+const exportMd = async (path: string) => {
+  const data = await editorJs.value?.saver.save()
+  const emptc = exporter(data?.blocks)
+
+  await invoker.writeStringIntoFile(path, emptc)
+
+  appStore.data.progress.simpleTaskName = ''
+}
+
+appStore.$subscribe(async (mutation, state) => {
+  const taskName = state.data.progress.simpleTaskName
+  if (taskName === TaskImportMd) {
+    importMd(await getMdPath(false))
+  } else if (taskName === TaskExportMd) {
+    const dir = await getMdPath(true)
+    const path = await pathJoin(dir, appStore.data.currentFile.title + '.md')
+    exportMd(path)
+  }
+})
+
+// -------- import / export end ---------
 
 onMounted(() => {
   init(props.content)

@@ -65,6 +65,7 @@ import SelectTagButton from '@/components/button/SelectTag.vue'
 import SmallTagList from '@/components/widget/SmallTagList.vue'
 
 import { ExtDataPathInfo, MessagesInfo } from '@/types'
+import { tmplCurrentFile } from '@/types_template'
 import { TypeNote, TypeFile, TaskEncrypt } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { NoteInfo, TagInfo } from '@/libs/user_data/types'
@@ -102,12 +103,17 @@ const addItem = (itemType: typeof TypeNote) => {
     tagsArr: []
   }
 
-  ad.listCol.listOfNote.push(newItem)
-  ad.currentFile.title = newItem.title
-  ad.currentFile.content = newItem.content
-  ad.currentFile.subSign = newItem.sign
-  ad.currentFile.type = newItem.type
-  appStore.setData(ad)
+  const listCol = ad.listCol
+  listCol.listOfNote.push(newItem)
+  appStore.setListColData(listCol)
+
+  const cf = tmplCurrentFile()
+  cf.title = newItem.title
+  cf.content = newItem.content
+  cf.subSign = newItem.sign
+  cf.type = newItem.type
+  cf.sign = appStore.data.currentFile.sign
+  appStore.setCurrentFile(cf)
 }
 
 const onAddNote = () => {

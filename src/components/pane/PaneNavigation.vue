@@ -1,12 +1,5 @@
 <template>
   <div class="navigation-column">
-    <!--
-    <div id="web-nav-btns" v-if="isWebPage()">
-      <SettingButton />
-      <ThemeButton />
-    </div>
-    -->
-
     <div class="navigation-pane">
       <section class="section">
 
@@ -143,10 +136,8 @@ import { useI18n } from 'vue-i18n'
 
 import SelectEmojiButton from '@/components/button/SelectEmoji.vue'
 import SelectTagButton from '@/components/button/SelectTag.vue'
-// import SyncButton from '@/components/button/Sync.vue'
-// import SettingButton from '@/components/button/Setting.vue'
-// import ThemeButton from '@/components/button/Theme.vue'
 
+import { tmplCurrentFile } from '@/types_template'
 import { TypeFile, TypeNote, TypeTag } from '@/constants'
 import { useAppStore } from '@/pinia/modules/app'
 import { getDataDirs } from '@/libs/init/dirs'
@@ -157,14 +148,9 @@ import {
 } from '@/libs/user_data/utils'
 import { NoteInfo, NotebookInfo, TagInfo } from '@/libs/user_data/types'
 import { genFileName, restEditorCol } from '@/utils/pinia_related'
-import { CurrentFileInfo } from './types'
 
 const { t } = useI18n()
 const appStore = useAppStore()
-
-const isWebPage = () => {
-  return appStore.data.isWebPage
-}
 
 const DIALOG_TYPE_ADD = 'ADD'
 const DIALOG_TYPE_EDIT = 'EDIT'
@@ -301,14 +287,9 @@ const onListNb = async (index: number) => {
 
   const ad = appStore.data
   const nb = ad.userData.notebooks[index]
-  const currentFile: CurrentFileInfo = {
-    content: '',
-    sign: nb.sign,
-    subSign: '',
-    tagsArr: [],
-    title: '',
-    type: TypeNote
-  }
+  const currentFile = tmplCurrentFile()
+  currentFile.sign = nb.sign
+  currentFile.type = TypeNote
 
   readNotebookdata(nb.sign).then((notes) => {
     appStore.setListColData({
@@ -324,6 +305,8 @@ const onListNb = async (index: number) => {
     ad.navCol.sign = nb.sign
     ad.currentFile = currentFile
     appStore.setData(ad)
+
+    console.log('>>> onListNb currentFile::', ad.currentFile)
   }).catch((err: Error) => {
     const typeName = t('Notebook')
     CmdAdapter().notification(t('&Error initializing file', { name: typeName }), t(err.message), '')
@@ -456,6 +439,7 @@ const onListFiles = () => {
   })
 
   appStore.data.navCol.sign = TypeFile
+
   restEditorCol()
 }
 // ---------- add / edit files end ----------

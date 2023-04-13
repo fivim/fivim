@@ -1,14 +1,14 @@
 use tauri::Manager;
 use xutils::{
-    dir as xu_dir, file as xx_file, fs as xu_fs, hash as xu_hash,
-    logger as xu_logger, progress as xu_progress,
+    dir as xu_dir, file as xx_file, fs as xu_fs, hash as xu_hash, logger as xu_logger,
+    progress as xu_progress,
 };
 
 use crate::conf as x_conf;
 use crate::data_file_parse as x_parser;
 use crate::i18n as x_i18n;
 use crate::menu as x_menu;
-use crate::utils::{encrypt as x_encrypt, file as x_file, tauri as x_tauri};
+use crate::utils::{encrypt as x_encrypt, file as x_file, http as x_http, tauri as x_tauri};
 
 // ---------- core ----------
 
@@ -292,12 +292,20 @@ pub async fn re_encrypt_file(
 
 // ---------- user data file ----------
 
+// ---------- http ----------
+#[tauri::command]
+pub async fn http_request(method: String, url: String, resp_data_type: String) -> x_http::HttpResponse {
+    return x_http::request(&method, &url, &resp_data_type).await;
+}
+
+// ---------- http end ----------
+
 // ---------- other ----------
 
 #[tauri::command]
 pub async fn download_file(url: String, file_path: String) {
     // TODO
-    return
+    return;
 }
 
 #[tauri::command]

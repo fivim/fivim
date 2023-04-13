@@ -50,6 +50,7 @@ export type ProgressChangeMasterPasswordInfo = {
 export type ProgressInfo = {
     currentTask: ProgressCommonInfo
     changeMasterPassword: ProgressChangeMasterPasswordInfo
+    simpleTaskName: string
 }
 
 export type DataPathInfo = {

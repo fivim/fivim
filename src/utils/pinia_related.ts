@@ -99,7 +99,7 @@ export const startProgressBar = (taskName: TypeTask, autoResetTaskName: boolean)
     })
   }, 500)
 
-  progressBarTimerMap[progressName] = itmer
+  progressBarTimerMap[progressName] = itmer as unknown as number
 
   return progressName
 }

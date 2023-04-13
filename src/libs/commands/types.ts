@@ -28,6 +28,13 @@ export type UserDataFile = {
 
 export type UserDataParseAs = typeof TypeString | typeof TypeBase64 | typeof TypeBinary | typeof TypeNone
 
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE'
+export type HttpResponse = {
+    headers: object,
+    status: number,
+    data: any,
+}
+
 export type FileMeta = {
     sha256: string,
     size: number,

@@ -7,27 +7,39 @@
     <div class="py-2">
       <div class="enas-list cur-ptr">
         <template v-if="isNote()">
-          <div class="list-item" @click="onClickNoteDelete()">
+          <div class="list-item" @click.stop="onClickNoteDelete()">
             <el-icon>
               <Delete />
             </el-icon>
             {{ t('Delete') }}
           </div>
+          <div class="list-item" @click.stop="onClickImport()">
+            <el-icon>
+              <Upload />
+            </el-icon>
+            {{ t('Import from {name}', { name: 'Markdown' }) }}
+          </div>
+          <div class="list-item" @click.stop="onClickExport()">
+            <el-icon>
+              <Download />
+            </el-icon>
+            {{ t('Export to {name}', { name: 'Markdown' }) }}
+          </div>
         </template>
         <template v-else-if="isFile()">
-          <div class="list-item" @click="onExportFile()">
+          <div class="list-item" @click.stop="onExportFile()">
             <el-icon>
               <Download />
             </el-icon>
             {{ t('Export') }}
           </div>
-          <div class="list-item" @click="onShareFile()">
+          <div class="list-item" @click.stop="onShareFile()">
             <el-icon>
               <Share />
             </el-icon>
             {{ t('Share') }}
           </div>
-          <div class="list-item" @click="onClickFileDelete()">
+          <div class="list-item" @click.stop="onClickFileDelete()">
             <el-icon>
               <Delete />
             </el-icon>
@@ -72,11 +84,11 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { Download, Share, Delete, MoreFilled } from '@element-plus/icons-vue'
+import { Upload, Download, Share, Delete, MoreFilled } from '@element-plus/icons-vue'
 import { open as openDialog } from '@tauri-apps/api/dialog'
 import { join as pathJoin } from '@tauri-apps/api/path'
 
-import { TaskDecrypt, TaskReEncrypt, TypeNone } from '@/constants'
+import { TaskDecrypt, TaskReEncrypt, TypeNone, TaskImportMd, TaskExportMd } from '@/constants'
 import { MessagesInfo } from '@/types'
 import { invoker } from '@/libs/commands/invoke'
 import { genFilePwd } from '@/libs/commands'
@@ -107,6 +119,14 @@ const onClickNoteDelete = () => {
       // catch error
     })
 }
+
+const onClickImport = () => {
+  appStore.data.progress.simpleTaskName = TaskImportMd
+}
+
+const onClickExport = () => {
+  appStore.data.progress.simpleTaskName = TaskExportMd
+}
 // ---------- note end ---------
 
 // ---------- file ---------
@@ -117,7 +137,6 @@ const getFileInfo = async () => {
 }
 
 const onClickFileDelete = () => {
-  console.log('>>> fileInfo.value ::', fileInfo.value)
   ElMessageBox.confirm(t('&confirm delete file?', { name: fileInfo.value.title }))
     .then(async () => {
       if (fileInfo.value.sign) {

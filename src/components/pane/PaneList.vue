@@ -136,7 +136,6 @@ import { NoteInfo, FileInfo } from '@/libs/user_data/types'
 import { formatTime } from '@/utils/pinia_related'
 
 import { CurrentFileInfo } from './types'
-import { getCurrentNotebookInList } from '@/libs/user_data/utils'
 
 const props = defineProps({
   className: {
