@@ -39,7 +39,7 @@
         "&Valid for new files": "الإعدادات التالية صالحة فقط للملفات الجديدة بعد التعديل",
         "&cannot find conf file": "لا يمكن العثور على ملف التكوين.",
         "&cannot find sync lock file": "لا يمكن العثور على ملف قفل المزامنة.",
-        "&check Import / export result later.": "قد يؤدي استيراد / تصدير {type} إلى فقد بعض السمات ، يرجى التحقق من النتيجة لاحقًا.",
+        "&check import / export result later.": "قد يؤدي استيراد / تصدير {type} إلى فقد بعض السمات ، يرجى التحقق من النتيجة لاحقًا.",
         "&confirm delete file information": "فشل في حذف الملف , هل تريد حذف المعلومات المسجلة",
         "&confirm delete file?": "هل أنت متأكد من حذف هذا الملف: {name}?",
         "&confirm delete note?": "هل أنت متأكد من حذف هذه الملاحظة: {name}?",

@@ -39,7 +39,7 @@
         "&Valid for new files": "Nasledujúce nastavenia platia len pre nové súbory po úprave",
         "&cannot find conf file": "Nemôžem nájsť konfiguračný súbor.",
         "&cannot find sync lock file": "Nemôžem nájsť súbor zámku synchronizácie.",
-        "&check Import / export result later.": "Importovať / Exportovať {type} môže stratiť niektoré atribúty, skontrolujte výsledok neskôr.",
+        "&check import / export result later.": "Importovať / Exportovať {type} môže stratiť niektoré atribúty, skontrolujte výsledok neskôr.",
         "&confirm delete file information": "Nepodarilo sa odstrániť súbor, chcete odstrániť zaznamenané informácie",
         "&confirm delete file?": "Naozaj chcete odstrániť tento súbor: {name}?",
         "&confirm delete note?": "Naozaj chcete odstrániť túto poznámku: {name}?",

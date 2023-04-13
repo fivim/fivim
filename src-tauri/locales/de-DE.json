@@ -39,7 +39,7 @@
         "&Valid for new files": "Die folgenden Einstellungen gelten nur für neue Dateien nach Änderung",
         "&cannot find conf file": "konnte die Konfigurationsdatei nicht finden.",
         "&cannot find sync lock file": "kann die Synchronisierungssperrdatei nicht finden.",
-        "&check Import / export result later.":"Beim Importieren/Exportieren von {type} können einige Attribute verloren gehen. Bitte überprüfen Sie das Ergebnis später.",
+        "&check import / export result later.":"Beim Importieren/Exportieren von {type} können einige Attribute verloren gehen. Bitte überprüfen Sie das Ergebnis später.",
         "&confirm delete file information": "Die Datei konnte nicht gelöscht werden, möchten Sie die aufgezeichneten Informationen löschen",
         "&confirm delete file?": "Möchten Sie diese Datei wirklich löschen: {name} ?",
         "&confirm delete note?": "Möchtest du diese Notiz wirklich löschen: {name}?",

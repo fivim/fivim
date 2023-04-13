@@ -39,7 +39,7 @@
         "&Valid for new files": "ההגדרות הבאות תקפות רק לקבצים חדשים לאחר השינוי",
         "&cannot find conf file": "לא יכול למצוא את קובץ התצורה.",
         "&cannot find sync lock file": "לא יכול למצוא את קובץ נעילת הסנכרון.",
-        "&check Import / export result later.": "יבוא/ייצוא {type} עלול לאבד תכונות מסוימות, אנא בדוק את התוצאה מאוחר יותר.",
+        "&check import / export result later.": "יבוא/ייצוא {type} עלול לאבד תכונות מסוימות, אנא בדוק את התוצאה מאוחר יותר.",
         "&confirm delete file information": "מחיקת הקובץ נכשלה, האם ברצונך למחוק את המידע המוקלט",
         "&confirm delete file?": "&לאשר את מחיקת הקובץ?",
         "&confirm delete note?": "&לאשר את מחיקת הערה?",

@@ -39,7 +39,7 @@
         "&Valid for new files": "Наступныя налады дзейнічаюць толькі для новых файлаў пасля мадыфікацыі",
         "&cannot find conf file": "не магу знайсці файл канфігурацыі.",
         "&cannot find sync lock file": "немагчыма знайсці файл блакіроўкі сінхранізацыі.",
-        "&check Import / export result later.": "Import/export {type} може да загуби някои атрибути, моля, проверете резултата по-късно.",
+        "&check import / export result later.": "Import/export {type} може да загуби някои атрибути, моля, проверете резултата по-късно.",
         "&confirm delete file information": "Неуспешно изтриване на файла, искате ли да изтриете записаната информация",
         "&confirm delete file?": "Сигурни ли сте, че ще изтриете този файл: {name}?",
         "&confirm delete note?": "Сигурни ли сте, че ще изтриете тази бележка: {name}?",

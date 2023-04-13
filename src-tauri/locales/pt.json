@@ -39,7 +39,7 @@
         "&Valid for new files": "As seguintes configurações são válidas apenas para novos arquivos após a modificação",
         "&cannot find conf file": "não foi possível encontrar o arquivo de configuração.",
         "&cannot find sync lock file": "não foi possível encontrar o arquivo de bloqueio de sincronização.",
-        "&check Import / export result later.": "Importar/exportar {type} pode perder alguns atributos, verifique o resultado mais tarde.",
+        "&check import / export result later.": "Importar/exportar {type} pode perder alguns atributos, verifique o resultado mais tarde.",
         "&confirm delete file information": "Falha ao excluir o arquivo, deseja excluir as informações gravadas",
         "&confirm delete file?": "Tem certeza que deseja excluir este arquivo: {name}?",
         "&confirm delete note?": "Tem certeza que deseja excluir esta nota: {name}?",

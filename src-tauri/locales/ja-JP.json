@@ -39,7 +39,7 @@
         "&Valid for new files": "次の設定は、変更後の新しいファイルに対してのみ有効です",
         "&cannot find conf file": "設定ファイルが見つかりません。",
         "&cannot find sync lock file": "同期ロックファイルが見つかりません。",
-        "&check Import / export result later.": "インポート / エクスポート {type} は一部の属性を失う可能性があります。後で結果を確認してください。",
+        "&check import / export result later.": "インポート / エクスポート {type} は一部の属性を失う可能性があります。後で結果を確認してください。",
         "&confirm delete file information": "ファイルの削除に失敗しました。記録された情報を削除しますか",
         "&confirm delete file?": "このファイルを削除してもよろしいですか: {name} ?",
         "&confirm delete note?": "このメモを削除してもよろしいですか: {name} ?",

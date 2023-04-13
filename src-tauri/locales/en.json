@@ -40,7 +40,7 @@
         "&Valid for new files": "The following settings only valid for new files after modification",
         "&cannot find conf file": "cannot find the configuration file.",
         "&cannot find sync lock file": "cannot find the synchronization lock file.",
-        "&check Import / export result later.":"Import / export {type} might loss some attributes, please check the result later.",
+        "&check import / export result later.":"Import / export {type} might loss some attributes, please check the result later.",
         "&confirm delete file information": "Failed to delete the file, do you want to delete the recorded information",
         "&confirm delete file?": "&confirm delete file?",
         "&confirm delete note?": "&confirm delete note?",

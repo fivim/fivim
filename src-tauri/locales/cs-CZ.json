@@ -39,7 +39,7 @@
         "&Valid for new files": "Následující nastavení platí pouze pro nové soubory po úpravě",
         "&cannot find conf file": "nelze najít konfigurační soubor.",
         "&cannot find sync lock file": "nelze najít soubor zámku synchronizace.",
-        "&check Import / export result later.": "Import / export {type} může ztratit některé atributy, zkontrolujte prosím výsledek později.",
+        "&check import / export result later.": "Import / export {type} může ztratit některé atributy, zkontrolujte prosím výsledek později.",
         "&confirm delete file information": "Soubor se nepodařilo odstranit, chcete smazat zaznamenané informace",
         "&confirm delete file?": "Opravdu chcete smazat tento soubor: {name}?",
         "&confirm delete note?": "Opravdu chcete smazat tuto poznámku: {name}?",

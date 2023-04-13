@@ -40,7 +40,7 @@
         "&Valid for new files": "Följande inställningar gäller endast för nya filer efter ändring",
         "&cannot find conf file": "kan inte hitta konfigurationsfilen.",
         "&cannot find sync lock file": "kan inte hitta synkroniseringslåsfilen.",
-        "&check Import / export result later.":"Importera/Exportera {type} kan förlora vissa attribut, kontrollera resultatet senare.",
+        "&check import / export result later.":"Importera/Exportera {type} kan förlora vissa attribut, kontrollera resultatet senare.",
         "&confirm delete file information": "Kunne ikke slette filen, vil du slette den registrerte informasjonen",
         "&confirm delete file?": "Er du sikker på å slette denne filen: {name} ?",
         "&confirm delete note?": "Er du sikker på å slette dette notatet: {name}?",

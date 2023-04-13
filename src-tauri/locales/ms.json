@@ -39,7 +39,7 @@
         "&Valid for new files": "Tetapan berikut hanya sah untuk fail baharu selepas pengubahsuaian",
         "&cannot find conf file": "tidak dapat mencari fail konfigurasi.",
         "&cannot find sync lock file": "tidak dapat mencari fail kunci penyegerakan.",
-        "&check Import / export result later.": "Import / export {type} mungkin kehilangan beberapa atribut, sila semak hasilnya kemudian.",
+        "&check import / export result later.": "Import / export {type} mungkin kehilangan beberapa atribut, sila semak hasilnya kemudian.",
         "&confirm delete file information": "Gagal memadam fail, adakah anda mahu memadam maklumat yang direkodkan",
         "&confirm delete file?": "Adakah anda pasti akan memadamkan fail ini: {name} ?",
         "&confirm delete note?": "Adakah anda pasti akan memadamkan nota ini: {name} ?",

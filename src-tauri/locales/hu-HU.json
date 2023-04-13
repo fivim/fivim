@@ -39,7 +39,7 @@
         "&Valid for new files": "A következő beállítások csak a módosítás utáni új fájlokra érvényesek",
         "&cannot find conf file": "nem található a konfigurációs fájl.",
         "&cannot find sync lock file": "nem található a szinkronizálási zárolási fájl.",
-        "&check Import / export result later.": "A(z) {type} importálása/exportálása elveszítheti bizonyos attribútumokat, kérjük, ellenőrizze az eredményt később.",
+        "&check import / export result later.": "A(z) {type} importálása/exportálása elveszítheti bizonyos attribútumokat, kérjük, ellenőrizze az eredményt később.",
         "&confirm delete file information": "Nem sikerült törölni a fájlt, szeretné törölni a rögzített információkat",
         "&confirm delete file?": "Biztosan törli ezt a fájlt: {name}?",
         "&confirm delete note?": "Biztosan törli ezt a megjegyzést: {name}?",

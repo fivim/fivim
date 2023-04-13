@@ -39,7 +39,7 @@
         "&Valid for new files": "以下設置修改後僅對新文件有效",
         "&cannot find conf file": "找不到配置文件。",
         "&cannot find sync lock file": "找不到同步鎖文件。",
-        "&check Import / export result later.": "導入/導出{type}可能會丟失一些屬性，請稍後檢查結果。",
+        "&check import / export result later.": "導入/導出{type}可能會丟失一些屬性，請稍後檢查結果。",
         "&confirm delete file information": "刪除文件失敗,是否刪除記錄信息",
         "&confirm delete file?": "您確定要刪除此文件：{name} 嗎？",
         "&confirm delete note?": "您確定要刪除此備註：{name} 嗎？",

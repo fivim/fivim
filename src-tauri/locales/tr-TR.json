@@ -39,7 +39,7 @@
         "&Valid for new files": "Aşağıdaki ayarlar yalnızca değiştirildikten sonra yeni dosyalar için geçerlidir",
         "&cannot find conf file": "yapılandırma dosyası bulunamadı.",
         "&cannot find sync lock file": "senkronizasyon kilit dosyası bulunamadı.",
-        "&check Import / export result later.": "{type} içe/dışa aktarma bazı özellikleri kaybedebilir, lütfen sonucu daha sonra kontrol edin.",
+        "&check import / export result later.": "{type} içe/dışa aktarma bazı özellikleri kaybedebilir, lütfen sonucu daha sonra kontrol edin.",
         "&confirm delete file information": "Dosya silinemedi, kaydedilen bilgileri silmek istiyor musunuz?",
         "&confirm delete file?": "Bu dosyayı silmek istediğinizden emin misiniz: {name}?",
         "&confirm delete note?": "Bu notu silmek istediğinizden emin misiniz: {name}?",

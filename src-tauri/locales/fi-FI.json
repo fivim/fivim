@@ -39,7 +39,7 @@
         "&Valid for new files": "Seuraavat asetukset ovat voimassa vain uusille tiedostoille muokkauksen jälkeen",
         "&cannot find conf file": "määritystiedostoa ei löydy.",
         "&cannot find sync lock file": "synkronoinnin lukitustiedostoa ei löydy.",
-        "&check Import / export result later.": "Tuonti/vienti {type} saattaa menettää joitakin määritteitä, tarkista tulos myöhemmin.",
+        "&check import / export result later.": "Tuonti/vienti {type} saattaa menettää joitakin määritteitä, tarkista tulos myöhemmin.",
         "&confirm delete file information": "Tiedoston poistaminen epäonnistui, haluatko poistaa tallennetut tiedot",
         "&confirm delete file?": "Oletko varma, että poistat tämän tiedoston: {name}?",
         "&confirm delete note?": "Oletko varma, että poistat tämän muistiinpanon: {name}?",

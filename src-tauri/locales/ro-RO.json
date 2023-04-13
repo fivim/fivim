@@ -39,7 +39,7 @@
         "&Valid for new files": "Următoarele setări sunt valabile numai pentru fișierele noi după modificare",
         "&cannot find conf file": "Nu se poate găsi fișierul de configurare.",
         "&cannot find sync lock file": "Nu se poate găsi fișierul de blocare a sincronizării.",
-        "&check Import / export result later.": "Importul/exportul {type} poate pierde unele atribute, vă rugăm să verificați rezultatul mai târziu.",
+        "&check import / export result later.": "Importul/exportul {type} poate pierde unele atribute, vă rugăm să verificați rezultatul mai târziu.",
         "&confirm delete file information": "Ștergerea fișierului nu a reușit, doriți să ștergeți informațiile înregistrate",
         "&confirm delete file?": "Sunteți sigur că veți șterge acest fișier: {name} ?",
         "&confirm delete note?": "Sunteți sigur că veți șterge această notă: {name} ?",

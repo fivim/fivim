@@ -39,7 +39,7 @@
         "&Valid for new files": "Các cài đặt sau chỉ hợp lệ cho các tệp mới sau khi sửa đổi",
         "&cannot find conf file": "không thể tìm thấy tệp cấu hình.",
         "&cannot find sync lock file": "không thể tìm thấy tệp khóa đồng bộ hóa.",
-        "&check Import / export result later.": "Nhập/xuất {type} có thể mất một số thuộc tính, vui lòng kiểm tra kết quả sau.",
+        "&check import / export result later.": "Nhập/xuất {type} có thể mất một số thuộc tính, vui lòng kiểm tra kết quả sau.",
         "&confirm delete file information": "Xóa tệp không thành công, bạn có muốn xóa thông tin đã ghi không",
         "&confirm delete file?": "Bạn có chắc chắn xóa tệp này: {name} ?",
         "&confirm delete note?": "Bạn có chắc chắn xóa ghi chú này: {name} ?",

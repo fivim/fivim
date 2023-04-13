@@ -39,7 +39,7 @@
         "&Valid for new files": "Pengaturan berikut hanya berlaku untuk file baru setelah modifikasi",
         "&cannot find conf file": "tidak dapat menemukan file konfigurasi.",
         "&cannot find sync lock file": "tidak dapat menemukan file kunci sinkronisasi.",
-        "&check Import / export result later.": "Impor / ekspor {type} mungkin kehilangan beberapa atribut, silakan periksa hasilnya nanti.",
+        "&check import / export result later.": "Impor / ekspor {type} mungkin kehilangan beberapa atribut, silakan periksa hasilnya nanti.",
         "&confirm delete file information": "Gagal menghapus file, apakah Anda ingin menghapus informasi yang direkam",
         "&confirm delete file?": "Anda yakin ingin menghapus file ini: {name} ?",
         "&confirm delete note?": "Anda yakin ingin menghapus catatan ini: {name} ?",
