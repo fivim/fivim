@@ -1,0 +1,13 @@
+{
+  "root": true,
+  "extends": [
+    "codex"
+  ],
+  "globals": {
+    "Range" : true,
+    "HTMLDivElement": true,
+    "HTMLElement": true,
+    "KeyboardEvent": true,
+    "PasteEvent": true
+  }
+}

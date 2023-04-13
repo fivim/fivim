@@ -1,22 +1,19 @@
 import { EditorConfig } from '@editorjs/editorjs'
 
-// import AttachesTool from '@editorjs/attaches'
-import AttachesTool from './plugins/attaches/src/index.js'
 import ChecklistTool from '@editorjs/checklist'
 import CodeTool from '@editorjs/code'
 import DelimiterTool from '@editorjs/delimiter'
 import EmbedTool from '@editorjs/embed'
 import HeaderTool from '@editorjs/header'
-import ImageTool from './plugins/image/src/index.js'
 import InlineCodeTool from '@editorjs/inline-code'
-import LinkTool from '@editorjs/link'
 import ListTool from '@editorjs/list'
 import MarkerTool from '@editorjs/marker'
-import NestedListTool from '@editorjs/nested-list'
 import QuoteTool from '@editorjs/quote'
-import RawHtmlTool from '@editorjs/raw'
 import TableTool from '@editorjs/table'
-import WarningTool from '@editorjs/warning'
+
+// import AttachesTool from './plugins/attaches/src/index.js'
+import ImageTool from './plugins/image/src/index.js'
+import LinkTool from './plugins/link/src/index.js'
 
 import { Props } from './types'
 import { i18n } from '@/libs/init/i18n'
@@ -123,18 +120,12 @@ export const mergeConfig = (confInput: Props) => {
         }
       },
       inlineCode: InlineCodeTool,
-      link: { // Refer: https://github.com/editor-js/link
-        class: LinkTool as unknown as undefined, // avoid type error
-        config: {
-          endpoint: 'http://localhost:8008/fetchUrl' // Your backend endpoint for url data fetching,
-        }
-      },
+      link: LinkTool,
       list: { // Refer: https://github.com/editor-js/list
         class: ListTool as unknown as undefined, // avoid type error
         inlineToolbar: true
       },
       marker: MarkerTool,
-      nestedList: NestedListTool,
       quote: {
         class: QuoteTool as unknown as undefined, // avoid type error
         config: {
@@ -142,20 +133,7 @@ export const mergeConfig = (confInput: Props) => {
           captionPlaceholder: t('NoteEditor.Enter a caption')
         }
       },
-      rawHtml: {
-        class: RawHtmlTool as unknown as undefined, // avoid type error
-        config: {
-          placeholder: t('NoteEditor.Enter HTML code')
-        }
-      },
-      table: TableTool,
-      warning: {
-        class: WarningTool as unknown as undefined, // avoid type error
-        config: {
-          titlePlaceholder: t('NoteEditor.Title'),
-          messagePlaceholder: t('NoteEditor.Message')
-        }
-      }
+      table: TableTool
     },
     // Internationalzation, refer https://editorjs.io/i18n/
     i18n: {
