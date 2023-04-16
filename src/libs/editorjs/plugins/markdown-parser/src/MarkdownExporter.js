@@ -1,16 +1,8 @@
-import { parseHeaderToMarkdown } from './BlockTypeParsers/HeaderTypeParser'
-import { parseParagraphToMarkdown } from './BlockTypeParsers/ParagraphTypeParser'
-import { parseListToMarkdown } from './BlockTypeParsers/ListTypeParser'
-import { parseDelimiterToMarkdown } from './BlockTypeParsers/DelimiterTypeParser'
-import { parseImageToMarkdown } from './BlockTypeParsers/ImageTypeParser'
-import { parseCheckboxToMarkdown } from './BlockTypeParsers/CheckboxTypeParser'
-import { parseQuoteToMarkdown } from './BlockTypeParsers/QuoteTypeParser'
-import { parseCodeToMarkdown } from './BlockTypeParsers/CodeTypeParser'
+import {
+  Header2Md, Paragraph2Md, List2Md, Delimiter2Md, Image2Md,
+  Checkbox2Md, Quote2Md, Code2Md, Link2Md, Table2Md
+} from './blockParsers'
 import { fileDownloadHandler } from './FileHandler'
-
-import { parseLinkToMarkdown } from './BlockTypeParsers/LinkTypeParser'
-import { parseTableToMarkdown } from './BlockTypeParsers/TableTypeParser'
-// import { parseRawHtmlToMarkdown } from './BlockTypeParsers/RawHtmlTypeParser'
 
 /**
  * Markdown Parsing class
@@ -68,48 +60,44 @@ export default class MarkdownExporter {
 }
 
 export const exporter = (blocks) => {
-  console.log('导出的 blocks: ', blocks)
-
   // eslint-disable-next-line array-callback-return
   const parsedData = blocks.map((item) => {
     let tempArr = []
     // iterate through editor data and parse the single blocks to markdown syntax
     switch (item.type) {
       case 'header':
-        return parseHeaderToMarkdown(item.data)
+        return Header2Md(item.data)
       case 'paragraph':
-        return parseParagraphToMarkdown(item.data)
+        return Paragraph2Md(item.data)
       case 'list':
-        tempArr = parseListToMarkdown(item.data) || []
+        tempArr = List2Md(item.data) || []
         return tempArr.join('\n')
       case 'delimiter':
-        return parseDelimiterToMarkdown(item)
+        return Delimiter2Md(item)
       case 'image':
-        return parseImageToMarkdown(item.data)
+        return Image2Md(item.data)
       case 'quote':
-        return parseQuoteToMarkdown(item.data)
+        return Quote2Md(item.data)
       case 'checkbox':
-        return parseCheckboxToMarkdown(item.data)
+        return Checkbox2Md(item.data)
       case 'code':
-        return parseCodeToMarkdown(item.data)
+        return Code2Md(item.data)
       case 'checklist':
-        return parseCheckboxToMarkdown(item.data)
+        return Checkbox2Md(item.data)
       //
       // case 'nestedList': // TODO not perfect
-      //   tempArr = parseListToMarkdown(item.data)
+      //   tempArr = List2Md(item.data)
       //   return tempArr.join('\n')
       case 'link':
-        return parseLinkToMarkdown(item.data)
+        return Link2Md(item.data)
       case 'table':
-        return parseTableToMarkdown(item.data)
+        return Table2Md(item.data)
       // case 'rawHtml': // TODO, data is {html: 'html'} ???
-      //   return parseRawHtmlToMarkdown(item.data)
+      //   return parseRawHtml2Md(item.data)
       default:
         break
     }
   })
-
-  console.log('最后导出之前的 ', parsedData)
 
   return parsedData.join('\n')
 }

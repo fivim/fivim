@@ -4,14 +4,11 @@ import remarkToc from 'remark-toc'
 // import { remarkExtendedTable, extendedTableHandlers } from 'remark-extended-table'
 // import remarkRehype from 'remark-rehype'
 
-import { parseMarkdownToHeader } from './BlockTypeParsers/HeaderTypeParser'
-import { parseMarkdownToParagraph } from './BlockTypeParsers/ParagraphTypeParser'
-import { parseMarkdownToList } from './BlockTypeParsers/ListTypeParser'
-import { parseMarkdownToDelimiter } from './BlockTypeParsers/DelimiterTypeParser'
-import { parseMarkdownToCode } from './BlockTypeParsers/CodeTypeParser'
-import { parseMarkdownToQuote } from './BlockTypeParsers/QuoteTypeParser'
-
-import { parseMarkdownToTable } from './BlockTypeParsers/TableTypeParser'
+import {
+  Md2Header, Md2Paragraph, Md2List,
+  Md2Delimiter, Md2Code, Md2Quote,
+  Md2Table
+} from './blockParsers'
 
 export const editorData = []
 
@@ -100,27 +97,27 @@ export const importer = (content) => {
   const r = remark()
     .use(remarkGfm)
     .use(remarkToc)
-    // .use(remarkExtendedTable)
-    // .use(remarkRehype, null, { handlers: Object.assign({}, extendedTableHandlers) })
+  // .use(remarkExtendedTable)
+  // .use(remarkRehype, null, { handlers: Object.assign({}, extendedTableHandlers) })
 
   const parsedMarkdown = r.parse(content)
   // iterating over the pared remarkjs syntax tree and executing the json parsers
   parsedMarkdown.children.forEach((item, index) => {
     switch (item.type) {
       case 'heading':
-        return editorData.push(parseMarkdownToHeader(item))
+        return editorData.push(Md2Header(item))
       case 'paragraph':// indluding: text / image / link
-        return editorData.push(parseMarkdownToParagraph(item))
+        return editorData.push(Md2Paragraph(item))
       case 'list':
-        return editorData.push(parseMarkdownToList(item))
+        return editorData.push(Md2List(item))
       case 'thematicBreak':
-        return editorData.push(parseMarkdownToDelimiter())
+        return editorData.push(Md2Delimiter())
       case 'code':
-        return editorData.push(parseMarkdownToCode(item))
+        return editorData.push(Md2Code(item))
       case 'blockquote':
-        return editorData.push(parseMarkdownToQuote(item))
+        return editorData.push(Md2Quote(item))
       case 'table':
-        return editorData.push(parseMarkdownToTable(item))
+        return editorData.push(Md2Table(item))
       default:
         break
     }
