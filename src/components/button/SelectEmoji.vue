@@ -4,8 +4,8 @@
       <el-button>{{ icon ? `${icon} ` : '' }}{{ t('Icon') }}</el-button>
     </template>
 
-    <!-- TODO add "locale" and "pickerStyle" to VuemojiPicker -->
-    <VuemojiPicker @emojiClick="onClick" :isDark="emojiPickerIsDark()" />
+    <!-- TODO add "locale" -->
+    <VuemojiPicker @emojiClick="onClick" />
   </XPopover>
 </template>
 
@@ -33,10 +33,19 @@ const { t } = useI18n()
 const onClick = (detail: EmojiClickEventDetail) => {
   emits('onClick', detail)
 }
-
-const emojiPickerIsDark = () => {
-  return true
-}
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+emoji-picker {
+  --background: var(--enas-background-primary-color);
+  --border-color: var(--enas-border-color);
+  --button-active-background: var(--enas-background-secondary-color);
+  --button-hover-background: var(--enas-background-secondary-color);
+  --category-font-color: var(--enas-foreground-primary-color);
+  --indicator-color: var(--enas-highlight-color);
+  --input-border-color: var(--enas-border-color);
+  --input-font-color: var(--enas-foreground-primary-color);
+  --input-placeholder-color: var(--enas-foreground-primary-color);
+  --outline-color: var(--enas-highlight-color);
+}
+</style>
