@@ -16,6 +16,6 @@ Editor function:
   - on Linux is: `~/.enassi/conf.bin`
   - on MacOS is: `~/.enassi/conf.bin`
 
-- `The startup configuration` and main configuration file is in the same directory, with the file name `conf.startup.bin`.
+- `The startup configuration` and main configuration file are in the same directory, with the file name `conf.startup.bin`.
 
 - `The user data directory` is set by yourself in `Setup wizard`.There will be several subdirectories in the working directory, and the directory names are encrypted.
