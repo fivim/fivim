@@ -48,7 +48,7 @@ pub fn read_to_string(file_path: &str) -> Result<String, x_error> {
     Ok(res)
 }
 
-pub fn read_to_bytes(file_path: &str) -> Result<Vec<u8>, x_error> {
+pub fn read_to_bytes(file_path: &str, log_open_err: bool) -> Result<Vec<u8>, x_error> {
     let mut file = match File::open(&file_path) {
         Ok(f) => f,
         Err(e) => {
@@ -56,7 +56,9 @@ pub fn read_to_bytes(file_path: &str) -> Result<Vec<u8>, x_error> {
                 path: file_path.to_owned(),
                 error: e,
             };
-            x_logger::log_error(&format!("read_to_bytes:: {}\n", eee));
+            if log_open_err {
+                x_logger::log_error(&format!("read_to_bytes:: {}\n", eee));
+            }
             return Err(eee);
         }
     };

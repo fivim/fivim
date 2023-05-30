@@ -220,7 +220,7 @@ pub fn read_file(
     if always_open_in_memory || do_in_memory(file_size_kb as u64, file_path) {
         // small file, read all the content
         // TODO read file twice
-        match xu_file::read_to_bytes(&file_path) {
+        match xu_file::read_to_bytes(&file_path, false) {
             Ok(content) => {
                 let mut psd = parse_small_data(&content);
                 let bin = x_encrypt::decrypt_bytes(pwd, &psd.file_data, &progress_name);

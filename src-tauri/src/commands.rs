@@ -84,7 +84,7 @@ pub async fn exist_file(file_path: String) -> bool {
 
 #[tauri::command]
 pub async fn get_file_bytes(file_path: String) -> Vec<u8> {
-    match xx_file::read_to_bytes(file_path.as_str()) {
+    match xx_file::read_to_bytes(file_path.as_str(), false) {
         Ok(c) => {
             return c;
         }
@@ -101,7 +101,7 @@ pub async fn get_file_meta(file_path: String) -> x_file::FileMeta {
 
 #[tauri::command]
 pub async fn read_file_to_bytes(file_path: String) -> Vec<u8> {
-    match xx_file::read_to_bytes(file_path.as_str()) {
+    match xx_file::read_to_bytes(file_path.as_str(), false) {
         Ok(content) => return content,
         Err(_) => return [].to_vec(),
     }
@@ -294,7 +294,11 @@ pub async fn re_encrypt_file(
 
 // ---------- http ----------
 #[tauri::command]
-pub async fn http_request(method: String, url: String, resp_data_type: String) -> x_http::HttpResponse {
+pub async fn http_request(
+    method: String,
+    url: String,
+    resp_data_type: String,
+) -> x_http::HttpResponse {
     return x_http::request(&method, &url, &resp_data_type).await;
 }
 
