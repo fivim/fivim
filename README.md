@@ -26,7 +26,7 @@
 
 ## Features
 
-- 🔒 Encrypt everything, support large file.
+- 🔒 Encrypt everything, support large files.
 - 🙂 Easy to use.
 - 💌 Free and open source.
 - 💻 Cross-platform.

@@ -19,7 +19,7 @@ There are some buttons on the top left corner in the above image:
 - Save button: `Save` right now.
 - Lockscreen button: `Lockscreen` right now.
 
-The main part of the app has navigation column / list column / editor column.
+The main part of the app has a navigation column, a list column and a editor column.
 
 ## Theme and appearance
 We provide some built-in themes. Please click the **Theme** button to switch it.

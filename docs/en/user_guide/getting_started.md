@@ -7,7 +7,7 @@ The master password will be used to encrypt all your data, it is very important.
 Editor function:
 
 - Image: you can paste images into editor, it will be encoded as base64.
-- Attachment: under developing.
+- Attachment: underdeveloping.
 
 ## Data directory
 

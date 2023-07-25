@@ -24,7 +24,7 @@ features:
     title: Easy to use.Provide multi-language support and various themes.
     details: Lorem ipsum...
   - icon: 🔒
-    title: Encrypt everything, include configuration files and user files, support large file.
+    title: Encrypt everything, including configuration files and user files, support large files.
     details: Lorem ipsum...
   - icon: 🔗
     title: Set a password to share encrypted data with your friends
