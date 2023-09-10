@@ -40,22 +40,22 @@ pub async fn close_splashscreen(window: tauri::Window) {
 
 #[tauri::command]
 pub async fn get_app_core_conf() -> x_tauri::AppCoreConf {
-    return x_tauri::get_app_core_conf();
+    x_tauri::get_app_core_conf()
 }
 
 #[tauri::command]
 pub async fn get_dict_json() -> String {
-    return x_i18n::get_dict_json();
+    x_i18n::get_dict_json()
 }
 
 #[tauri::command]
 pub async fn get_locale() -> String {
-    return x_i18n::get_locale();
+    x_i18n::get_locale()
 }
 
 #[tauri::command]
 pub async fn set_locale(locale: String) {
-    return x_i18n::set_locale(locale);
+    x_i18n::set_locale(locale)
 }
 
 #[tauri::command]
@@ -69,12 +69,12 @@ pub async fn system_tray_update_text(app_handle: tauri::AppHandle) {
 
 #[tauri::command]
 pub async fn copy_file(file_path: String, target_file_path: String) -> bool {
-    return !xx_file::copy(&file_path, &target_file_path);
+    !xx_file::copy(&file_path, &target_file_path)
 }
 
 #[tauri::command]
 pub async fn delete_file(file_path: String) -> bool {
-    return xx_file::delete(&file_path);
+    xx_file::delete(&file_path)
 }
 
 #[tauri::command]
@@ -85,12 +85,8 @@ pub async fn exist_file(file_path: String) -> bool {
 #[tauri::command]
 pub async fn get_file_bytes(file_path: String) -> Vec<u8> {
     match xx_file::read_to_bytes(file_path.as_str(), false) {
-        Ok(c) => {
-            return c;
-        }
-        Err(_) => {
-            return [].to_vec();
-        }
+        Ok(c) => c,
+        Err(_) => [].to_vec(),
     }
 }
 
@@ -102,16 +98,16 @@ pub async fn get_file_meta(file_path: String) -> x_file::FileMeta {
 #[tauri::command]
 pub async fn read_file_to_bytes(file_path: String) -> Vec<u8> {
     match xx_file::read_to_bytes(file_path.as_str(), false) {
-        Ok(content) => return content,
-        Err(_) => return [].to_vec(),
+        Ok(content) => content,
+        Err(_) => [].to_vec(),
     }
 }
 
 #[tauri::command]
 pub async fn read_file_to_string(file_path: String) -> String {
     match xx_file::read_to_string(file_path.as_str()) {
-        Ok(content) => return content,
-        Err(_) => return "".to_string(),
+        Ok(content) => content,
+        Err(_) => "".to_string(),
     }
 }
 #[tauri::command]
@@ -125,17 +121,11 @@ pub async fn write_base64_into_file(file_path: String, file_content_base64: Stri
 }
 #[tauri::command]
 pub async fn write_string_into_file(file_path: String, file_content: String) -> bool {
-    match xx_file::write_str(file_path.as_str(), file_content.as_str()) {
-        Ok(_) => return true,
-        Err(_) => return false,
-    }
+    xx_file::write_str(file_path.as_str(), file_content.as_str()).is_ok()
 }
 #[tauri::command]
 pub async fn write_bytes_into_file(file_path: String, file_content: Vec<u8>) -> bool {
-    match xx_file::write_bytes(file_path.as_str(), &file_content) {
-        Ok(_) => return true,
-        Err(_) => return false,
-    }
+    xx_file::write_bytes(file_path.as_str(), &file_content).is_ok()
 }
 
 // ---------- file end ----------
@@ -144,12 +134,12 @@ pub async fn write_bytes_into_file(file_path: String, file_content: Vec<u8>) -> 
 
 #[tauri::command]
 pub async fn delete_dir(dir_path: String) -> bool {
-    return xu_dir::delete(&dir_path);
+    xu_dir::delete(&dir_path)
 }
 
 #[tauri::command]
 pub async fn get_dir_size(dir_path: String) -> u64 {
-    return xu_dir::get_size(&dir_path);
+    xu_dir::get_size(&dir_path)
 }
 
 #[tauri::command]
@@ -163,7 +153,7 @@ pub async fn list_dir_children(dir_path: String) -> Vec<xu_dir::DirChildren> {
 
 #[tauri::command]
 pub fn rename(path_old: &str, path_new: &str) -> bool {
-    return xu_fs::rename(path_old, path_new);
+    xu_fs::rename(path_old, path_new)
 }
 
 // ---------- fs end ----------
@@ -223,11 +213,9 @@ pub async fn read_user_data_file(
         target_file_path.as_str(),
         progress_name.as_str(),
     ) {
-        Ok(res) => return res,
-        Err(_) => {
-            return x_parser::UserFileData::new();
-        }
-    };
+        Ok(res) => res,
+        Err(_) => x_parser::UserFileData::new(),
+    }
 }
 
 #[tauri::command]
@@ -247,17 +235,15 @@ pub async fn write_user_data_file(
         source_of_large_file_path.as_str(),
         progress_name.as_str(),
     ) {
-        Ok(res) => {
-            return res;
-        }
+        Ok(res) => res,
         Err(e) => {
             xu_logger::log_error(&format!(
                 ">>> write_user_data_file error: {}, file_path:{}\n",
                 e, file_path
             ));
-            return false;
+            false
         }
-    };
+    }
 }
 
 #[tauri::command]
@@ -277,17 +263,15 @@ pub async fn re_encrypt_file(
         target_file_path.as_str(),
         progress_name.as_str(),
     ) {
-        Ok(res) => {
-            return res;
-        }
+        Ok(res) => res,
         Err(e) => {
             xu_logger::log_error(&format!(
                 ">>> write_user_data_file error: {}, file_path:{}\n",
                 e, file_path
             ));
-            return false;
+            false
         }
-    };
+    }
 }
 
 // ---------- user data file ----------
@@ -299,7 +283,7 @@ pub async fn http_request(
     url: String,
     resp_data_type: String,
 ) -> x_http::HttpResponse {
-    return x_http::request(&method, &url, &resp_data_type).await;
+    x_http::request(&method, &url, &resp_data_type).await
 }
 
 // ---------- http end ----------
@@ -307,14 +291,13 @@ pub async fn http_request(
 // ---------- other ----------
 
 #[tauri::command]
-pub async fn download_file(url: String, file_path: String) {
+pub async fn download_file(_url: String, _file_path: String) {
     // TODO
-    return;
 }
 
 #[tauri::command]
 pub async fn get_progress(progress_name: String) -> xu_progress::Status {
-    return xu_progress::get(&progress_name);
+    xu_progress::get(&progress_name)
 }
 
 // ---------- other end ----------

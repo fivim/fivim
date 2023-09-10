@@ -9,7 +9,6 @@ extern crate custom_error;
 
 use std::path::Path;
 use tauri::Manager;
-use window_shadows::set_shadow;
 
 mod commands;
 mod conf;
@@ -17,7 +16,6 @@ mod data_file_parse;
 mod i18n;
 mod menu;
 mod utils;
-use xutils;
 
 fn main() {
     utils::tauri::set_app_dir();
@@ -64,13 +62,18 @@ fn main() {
             commands::http_request,
             // other
             commands::get_progress,
-            commands::download_file,            
+            commands::download_file,
         ])
         .setup(|app| {
             menu::make_tray_menu(app)?;
 
-            let main_window = app.get_window(conf::WINDOW_LABEL_MAIN).unwrap();
-            set_shadow(&main_window, true).expect("Unsupported platform!");
+            #[cfg(any(windows, target_os = "macos"))]
+            {
+                use window_shadows::set_shadow;
+                let main_window = app.get_window(conf::WINDOW_LABEL_MAIN).unwrap();
+                set_shadow(&main_window, true).expect("Unsupported platform!");
+            }
+
             // let splashscreen_window = app.get_window(conf::WINDOW_LABEL_SPLASHSCREEN).unwrap();
             // // we perform the initialization code on a new task so the app doesn't crash
             // tauri::async_runtime::spawn(async move {
@@ -81,19 +84,16 @@ fn main() {
             // Get locales dir path, and init i18n dict
             // Refer: https://tauri.app/v1/guides/building/resources/
             let resource_dir = app.path_resolver().resource_dir();
-            match resource_dir {
-                Some(dir) => {
-                    let dir = dir.into_os_string().into_string().unwrap();
-                    let locales_dir = Path::new(&dir)
-                        .join(conf::LOCALES_DIR_NAME) // Add the locales dir name
-                        .to_str()
-                        .unwrap()
-                        .to_string();
+            if let Some(dir) = resource_dir {
+                let dir = dir.into_os_string().into_string().unwrap();
+                let locales_dir = Path::new(&dir)
+                    .join(conf::LOCALES_DIR_NAME) // Add the locales dir name
+                    .to_str()
+                    .unwrap()
+                    .to_string();
 
-                    i18n::set_locales_dir(locales_dir);
-                    i18n::init_dict();
-                }
-                None => {}
+                i18n::set_locales_dir(locales_dir);
+                i18n::init_dict();
             }
 
             Ok(())
@@ -102,10 +102,9 @@ fn main() {
         .build(tauri::generate_context!())
         .expect("error while building tauri application");
 
-    app.run(|_app_handle, event| match event {
-        tauri::RunEvent::ExitRequested { api, .. } => {
+    app.run(|_app_handle, event| {
+        if let tauri::RunEvent::ExitRequested { api, .. } = event {
             api.prevent_exit();
         }
-        _ => {}
     });
 }

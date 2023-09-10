@@ -1,6 +1,5 @@
 use xencrypt::xchacha20poly1305::{
-    decrypt as xu_decrypt, encrypt as xu_encrypt, re_encrypt_file as xu_re_encrypt_file, test_file,
-    test_string, EncryptRes, SIZE_KEY, SIZE_NONCE,
+    decrypt as xu_decrypt, encrypt as xu_encrypt, re_encrypt_file as xu_re_encrypt_file, EncryptRes, SIZE_KEY, SIZE_NONCE,
 };
 
 use xutils::{
@@ -11,11 +10,11 @@ use xutils::{
 // Convert a slice as an array
 // Refer: https://stackoverflow.com/questions/25428920/how-to-get-a-slice-as-an-array-in-rust
 fn u8_array_key(input: &[u8]) -> [u8; SIZE_KEY] {
-    return input.try_into().expect("slice with incorrect length");
+    input.try_into().expect("slice with incorrect length")
 }
 
 fn u8_array_nonce(input: &[u8]) -> [u8; SIZE_NONCE] {
-    return input.try_into().expect("slice with incorrect length");
+    input.try_into().expect("slice with incorrect length")
 }
 
 pub fn gen_key(pwd: &str) -> [u8; SIZE_KEY] {
@@ -37,7 +36,7 @@ pub fn encrypt_bytes(pwd: &str, content: &Vec<u8>, progress_name: &str) -> Vec<u
     match xu_encrypt(
         &kkk,
         &nnn,
-        &content,
+        content,
         "".to_string(),
         "".to_string(),
         &[].to_vec(),
@@ -45,13 +44,13 @@ pub fn encrypt_bytes(pwd: &str, content: &Vec<u8>, progress_name: &str) -> Vec<u
         progress_name.to_owned(),
     ) {
         Ok(d) => {
-            return d.dist_vec;
+            d.dist_vec
         }
         Err(e) => {
             xu_logger::log_error(&format!("encrypt_bytes error:{:?}\n", e));
-            return vec![];
+            vec![]
         }
-    };
+    }
 }
 
 pub fn decrypt_bytes(pwd: &str, content: &Vec<u8>, progress_name: &str) -> Vec<u8> {
@@ -61,24 +60,24 @@ pub fn decrypt_bytes(pwd: &str, content: &Vec<u8>, progress_name: &str) -> Vec<u
     match xu_decrypt(
         &kkk,
         &nnn,
-        &content,
+        content,
         "".to_string(),
         "".to_string(),
         0,
         0,
         progress_name.to_owned(),
     ) {
-        Ok(de) => return de.dist_vec,
+        Ok(de) => de.dist_vec,
         Err(e) => {
             xu_logger::log_error(&format!("decrypt_bytes error:{:?}\n", e));
-            return [].to_vec();
+            [].to_vec()
         }
-    };
+    }
 }
 
 pub fn decrypt_bytes_to_string(pwd: &str, content: &Vec<u8>, progress_name: &str) -> String {
-    let dec = decrypt_bytes(pwd, content, &progress_name.to_string());
-    return xu_string::bytes_to_string(&dec);
+    let dec = decrypt_bytes(pwd, content, progress_name);
+    xu_string::bytes_to_string(&dec)
 }
 
 pub fn encrypt_file(
@@ -100,7 +99,7 @@ pub fn encrypt_file(
         &[].to_vec(),
         progress_name.to_string(),
     ) {
-        Ok(d) => return d,
+        Ok(d) => d,
         Err(e) => {
             let eee = xu_error::EncryptFileError {
                 path: source_path.to_owned(),
@@ -108,11 +107,11 @@ pub fn encrypt_file(
             };
             xu_logger::log_error(&format!("encrypt_file:: error: {}\n", eee));
 
-            let res = EncryptRes {
+            
+            EncryptRes {
                 dist_vec: [].to_vec(),
                 encrypted_data_len: 0,
-            };
-            return res;
+            }
         }
     }
 }
@@ -140,7 +139,7 @@ pub fn decrypt_file(
         end,
         progress_name.to_string(),
     ) {
-        Ok(d) => return d,
+        Ok(d) => d,
         Err(e) => {
             let eee = xu_error::DecryptFileError {
                 path: source_path.to_owned(),
@@ -148,11 +147,11 @@ pub fn decrypt_file(
             };
             xu_logger::log_error(&format!("decrypt_file:: error: {}\n", eee));
 
-            let res = EncryptRes {
+            
+            EncryptRes {
                 dist_vec: [].to_vec(),
                 encrypted_data_len: 0,
-            };
-            return res;
+            }
         }
     }
 }
@@ -185,7 +184,7 @@ pub fn re_encrypt_file(
         &[].to_vec(),
         progress_name.to_string(),
     ) {
-        Ok(d) => return d,
+        Ok(d) => d,
         Err(e) => {
             let eee = xu_error::ReEncryptFileError {
                 source_path: source_path.to_owned(),
@@ -194,13 +193,17 @@ pub fn re_encrypt_file(
             };
             xu_logger::log_error(&format!("re_encrypt_file:: error: {}\n", eee));
 
-            return 0;
+            0
         }
     }
 }
 
 #[test]
 pub fn test() {
+    use xencrypt::xchacha20poly1305::{
+        test_file,
+        test_string,
+    };
     let text = "vfE6IJRRnUCAzNqGHqFCdJ4bFQk4wqeKtQ5RXv5wyVQEaIZsj8Sic2L8Eze5DyN7GFMqAAnaRUBpqhposu4LHj1ZkGDJsgcv80AH3SOD0AlZ5arzfzL03T0J7UVS14xDgRKdVfhIxl2ZKEMZpAbSAtzD08r3D5sR4f41q9rnj9DZ91o8Yl9QPp3VkQ5GU2DfvjNwgwan8D3lXm9WK5yuJTGkwX8L3VBayPJuuCyAZhTwndnx2aRuKxZ04794sL7rX8B1ZBtjsPkFHqWheDSC3ARpqIi8P5yz0kCvGzUpwH5uubIANqIPUegSWZYJrJX94C9Tkp6Kx0LYcHAtY5hPJ4xqKWZ65XL7DFKIkkFK8uv1H3VsrBmBBrFcpauyR1KbimXHT6RkoeceQrKwPX7yhbI3216192B63q4TYYndAOVrTfMqxvqxBxjn9u994JfOHulFSYvQrZH5odfadoJzKseHZyrp487IhN9z51gFi6uNVB74d62";
     test_string(text);
 

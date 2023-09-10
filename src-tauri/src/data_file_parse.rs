@@ -30,7 +30,7 @@ pub struct UserFileData {
 
 impl UserFileData {
     pub fn new() -> Self {
-        return UserFileData {
+        UserFileData {
             crc32: 0,
             crc32_check: 0,
             file_modify_timestamp: 0,
@@ -44,7 +44,7 @@ impl UserFileData {
             file_data_start_pos: 0,
             file_data_end_pos: 0,
             file_data_len: 0,
-        };
+        }
     }
 }
 
@@ -59,7 +59,7 @@ fn do_in_memory(mut file_size_kb: u64, file_path: &str) -> bool {
     }
 
     let mem_state = xu_sys::get_memory_info();
-    return mem_state.free > file_size_kb * 10;
+    mem_state.free > file_size_kb * 10
 }
 
 fn get_file_meta(file_path: &str) -> UserFileData {
@@ -93,12 +93,11 @@ fn get_file_meta(file_path: &str) -> UserFileData {
     }
 
     let bytes = buffer.to_vec();
-    let meta = decode_file_meta(&bytes);
 
-    return meta;
+    decode_file_meta(&bytes)
 }
 
-fn decode_file_meta(bytes: &Vec<u8>) -> UserFileData {
+fn decode_file_meta(bytes: &[u8]) -> UserFileData {
     let mut res = UserFileData::new();
 
     let mut file_header_signature = [0u8; 4];
@@ -143,24 +142,24 @@ fn decode_file_meta(bytes: &Vec<u8>) -> UserFileData {
     res.file_data_end_pos = file_data_end;
     res.file_data_len = file_data_len;
 
-    return res;
+    res
 }
 
-pub fn parse_small_data(bytes: &Vec<u8>) -> UserFileData {
+pub fn parse_small_data(bytes: &[u8]) -> UserFileData {
     let mut res = decode_file_meta(bytes);
     let item_file_name = &bytes[res.file_name_start_pos..res.file_name_end_pos];
     let item_file_data = &bytes[res.file_data_start_pos..res.file_data_end_pos];
 
     res.file_name = String::from_utf8(item_file_name.to_vec()).unwrap();
     res.file_data = item_file_data.to_vec();
-    res.crc32_check = xu_hash::crc32_of_sha256_by_data(&item_file_data);
+    res.crc32_check = xu_hash::crc32_of_sha256_by_data(item_file_data);
 
-    return res;
+    res
 }
 
 fn gen_file_meta(file_name: &str, crc32: [u8; 4], data_len: usize) -> [Vec<u8>; 2] {
     let file_name_arr = file_name.as_bytes();
-    let fnu = &file_name_bytes(&file_name_arr).to_vec();
+    let fnu = &file_name_bytes(file_name_arr).to_vec();
     let tmu = &timestamp_bytes().to_vec();
     let pk = "PK".as_bytes().to_vec();
     let data_size = &size_bytes(data_len);
@@ -168,20 +167,20 @@ fn gen_file_meta(file_name: &str, crc32: [u8; 4], data_len: usize) -> [Vec<u8>; 
     // File header
     let mut file_header = [0u8; FILE_HEADER_SIZE];
     file_header[0..12].clone_from_slice(
-        &[
+        [
             pk[0], pk[1], 3, 4, // File header signature
             0, 2, // File format version
             0, 2, // Inner data structure version
             0, 0, 0, 0, // CRC-32
         ]
-        .to_vec(),
+        .as_ref(),
     );
     file_header[12..20].clone_from_slice(tmu); // File last modification UTC timestamp
 
     // Item header
     let mut item_header = [0u8; ITEM_HEADER_SIZE];
-    item_header[0..4].clone_from_slice(&[pk[0], pk[1], 1, 2].to_vec()); // Item header signature
-    item_header[4..8].clone_from_slice(&crc32.to_vec()); // Item CRC-32
+    item_header[0..4].clone_from_slice([pk[0], pk[1], 1, 2].as_ref()); // Item header signature
+    item_header[4..8].clone_from_slice(crc32.as_ref()); // Item CRC-32
     item_header[8..16].clone_from_slice(tmu); // Item last modification UTC timestamp
     item_header[16..18].clone_from_slice(fnu); // Item file name length
     item_header[18..22].clone_from_slice(data_size); // Item file data length
@@ -189,10 +188,10 @@ fn gen_file_meta(file_name: &str, crc32: [u8; 4], data_len: usize) -> [Vec<u8>; 
     // Item tail
     let mut item_tail = [0u8; ITEM_TAIL_SIZE];
     item_tail[0..4].clone_from_slice(
-        &[
+        [
             pk[0], pk[1], 5, 6, // End of item signature
         ]
-        .to_vec(),
+        .as_ref(),
     );
 
     let header = [
@@ -202,7 +201,7 @@ fn gen_file_meta(file_name: &str, crc32: [u8; 4], data_len: usize) -> [Vec<u8>; 
     ]
     .concat();
 
-    return [header, item_tail.to_vec()];
+    [header, item_tail.to_vec()]
 }
 
 // Read and decrypt user data
@@ -220,24 +219,22 @@ pub fn read_file(
     if always_open_in_memory || do_in_memory(file_size_kb as u64, file_path) {
         // small file, read all the content
         // TODO read file twice
-        match xu_file::read_to_bytes(&file_path, false) {
+        match xu_file::read_to_bytes(file_path, false) {
             Ok(content) => {
                 let mut psd = parse_small_data(&content);
-                let bin = x_encrypt::decrypt_bytes(pwd, &psd.file_data, &progress_name);
+                let bin = x_encrypt::decrypt_bytes(pwd, &psd.file_data, progress_name);
 
                 // parse data
                 if parse_as == x_conf::TYPE_STRING {
                     psd.file_data_str =
-                        x_encrypt::decrypt_bytes_to_string(pwd, &psd.file_data, &progress_name);
-                } else {
-                    if parse_as == x_conf::TYPE_BASE64 {
-                        psd.file_data_str = b64_STANDARD.encode(&bin);
-                    } else if parse_as == x_conf::TYPE_BINARY {
-                        psd.file_data = (&*bin).to_vec();
-                    }
+                        x_encrypt::decrypt_bytes_to_string(pwd, &psd.file_data, progress_name);
+                } else if parse_as == x_conf::TYPE_BASE64 {
+                    psd.file_data_str = b64_STANDARD.encode(&bin);
+                } else if parse_as == x_conf::TYPE_BINARY {
+                    psd.file_data = (*bin).to_vec();
                 }
 
-                if target_file_path != "" {
+                if !target_file_path.is_empty() {
                     match xu_file::write_bytes(target_file_path, &bin) {
                         Ok(_) => (),
                         Err(e) => return Err(e),
@@ -256,7 +253,7 @@ pub fn read_file(
     } else {
         // latge file, use a temp file for saving memory.
 
-        if target_file_path == "" {
+        if target_file_path.is_empty() {
             xu_logger::log_error(
                 "read_file with a large file should pass target_file_path param \n",
             );
@@ -270,7 +267,7 @@ pub fn read_file(
             target_file_path,
             meta.file_data_start_pos,
             meta.file_data_end_pos,
-            &progress_name,
+            progress_name,
         );
     }
 
@@ -297,9 +294,9 @@ pub fn write_file(
     // If the file is not too large, operate directly in memory,
     // otherwise write to a temporary file, then assemble the full data.
 
-    if large_file_source_path == "" {
+    if large_file_source_path.is_empty() {
         // Operate all data in memory.
-        let enc_data = x_encrypt::encrypt_bytes(pwd, &vec_data, &progress_name);
+        let enc_data = x_encrypt::encrypt_bytes(pwd, &vec_data, progress_name);
         let [header, item_tail] =
             gen_file_meta(file_name, sha256_crc32_bytes(&enc_data), enc_data.len());
         let res = [header, enc_data, item_tail.to_vec()].concat();
@@ -312,7 +309,7 @@ pub fn write_file(
         // TODO Maybe we can write all the data first, and finally modify the crc32 and length.
 
         let enc_data =
-            x_encrypt::encrypt_file(pwd, large_file_source_path, dist_path, &progress_name);
+            x_encrypt::encrypt_file(pwd, large_file_source_path, dist_path, progress_name);
         if enc_data.encrypted_data_len > 0 {
             let crc32 = sha256_crc32_file_path(large_file_source_path);
             let [header, tail] = gen_file_meta(file_name, crc32, enc_data.encrypted_data_len);
@@ -343,7 +340,7 @@ pub fn re_encrypt_file(
         target_file_path,
         meta.file_data_start_pos,
         meta.file_data_end_pos,
-        &progress_name,
+        progress_name,
     );
 
     if rel > 0 {
@@ -361,25 +358,25 @@ pub fn re_encrypt_file(
 
 pub fn timestamp_bytes() -> [u8; 8] {
     let tm = chrono::offset::Utc::now().timestamp();
-    return tm.to_le_bytes();
+    tm.to_le_bytes()
 }
 
 fn file_name_bytes(file_name_arr: &[u8]) -> [u8; 2] {
     let fnl = file_name_arr.len() as i16; // Max 32767
-    return fnl.to_le_bytes();
+    fnl.to_le_bytes()
 }
 
 fn size_bytes(size: usize) -> [u8; 4] {
     let sz = size as i32; // Max 2147483647
-    return sz.to_le_bytes();
+    sz.to_le_bytes()
 }
 
 fn sha256_crc32_bytes(data: &[u8]) -> [u8; 4] {
     let crc32 = xu_hash::crc32_of_sha256_by_data(data);
-    return crc32.to_le_bytes();
+    crc32.to_le_bytes()
 }
 
 fn sha256_crc32_file_path(dist_path: &str) -> [u8; 4] {
     let crc32 = xu_hash::crc32_of_sha256_by_file_path(dist_path);
-    return crc32.to_le_bytes();
+    crc32.to_le_bytes()
 }

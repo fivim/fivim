@@ -3,7 +3,7 @@ use std::path::Path;
 use std::sync::Mutex;
 use std::sync::RwLock;
 
-use serde_json;
+
 use xutils::{dir as xu_dir, file as xu_file, logger as xu_logger, path as xu_path};
 
 use crate::conf as x_conf;
@@ -28,8 +28,8 @@ pub type I18nDictGlobal = HashMap<String, String>;
 lazy_static! {
     #[derive(Debug)]
     static ref I18N_DICT: RwLock<I18nDictGlobal> = RwLock::new({
-        let map = HashMap::new();
-        map
+        
+        HashMap::new()
     });
 
     static ref CONFIG: Mutex<Conf> = Mutex::new(Conf{
@@ -72,9 +72,9 @@ pub fn get_dict_json() -> String {
     let bound = serde_json::to_string(&*gpr);
 
     match bound {
-        Ok(s) => return s,
-        Err(_e) => return "{}".to_string(),
-    };
+        Ok(s) => s,
+        Err(_e) => "{}".to_string(),
+    }
 }
 
 pub fn init_dict() {
@@ -102,12 +102,12 @@ pub fn get_locales_list() -> Vec<String> {
     let mut res: Vec<String> = Vec::new();
     let locals_dir = get_locales_dir();
 
-    if locals_dir != "" {
+    if !locals_dir.is_empty() {
         for key in xu_dir::get_file_list(&locals_dir) {
             let new_key = key.replace(x_conf::LOCALES_FILE_EXT, ""); // remove extension
             res.push(new_key);
         }
     }
 
-    return res;
+    res
 }

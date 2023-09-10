@@ -14,10 +14,10 @@ pub fn make_window_menu() -> tauri::Menu {
         conf::TEXT_FILE,
         Menu::new().add_item(file_quit).add_item(file_close),
     );
-    return Menu::new()
+    Menu::new()
         .add_submenu(menu_file)
         // .add_native_item(MenuItem::Copy)
-        .add_item(CustomMenuItem::new(conf::TEXT_HELP, conf::TEXT_HELP));
+        .add_item(CustomMenuItem::new(conf::TEXT_HELP, conf::TEXT_HELP))
 }
 
 // Create the tray menu:
@@ -38,7 +38,7 @@ pub fn make_tray_menu(app: &tauri::App) -> tauri::Result<()> {
         .add_item(quit);
 
     SystemTray::new()
-        .with_id(&tray_id)
+        .with_id(tray_id)
         .with_menu(tray_menu)
         .on_event(move |event| {
             match event {
@@ -47,21 +47,21 @@ pub fn make_tray_menu(app: &tauri::App) -> tauri::Result<()> {
                     size: _,
                     ..
                 } => {
-                    xu_logger::log_info(&format!("system tray received a left click"));
+                    xu_logger::log_info("system tray received a left click");
                 }
                 SystemTrayEvent::RightClick {
                     position: _,
                     size: _,
                     ..
                 } => {
-                    xu_logger::log_info(&format!("system tray received a right click"));
+                    xu_logger::log_info("system tray received a right click");
                 }
                 SystemTrayEvent::DoubleClick {
                     position: _,
                     size: _,
                     ..
                 } => {
-                    xu_logger::log_info(&format!("system tray received a double click"));
+                    xu_logger::log_info("system tray received a double click");
                 }
                 SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
                     conf::TEXT_SHOW => {
