@@ -9,10 +9,10 @@ pub struct FileMeta {
 
 impl FileMeta {
     pub fn new() -> Self {
-        return FileMeta {
+        FileMeta {
             sha256: "".to_owned(),
             size: 0,
-        };
+        }
     }
 }
 
@@ -21,5 +21,5 @@ pub fn get_file_meta(file_path: &str) -> FileMeta {
     res.sha256 = xu_hash::sha256_by_file_path(file_path);
     res.size = xu_file::get_size(file_path) as usize;
 
-    return res;
+    res
 }

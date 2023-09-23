@@ -27,7 +27,7 @@ pub fn set_app_dir() -> bool {
     if env::set_current_dir(root).is_ok() {
         return true;
     }
-    return false;
+    false
 }
 
 #[cfg(not(debug_assertions))]
@@ -38,44 +38,46 @@ fn get_current_root_dir() -> String {
 // In debug mode, the work dir is "src-tauri", need to set it to the root dir of the project.
 #[cfg(debug_assertions)]
 fn get_current_root_dir() -> String {
-    return "../".to_string();
+    "../".to_string()
 }
 
 fn get_context() -> tauri::Context<EmbeddedAssets> {
-    return tauri::generate_context!("tauri.conf.json");
+    tauri::generate_context!("tauri.conf.json")
 }
 
 pub fn app_name() -> String {
     match &get_context().config().package.product_name {
-        Some(name) => return name.to_string(),
-        None => return "".to_string(),
+        Some(name) => name.to_string(),
+        None => "".to_string(),
     }
 }
 
 pub fn version() -> String {
     match &get_context().config().package.version {
-        Some(ver) => return ver.to_string(),
-        None => return "".to_string(),
+        Some(ver) => ver.to_string(),
+        None => "".to_string(),
     }
 }
 
 pub fn home_dir() -> String {
     match t_path::home_dir() {
-        Some(dir) => return x_path::path_buf_to_string(dir.join("")),
-        None => return "".to_string(),
+        Some(dir) => x_path::path_buf_to_string(dir.join("")),
+        None => "".to_string(),
     }
 }
 
 pub fn home_app_dir() -> String {
     x_path::path_buf_to_string(
         Path::new(&home_dir())
-            .join(&format!(".{}", app_name()))
+            .join(format!(".{}", app_name()))
             .join(""),
     )
 }
 
 pub fn get_app_core_conf() -> AppCoreConf {
-    let res = AppCoreConf {
+    
+
+    AppCoreConf {
         appName: app_name(),
         defaultLocale: x_conf::DEFAULT_LANGUAGE.to_string(),
         defaultLocaleInNative: x_conf::DEFAULT_LANGUAGE_IN_NATIVE_WORD.to_string(),
@@ -84,7 +86,5 @@ pub fn get_app_core_conf() -> AppCoreConf {
         logFilePath: x_path::path_buf_to_string(x_utils::logger::gen_logger_file_path()),
         repo: x_conf::PROJECT_REPO.to_string(),
         version: version(),
-    };
-
-    return res;
+    }
 }

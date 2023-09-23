@@ -15,11 +15,11 @@ pub struct HttpResponse {
 
 impl HttpResponse {
     pub fn new() -> Self {
-        return HttpResponse {
+        HttpResponse {
             headers: StringMap::new(),
             status: 0,
             data: serde_json::Value::String("".to_string()),
-        };
+        }
     }
 }
 
@@ -64,5 +64,5 @@ pub async fn request(method: &str, url: &str, resp_data_type: &str) -> HttpRespo
         println!("Something Happened!");
     }
 
-    return res;
+    res
 }

@@ -11,7 +11,7 @@
 
           <template #extra>
             <div class="py-2">
-              <el-input v-model="password" type="password" :placeholder="t('&Input your master password')" autofocus />
+              <el-input v-model="password" @keyup.enter="checkPassword" type="password" :placeholder="t('&Input your master password')" autofocus />
             </div>
             <div class="py-2" v-if="masterPasswordWrong">
               <el-alert :title="t('&Invalid master password')" type="error" show-icon />
