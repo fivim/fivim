@@ -1,7 +1,7 @@
 {
   "name": "encryption_assistant",
   "private": true,
-  "version": "1.2.1",
+  "version": "1.2.3",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -33,7 +33,7 @@
     "@editorjs/quote": "^2.5.0",
     "@editorjs/table": "^2.2.1",
     "@element-plus/icons-vue": "^2.1.0",
-    "@tauri-apps/api": "^1.4.0",
+    "@tauri-apps/api": "^1.5.0",
     "base128-encoding": "^2.0.1",
     "cheerio": "1.0.0-rc.12",
     "crypto-js": "^4.1.1",
