@@ -2,10 +2,20 @@ ENSSI License
 Version 2, February 28, 2024
 All rights reserved © 2023-2024 ENASSI
 
-Permission is granted to the individual developers, who can download/copy/modify/edit/compile this project only used for their own devices and those owned by their parents/siblings/spouses/children to process their own data.
+Permission is granted to the individual developers, who can download / copy /
+modify / edit / compile this project only used for their own devices and those
+owned by their parents/siblings/spouses/children to process their own data.
 
-Projects that use the source code of this project (including modified versions based on this project) must be open-source and cannot modify project names, protocols, code repository addresses, and other identity identifiers.
+Projects that use the source code of this project (including modified versions
+based on this project) must be open-source and cannot modify project names,
+protocols, code repository addresses, and other identity identifiers.
 
 Other uses require authorization.
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
