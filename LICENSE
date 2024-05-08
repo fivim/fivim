@@ -1,14 +1,15 @@
 ENSSI License
-Version 2, February 28, 2024
+Version 3, May 8, 2024
 All rights reserved © 2023-2024 ENASSI
 
-Permission is granted to the individual developers, who can download / copy /
-modify / edit / compile this project only used for their own devices and those
-owned by their parents/siblings/spouses/children to process their own data.
+Individual users are permitted to download, copy, edit, and compile the source
+code of this project solely for the purpose of processing their own data on 
+devices owned by themselves, and their parents, siblings, spouses, or children.
 
-Projects that use the source code of this project (including modified versions
-based on this project) must be open-source and cannot modify project names,
-protocols, code repository addresses, and other identity identifiers.
+Projects that utilize the source code of this project must be open-source and 
+must inherit this license. There must be a link to this project in the first 
+paragraph of all kinds of their documentation(including a README file for 
+developers and web pages for normal users, etc).
 
 Other uses require authorization.
 
