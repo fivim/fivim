@@ -13,6 +13,8 @@
 
 ## Themes
 
+[All themes](https://enassi.github.io/enassi-docs/en/themes/)
+
 Violet light
 
 ![Violet light](https://enassi.github.io/enassi-docs/violet_light.png)
@@ -23,11 +25,13 @@ Violet dark
 
 ## Features
 
-- 🙂 Easy to use.
-- 💌 Free and open source.
-- 💻 Cross-platform.
-- 🌐 Multi-language support.
-- 🎨 Various themes.
+- 🙂 Easy to use
+- 💌 Free and open source
+- 💻 Cross-platform
+- 🌐 Multi-language
+- 🎨 Various themes
+- ☁️ Synchronize(Gitee and Gitlab)
+- ⌨️ Markdown, 📖 rich text, 📔 PDFs, 🎵 images
 
 ## Dante
 
