@@ -1,0 +1,7 @@
+dist/
+node_modules/
+public/
+
+src-tauri/
+
+**/*.yaml

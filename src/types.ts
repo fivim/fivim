@@ -1,141 +1,142 @@
+import { TreeDataNode } from 'antd'
 
-import { TypeNone, TaskEncrypt, TaskDecrypt, TaskReEncrypt, TaskChangeMasterPassword, TaskUpdateFilesSha256 } from '@/constants'
-import { UserDataInfo } from '@/libs/user_data/types'
-import { CurrentFileInfo, ListColInfo, NavColInfo } from '@/components/pane/types'
-import { TimeHashedSignType } from '@/utils/hash'
+import { AlertDialogProps, AlertDialogRes } from '@/components/AlertDialog'
+import { MessageLineProps } from '@/components/MessageLine'
+import { TYPE_AUDIO, TYPE_IMAGE, TYPE_MD, TYPE_NONE, TYPE_PDF, TYPE_SOURCE_CODE, TYPE_XRTM } from '@/constants'
+import {
+	HTTP_CONNECT,
+	HTTP_DELETE,
+	HTTP_GET,
+	HTTP_HEAD,
+	HTTP_OPTIONS,
+	HTTP_PATCH,
+	HTTP_POST,
+	HTTP_PUT,
+	HTTP_TRACE,
+} from '@/constants'
+import { SyncSettings } from '@/synchronizer/types'
 
-export type TextDirectionInfo = 'LTR' | 'RTL'
-export type TypeTask = typeof TypeNone | typeof TaskEncrypt | typeof TaskDecrypt | typeof TaskReEncrypt |
-    typeof TaskChangeMasterPassword | typeof TaskUpdateFilesSha256
+import { OutlineHeading } from './components/Editor/RichText/types'
 
-export enum AppModeInfo {
-    App = 'app',
-    Web = 'web',
-    Desktop = 'desktop',
-    Empty = '',
-    Mobile = 'mobile'
+export type OptionItem = { value: string; label: string }
+
+export type StringNumberObj = {
+	[key: string]: number
 }
 
-export type AppCoreConfInfo = {
-    appName: string
-    defaultLanguage: string,
-    defaultLanguageInNative: string,
-    homeAppDir: string
-    homeDir: string
-    logFilePath: string
-    repo: string
-    version: string
+export type StringStringObj = {
+	[key: string]: string
 }
 
-export type ProgressColorInfo = {
-    percent: number
-    color: string
+export type StringPair = [string, string]
+
+export type NumberArray = number[]
+export type StringArray = string[]
+export type ObjectArray = object[]
+
+export type Obj = {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	[key: string]: any
 }
 
-export type ProgressCommonInfo = {
-    percent: number
-    taskName: TypeTask
-    isFailure: boolean
-    isSuccess: boolean
-    message: string
+export type HttpMethod =
+	| typeof HTTP_GET
+	| typeof HTTP_POST
+	| typeof HTTP_PUT
+	| typeof HTTP_DELETE
+	| typeof HTTP_PATCH
+	| typeof HTTP_HEAD
+	| typeof HTTP_OPTIONS
+	| typeof HTTP_CONNECT
+	| typeof HTTP_TRACE
+
+export type HttpRequest = {
+	method: HttpMethod
+	url: string
+	body: string
+	headerMap: {
+		[key: string]: string
+	}
+	paramsMap: {
+		[key: string]: string
+	}
 }
 
-export type ProgressChangeMasterPasswordInfo = {
-    totalFilesCount: number
-    currentFileIndex: number
-    currentFileName: string
-    currentFileSize: number
+export type HttpResponse = {
+	headers: object
+	status: number
+	data: any
+	text: any
+	errorMsg: string
 }
 
-export type ProgressInfo = {
-    currentTask: ProgressCommonInfo
-    changeMasterPassword: ProgressChangeMasterPasswordInfo
-    simpleTaskName: string
+export type MessageType = 'success' | 'warning' | 'error' | 'info' | 'confirm'
+
+export type TextDirection = 'LTR' | 'RTL'
+
+export type EditorType =
+	| typeof TYPE_XRTM
+	| typeof TYPE_MD
+	| typeof TYPE_SOURCE_CODE
+	| typeof TYPE_PDF
+	| typeof TYPE_IMAGE
+	| typeof TYPE_AUDIO
+	| typeof TYPE_NONE
+
+export type AppCoreConf = {
+	defaultLanguage: string
+	defaultLanguageInNative: string
+	homeAppDir: string
+	homeDir: string
+	logFilePath: string
+	pathSeparator: string
+	repo: string
+	version: string
+	userFilesDirDefult: string
 }
 
-export type DataPathInfo = {
-    separator: string
-    pathOfHomeAppData: string
-    pathOfHome: string
-    pathOfLogFile: string
+export type Setting = {
+	dateTimeFormat: string
+	encryptedFileExt: string
+	forceDarkMode: boolean
+	locale: string
+	passwordSum: string // The SHA-256 hash of the password is only used to verify whether the password entered by the user is correct.
+	sync: SyncSettings
+	theme: string
+	userFilesDir: string
 }
 
-export type ExtDataPathInfo = {
-    pathOfHome: string
-    pathOfHomeAppData: string
-    pathOfConfig: string
-    pathOfConfigStartUp: string
-    pathOfChangeMasterPasswordDir: string
-    pathOfCurrentDir: string
-    pathOfSyncDir: string
-    pathOfSyncCachedDir: string
-    pathOfSyncDownloadDir: string
-    // style
-    pathOfCustomStyle: string
-    pathOfCustomBackgroundImage: string
+export type SettingOfStartUp = {
+	forceDarkMode: boolean // Force use of dark mode
+	locale: string
+	theme: string
 }
 
-export type SettingInfo = {
-    normal: {
-        showFileSavingStatus: boolean
-        spellCheck: boolean
-        workDir: string
-        locale: string
-    },
-    appearance: {
-        customBackagroundImg: string
-        customBackagroundOpacity: number
-        dateTimeFormat: string
-        listColShowCreateTime: boolean
-        listColShowUpdateTime: boolean
-        listColSortBy: 'title' | 'mtimeUtc' | 'ctimeUtc'
-        listColSortOrder: 'ASC' | 'DESC'
-        theme: string
-    },
-    encryption: {
-        masterPassword: string
-        enableFileCompress: boolean
-        entryFileName: string
-        fileExt: string
-        fileNameRule: keyof typeof TimeHashedSignType
-        lockFileName: string
-    },
-    startupTask: ProgressCommonInfo
-}
-
-export type SettingOfStartUpInfo = {
-    normal: {
-        locale: string
-    },
-    appearance: {
-        theme: string
-    },
-}
-
-export type AppInfo = {
-    appMode: AppModeInfo // desktop mode or mobile mode
-    appName: string
-    appRepo: string
-    changeLocaleTimestamp: number // record timestamp for editor i18n
-    currentFile: CurrentFileInfo
-    currentTheme: string
-    dataPath: DataPathInfo
-    defaultLocale: string
-    defaultLocaleInNative: string
-    editorFullScreen: boolean
-    existConfigFile: boolean
-    isWebPage: boolean
-    listCol: ListColInfo
-    navCol: NavColInfo
-    lockscreen: boolean
-    progress: ProgressInfo
-    settings: SettingInfo
-    textDirection: TextDirectionInfo
-    userData: UserDataInfo
-    version: string
-}
-
-export enum MessagesInfo {
-    FileVerificationFailed = 'File verification failed',
-    FileStillInProgress = '&have task in progress'
+export type Global = {
+	appIsLoading: boolean // app loading status
+	currentFileName: string
+	currentFilePath: string
+	editorType: EditorType
+	existConfigFile: boolean
+	fileTreeData: TreeDataNode[]
+	globalWebAlertDialogProps: AlertDialogProps
+	globalWebAlertDialogRes: AlertDialogRes
+	globalMessageLineProps: MessageLineProps
+	isMobileOs: boolean
+	isMobileScreen: boolean
+	isPcOs: boolean
+	isPcScreen: boolean
+	lockscreen: boolean
+	openMenuTree: boolean
+	openMenuOpt: boolean
+	outlineHeadings: OutlineHeading[]
+	pathOfConfDir: string
+	pathOfHome: string
+	pathOfLogFile: string
+	pathOfUserFilesDefult: string
+	pathSeparator: string	
+	runInTauri: boolean
+	titlebarText: string
+	titlebarShowLockIcon: boolean
+	textDirection: TextDirection
 }

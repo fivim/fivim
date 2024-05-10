@@ -1,104 +1,236 @@
+import LZString from 'lz-string'
+
+import { PASSWORD_SALT } from '@/constants'
+
 import { sha256 } from './hash'
 import { getPageWidth } from './media_query'
 
 // Make a password to encrypt/decrypt file with a salt.
 export const genFilePwdWithSalt = (pwdSha256: string, salt: string) => {
-  if (pwdSha256 === '') {
-    return ''
-  }
+	if (pwdSha256 === '') {
+		return ''
+	}
 
-  return sha256(salt + salt + pwdSha256)
+	return sha256(salt + salt + pwdSha256)
+}
+
+export const lzCompress = (str: string) => {
+	return LZString.compressToUint8Array(str)
+}
+
+export const genPwdVec = (pwdStr: string) => {
+	pwdStr = PASSWORD_SALT + pwdStr
+	let sss = encodeURIComponent(pwdStr)
+	sss = sha256(sss) + sha256(pwdStr) + sha256(sss + pwdStr)
+	const u8a = lzCompress(pwdStr)
+
+	let arr = Array.from(u8a)
+	while (arr.length < 60) {
+		const na = [...arr]
+		arr = arr.concat(na)
+	}
+
+	return arr
+}
+
+export const genPwdArr = (arr: number[]) => {
+	let resArr: number[] = []
+	if (arr.length < 60) {
+		console.error(`genPwdArr' length is too small ${arr.length}`)
+		return []
+	}
+
+	resArr = [
+		arr[9],
+		arr[49],
+		arr[28],
+		arr[3],
+		arr[12],
+		arr[36],
+		arr[54],
+		arr[31],
+		arr[58],
+		arr[19],
+		arr[15],
+		arr[22],
+		arr[24],
+		arr[5],
+		arr[1],
+		arr[37],
+		arr[39],
+		arr[33],
+		arr[50],
+		arr[46],
+		arr[7],
+		arr[38],
+		arr[42],
+		arr[21],
+		arr[26],
+		arr[52],
+		arr[55],
+		arr[23],
+		arr[10],
+		arr[35],
+		arr[56],
+		arr[11],
+	]
+
+	return resArr
 }
 
 // deep copy a data
 export const jsonCopy = (data: any) => JSON.parse(JSON.stringify(data))
 
-// Refer: https://davidwalsh.name/javascript-debounce-function
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function debounce(this: any, func: any, wait: number, immediate = false) {
-  let timeout: number
-  return () => {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const context = this
-    // eslint-disable-next-line prefer-rest-params
-    const args = arguments
-    const later = function () {
-      timeout = 0
-      if (!immediate) {
-        func.apply(context, args)
-      }
-    }
-    const callNow = immediate && !timeout
-    if (timeout) {
-      clearTimeout(timeout)
-    }
-    timeout = setTimeout(later, wait) as unknown as number
-    if (callNow) {
-      func.apply(context, args)
-    }
-  }
+/** Via https://davidwalsh.name/javascript-debounce-function */
+export function debounce(this: unknown, func: any, wait: number, immediate = false) {
+	let timeout: NodeJS.Timeout | null
+	return (...args: any[]) => {
+		const context = this
+		// eslint-disable-next-line prefer-rest-params
+		const later = () => {
+			timeout = null
+			if (!immediate) {
+				func.apply(context, args)
+			}
+		}
+		const callNow = immediate && !timeout
+		if (timeout) {
+			clearTimeout(timeout)
+		}
+		timeout = setTimeout(later, wait)
+		if (callNow) {
+			func.apply(context, args)
+		}
+	}
 }
 
 export const runInTauri = () => {
-  return Object.prototype.hasOwnProperty.call(window, '__TAURI__')
+	return (
+		Object.prototype.hasOwnProperty.call(window, '__TAURI__') ||
+		Object.prototype.hasOwnProperty.call(window, '__TAURI_INTERNALS__')
+	)
 }
 
 export const disableRightCilckAndDevTool = () => {
-  // disable right click
-  window.oncontextmenu = function (e) { e.preventDefault() }
-  // disable develop tool
-  window.onkeydown = function (e) {
-    if (e.keyCode === 123) {
-      e.preventDefault()
-    }
-  }
+	// disable right click
+	window.oncontextmenu = function (e) {
+		e.preventDefault()
+	}
+	// disable develop tool
+	window.onkeydown = function (e) {
+		if (e.keyCode === 123) {
+			e.preventDefault()
+		}
+	}
+}
+
+export const convertAnythingToString = (val: any) => {
+	if (val === null) {
+		return 'null'
+	}
+
+	if (typeof val === 'undefined') {
+		return 'undefined'
+	}
+
+	try {
+		const jjj = JSON.stringify(val, null, 2)
+
+		return jjj
+	} catch (error) {
+		if (error instanceof TypeError && error.message.includes('circular structure')) {
+			console.error('Circular reference detected, unable to stringify object.')
+			return 'Circular Reference'
+		}
+	}
+
+	return String(val)
+}
+
+export const isDebug = () => {
+	try {
+		// rspack
+		if (process.env.NODE_ENV) {
+			return process.env.NODE_ENV === 'development'
+		}
+		// vite
+		if (import.meta) {
+			// import.meta.env.MODE.startsWith('dev')
+			const meta = import.meta as any
+			const env = meta.env as any
+			env.MODE.startsWith('dev')
+		}
+	} catch (error) {
+		console.error("Function 'isDebug' error, are you using rspack or vite?")
+	}
+
+	return false
 }
 
 export const addJsScript = (src: string) => {
-  const script = document.createElement('script')
-  script.type = 'text/javascript'
-  script.src = src
-  document.body.appendChild(script)
+	const script = document.createElement('script')
+	script.type = 'text/javascript'
+	script.src = src
+	document.body.appendChild(script)
 }
 
 export const addCssStyle = (src: string) => {
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.type = 'text/css'
-  link.href = src
-  document.body.appendChild(link)
+	const link = document.createElement('link')
+	link.rel = 'stylesheet'
+	link.type = 'text/css'
+	if (src) link.href = src
+	document.body.appendChild(link)
+}
+
+export const insertStyleSheet = (styleStr: string) => {
+	if (document.styleSheets.length === 0) addCssStyle('')
+
+	const sheet = document.styleSheets[0]
+	sheet.insertRule(styleStr, sheet.cssRules.length)
 }
 
 export const setTheme = (themeName: string) => {
-  document.documentElement.setAttribute('theme', themeName)
+	document.documentElement.setAttribute('theme', themeName)
+}
+
+export const setDarkMode = () => {
+	document.documentElement.setAttribute('force-dark-mode', 'true')
+	document.documentElement.classList.add('dark')
+	document.documentElement.classList.remove('light')
+}
+
+export const resetDarkMode = () => {
+	document.documentElement.removeAttribute('force-dark-mode')
+	document.documentElement.classList.remove('dark')
+	document.documentElement.classList.add('light')
 }
 
 export const genDialogWidth = () => {
-  const width = getPageWidth()
-  if (width < 768) {
-    return '100%'
-  } else if (width < 1024) {
-    return '95%'
-  } else if (width >= 1024) {
-    return '50%'
-  }
+	const width = getPageWidth()
+	if (width < 768) {
+		return '100%'
+	} else if (width < 1024) {
+		return '95%'
+	} else if (width >= 1024) {
+		return '50%'
+	}
 }
 
 export const genDialogWidthSmall = () => {
-  const width = getPageWidth()
-  if (width < 768) {
-    return '100%'
-  } else if (width < 1024) {
-    return '60%'
-  } else if (width >= 1024) {
-    return '40%'
-  }
-}
+	const width = getPageWidth()
 
-export const getFileNameExt = (fileName: string) => {
-  return fileName.split('.').pop() || ''
-}
+	if (width >= 1440) {
+		return '50%'
+	}
+	if (width >= 1280) {
+		return '60%'
+	}
+	if (width >= 1024) {
+		return '70%'
+	}
+	if (width >= 768) {
+		return '80%'
+	}
 
-export const fileNameIsImage = (fileName: string) => {
-  return ['bmp', 'jpg', 'jpeg', 'png', 'gif'].indexOf(getFileNameExt(fileName).toLowerCase()) >= 0
+	return '100%'
 }

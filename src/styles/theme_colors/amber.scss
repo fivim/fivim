@@ -1,0 +1,29 @@
+@import '@radix-ui/colors/amber.css';
+@import '@radix-ui/colors/amber-dark.css';
+
+$amber11: #ece178;
+
+:root {
+	--enas-bg-color_amber: var(--amber-1);
+	--enas-text-color_amber: #{$amber11}; // var(--amber-11);
+	--enas-highlight-color_amber: var(--amber-9);
+}
+
+:root[theme='amber'] {
+	--enas-bg-clr: var(--amber-1);
+	--enas-bg-clr2: var(--amber-2);
+
+	--enas-cmp-clr: var(--amber-3);
+	--enas-cmp-clr2: var(--amber-4);
+	--enas-cmp-clr3: var(--amber-5);
+
+	--enas-border-clr: var(--amber-6);
+	--enas-border-clr2: var(--amber-7);
+	--enas-border-clr3: var(--amber-8);
+
+	--enas-solid-clr: var(--amber-9);
+	--enas-solid-clr2: var(--amber-10);
+
+	--enas-text-clr: #{$amber11}; // var(--amber-11);
+	--enas-text-clr2: var(--amber-12);
+}

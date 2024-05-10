@@ -1,0 +1,66 @@
+.Titlebar {
+	height: var(--enas-title-bar-height);
+	line-height: calc(var(--enas-title-bar-height));
+	background-color: var(--enas-cmp-clr3);
+	color: var(--enas-text-clr);
+	cursor: pointer;
+
+	position: fixed;
+	top: 1px;
+	right: 1px;
+	left: 1px;
+	text-align: center;
+	user-select: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	.Content {
+		position: relative;
+		width: 100%;
+		z-index: var(--enas-z-index-title-bar-content);
+
+		.title {
+			background-color: var(--enas-bg-clr);
+			padding: 0.3rem 0.5rem;
+		}
+	}
+
+	.Actions {
+		z-index: var(--enas-z-index-title-bar_actions);
+
+		span:hover {
+			background-color: var(--enas-cmp-clr);
+			color: var(--enas-text-clr2);
+		}
+	}
+
+	$processBarHeight: 3px;
+
+	.ProcessBar {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: var(--enas-z-index-title-bar-progress-bar);
+		height: var(--enas-title-bar-height);
+
+		.Colors {
+			height: $processBarHeight;
+			background-image: linear-gradient(
+				to right,
+				var(--enas-progress-clr-start),
+				var(--enas-progress-clr-middle),
+				var(--enas-progress-clr-end)
+			);
+		}
+
+		.Shade {
+			position: absolute;
+			top: 0;
+			right: 0;
+			height: $processBarHeight;
+			background-color: var(--enas-solid-clr) !important;
+		}
+	}
+}

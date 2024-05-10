@@ -1,0 +1,98 @@
+@import url(./_text.scss);
+@import url(./_space.scss);
+
+// cursor
+.cur-ptr {
+	cursor: pointer !important;
+}
+
+// display
+.disp-block {
+	display: block !important;
+}
+
+.disp-grid {
+	display: grid !important;
+}
+
+.disp-none {
+	display: none !important;
+}
+
+.disp-inline-block {
+	display: inline-block !important;
+}
+
+.disp-inline {
+	display: inline !important;
+}
+
+.disp-flex {
+	display: flex !important;
+}
+
+// flex
+.flex-grow {
+	flex-grow: 1 !important;
+}
+
+.flex-nowrap {
+	flex-wrap: nowrap !important;
+}
+
+.flex-space-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+// positon
+.pos-abs {
+	position: absolute !important;
+}
+
+.pos-rel {
+	position: relative !important;
+}
+
+// width
+.w-auto {
+	width: auto !important;
+}
+
+.w-full {
+	width: 100% !important;
+}
+
+// float
+.fl {
+	float: left;
+}
+
+.fr {
+	float: right;
+}
+
+// other
+.justify-content-right {
+	justify-content: right !important;
+}
+
+.user-select-none {
+	-webkit-user-select: none; /* Webkit. On Linux, only this one is valid. */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none !important; /* Standard syntax */
+}
+
+// md
+@media (min-width: 768px) {
+}
+
+// lg
+@media (min-width: 1024px) {
+}
+
+// xl
+@media (min-width: 1280px) {
+}

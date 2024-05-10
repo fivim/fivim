@@ -1,0 +1,147 @@
+/* reset */
+button,
+fieldset,
+input {
+	all: unset;
+}
+
+.DialogOverlay {
+	background-color: var(--enas-bg-clr);
+	position: fixed;
+	inset: 0;
+
+	&.Animate {
+		animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+}
+
+.DialogContent {
+	background-color: var(--enas-cmp-clr);
+	border: 1px solid var(--enas-border-clr);
+	border-radius: 6px;
+	box-shadow:
+		hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+		hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 2rem;
+	z-index: 2;
+
+	.ButtonGroup {
+		margin-top: 2rem;
+
+		&.start {
+			display: flex;
+			justify-content: flex-start;
+		}
+		&.end {
+			display: flex;
+			justify-content: flex-end;
+		}
+
+		&.center {
+			display: flex;
+			justify-content: center;
+		}
+	}
+
+	&.Animate {
+		animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	&:focus {
+		outline: none;
+	}
+}
+
+.DialogTitle {
+	margin: 0;
+	font-weight: 500;
+	color: var(--enas-solid-clr);
+	font-size: 1.5rem;
+}
+
+.DialogDescription {
+	margin: 10px 0 20px;
+	color: var(--enas-text-clr2);
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
+.Button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 4px;
+	padding: 0 0.5rem;
+	margin: 0 0.5rem;
+	font-size: 15px;
+	line-height: 1;
+	font-weight: 500;
+	height: 35px;
+	border: 1px solid var(--enas-solid-clr);
+
+	&.Ok {
+		background-color: var(--enas-solid-clr);
+
+		&:hover {
+			background-color: var(--enas-solid-clr2);
+		}
+	}
+
+	&.Cancel {
+		background-color: var(--enas-cmp-clr);
+
+		&:hover {
+			background-color: var(--enas-cmp-clr3);
+		}
+	}
+
+	&.Ext {
+		background-color: var(--enas-cmp-clr3);
+
+		&:hover {
+			background-color: var(--enas-cmp-clr);
+		}
+	}
+}
+
+.IconButton {
+	font-family: inherit;
+	border-radius: 100%;
+	height: 25px;
+	width: 25px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--enas-danger-clr);
+	position: absolute;
+	top: 10px;
+	right: 10px;
+
+	&:hover {
+		background-color: var(--enas-warning-clr);
+	}
+}
+
+@keyframes overlayShow {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes contentShow {
+	from {
+		opacity: 0;
+		transform: translate(-50%, -48%) scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1);
+	}
+}

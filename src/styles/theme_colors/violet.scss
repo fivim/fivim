@@ -1,0 +1,27 @@
+@import '@radix-ui/colors/violet.css';
+@import '@radix-ui/colors/violet-dark.css';
+
+:root {
+	--enas-bg-color_violet: var(--violet-1);
+	--enas-text-color_violet: var(--violet-11);
+	--enas-highlight-color_violet: var(--violet-9);
+}
+
+:root[theme='violet'] {
+	--enas-bg-clr: var(--violet-1);
+	--enas-bg-clr2: var(--violet-2);
+
+	--enas-cmp-clr: var(--violet-3);
+	--enas-cmp-clr2: var(--violet-4);
+	--enas-cmp-clr3: var(--violet-5);
+
+	--enas-border-clr: var(--violet-6);
+	--enas-border-clr2: var(--violet-7);
+	--enas-border-clr3: var(--violet-8);
+
+	--enas-solid-clr: var(--violet-9);
+	--enas-solid-clr2: var(--violet-10);
+
+	--enas-text-clr: var(--violet-11);
+	--enas-text-clr2: var(--violet-12);
+}

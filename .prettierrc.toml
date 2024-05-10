@@ -1,0 +1,12 @@
+# format current directory: npx prettier --write
+
+useTabs = true
+tabWidth = 2
+semi = false
+singleQuote = true
+printWidth = 120
+endOfLine = 'lf'
+plugins = ['@trivago/prettier-plugin-sort-imports']
+importOrder = ['^[a-zA-Z]', '^@[^/]', '^@/', '^[./]']
+importOrderSeparation = true
+importOrderSortSpecifiers = true

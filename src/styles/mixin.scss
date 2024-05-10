@@ -1,0 +1,134 @@
+/* Color of the selected text */
+@mixin selection {
+	::selection {
+		color: var(--enas-bg-clr2);
+		background-color: var(--enas-text-clr2);
+	}
+}
+
+@mixin headings {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		position: relative;
+	}
+
+	h1::before,
+	h2::before,
+	h3::before,
+	h4::before,
+	h5::before,
+	h6::before {
+		color: var(--enas-primary-clr);
+		padding-inline-end: 0.5rem;
+		margin-inline-end: 0.5rem;
+		border-inline-end: 2px dashed var(--enas-success-clr);
+	}
+
+	h1 {
+		font-size: 2rem;
+		line-height: 3rem;
+
+		&::before {
+			content: 'H1';
+		}
+	}
+
+	h2 {
+		font-size: 1.8rem;
+		line-height: 2.8rem;
+
+		&::before {
+			content: 'H2';
+		}
+	}
+	h3 {
+		font-size: 1.6rem;
+		line-height: 2.6rem;
+
+		&::before {
+			content: 'H3';
+		}
+	}
+
+	h4 {
+		font-size: 1.4rem;
+		line-height: 2.4rem;
+
+		&::before {
+			content: 'H4';
+		}
+	}
+	h5 {
+		font-size: 1.2rem;
+		line-height: 2.2rem;
+
+		&::before {
+			content: 'H5';
+		}
+	}
+	h6 {
+		font-size: 1rem;
+		line-height: 2rem;
+
+		&::before {
+			content: 'H6';
+		}
+	}
+}
+
+@mixin underline {
+	text-underline-offset: 0.3rem;
+	text-decoration-color: var(--enas-solid-clr);
+}
+
+@mixin strikethrough {
+	text-decoration-color: rgba(0, 0, 0, 0);
+	background: linear-gradient(
+		to bottom,
+		var(--enas-bg-clr2) 0%,
+		var(--enas-bg-clr2) 30%,
+		var(--enas-danger-clr) 50%,
+		var(--enas-bg-clr2) 70%,
+		var(--enas-bg-clr2) 100%
+	);
+	padding: 0 0.5rem;
+}
+
+@mixin link {
+	text-underline-offset: 0.3rem;
+	background-color: var(--enas-cmp-clr) !important;
+	color: var(--enas-solid-clr);
+	padding: 0 1rem;
+
+	&::before {
+		content: '🔗';
+	}
+}
+
+@mixin quote {
+	padding: 0.5rem;
+	margin-inline-start: 1em;
+	margin-inline-end: 1em;
+	border-inline-start: 3px solid var(--enas-solid-clr);
+}
+
+@mixin code {
+	background-color: var(--enas-cmp-clr2) !important;
+	color: var(--enas-text-clr) !important;
+
+	&::before,
+	&::after {
+		padding: 0 0.25rem;
+	}
+
+	&::before {
+		content: '«';
+	}
+	&::after {
+		content: '»';
+	}
+}

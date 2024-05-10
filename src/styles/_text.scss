@@ -1,0 +1,38 @@
+@import '_variables.scss';
+
+// text size
+@each $name, $size in $sizes {
+	.ts-#{$name} {
+		font-size: $size !important;
+		line-height: $size * $textSizeLineHeightTmes !important;
+	}
+}
+
+.text-align-center {
+	text-align: center !important;
+}
+
+.text-align-left {
+	text-align: left !important;
+}
+
+.text-align-right {
+	text-align: right !important;
+}
+
+.text-bold {
+	font-weight: 700 !important;
+}
+
+.text-break-all {
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+.direction-ltr {
+	direction: ltr;
+}
+
+.direction-rtl {
+	direction: rtl;
+}

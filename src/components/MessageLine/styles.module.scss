@@ -1,0 +1,20 @@
+.MessageLineWrapper {
+	position: relative;
+
+	.MessageLine {
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+
+		line-height: 2rem;
+		padding: 0 1rem;
+
+		.Title {
+			font-weight: 700;
+		}
+
+		.Description {
+			font-weight: 400;
+		}
+	}
+}

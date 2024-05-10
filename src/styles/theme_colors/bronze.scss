@@ -1,0 +1,27 @@
+@import '@radix-ui/colors/bronze.css';
+@import '@radix-ui/colors/bronze-dark.css';
+
+:root {
+	--enas-bg-color_bronze: var(--bronze-1);
+	--enas-text-color_bronze: var(--bronze-11);
+	--enas-highlight-color_bronze: var(--bronze-9);
+}
+
+:root[theme='bronze'] {
+	--enas-bg-clr: var(--bronze-1);
+	--enas-bg-clr2: var(--bronze-2);
+
+	--enas-cmp-clr: var(--bronze-3);
+	--enas-cmp-clr2: var(--bronze-4);
+	--enas-cmp-clr3: var(--bronze-5);
+
+	--enas-border-clr: var(--bronze-6);
+	--enas-border-clr2: var(--bronze-7);
+	--enas-border-clr3: var(--bronze-8);
+
+	--enas-solid-clr: var(--bronze-9);
+	--enas-solid-clr2: var(--bronze-10);
+
+	--enas-text-clr: var(--bronze-11);
+	--enas-text-clr2: var(--bronze-12);
+}

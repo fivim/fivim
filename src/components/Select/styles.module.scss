@@ -1,0 +1,71 @@
+/* 
+https://github.com/newproplus/mdxeditor_editor/blob/main/src/styles/ui.module.css 
+Like mdxeditor_editor
+*/
+
+@import '@/styles/mixin.scss';
+
+.SelectContainer {
+	background-color: var(--enas-cmp-clr);
+	color: var(--enas-text-clr);
+	border: 1px solid var(--enas-text-clr);
+	z-index: 3;
+	border-bottom-left-radius: var(--enas-spacing-1);
+	border-bottom-right-radius: var(--enas-spacing-1);
+}
+
+.SelectItem {
+	padding: var(--enas-spacing-1) var(--enas-spacing-2);
+	cursor: pointer;
+
+	&[data-state='checked'] {
+		background-color: var(--enas-solid-clr);
+	}
+
+	&[data-highlighted] {
+		background-color: var(--enas-cmp-clr3);
+		color: var(--enas-solid-clr2);
+		font-weight: 700;
+	}
+
+	&:last-child {
+		border-bottom-left-radius: var(--enas-spacing-1);
+		border-bottom-right-radius: var(--enas-spacing-1);
+	}
+}
+
+.SelectDropdownArrow {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+}
+
+.SelectTrigger {
+	border: 0;
+	display: flex;
+	align-items: center;
+	background-color: var(--enas-cmp-clr3);
+	color: var(--enas-solid-clr2);
+	height: 1.5rem;
+	padding: var(--enas-spacing-1) var(--enas-spacing-2);
+	border-radius: var(--enas-spacing-2);
+	white-space: nowrap;
+	flex-wrap: nowrap;
+	margin: 0 var(--enas-spacing-1);
+
+	&[data-state='open'] {
+		filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.2));
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+
+	&[data-placeholder] > span:first-child {
+		color: var(--baseBorderHover);
+	}
+}
+
+.SelectSeparator {
+	height: 1px;
+	background-color: var(--enas-solid-clr);
+	margin: 5px;
+}

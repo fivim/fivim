@@ -1,0 +1,20 @@
+.toolbar {
+	background-color: var(--enas-bg-clr2);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: var(--enas-editor-tool-bar-height);
+
+	.btn {
+		padding-left: 1rem;
+		padding-right: 1rem;
+		width: 3rem;
+		color: var(--enas-text-clr);
+	}
+}
+
+.viewer {
+	overflow-x: scroll;
+	overflow-y: scroll;
+	height: calc(100vh - var(--enas-editor-tool-bar-height) - var(--enas-title-bar-height));
+}
