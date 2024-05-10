@@ -6,10 +6,14 @@
 [![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
 [![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
 
-[Official document site](https://enassi.github.io/enassi-docs/) /
+[Engilsh document](https://enassi.github.io/enassi-docs/en/) /
+[简体中文文档](https://enassi.github.io/enassi-docs/zh-cn/)
+
 [Gitee repo](https://gitee.com/vhash/enassi/)
 
 ## Themes
+
+[All themes](https://enassi.github.io/enassi-docs/en/themes/)
 
 Violet light
 
@@ -21,11 +25,13 @@ Violet dark
 
 ## Features
 
-- 🙂 Easy to use.
-- 💌 Free and open source.
-- 💻 Cross-platform.
-- 🌐 Multi-language support.
-- 🎨 Various themes.
+- 🙂 Easy to use
+- 💌 Free and open source
+- 💻 Cross-platform
+- 🌐 Multi-language
+- 🎨 Various themes
+- ☁️ Synchronize(Gitee and Gitlab)
+- ⌨️ Markdown, 📖 rich text, 📔 PDFs, 🎵 images
 
 ## Dante
 
