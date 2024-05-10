@@ -1,10 +1,10 @@
 # Enassi is your data encryption assistant.
 
-[![test core](https://img.shields.io/github/stars/enassi?style=social)](https://github.com/enassi/enassi)
-[![test core](https://img.shields.io/github/followers/enassi?style=social)](https://github.com/enassi/enassi)
-[![test core](https://img.shields.io/github/watchers/enassi/enassi?style=social)](https://github.com/enassi/enassi)
-[![test core](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
-[![test core](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
+[![stars](https://img.shields.io/github/stars/enassi?style=social)](https://github.com/enassi/enassi)
+[![followers](https://img.shields.io/github/followers/enassi?style=social)](https://github.com/enassi/enassi)
+[![watchers](https://img.shields.io/github/watchers/enassi/enassi?style=social)](https://github.com/enassi/enassi)
+[![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
+[![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
 
 ## Features
 
