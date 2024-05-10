@@ -1,8 +1,8 @@
-name: Build
+name: Release
 on:
   push:
     branches:
-      - main
+      - release
   workflow_dispatch:
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
       matrix:
         platform: [ubuntu-20.04, windows-latest, macos-latest]
     runs-on: ${{ matrix.platform }}
-    steps:      
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -32,11 +32,11 @@ jobs:
           workspaces: './src-tauri -> target'
 
       # Add pnpm support.
-      # Refer: https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies        
+      # Refer: https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       #        https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       # Ensure that pnpm-lock.yaml is always committed, when on CI pass --frozen-lockfile to pnpm install when installing packages.
       - name: Install pnpm
-        uses: pnpm/action-setup@v2 
+        uses: pnpm/action-setup@v2
         with:
           version: 7
 
