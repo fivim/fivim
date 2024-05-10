@@ -6,6 +6,10 @@
 [![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
 [![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
 
+[Official document site](https://enassi.github.io/enassi-docs/)
+
+[Gitee repo](https://gitee.com/vhash/enassi/)
+
 ## Features
 
 - 🙂 Easy to use.
