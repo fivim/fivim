@@ -6,6 +6,19 @@
 [![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
 [![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
 
+[Official document site](https://enassi.github.io/enassi-docs/) /
+[Gitee repo](https://gitee.com/vhash/enassi/)
+
+## Themes
+
+Violet light
+
+![Violet light](https://enassi.github.io/enassi-docs/violet_light.png)
+
+Violet dark
+
+![Violet dark](https://enassi.github.io/enassi-docs/violet_dark.png)
+
 ## Features
 
 - 🙂 Easy to use.
@@ -16,9 +29,11 @@
 
 ## Dante
 
-[open collective](https://opencollective.com/enassi)
+[Open collective](https://opencollective.com/enassi)
 
-### Cryptocurrency
+[Alipay / Weixin pay](https://github.com/newproplus)
+
+Cryptocurrency:
 
 - XMR: 46df6rwnqcUCFaSummLobcH3J9sWgqYASF8Znq5HnhgrLeASh8u4TPJ2LaLnoQk3uV6t18CgNuFVCDfLUR9G94AZUj1TtGr
 - SOL: BbrRkLArfTeAieAtDpvBHNE4KBKX9fmbjPb5JDmKHWE7
