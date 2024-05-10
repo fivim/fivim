@@ -2,13 +2,13 @@
   "build": {
     "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build",
-    "devPath": "http://localhost:1420",
+    "devPath": "http://localhost:3000",
     "distDir": "../dist",
     "withGlobalTauri": true
   },
   "package": {
     "productName": "enassi",
-    "version": "1.2.3"
+    "version": "2.0.45"
   },
   "tauri": {
     "allowlist": {
@@ -43,46 +43,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [
-        "./locales/ar.json",
-        "./locales/be-BY.json",
-        "./locales/bg-BG.json",
-        "./locales/cs-CZ.json",
-        "./locales/da-DK.json",
-        "./locales/de-DE.json",
-        "./locales/el-GR.json",
-        "./locales/en.json",
-        "./locales/es.json",
-        "./locales/fa-IR.json",
-        "./locales/fi-FI.json",
-        "./locales/fr.json",
-        "./locales/he-IL.json",
-        "./locales/hi-IN.json",
-        "./locales/hu-HU.json",
-        "./locales/id-ID.json",
-        "./locales/it-IT.json",
-        "./locales/ja-JP.json",
-        "./locales/kk-KZ.json",
-        "./locales/ko-KR.json",
-        "./locales/ms.json",
-        "./locales/my-MM.json",
-        "./locales/nb-NO.json",
-        "./locales/nl-NL.json",
-        "./locales/pl-PL.json",
-        "./locales/pt.json",
-        "./locales/ro-RO.json",
-        "./locales/ru-RU.json",
-        "./locales/sk-SK.json",
-        "./locales/sr-SP.json",
-        "./locales/sv-SE.json",
-        "./locales/th-TH.json",
-        "./locales/tr-TR.json",
-        "./locales/uk-UA.json",
-        "./locales/ur.json",
-        "./locales/vi-VN.json",
-        "./locales/zh-CHS.json",
-        "./locales/zh-CHT.json"
-      ],
+      "resources": [      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
@@ -101,8 +62,8 @@
       {
         "label": "main",
         "title": "enassi",
-        "height": 600,
-        "width": 800,
+        "height": 768,
+        "width": 1024,
         "resizable": true,
         "fullscreen": false,
         "decorations": false

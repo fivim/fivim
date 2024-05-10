@@ -1,148 +1,109 @@
-import { AppInfo, AppModeInfo, SettingInfo, SettingOfStartUpInfo, ProgressInfo, ExtDataPathInfo } from '@/types'
-import { TypeNote, TypeNone } from '@/constants'
+import { DateTime } from 'luxon'
 
-import { UserDataInfo } from '@/libs/user_data/types'
-import { CurrentFileInfo } from '@/components/pane/types'
+import { AlertDialogProps } from '@/components/AlertDialog'
+import { MessageLineProps } from '@/components/MessageLine'
+import { TYPE_NONE } from '@/constants'
+import i18n from '@/i18n'
+import { Global, Setting, SettingOfStartUp } from '@/types'
 
-export const tmplExtDataPathInfo = (): ExtDataPathInfo => {
-  return {
-    pathOfHome: '',
-    pathOfHomeAppData: '',
-    pathOfConfig: '',
-    pathOfConfigStartUp: '',
-    pathOfChangeMasterPasswordDir: '',
-    pathOfCurrentDir: '',
-    pathOfSyncDir: '',
-    pathOfSyncCachedDir: '',
-    pathOfSyncDownloadDir: '',
-    // style
-    pathOfCustomStyle: '',
-    pathOfCustomBackgroundImage: ''
-  }
+const t = i18n.t
+export const tmplSetting = (): Setting => {
+	return {
+		dateTimeFormat: '',
+		encryptedFileExt: 'enc',
+		forceDarkMode: false,
+		passwordSum: '',
+		locale: '',
+		sync: {
+			mode: TYPE_NONE,
+			conf: {
+				gitlabApi: {
+					lastSyncTime: DateTime.fromMillis(0),
+					lastCommitId: '',
+					siteUrl: '',
+					token: '',
+					projectId: '',
+					branch: '',
+				},
+				giteeApi: {
+					lastSyncTime: DateTime.fromMillis(0),
+					lastCommitId: '',
+					owner: '',
+					repo: '',
+					branch: '',
+					token: '',
+				},
+			},
+		},
+		theme: '',
+		userFilesDir: '',
+	}
 }
 
-export const tmplUserDataMap = (): UserDataInfo => {
-  return {
-    files: [],
-    notebooks: [],
-    tags: [],
-    filesMeta: []
-  }
+export const tmplSettinggStartup = (): SettingOfStartUp => {
+	return {
+		forceDarkMode: false,
+		locale: '',
+		theme: '',
+	}
 }
 
-export const tmplProgress = (): ProgressInfo => {
-  return {
-    currentTask: {
-      percent: 0,
-      taskName: TypeNone,
-      isFailure: false,
-      isSuccess: false,
-      message: ''
-    },
-    changeMasterPassword: {
-      totalFilesCount: 0,
-      currentFileIndex: 0,
-      currentFileName: '',
-      currentFileSize: 0
-    },
-    simpleTaskName: ''
-  }
+export const tmplAlertDialogProps = (): AlertDialogProps => {
+	return {
+		open: false,
+		title: '',
+		description: '',
+		cancelText: '',
+		okText: '',
+		msgType: 'info',
+		onReturn: function (value: boolean): void {},
+	}
 }
 
-export const tmplCurrentFile = (): CurrentFileInfo => {
-  return {
-    content: '',
-    sign: '',
-    subSign: '',
-    title: '',
-    type: TypeNote,
-    tagsArr: []
-  }
+export const tmplAlertDialogPropsConfirm = (): AlertDialogProps => {
+	const res = tmplAlertDialogProps()
+	res.cancelText = t('Cancel')
+	res.okText = t('OK')
+	return res
 }
 
-export const tmplSetting = (): SettingInfo => {
-  return {
-    normal: {
-      showFileSavingStatus: true,
-      spellCheck: false,
-      workDir: '',
-      locale: ''
-    },
-    appearance: {
-      dateTimeFormat: '',
-      theme: '',
-      customBackagroundImg: '',
-      customBackagroundOpacity: 0.8,
-      listColSortBy: 'title',
-      listColSortOrder: 'ASC',
-      listColShowCreateTime: true,
-      listColShowUpdateTime: true
-    },
-    encryption: {
-      masterPassword: '',
-      enableFileCompress: true,
-      entryFileName: '',
-      fileExt: '',
-      fileNameRule: 'formattedTimeSha256',
-      lockFileName: ''
-    },
-    startupTask: {
-      percent: 0,
-      taskName: TypeNone,
-      isFailure: false,
-      isSuccess: false,
-      message: ''
-    }
-  }
+export const tmplMessageLineProps = (): MessageLineProps => {
+	return {
+		backgroundColor: '',
+		color: '',
+		description: '',
+		open: false,
+		title: '',
+	}
 }
 
-export const tmplSettinggStartup = (): SettingOfStartUpInfo => {
-  return {
-    normal: {
-      locale: ''
-    },
-    appearance: {
-      theme: ''
-    }
-  }
-}
-
-export const tmplAppData = (): AppInfo => {
-  return {
-    appMode: AppModeInfo.Empty,
-    appName: '',
-    appRepo: '',
-    changeLocaleTimestamp: 0,
-    progress: tmplProgress(),
-    currentTheme: '',
-    dataPath: {
-      separator: '/',
-      pathOfHome: '',
-      pathOfHomeAppData: '',
-      pathOfLogFile: ''
-    },
-    defaultLocale: '',
-    defaultLocaleInNative: '',
-    editorFullScreen: false,
-    existConfigFile: false,
-    isWebPage: true,
-    lockscreen: true,
-    textDirection: 'LTR',
-    version: '',
-    userData: tmplUserDataMap(),
-    listCol: {
-      sign: '',
-      icon: '',
-      listOfNote: [],
-      listOfTag: [],
-      title: '',
-      type: TypeNote,
-      tagsArr: []
-    },
-    navCol: {
-      sign: ''
-    },
-    currentFile: tmplCurrentFile(),
-    settings: tmplSetting()
-  }
+export const tmplGlobal = (): Global => {
+	return {
+		appIsLoading: true,
+		currentFileName: '',
+		currentFilePath: '',
+		editorType: TYPE_NONE,
+		existConfigFile: false,
+		fileTreeData: [],
+		globalWebAlertDialogProps: tmplAlertDialogProps(),
+		globalMessageLineProps: tmplMessageLineProps(),
+		globalWebAlertDialogRes: null,
+		isMobileOs: false,
+		isMobileScreen: false,
+		isPcOs: false,
+		isPcScreen: false,
+		lockscreen: true,
+		openMenuTree: false,
+		openMenuOpt: false,
+		outlineHeadings: [],
+		pathOfConfDir: '',
+		pathOfHome: '',
+		pathOfLogFile: '',
+		pathOfUserFilesDefult: '',
+		pathSeparator: '/',
+		runInTauri: false,
+		titlebarText: '',
+		titlebarShowLockIcon: false,
+		textDirection: 'LTR',
+	}
 }

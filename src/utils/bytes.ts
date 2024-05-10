@@ -8,22 +8,22 @@
  * @returns String Size as string
  */
 export const happybytes = (size: number, useMiB: boolean) => {
-  if (typeof size !== 'number') throw new Error('Invalid size')
+	if (typeof size !== 'number') throw new Error('Invalid size')
 
-  const unit = [
-    ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'],
-    ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  ][useMiB ? 0 : 1]
+	const unit = [
+		['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'],
+		['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+	][useMiB ? 0 : 1]
 
-  const base = useMiB ? 1024 : 1000
-  let c = 0
-  do {
-    size /= base
-    c++
-    if (size < base || c >= unit.length - 1) {
-      break
-    }
-  } while (size > base)
+	const base = useMiB ? 1024 : 1000
+	let c = 0
+	do {
+		size /= base
+		c++
+		if (size < base || c >= unit.length - 1) {
+			break
+		}
+	} while (size > base)
 
-  return String(Math.floor(Math.round((size * 100))) / 100 + unit[c])
+	return String(Math.floor(Math.round(size * 100)) / 100 + unit[c])
 }

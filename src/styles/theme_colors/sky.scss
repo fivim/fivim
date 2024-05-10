@@ -1,0 +1,27 @@
+@import '@radix-ui/colors/sky.css';
+@import '@radix-ui/colors/sky-dark.css';
+
+:root {
+	--enas-bg-color_sky: var(--sky-1);
+	--enas-text-color_sky: var(--sky-11);
+	--enas-highlight-color_sky: var(--sky-9);
+}
+
+:root[theme='sky'] {
+	--enas-bg-clr: var(--sky-1);
+	--enas-bg-clr2: var(--sky-2);
+
+	--enas-cmp-clr: var(--sky-3);
+	--enas-cmp-clr2: var(--sky-4);
+	--enas-cmp-clr3: var(--sky-5);
+
+	--enas-border-clr: var(--sky-6);
+	--enas-border-clr2: var(--sky-7);
+	--enas-border-clr3: var(--sky-8);
+
+	--enas-solid-clr: var(--sky-9);
+	--enas-solid-clr2: var(--sky-10);
+
+	--enas-text-clr: var(--sky-11);
+	--enas-text-clr2: var(--sky-12);
+}

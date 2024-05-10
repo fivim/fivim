@@ -1,0 +1,27 @@
+@import '@radix-ui/colors/blue.css';
+@import '@radix-ui/colors/blue-dark.css';
+
+:root {
+	--enas-bg-color_blue: var(--blue-1);
+	--enas-text-color_blue: var(--blue-11);
+	--enas-highlight-color_blue: var(--blue-9);
+}
+
+:root[theme='blue'] {
+	--enas-bg-clr: var(--blue-1);
+	--enas-bg-clr2: var(--blue-2);
+
+	--enas-cmp-clr: var(--blue-3);
+	--enas-cmp-clr2: var(--blue-4);
+	--enas-cmp-clr3: var(--blue-5);
+
+	--enas-border-clr: var(--blue-6);
+	--enas-border-clr2: var(--blue-7);
+	--enas-border-clr3: var(--blue-8);
+
+	--enas-solid-clr: var(--blue-9);
+	--enas-solid-clr2: var(--blue-10);
+
+	--enas-text-clr: var(--blue-11);
+	--enas-text-clr2: var(--blue-12);
+}

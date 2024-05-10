@@ -1,0 +1,54 @@
+@import '_variables.scss';
+
+// A bit like bootstrap
+@each $name, $size in $sizes {
+	// padding
+	.p-#{$name} {
+		padding: $size !important;
+	}
+
+	.pt-#{$name},
+	.py-#{$name} {
+		padding-top: $size !important;
+	}
+
+	.pr-#{$name},
+	.px-#{$name} {
+		padding-right: $size !important;
+	}
+
+	.pb-#{$name},
+	.py-#{$name} {
+		padding-bottom: $size !important;
+	}
+
+	.pl-#{$name},
+	.px-#{$name} {
+		padding-left: $size !important;
+	}
+
+	// margin
+	.m-#{$name} {
+		margin: $size !important;
+	}
+
+	.mt-#{$name},
+	.my-#{$name} {
+		margin-top: $size !important;
+	}
+
+	.mr-#{$name},
+	.mx-#{$name} {
+		margin-right: $size !important;
+	}
+
+	.mb-#{$name},
+	.my-#{$name} {
+		margin-bottom: $size !important;
+	}
+
+	.ml-#{$name},
+	.mx-#{$name} {
+		margin-left: $size !important;
+	}
+}

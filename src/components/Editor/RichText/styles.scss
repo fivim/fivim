@@ -1,0 +1,81 @@
+@import '@/styles/mixin.scss';
+
+$joditorPaddingY: 0.5rem;
+
+.rich-editor-wrapper {
+	padding: $joditorPaddingY;
+}
+
+.joditor {
+	--jd-dark-background-color: var(--enas-bg-clr2);
+
+	.jodit-wysiwyg {
+		height: calc(
+			100vh - var(--enas-title-bar-height) - var(--enas-jodit-toolbar-height) - var(--enas-jodit-status-bar-height) -
+				0.5rem - $joditorPaddingY * 2
+		) !important;
+		overflow-y: scroll;
+		font-family: var(--enas-editor-font-family);
+
+		@include selection;
+		@include headings;
+
+		s {
+			@include strikethrough;
+		}
+
+		a,
+		u {
+			@include underline;
+		}
+
+		a {
+			@include link;
+		}
+
+		code {
+			@include code;
+		}
+
+		blockquote {
+			@include quote;
+		}
+
+		.custom-block {
+			background-color: var(--enas-cmp-clr);
+			padding: 0.5rem;
+			margin: 0.5rem;
+			min-height: 3rem;
+
+			.dataJson {
+				display: none;
+			}
+
+			.preview {
+				position: relative;
+			}
+		}
+	}
+}
+
+.jodit-popup-container {
+	.jodit-toolbar-button__text {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			font-size: unset;
+			font-weight: unset;
+			margin: unset;
+			word-break: keep-all;
+		}
+
+		pre {
+			background-color: unset;
+			color: unset;
+			overflow: unset;
+		}
+	}
+}

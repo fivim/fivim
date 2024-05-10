@@ -1,0 +1,27 @@
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/mauve-dark.css';
+
+:root {
+	--enas-bg-color_mauve: var(--mauve-1);
+	--enas-text-color_mauve: var(--mauve-11);
+	--enas-highlight-color_mauve: var(--mauve-9);
+}
+
+:root[theme='mauve'] {
+	--enas-bg-clr: var(--mauve-1);
+	--enas-bg-clr2: var(--mauve-2);
+
+	--enas-cmp-clr: var(--mauve-3);
+	--enas-cmp-clr2: var(--mauve-4);
+	--enas-cmp-clr3: var(--mauve-5);
+
+	--enas-border-clr: var(--mauve-6);
+	--enas-border-clr2: var(--mauve-7);
+	--enas-border-clr3: var(--mauve-8);
+
+	--enas-solid-clr: var(--mauve-9);
+	--enas-solid-clr2: var(--mauve-10);
+
+	--enas-text-clr: var(--mauve-11);
+	--enas-text-clr2: var(--mauve-12);
+}

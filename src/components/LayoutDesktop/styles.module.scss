@@ -1,0 +1,28 @@
+.container {
+	display: flex;
+	padding-top: var(--enas-title-bar-height);
+
+	.flexibleWidth {
+		width: calc(100vw - var(--enas-desktop-activity-bar-width));
+	}
+
+	.sideBar {
+		display: flex;
+		flex-direction: row-reverse;
+
+		.sideBarMenu,
+		.sideBarResizer {
+			align-self: stretch;
+		}
+
+		.sideBarMenu {
+			flex-grow: 1;
+			min-width: 0;
+			overflow: scroll;
+		}
+
+		.sideBarResizer {
+			margin-left: auto;
+		}
+	}
+}

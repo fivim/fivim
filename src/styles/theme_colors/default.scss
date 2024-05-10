@@ -1,18 +1,33 @@
+//
+// Theme colors
+//
+// Imitate the usage of "@radix-ui/colors": https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale
+$defaultBgClr: rgb(3, 3, 23);
+$defaultHighlightClr: rgb(101, 87, 224);
+$defaultTextClr: rgb(129, 146, 221);
+
 :root {
-  --enas-background-primary-color_default: rgb(255, 255, 255);
-  --enas-foreground-primary-color_default: rgb(51, 51, 54);
-  --enas-highlight-color_default: rgb(69, 155, 247);
+	--enas-bg-color_default: #{$defaultBgClr};
+	--enas-text-color_default: #{$defaultTextClr};
+	--enas-highlight-color_default: #{$defaultHighlightClr};
 }
 
 :root {
-  --enas-background-primary-color: var(--enas-background-primary-color_default);
-  --enas-background-secondary-color: rgb(238, 239, 241);
-
-  --enas-foreground-primary-color: var(--enas-foreground-primary-color_default);
-  --enas-foreground-secondary-color: rgb(58, 54, 54);
-
-  --enas-highlight-color: var(--enas-highlight-color_default);
-  --enas-border-color: rgb(223, 225, 228);
-
-  --enas-scrollbar-thumb-color: var(--enas-border-color);
+	// Background color
+	--enas-bg-clr: #{$defaultBgClr}; // 1
+	--enas-bg-clr2: rgb(24, 28, 42); // 2
+	// Component color
+	--enas-cmp-clr: rgb(38, 41, 56); // 3
+	--enas-cmp-clr2: rgb(44, 48, 70); // 4
+	--enas-cmp-clr3: rgb(52, 62, 109); // 5
+	// Border color
+	--enas-border-clr: rgb(45, 50, 88); // 6
+	--enas-border-clr2: rgb(46, 45, 114); // 7
+	--enas-border-clr3: rgb(45, 55, 145); // 8
+	// Solid color
+	--enas-solid-clr: #{$defaultHighlightClr}; // 9
+	--enas-solid-clr2: rgb(116, 122, 226); // 10
+	// Text color
+	--enas-text-clr: #{$defaultTextClr}; // 11
+	--enas-text-clr2: rgb(173, 195, 241); // 12
 }

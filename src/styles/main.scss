@@ -1,197 +1,146 @@
+@import '_variables.scss';
+
 :root {
-  --enas-z-index-title-bar-progress-bar: 8;
-  --enas-z-index-title-bar-content: 9;
-  --enas-z-index-editor-title-bar: 10;
-  --enas-z-index-resizer-overlay: 11;
-  --enas-z-index-pane-resizer: 12;
+	--enas-base-font-size: 14px;
+	--enas-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+		'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	--enas-editor-font-family: var(--enas-font-family); // Font family in editor
 
-  --enas-scrollbar-width: 17px;
-  --enas-scrollbar-height: 18px;
+	--enas-title-bar-height: 36px;
+	--enas-desktop-activity-bar-width: 60px;
+	--enas-desktop-activity-bar-padding: 10px;
+	--enas-desktop-activity-bar-icon-size: 20px;
+	--enas-desktop-rezizer-width: 2px;
+	--enas-editor-tool-bar-height: 30px;
+	--enas-jodit-toolbar-height: 77px;
+	--enas-jodit-status-bar-height: 20px;
 
-  --enas-col-padding: 0.5rem;
+	--enas-z-index-title-bar-progress-bar: 2;
+	--enas-z-index-title-bar-content: 3;
+	--enas-z-index-title-bar_actions: 4;
+	--enas-z-index-loading: 10;
 
-  --enas-base-font-size: 14px;
-  --enas-simplified-chinese-font: 'Microsoft Yahei', '微软雅黑体';
-  --enas-monospace-font: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, 'Ubuntu Mono', 'Courier New', monospace;
-  --enas-sans-serif-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', var(--enas-simplified-chinese-font), sans-serif;
-  --enas-editor-font-family: var(--enas-sans-serif-font);
+	--enas-scrollbar-width: 5px;
+	--enas-scrollbar-height: 5px;
 
-  --enas-note-editor-margin: 10px;
-  --enas-note-editor-padding: 10px;
+	--enas-spacing-1: #{map-get($sizes, 1)};
+	--enas-spacing-2: #{map-get($sizes, 2)};
 
-  --enas-editor-title-bar-height: 52px;
-  --enas-desktop-title-bar-height: 36px;
-  --enas-desktop-title-bar-icon-font-size: 16px;
+	// Status color
+	--enas-danger-clr: rgb(243, 102, 102);
+	--enas-info-clr: rgb(142, 176, 197);
+	--enas-primary-clr: rgb(64, 158, 255);
+	--enas-success-clr: rgb(98, 183, 56);
+	--enas-warning-clr: rgb(230, 162, 60);
 
-  --enas-translate-x: 0;
-  --enas-translate-y: 0;
-  --enas-rotate: 0;
-  --enas-skew-x: 0;
-  --enas-skew-y: 0;
-  --enas-scale-x: 1;
-  --enas-scale-y: 1;
+	// Progress color
+	--enas-progress-clr-start: rgb(128, 0, 255);
+	--enas-progress-clr-middle: rgb(39, 158, 255);
+	--enas-progress-clr-end: rgb(0, 178, 0);
 
-  --enas-shadow: 0 0 #0000;
-  --enas-shadow-colored: 0 0 #9c505000;
-  --enas-ring-offset-shadow: 0 0 #0000;
-  --enas-ring-shadow: 0 0 #0000;
+	// The default color of text
+	--enas-default-text-clr: var(--enas-default-text-clr-light);
+	--enas-default-text-clr-light: #333; // Light mode
+	--enas-default-text-clr-dark: #999; // Dark mode
 
-  // progress-bar
-  --enas-progress-bar-start-color: rgb(128, 0, 255);
-  --enas-progress-bar-middle-color: rgb(39, 158, 255);
-  --enas-progress-bar-end-color: rgb(0, 178, 0);
-
-  // Color of columns
-  --enas-title-bar-background-color: var(--enas-background-secondary-color);
-  --enas-title-bar-foreground-color: var(--enas-foreground-primary-color);
-
-  --enas-navigation-col-background-color: var(--enas-background-secondary-color);
-  --enas-navigation-col-foreground-color: var(--enas-foreground-primary-color);
-
-  --enas-list-col-background-color: var(--enas-background-primary-color);
-  --enas-list-col-foreground-color: var(--enas-foreground-primary-color);
-
-  --enas-editor-col-background-color: var(--enas-background-primary-color);
-  --enas-editor-col-foreground-color: var(--enas-foreground-primary-color);
+	// Other color
+	--enas-highlight-clr: var(--enas-solid-clr);
+	--enas-scrollbar-thumb-clr: var(--enas-border-clr);
 }
 
-html,
-body {
-  font-size: var(--enas-base-font-size);
-  color: var(--enas-foreground-primary-color);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
-  -moz-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  line-height: normal;
-  margin: 0;
+.light:root {
+	--enas-default-text-clr: var(--enas-default-text-clr-light);
+}
+
+.dark:root {
+	--enas-default-text-clr: var(--enas-default-text-clr-dark);
 }
 
 * {
-  box-sizing: border-box;
-}
-
-.uppercase {
-  text-transform: uppercase;
-}
-
-h1 {
-  font-size: var(--enas-font-size-h1);
-}
-
-h2 {
-  font-size: var(--enas-font-size-h2);
-}
-
-h3 {
-  font-size: var(--enas-font-size-h3);
-}
-
-p {
-  color: var(--enas-foreground-primary-color);
-  margin: 0;
-}
-
-input,
-textarea,
-button,
-select,
-label,
-a {
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-input,
-button,
-select,
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: normal;
-}
-
-a {
-  text-decoration: none;
-
-  &.no-decoration {
-    color: inherit;
-  }
-
-  &:hover {
-    text-decoration: underline;
-
-    &.no-decoration {
-      text-decoration: none;
-    }
-  }
+	box-sizing: border-box;
 }
 
 html {
-  border: 1px solid var(--enas-border-color) !important;
-  background-color: var(--enas-background-primary-color) !important;
-  overflow: hidden;
+	overflow: hidden;
+	font-size: var(--enas-base-font-size);
+	font-family: var(--enas-font-family);
+	-moz-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	line-height: normal;
+	margin: 0;
 }
 
-.highlight {
-  color: var(--enas-highlight-color) !important;
+body {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0 !important;
+	padding: 0 !important;
+	color: var(--enas-default-text-clr) !important;
+	background-color: var(--enas-bg-clr) !important;
 }
 
-.app {
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  vertical-align: top;
-  width: 100%;
-
-  .section {
-    overflow: hidden;
-
-    .section-title-bar-header {
-      display: flex;
-      justify-content: space-between;
-    }
-  }
+.background-color {
+	color: var(--enas-bg-clr) !important;
 }
 
-#resizer-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-  z-index: var(--enas-z-index-resizer-overlay);
-  opacity: 0;
+.background2-color {
+	background-color: var(--enas-bg-clr2) !important;
 }
 
-.color-primary {
-  color: var(--enas-foreground-primary-color);
+.text-color {
+	color: var(--enas-text-clr) !important;
 }
 
-.color-secondary {
-  color: var(--enas-foreground-secondary-color);
+.text-color2 {
+	color: var(--enas-text-clr2) !important;
+}
+
+.highlight-color {
+	color: var(--enas-solid-clr) !important;
+}
+
+.highlight-color2 {
+	color: var(--enas-solid-clr2) !important;
+}
+
+.danger-color {
+	color: var(--enas-danger-clr) !important;
 }
 
 // scrollbar
 ::-webkit-scrollbar {
-  width: var(--enas-scrollbar-width);
-  height: var(--enas-scrollbar-height);
-  border-left: none;
+	width: var(--enas-scrollbar-width);
+	height: var(--enas-scrollbar-height);
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 5px solid rgba(0, 0, 0, 0);
-  background-clip: padding-box;
-  -webkit-border-radius: 10px;
-  background-color: var(--enas-scrollbar-thumb-color);
-  -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
-}
-
-::-webkit-scrollbar-button {
-  width: 0;
-  height: 0;
-  display: none;
+	-webkit-border-radius: 5px;
+	background-color: var(--enas-scrollbar-thumb-clr);
 }
 
 ::-webkit-scrollbar-corner {
-  background-color: transparent;
+	display: none;
+}
+
+// custom list
+.enas-list {
+	.group-title {
+		font-weight: 700;
+		color: var(--enas-solid-clr2);
+		padding: 0.5rem;
+	}
+
+	.list-item {
+		line-height: 2rem;
+		display: block;
+	}
+}
+
+.action-btn-row {
+	padding: 0.2rem 0;
+	cursor: pointer;
 }

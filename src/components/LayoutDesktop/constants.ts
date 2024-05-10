@@ -1,0 +1,2 @@
+export const SIDEBAR_DEFAULT_WIDTH = 280
+export const SIDEBAR_MIN_WIDTH = 100

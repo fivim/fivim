@@ -1,0 +1,78 @@
+@import '@/styles/mixin.scss';
+
+.toolbar {
+	background-color: var(--enas-cmp-clr);
+	border-bottom: 1px solid var(--enas-border-clr);
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--enas-editor-tool-bar-height);
+	> label {
+		margin-right: 15px;
+	}
+
+	> button {
+		background-color: var(--enas-cmp-clr3);
+		padding: var(--enas-spacing-1) var(--enas-spacing-2);
+		margin: 0 var(--enas-spacing-1);
+	}
+}
+
+.colContainer {
+	.colPreview {
+		background-color: var(--enas-bg-clr);
+		padding: 0.5rem;
+
+		@include headings;
+
+		a {
+			@include link;
+		}
+
+		del {
+			@include strikethrough;
+		}
+
+		> code {
+			@include code;
+		}
+
+		pre code {
+			line-height: 1.5rem;
+		}
+
+		table {
+			border-spacing: 0;
+			border-collapse: collapse;
+
+			th,
+			td {
+				border: 1px solid var(--enas-border-clr2);
+			}
+
+			th {
+				background-color: var(--enas-cmp-clr2);
+			}
+		}
+	}
+}
+
+.colContainerDesktop {
+	display: flex;
+
+	.col {
+		flex: 1; /* When there are two child elements, divide the width equally. */
+		width: 50%;
+		height: calc(100vh - var(--enas-title-bar-height) - var(--enas-editor-tool-bar-height));
+		overflow: scroll;
+	}
+
+	> :only-child {
+		flex: none; /* When there is only one child element, do not stretch and occupy the full width. */
+		width: 100%;
+	}
+}
+
+.colContainerMobile {
+}

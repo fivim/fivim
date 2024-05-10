@@ -1,0 +1,54 @@
+.TabsRoot {
+	display: flex;
+	flex-direction: column;
+
+	.TabsList {
+		flex-shrink: 0;
+		display: flex;
+		justify-content: space-between;
+		padding: 0 0.5rem 0.5rem 0.5rem;
+
+		.Triggers {
+			flex-grow: 1;
+
+			.TabsTrigger {
+				user-select: none;
+				padding: 0.25rem 1rem;
+
+				&:first-child {
+					border-top-left-radius: 6px;
+				}
+				&:last-child {
+					border-top-right-radius: 6px;
+				}
+				&:hover {
+					color: var(--enas-solid-clr2);
+				}
+				&[data-state='active'] {
+					color: var(--enas-solid-clr);
+					box-shadow:
+						inset 0 -1px 0 0 currentColor,
+						0 1px 0 0 currentColor;
+				}
+				.TabsTrigger:focus {
+					position: relative;
+					box-shadow: 0 0 0 2px black;
+				}
+			}
+		}
+
+		.Btns {
+			flex: 0 0 auto;
+		}
+	}
+
+	.TabsContent {
+		flex-grow: 1;
+		border-bottom-left-radius: 6px;
+		border-bottom-right-radius: 6px;
+		outline: none;
+	}
+	.TabsContent:focus {
+		box-shadow: 0 0 0 2px black;
+	}
+}

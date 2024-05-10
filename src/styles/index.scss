@@ -1,11 +1,17 @@
-@import "./common_class.scss";
+@import './common.scss';
 @import './main.scss';
-@import './utils.scss';
+@import './antd.scss';
 
+@import './theme_colors/amber.scss';
+@import './theme_colors/blue.scss';
+@import './theme_colors/bronze.scss';
 @import './theme_colors/default.scss';
-@import './theme_colors/balance.scss';
-@import './theme_colors/frost.scss';
-@import './theme_colors/material.scss';
-@import './theme_colors/polar-night.scss';
-@import './theme_colors/pretty.scss';
-@import './theme_colors/sunrise.scss';
+@import './theme_colors/grass.scss';
+@import './theme_colors/lime.scss';
+@import './theme_colors/mauve.scss';
+@import './theme_colors/mint.scss';
+@import './theme_colors/pink.scss';
+@import './theme_colors/sky.scss';
+@import './theme_colors/teal.scss';
+@import './theme_colors/tomato.scss';
+@import './theme_colors/violet.scss';
