@@ -4,4 +4,4 @@ public/
 
 src-tauri/
 
-**/*.yaml
+pnpm-lock.yaml

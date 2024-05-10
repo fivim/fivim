@@ -38,7 +38,7 @@ class GlobalStore {
 				setPathOfHome: action,
 				setPathOfLogFile: action,
 				setPathOfUserFilesDefult: action,
-				setPathSeparator: action,				
+				setPathSeparator: action,
 				setRunInTauri: action,
 				setTitlebarShowLockIcon: action,
 				setTitlebarText: action,
@@ -120,7 +120,7 @@ class GlobalStore {
 	}
 	setPathSeparator(val: string) {
 		this.data.pathSeparator = val
-	}	
+	}
 	setRunInTauri(val: boolean) {
 		this.data.runInTauri = val
 	}

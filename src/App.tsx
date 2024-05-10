@@ -83,11 +83,7 @@ const App: React.FC = () => {
 						{GD.existConfigFile && (
 							<>
 								{GD.lockscreen && <LockScreen />}
-								{!GD.lockscreen && (
-									<>
-										{GD.isPcScreen && <DesktopLayout />}										
-									</>
-								)}
+								{!GD.lockscreen && <>{GD.isPcScreen && <DesktopLayout />}</>}
 							</>
 						)}
 					</>

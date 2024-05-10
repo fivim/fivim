@@ -134,7 +134,7 @@ export type Global = {
 	pathOfHome: string
 	pathOfLogFile: string
 	pathOfUserFilesDefult: string
-	pathSeparator: string	
+	pathSeparator: string
 	runInTauri: boolean
 	titlebarText: string
 	titlebarShowLockIcon: boolean
