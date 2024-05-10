@@ -20,9 +20,9 @@
 
 ## Dante
 
-[open collective](https://opencollective.com/enassi)
+[Open collective](https://opencollective.com/enassi)
 
-### Cryptocurrency
+Cryptocurrency:
 
 - XMR: 46df6rwnqcUCFaSummLobcH3J9sWgqYASF8Znq5HnhgrLeASh8u4TPJ2LaLnoQk3uV6t18CgNuFVCDfLUR9G94AZUj1TtGr
 - SOL: BbrRkLArfTeAieAtDpvBHNE4KBKX9fmbjPb5JDmKHWE7
