@@ -6,8 +6,7 @@
 [![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
 [![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
 
-[Engilsh document](https://enassi.github.io/enassi-docs/en/) /
-[简体中文文档](https://enassi.github.io/enassi-docs/zh-cn/)
+[Engilsh document](https://enassi.github.io/enassi-docs/en/) / [简体中文文档](https://enassi.github.io/enassi-docs/zh-cn/)
 
 [Github repo](https://github.com/enassi/enassi) / [Gitee repo](https://gitee.com/vhash/enassi/)
 
