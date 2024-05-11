@@ -30,7 +30,7 @@ Violet dark
 - 🌐 Multi-language
 - 🎨 Various themes
 - ☁️ Synchronize(Gitee and Gitlab)
-- ⌨️ Markdown, 📖 rich text, 📔 PDFs, 🎵 images
+- ⌨️ Markdown, 📖 rich text, 🔣 source files, 📔 PDFs, 🎵 images
 
 ## Donate
 
