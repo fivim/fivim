@@ -5,13 +5,13 @@ import { forwardRef, useState } from 'react'
 import styled from 'styled-components'
 
 import {
+	BarsOutlined,
 	CloudDownloadOutlined,
 	CloudSyncOutlined,
 	FileProtectOutlined,
 	FileTextOutlined,
 	LogoutOutlined,
-	ProfileOutlined,
-	ReadOutlined,
+	PartitionOutlined,
 	SaveOutlined,
 	SettingOutlined,
 	UndoOutlined,
@@ -121,7 +121,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 								toggleTab(TAB_FILE_TREE)
 							}}
 						>
-							<ProfileOutlined style={iconStyle} />
+							<PartitionOutlined style={iconStyle} />
 						</div>
 					</Tooltip>
 
@@ -132,7 +132,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 								toggleTab(TAB_OUTLINE)
 							}}
 						>
-							<ReadOutlined style={iconStyle} />
+							<BarsOutlined style={iconStyle} />
 						</div>
 					</Tooltip>
 
