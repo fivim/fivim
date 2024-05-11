@@ -72,20 +72,6 @@ fn main() {
         .setup(|app| {
             menu::make_tray_menu(app)?;
 
-            // #[cfg(any(windows, target_os = "macos"))]
-            // {
-            //     use window_shadows::set_shadow;
-            //     let main_window = app.get_window(conf::WINDOW_LABEL_MAIN).unwrap();
-            //     set_shadow(&main_window, true).expect("Unsupported platform!");
-            // }
-
-            // let splashscreen_window = app.get_window(conf::WINDOW_LABEL_SPLASHSCREEN).unwrap();
-            // // we perform the initialization code on a new task so the app doesn't crash
-            // tauri::async_runtime::spawn(async move {
-            //     splashscreen_window.close().unwrap();
-            //     main_window.show().unwrap();
-            // });
-
             Ok(())
         })
         //Keep the app running in the background after closing all windows

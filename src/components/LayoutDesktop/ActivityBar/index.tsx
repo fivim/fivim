@@ -108,7 +108,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 		}
 
 		const refreshPage = () => {
-			window.location.reload()
+			invoker.reoladWindow()
 		}
 
 		return (

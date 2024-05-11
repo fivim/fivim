@@ -11,8 +11,8 @@
  * Ordered list: 1
  * Table:|||
  * Code block:```
- * Link:\[
- * Image:\[[
+ * Link:[
+ * Image:[[
  *
  */
 import { v4 as uuidv4 } from 'uuid'
@@ -27,10 +27,10 @@ export const hotKeyReH3 = /^(\s*)(###)(\s*)$/
 export const hotKeyReH4 = /^(\s*)(####)(\s*)$/
 export const hotKeyReH5 = /^(\s*)(#####)(\s*)$/
 export const hotKeyReH6 = /^(\s*)(######)(\s*)$/
-export const hotKeyReImage = /^(\s*)(\\\[\[)(\s*)$/
+export const hotKeyReImage = /^(\s*)(\[\[)(\s*)$/
 export const hotKeyReItalic = /^(\s*)(\*)(\s*)$/
-export const hotKeyReLine = /^(\s*)(\*\*\*)(\s*)$/
-export const hotKeyReLink = /^(\s*)(\\\[)(\s*)$/
+export const hotKeyReSeparatorLine = /^(\s*)(\*\*\*)(\s*)$/
+export const hotKeyReLink = /^(\s*)(\[)(\s*)$/
 export const hotKeyReListOrdered = /^(\s*)(1\.)(\s*)$/
 export const hotKeyReListUnordered = /^(\s*)(-)(\s*)$/
 export const hotKeyReQuote = /^(\s*)(>)(\s*)$/
@@ -77,7 +77,7 @@ export const processHotKey = (text: string): HotKeyRes => {
 		// THERE MUST BE AT LEAST ONE CHARACTER INSIDE THE ELEMENT.
 		return { html: `<em>${PLACE_HOLDER_TEXT || '&nbsp;'}</em>`, focusTag: 'em' }
 	}
-	if (text.match(hotKeyReLine)) {
+	if (text.match(hotKeyReSeparatorLine)) {
 		return { html: `<hr/>`, focusTag: 'hr' }
 	}
 	if (text.match(hotKeyReLink)) {
