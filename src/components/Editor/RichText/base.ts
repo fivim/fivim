@@ -52,10 +52,8 @@ import 'jodit/esm/plugins/video/video'
 import 'jodit/esm/plugins/xpath/xpath'
 import { IControlType, IDictionary } from 'jodit/esm/types'
 
-import { TYPE_NONE } from '@/constants'
 import { removeHtmlTags } from '@/utils/string'
 
-import { TYPE_CODE_BLOCK } from './plugins/code-block/base'
 import './plugins/format-block/format-block'
 import a from './plugins/inline-popup/config/items/a'
 
@@ -64,57 +62,69 @@ import a from './plugins/inline-popup/config/items/a'
  */
 import { OutlineHeading } from './types'
 
-;(Config.prototype as any).popup = {
-	a,
-	img,
-	cells,
-	toolbar,
-	jodit,
-	iframe: jodit,
-	'jodit-media': jodit,
-	selection: [
-		'bold',
-		'underline',
-		'italic',
-		'ul',
-		'ol',
-		'\n',
-		'outdent',
-		'indent',
-		'fontsize',
-		'brush',
-		'cut',
-		'\n',
-		'paragraph',
-		'link',
-		'align',
-		'dots',
-	],
-} as IDictionary<Array<IControlType | string>>
+const modifyA = () => {
+	;(Config.prototype as any).popup = {
+		a,
+		img,
+		cells,
+		toolbar,
+		jodit,
+		iframe: jodit,
+		'jodit-media': jodit,
+		selection: [
+			'bold',
+			'underline',
+			'italic',
+			'ul',
+			'ol',
+			'\n',
+			'outdent',
+			'indent',
+			'fontsize',
+			'brush',
+			'cut',
+			'\n',
+			'paragraph',
+			'link',
+			'align',
+			'dots',
+		],
+	} as IDictionary<Array<IControlType | string>>
+}
 
 /**
  * Add Heading 5 and Heading 6
  */
-;(Config.prototype as any).controls.paragraph.list = Jodit.atom({
-	p: 'Paragraph',
-	h1: 'Heading 1',
-	h2: 'Heading 2',
-	h3: 'Heading 3',
-	h4: 'Heading 4',
-	h5: 'Heading 5',
-	h6: 'Heading 6',
-	blockquote: 'Quote',
-	// pre: 'Code',
-	code: 'Source code',
-})
+const addHeading5_6 = () => {
+	;(Config.prototype as any).controls.paragraph.list = Jodit.atom({
+		p: 'Paragraph',
+		h1: 'Heading 1',
+		h2: 'Heading 2',
+		h3: 'Heading 3',
+		h4: 'Heading 4',
+		h5: 'Heading 5',
+		h6: 'Heading 6',
+		blockquote: 'Quote',
+		// pre: 'Code',
+		code: 'Source code',
+	})
+}
 
 /**
  * Hot key
  */
-;(Config.prototype as any).commandToHotkeys = {
-	removeFormat: ['alt+p'], // plain text
-	insertOrderedList: ['alt+7'],
-	insertUnorderedList: ['alt+8'],
+const addHotKey = () => {
+	;(Config.prototype as any).commandToHotkeys = {
+		removeFormat: ['alt+p'], // plain text
+		insertOrderedList: ['alt+7'],
+		insertUnorderedList: ['alt+8'],
+	}
+}
+
+export const customJoditInit = () => {
+	modifyA()
+	addHeading5_6()
+	addHotKey()
 }
 
 export const TOOLBAR_BUTTON_ARRAY = [
@@ -189,8 +199,6 @@ export const TOOLBAR_BUTTON_ARRAY = [
 
 export const EDITOR_CLASS_NAME = 'joditor'
 export const IMG_BAK_SRC_ATTR_NAME = 'bak-src'
-
-export type CustomBlockType = typeof TYPE_NONE | typeof TYPE_CODE_BLOCK
 
 export const externalFunctions = {
 	loadImgBase64: async (src: string) => {

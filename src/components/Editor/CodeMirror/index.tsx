@@ -37,7 +37,7 @@ interface Props {
 	lang?: string
 	onChange: (str: string) => void
 	onChangeLang?: (str: string) => void
-	onSaveFile: () => void
+	onSaveFile?: () => void
 }
 
 const SHOW_MD_PREVIEW_DEFAULT = false
@@ -57,7 +57,7 @@ const CmEditor: React.FC<Props> = ({
 	const GD = globalStore.getData()
 
 	const [cmContent, setCmContent] = useState('')
-	const [mode, setMode] = useState('javascript')
+	const [mode, setMode] = useState('')
 	const [extensions, setExtensions] = useState<Extension[]>()
 	const [theme, setTheme] = useState<Extension | 'light' | 'none' | 'dark'>()
 	const [themeName, setThemeName] = useState<string>('light')
@@ -157,6 +157,8 @@ const CmEditor: React.FC<Props> = ({
 	useEffect(() => {
 		isDarkMode ? setThemeByName('dark') : setThemeByName('light')
 		reset('')
+
+		if (lang) handleLangChange(lang as LangsKey)
 
 		if (cmRef.current) {
 			cmRef.current.addEventListener('keydown', handleKeyDown)

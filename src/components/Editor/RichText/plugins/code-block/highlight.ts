@@ -132,7 +132,7 @@ export const supportedLangs = {
 	yaml: 'yaml',
 }
 
-export type supportedLangKey = keyof typeof supportedLangs
+export type SupportedLangKey = keyof typeof supportedLangs
 
 // https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md
 export const highlighCode = (str: string, lang: string) => {
