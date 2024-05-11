@@ -1,24 +1,45 @@
 # Enassi is your data encryption assistant.
 
-[![test core](https://img.shields.io/github/stars/enassi?style=social)](https://github.com/enassi/enassi)
-[![test core](https://img.shields.io/github/followers/enassi?style=social)](https://github.com/enassi/enassi)
-[![test core](https://img.shields.io/github/watchers/enassi/enassi?style=social)](https://github.com/enassi/enassi)
-[![test core](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
-[![test core](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
+[![stars](https://img.shields.io/github/stars/enassi?style=social)](https://github.com/enassi/enassi)
+[![followers](https://img.shields.io/github/followers/enassi?style=social)](https://github.com/enassi/enassi)
+[![watchers](https://img.shields.io/github/watchers/enassi/enassi?style=social)](https://github.com/enassi/enassi)
+[![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
+[![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
+
+[Engilsh document](https://enassi.github.io/enassi-docs/en/) /
+[简体中文文档](https://enassi.github.io/enassi-docs/zh-cn/)
+
+[Github repo](https://github.com/enassi/enassi) / [Gitee repo](https://gitee.com/vhash/enassi/)
+
+## Themes
+
+[All themes](https://enassi.github.io/enassi-docs/en/themes/)
+
+Violet light
+
+![Violet light](https://enassi.github.io/enassi-docs/violet_light.png)
+
+Violet dark
+
+![Violet dark](https://enassi.github.io/enassi-docs/violet_dark.png)
 
 ## Features
 
-- 🙂 Easy to use.
-- 💌 Free and open source.
-- 💻 Cross-platform.
-- 🌐 Multi-language support.
-- 🎨 Various themes.
+- 🙂 Easy to use
+- 💌 Free and open source
+- 💻 Cross-platform
+- 🌐 Multi-language
+- 🎨 Various themes
+- ☁️ Synchronize(Gitee and Gitlab)
+- ⌨️ Markdown, 📖 rich text, 📔 PDFs, 🎵 images
 
-## Dante
+## Donate
 
-[open collective](https://opencollective.com/enassi)
+[Open collective](https://opencollective.com/enassi)
 
-### Cryptocurrency
+[Alipay / Weixin pay](https://github.com/newproplus)
+
+Cryptocurrency:
 
 - XMR: 46df6rwnqcUCFaSummLobcH3J9sWgqYASF8Znq5HnhgrLeASh8u4TPJ2LaLnoQk3uV6t18CgNuFVCDfLUR9G94AZUj1TtGr
 - SOL: BbrRkLArfTeAieAtDpvBHNE4KBKX9fmbjPb5JDmKHWE7
