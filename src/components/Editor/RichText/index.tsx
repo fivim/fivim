@@ -1,5 +1,7 @@
 import classNames from 'classnames'
 import { Jodit } from 'jodit'
+import { isHTML } from 'jodit/esm/core/helpers'
+import { PasteEvent } from 'jodit/esm/plugins/paste/interface'
 import { Base64 } from 'js-base64'
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
@@ -9,7 +11,7 @@ import { TYPE_NONE } from '@/constants'
 import i18n from '@/i18n'
 import globalStore from '@/stores/globalStore'
 import { StringStringObj } from '@/types'
-import { extractHeaders } from '@/utils/html'
+import { extractHeaders, splitMulitLinesToHtmlEle } from '@/utils/html'
 import { isMobileScreen, osThemeIsDark } from '@/utils/media_query'
 
 import {
@@ -253,6 +255,20 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 							const headings = extractHeaders(data).join('')
 							globalStore.setOutlineHeadings(extractHeadingsData(headings))
 						},
+						// beforePaste: function (event: any) {
+						// 	console.log('beforePaste::: ', event)
+						// 	return true
+						// },
+						// afterPaste: function (event: any) {
+						// 	console.log('afterPaste:::: ', event)
+						// },
+						processPaste: function (e: PasteEvent, text: string, types_str: string) {
+							if (!isHTML(text)) return splitMulitLinesToHtmlEle(text, 'div')
+							return text
+						},
+						// afterCopy: function (event: any) {
+						// 	console.log('afterCopy:::: ', event)
+						// },
 					},
 					disablePlugins: isMobileScreen() ? 'powered-by-jodit' : '',
 					placeholder: placeholder || '...',
