@@ -235,7 +235,7 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 			if (editorRef.current) {
 				customJoditInit()
 
-				// all options from https://xdsoft.net/jodit/docs/
+				// all options from https://xdsoft.net/jodit/docs/,
 				editor.current = Jodit.make(editorRef.current, {
 					autofocus: true,
 					uploader: {
