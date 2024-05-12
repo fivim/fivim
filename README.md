@@ -10,6 +10,16 @@
 
 [Github repo](https://github.com/enassi/enassi) / [Gitee repo](https://gitee.com/vhash/enassi/)
 
+## Features
+
+- 🙂 Easy to use
+- 💌 Free and open source
+- 💻 Cross-platform
+- 🌐 Multi-language
+- 🎨 Various themes
+- ☁️ Synchronize(Gitee and Gitlab)
+- ⌨️ Markdown, 📖 rich text, 🔣 source code files, 📔 PDFs, 🎵 images
+
 ## Themes
 
 [All themes](https://enassi.github.io/enassi-docs/en/themes/)
@@ -21,16 +31,6 @@ Violet light
 Violet dark
 
 ![Violet dark](https://enassi.github.io/enassi-docs/violet_dark.png)
-
-## Features
-
-- 🙂 Easy to use
-- 💌 Free and open source
-- 💻 Cross-platform
-- 🌐 Multi-language
-- 🎨 Various themes
-- ☁️ Synchronize(Gitee and Gitlab)
-- ⌨️ Markdown, 📖 rich text, 🔣 source files, 📔 PDFs, 🎵 images
 
 ## Donate
 
@@ -55,3 +55,7 @@ Tauri currently supports development and distribution on the following platforms
 | Linux      | webkit2gtk 4.0 for Tauri v1 (for example Ubuntu 18.04) |
 | iOS/iPadOS | 9 and above(coming soon)                               |
 | Android    | 7 and above(coming soon)                               |
+
+## Develop
+
+[Ddocument](https://enassi.github.io/enassi-docs/en/develop/build/)
