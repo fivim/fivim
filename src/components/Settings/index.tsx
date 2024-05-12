@@ -10,7 +10,7 @@ import { saveConfToFile } from '@/initialize'
 import settingStore from '@/stores/settingStore'
 import { SYNC_MODE_OPTIONS, TYPE_GITEE_API_V5, TYPE_GITLAB_API } from '@/synchronizer/constants'
 import { SyncMode } from '@/synchronizer/types'
-import { resetDarkMode, setDarkMode, setTheme } from '@/utils/utils'
+import { resetDarkMode, setDarkMode, setTheme } from '@/utils/html'
 
 import styles from './styles.module.scss'
 

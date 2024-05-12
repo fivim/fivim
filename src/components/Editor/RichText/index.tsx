@@ -9,8 +9,8 @@ import { TYPE_NONE } from '@/constants'
 import i18n from '@/i18n'
 import globalStore from '@/stores/globalStore'
 import { StringStringObj } from '@/types'
+import { extractHeaders } from '@/utils/html'
 import { isMobileScreen, osThemeIsDark } from '@/utils/media_query'
-import { extractHeaders } from '@/utils/string'
 
 import {
 	EDITOR_CLASS_NAME,

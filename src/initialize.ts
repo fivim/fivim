@@ -6,8 +6,9 @@ import passwordStore from '@/stores/passwordStore'
 import settingStore from '@/stores/settingStore'
 import type { Setting, SettingOfStartUp } from '@/types'
 import { tmplSettinggStartup } from '@/types_template'
+import { setDarkMode, setTheme } from '@/utils/html'
 import { iso8601StrToDateTime } from '@/utils/time'
-import { genPwdArr, setDarkMode, setTheme } from '@/utils/utils'
+import { genPwdArr } from '@/utils/utils'
 
 const t = i18n.t
 
