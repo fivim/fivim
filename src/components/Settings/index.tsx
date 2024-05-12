@@ -91,9 +91,12 @@ export const Settings: React.FC<Props> = ({ showModal, onModalOk, onModalCancel,
 				</Form.Item>
 			</Form>
 
-			<p>
-				{APP_NAME} {t('Version')}: {APP_VERSION}
-			</p>
+			<div>
+				{t('Version')}: {APP_VERSION}
+			</div>
+			<div>
+				{t('Document')}: <span>https://enassi.github.io/enassi-docs</span>
+			</div>
 		</>
 	)
 
