@@ -4,8 +4,6 @@ import { Base64 } from 'js-base64'
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import Dialog, { ButtonPosition } from '@/components/Dialog'
-import stylesDialog from '@/components/Dialog/styles.module.scss'
 import { LOCAL_FILE_LINK_PREFIX } from '@/constants'
 import { TYPE_NONE } from '@/constants'
 import i18n from '@/i18n'
@@ -14,19 +12,18 @@ import { StringStringObj } from '@/types'
 import { isMobileScreen, osThemeIsDark } from '@/utils/media_query'
 import { extractHeaders } from '@/utils/string'
 
-import CmEditor from '../CodeMirror'
 import {
-	CustomBlockType,
 	EDITOR_CLASS_NAME,
 	IMG_BAK_SRC_ATTR_NAME,
 	TOOLBAR_BUTTON_ARRAY,
+	customJoditInit,
 	externalFunctions,
 	extractHeadingsData,
 } from './base'
+import { BlockEleDataSet, CustomBlockComponentRef, CustomBlockType } from './custom_block'
 import { processHotKey } from './hot_key'
-import './plugins/code-block'
-import { BlockDataJson, BlockEleDataSet, TYPE_CODE_BLOCK, previewCodeblock } from './plugins/code-block/base'
-import { supportedLangKey, supportedLangs } from './plugins/code-block/highlight'
+import CodeBlock from './plugins/code-block/CodeBlock'
+import { TYPE_CODE_BLOCK } from './plugins/code-block/base'
 import './styles.scss'
 
 const t = i18n.t
@@ -50,48 +47,18 @@ interface Props {
 }
 
 export const RtEditor = forwardRef<EditorComponentRef, Props>(
-	({ id, name, onOpenFile, onSaveFile: onSaveFile, placeholder, tabIndex }, ref) => {
+	({ id, name, onOpenFile, onSaveFile, placeholder, tabIndex }, ref) => {
 		const parentRef = useRef<HTMLDivElement>(null)
 		const editorRef = useRef<HTMLTextAreaElement>(null)
 		const editor = useRef<Jodit | null>(null)
 
+		const codeBlockRef = useRef<CustomBlockComponentRef>(null)
+
 		const [blockType, setBlockType] = useState<CustomBlockType>(TYPE_NONE)
 		const [blockContent, setBlockContent] = useState('')
-		const [blockLang, setBlockLang] = useState('')
 
-		const blockEditingUuid = useRef('')
-		const blockEditingContent = useRef('')
-		const onChangeText = (_str: string) => {
-			blockEditingContent.current = _str
-		}
-
-		const [dialogOpen, setDialogOpen] = useState(false)
-		const [buttonPosition, setButtonPosition] = useState<ButtonPosition>('center')
-
-		const dialogOk = () => {
-			setDialogOpen(false)
-
-			if (blockType === TYPE_CODE_BLOCK) {
-				const content = blockEditingContent.current
-				const previewHtm = previewCodeblock(content, blockLang)
-				const dataJson: BlockDataJson = {
-					content: content,
-				}
-				const dataJsonStr = JSON.stringify(dataJson)
-				updateCustomBlockByUuid(blockEditingUuid.current, dataJsonStr, previewHtm, {
-					lang: blockLang,
-				})
-			}
-		}
-
-		const dialogCancel = () => {
-			setDialogOpen(false)
-		}
-
-		const removeCurrentCustomBlock = () => {
-			removeCustomBlockByUuid(blockEditingUuid.current)
-			dialogCancel()
-		}
+		const [blockEditingUuid, setBlockEditingUuid] = useState('')
+		const [blockEditingContent, setBlockEditingContent] = useState('')
 
 		const setValue = async (str: string) => {
 			setBlockType(TYPE_NONE)
@@ -123,22 +90,6 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 			renderCustomBlock,
 		}))
 
-		const editCodeblock = (uuid: string, lang: string, dataEle: HTMLElement) => {
-			blockEditingUuid.current = uuid
-			const dataStr = dataEle.innerHTML
-			try {
-				const codeBlockData = JSON.parse(dataStr) as BlockDataJson
-				const blockLang = lang in supportedLangs ? supportedLangs[lang as supportedLangKey] : lang
-				setBlockLang(blockLang)
-				setBlockContent(codeBlockData.content)
-				blockEditingContent.current = codeBlockData.content
-
-				setDialogOpen(true)
-			} catch (error) {
-				console.log('An error occurred while parsing block data:', error)
-			}
-		}
-
 		const updateCustomBlockByUuid = (
 			uuid: string,
 			dataJsonStr: string,
@@ -168,36 +119,6 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 			})
 		}
 
-		const removeCustomBlockByUuid = (uuid: string) => {
-			const blocks = document.querySelectorAll(`.custom-block[data-uuid="${uuid}"]`)
-			blocks.forEach((block) => {
-				const parent = block.parentNode
-				if (parent) parent.removeChild(block)
-			})
-		}
-
-		const renderCustomBlock = () => {
-			const blocks = document.querySelectorAll(`.custom-block`)
-			blocks.forEach((block) => {
-				const ele = block as HTMLElement
-				const eleDataset = ele.dataset as BlockEleDataSet
-				const dataJsonEle = ele.querySelector('.dataJson')
-				const blockType = eleDataset.type
-				if (blockType === TYPE_CODE_BLOCK && dataJsonEle) {
-					const blockLang = eleDataset.lang as string
-					const dataJsonStr = dataJsonEle.innerHTML
-
-					try {
-						const codeBlockData = JSON.parse(dataJsonStr) as BlockDataJson
-						const previewHtml = previewCodeblock(codeBlockData.content, blockLang)
-						updateCustomBlockByUuid(eleDataset.uuid, dataJsonStr, previewHtml)
-					} catch (error) {
-						console.log('An error occurred while parsing block data:', error)
-					}
-				}
-			})
-		}
-
 		const renderLocalImg = async () => {
 			const matches = document.querySelectorAll(`img`)
 			const srcBakAttr = `data-${IMG_BAK_SRC_ATTR_NAME}`
@@ -217,6 +138,30 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 			}
 		}
 
+		const removeCustomBlockByUuid = (uuid: string) => {
+			const blocks = document.querySelectorAll(`.custom-block[data-uuid="${uuid}"]`)
+			blocks.forEach((block) => {
+				const parent = block.parentNode
+				if (parent) parent.removeChild(block)
+			})
+		}
+
+		const renderCustomBlock = () => {
+			const blocks = document.querySelectorAll(`.custom-block`)
+			blocks.forEach((block) => {
+				const ele = block as HTMLElement
+				const eleDataset = ele.dataset as BlockEleDataSet
+				const dataJsonEle = ele.querySelector('.dataJson')
+				const blockType = eleDataset.type
+
+				// CODE_BLOCK
+				if (blockType === TYPE_CODE_BLOCK && codeBlockRef.current && dataJsonEle) {
+					const rd = codeBlockRef.current.genBlockRenderData(eleDataset, dataJsonEle.innerHTML)
+					updateCustomBlockByUuid(eleDataset.uuid, rd.dataJsonStr, rd.innerHTML)
+				}
+			})
+		}
+
 		const handleClick = (event: MouseEvent) => {
 			if (!event.target) return false
 
@@ -230,26 +175,13 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 			}
 
 			// custom-block
-			// Click the language tip to enter the edit window.
-			if (target.classList.contains('code-block-lang-tip')) {
-				// Find .custom-block
-				const closest = target.closest('.custom-block')
-				if (!closest) return false
-				const blockEle = closest as HTMLDivElement
+			const cbEle = target.closest('.custom-block')
+			if (cbEle) {
+				const blockType = cbEle.getAttribute('data-type')
 
-				const ele = blockEle as HTMLElement
-				const eleDataset = ele.dataset as BlockEleDataSet
-
-				const dataJsonEle = ele.querySelector('.dataJson')
-				if (!dataJsonEle) return false
-
-				// Reset
-				blockEditingUuid.current = ''
-				blockEditingContent.current = ''
-				setBlockType(TYPE_CODE_BLOCK)
-
-				if (eleDataset.type === TYPE_CODE_BLOCK) {
-					editCodeblock(eleDataset.uuid, eleDataset.lang as string, dataJsonEle as HTMLElement)
+				// CODE_BLOCK
+				if (blockType == TYPE_CODE_BLOCK && codeBlockRef.current) {
+					codeBlockRef.current.clickHandler(target, cbEle)
 				}
 			}
 
@@ -301,6 +233,8 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 
 		useEffect(() => {
 			if (editorRef.current) {
+				customJoditInit()
+
 				// all options from https://xdsoft.net/jodit/docs/,
 				editor.current = Jodit.make(editorRef.current, {
 					autofocus: true,
@@ -351,43 +285,19 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 					<textarea name={name} id={id} ref={editorRef} />
 				</div>
 
-				{dialogOpen && (
-					<Dialog
-						animate={false}
-						buttonPosition={buttonPosition}
-						open={dialogOpen}
-						title={blockType}
-						okText={t('OK')}
-						cancelText={t('Cancel')}
-						okCallback={dialogOk}
-						cancelCallback={dialogCancel}
-						children={
-							<>
-								{blockType === TYPE_NONE && <div style={{ width: 500, height: 500, backgroundColor: '#0f0' }}></div>}
-								{blockType === TYPE_CODE_BLOCK && (
-									<div className={'joditorCodeBlock'}>
-										<CmEditor
-											content={blockContent}
-											onChange={onChangeText}
-											onChangeLang={setBlockLang}
-											isDarkMode={osThemeIsDark()}
-											canChangeLang={true}
-											lang={blockLang}
-											onSaveFile={() => {
-												if (onSaveFile) onSaveFile()
-											}}
-										/>
-									</div>
-								)}
-							</>
-						}
-						childrenExtButton={
-							<button className={classNames(stylesDialog.Button, stylesDialog.Ext)} onClick={removeCurrentCustomBlock}>
-								{t('Delete')}
-							</button>
-						}
-					/>
-				)}
+				<CodeBlock
+					ref={codeBlockRef}
+					blockType={blockType}
+					setBlockType={setBlockType}
+					blockContent={blockContent}
+					setBlockContent={setBlockContent}
+					blockEditingUuid={blockEditingUuid}
+					setBlockEditingUuid={setBlockEditingUuid}
+					blockEditingContent={blockEditingContent}
+					setBlockEditingContent={setBlockEditingContent}
+					onRemoveCustomBlockByUuid={removeCustomBlockByUuid}
+					onUpdateCustomBlockByUuid={updateCustomBlockByUuid}
+				/>
 			</>
 		)
 	},
