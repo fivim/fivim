@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "enassi",
-    "version": "2.0.46"
+    "version": "2.0.47"
   },
   "tauri": {
     "allowlist": {
