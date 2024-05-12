@@ -243,6 +243,7 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 					},
 					className: classNames(EDITOR_CLASS_NAME),
 					theme: osThemeIsDark() ? 'dark' : '',
+					language: i18n.language.toLowerCase(),
 					buttons: TOOLBAR_BUTTON_ARRAY,
 					enter: 'div',
 					enterBlock: 'div',
