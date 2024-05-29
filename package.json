@@ -57,7 +57,7 @@
 		"react-dom": "^18.3.1",
 		"react-error-boundary": "^3.1.4",
 		"react-i18next": "^14.1.1",
-		"react-pdf": "^7.7.3",
+		"react-pdf": "^9.0.0",
 		"react-zoom-pan-pinch": "^3.4.4",
 		"styled-components": "^6.1.11",
 		"uuid": "^9.0.1"
