@@ -12,9 +12,10 @@ import styles from './styles.module.scss'
 // 	pdfjs.GlobalWorkerOptions.workerPort = new Worker('/worker/pdf.worker.min.mjs')
 // }
 
-// The version must as same as pdfjs.version
-const workerSrc = `${window.location.protocol}//${window.location.host}/worker/pdf.worker.min.js`
-// alert(`pdfjs.version :: ${pdfjs.version}`)
+// The version of pdf.worker must as same as pdfjs.version
+// The link like https://cdn.jsdelivr.net/npm/pdfjs-dist@4.3.136/build/pdf.worker.min.mjs
+// console.log(`pdfjs.version :: ${pdfjs.version}`)
+const workerSrc = `${window.location.protocol}//${window.location.host}/worker/pdf.worker.min.mjs`
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
 
 interface Props {
