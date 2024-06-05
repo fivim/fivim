@@ -27,6 +27,7 @@
 	"Deleting local file": "Deleting local file",
 	"Deleting remote file": "Deleting remote file",
 	"Deleting": "Deleting",
+	"Document": "Document",
 	"Download failed": "Download failed",
 	"Encryot on save": "Encryot on save",
 	"Error": "Error",
@@ -112,7 +113,7 @@
 	"Unlock": "Unlock",
 	"Unset": "Unset",
 	"Unsupported file types": "Unsupported file types",
-	"Version": "version",
+	"Version": "Version",
 	"user-files directory": "user-files directory",
 	"Warning": "Warning"
 }

@@ -52,7 +52,7 @@ import 'jodit/esm/plugins/video/video'
 import 'jodit/esm/plugins/xpath/xpath'
 import { IControlType, IDictionary } from 'jodit/esm/types'
 
-import { removeHtmlTags } from '@/utils/string'
+import { removeHtmlTags } from '@/utils/html'
 
 import './plugins/format-block/format-block'
 import a from './plugins/inline-popup/config/items/a'
@@ -96,7 +96,7 @@ const modifyA = () => {
  * Add Heading 5 and Heading 6
  */
 const addHeading5_6 = () => {
-	;(Config.prototype as any).controls.paragraph.list = Jodit.atom({
+	Config.prototype.controls.paragraph.list = Jodit.atom({
 		p: 'Paragraph',
 		h1: 'Heading 1',
 		h2: 'Heading 2',

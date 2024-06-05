@@ -12,7 +12,7 @@ import globalStore from '@/stores/globalStore'
 import passwordStore from '@/stores/passwordStore'
 import settingStore from '@/stores/settingStore'
 import { genMasterPasswordSha256 } from '@/utils/hash'
-import { setTheme } from '@/utils/utils'
+import { setTheme } from '@/utils/html'
 
 import styles from './styles.module.scss'
 

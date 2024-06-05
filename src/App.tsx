@@ -16,10 +16,11 @@ import settingStore from '@/stores/settingStore'
 import '@/styles/index.scss'
 import { SYNC_LOCK_FILE_NAME } from '@/synchronizer/constants'
 import { tmplAlertDialogProps } from '@/types_template'
+import { insertStyleSheet } from '@/utils/html'
 import { isMobileScreen, isPcScreen, osThemeIsDark } from '@/utils/media_query'
 import { isMobile, isPc, isWindows } from '@/utils/os'
 import { pathJoin } from '@/utils/tauri_like'
-import { insertStyleSheet, runInTauri } from '@/utils/utils'
+import { runInTauri } from '@/utils/utils'
 
 const t = i18n.t
 

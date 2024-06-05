@@ -90,12 +90,11 @@
 	background: linear-gradient(
 		to bottom,
 		var(--enas-bg-clr2) 0%,
-		var(--enas-bg-clr2) 30%,
+		var(--enas-bg-clr2) 40%,
 		var(--enas-danger-clr) 50%,
-		var(--enas-bg-clr2) 70%,
+		var(--enas-bg-clr2) 60%,
 		var(--enas-bg-clr2) 100%
 	);
-	padding: 0 0.5rem;
 }
 
 @mixin link {

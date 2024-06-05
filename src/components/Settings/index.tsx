@@ -10,7 +10,7 @@ import { saveConfToFile } from '@/initialize'
 import settingStore from '@/stores/settingStore'
 import { SYNC_MODE_OPTIONS, TYPE_GITEE_API_V5, TYPE_GITLAB_API } from '@/synchronizer/constants'
 import { SyncMode } from '@/synchronizer/types'
-import { resetDarkMode, setDarkMode, setTheme } from '@/utils/utils'
+import { resetDarkMode, setDarkMode, setTheme } from '@/utils/html'
 
 import styles from './styles.module.scss'
 
@@ -91,9 +91,12 @@ export const Settings: React.FC<Props> = ({ showModal, onModalOk, onModalCancel,
 				</Form.Item>
 			</Form>
 
-			<p>
-				{APP_NAME} {t('Version')}: {APP_VERSION}
-			</p>
+			<div>
+				{t('Version')}: {APP_VERSION}
+			</div>
+			<div>
+				{t('Document')}: <span>https://enassi.github.io/enassi-docs</span>
+			</div>
 		</>
 	)
 

@@ -1,6 +1,4 @@
 import dateUtil from 'date-and-time'
-import parserHtml from 'prettier/plugins/html'
-import prettier from 'prettier/standalone'
 
 import { IMAGE_EXT_ARR } from '@/components/Editor/constants'
 import globalStore from '@/stores/globalStore'
@@ -148,47 +146,4 @@ export const appendToDirPathStr = (dirPath: string, postfix: string) => {
 
 export const fileNameIsImage = (fileName: string) => {
 	return IMAGE_EXT_ARR.indexOf(getFileNameExt(fileName).toLowerCase()) >= 0
-}
-
-export const formatHtml = async (htmlString: string) => {
-	return await prettier.format(htmlString, {
-		parser: 'html',
-		plugins: [parserHtml],
-
-		// https://prettier.io/playground/
-		arrowParens: 'always',
-		bracketSameLine: false,
-		bracketSpacing: true,
-		semi: true,
-		experimentalTernaries: false,
-		singleQuote: false,
-		jsxSingleQuote: false,
-		quoteProps: 'as-needed',
-		trailingComma: 'all',
-		singleAttributePerLine: false,
-		htmlWhitespaceSensitivity: 'ignore',
-		vueIndentScriptAndStyle: false,
-		proseWrap: 'preserve',
-		insertPragma: false,
-		printWidth: 120,
-		requirePragma: false,
-		tabWidth: 2,
-		useTabs: true,
-		embeddedLanguageFormatting: 'auto',
-	})
-}
-export const extractHeaders = (htmlString: string) => {
-	const regex = /<h[1-6][^>]*>(.*?)<\/h[1-6]>/gi
-	const matches = []
-	let match
-
-	while ((match = regex.exec(htmlString)) !== null) {
-		matches.push(match[0])
-	}
-
-	return matches
-}
-
-export const removeHtmlTags = (htmlString: string) => {
-	return htmlString.replace(/<[^>]*>/g, '')
 }

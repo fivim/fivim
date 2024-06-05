@@ -26,15 +26,9 @@ import settingStore from '@/stores/settingStore'
 import { syncAdapter, syncIsEnabled } from '@/synchronizer'
 import { pathToRelPath } from '@/synchronizer/sync_base'
 import { EditorType } from '@/types'
+import { formatHtml } from '@/utils/html'
 import { osThemeIsDark } from '@/utils/media_query'
-import {
-	formatHtml,
-	getDirByFilePath,
-	getFileName,
-	getFileNameExt,
-	removeEnding,
-	stringToUint8Array,
-} from '@/utils/string'
+import { getDirByFilePath, getFileName, getFileNameExt, removeEnding, stringToUint8Array } from '@/utils/string'
 import { pathJoin } from '@/utils/tauri_like'
 
 import CmEditor from './CodeMirror'

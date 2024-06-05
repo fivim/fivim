@@ -167,44 +167,6 @@ export const isDebug = () => {
 	return false
 }
 
-export const addJsScript = (src: string) => {
-	const script = document.createElement('script')
-	script.type = 'text/javascript'
-	script.src = src
-	document.body.appendChild(script)
-}
-
-export const addCssStyle = (src: string) => {
-	const link = document.createElement('link')
-	link.rel = 'stylesheet'
-	link.type = 'text/css'
-	if (src) link.href = src
-	document.body.appendChild(link)
-}
-
-export const insertStyleSheet = (styleStr: string) => {
-	if (document.styleSheets.length === 0) addCssStyle('')
-
-	const sheet = document.styleSheets[0]
-	sheet.insertRule(styleStr, sheet.cssRules.length)
-}
-
-export const setTheme = (themeName: string) => {
-	document.documentElement.setAttribute('theme', themeName)
-}
-
-export const setDarkMode = () => {
-	document.documentElement.setAttribute('force-dark-mode', 'true')
-	document.documentElement.classList.add('dark')
-	document.documentElement.classList.remove('light')
-}
-
-export const resetDarkMode = () => {
-	document.documentElement.removeAttribute('force-dark-mode')
-	document.documentElement.classList.remove('dark')
-	document.documentElement.classList.add('light')
-}
-
 export const genDialogWidth = () => {
 	const width = getPageWidth()
 	if (width < 768) {
