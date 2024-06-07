@@ -25,14 +25,14 @@ import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
 import { syncAdapter, syncIsEnabled } from '@/synchronizer'
+import { TabId } from '@/types'
 import { isMobileScreen } from '@/utils/media_query'
+import { showOutline } from '@/utils/utils'
 
-import { TabId } from '../types'
 import styles from './styles.module.scss'
 
 const t = i18n.t
 type Props = {
-	tabId: TabId
 	saveEditorContent: (event: any) => void
 	onDecryptContent: (event: any) => void
 	onSaveEncrypt: (event: any) => void
@@ -53,7 +53,6 @@ const iconStyle = {
 const ActivityBar = forwardRef<HTMLDivElement, Props>(
 	(
 		{
-			tabId,
 			saveEditorContent,
 			onDecryptContent,
 			onSaveEncrypt,
@@ -116,7 +115,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 				<Container className={classNames(styles.ActivityBar, className)} data-tauri-drag-region>
 					<Tooltip placement="right" title={t('File tree')}>
 						<div
-							className={classNames(styles.Item, tabId === TAB_FILE_TREE ? styles.Active : '')}
+							className={classNames(styles.Item, GD.tabId === TAB_FILE_TREE ? styles.Active : '')}
 							onClick={() => {
 								toggleTab(TAB_FILE_TREE)
 							}}
@@ -125,20 +124,22 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 						</div>
 					</Tooltip>
 
-					<Tooltip placement="right" title={t('Outline')}>
-						<div
-							className={classNames(styles.Item, tabId === TAB_OUTLINE ? styles.Active : '')}
-							onClick={() => {
-								toggleTab(TAB_OUTLINE)
-							}}
-						>
-							<BarsOutlined style={iconStyle} />
-						</div>
-					</Tooltip>
+					{showOutline() && (
+						<Tooltip placement="right" title={t('Outline')}>
+							<div
+								className={classNames(styles.Item, GD.tabId === TAB_OUTLINE ? styles.Active : '')}
+								onClick={() => {
+									toggleTab(TAB_OUTLINE)
+								}}
+							>
+								<BarsOutlined style={iconStyle} />
+							</div>
+						</Tooltip>
+					)}
 
 					<Tooltip placement="right" title={t('Save')}>
 						<div
-							className={classNames(styles.Item, tabId === TAB_SAVE ? styles.Active : '')}
+							className={classNames(styles.Item, GD.tabId === TAB_SAVE ? styles.Active : '')}
 							onClick={saveEditorContent}
 						>
 							<SaveOutlined style={iconStyle} />

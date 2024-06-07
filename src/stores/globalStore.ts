@@ -4,7 +4,7 @@ import { action, makeAutoObservable, observable } from 'mobx'
 import { AlertDialogProps, AlertDialogRes } from '@/components/AlertDialog'
 import { OutlineHeading } from '@/components/Editor/RichText/types'
 import { MessageLineProps } from '@/components/MessageLine'
-import { EditorType, Global } from '@/types'
+import { EditorType, Global, TabId } from '@/types'
 import { tmplGlobal } from '@/types_template'
 
 class GlobalStore {
@@ -40,6 +40,7 @@ class GlobalStore {
 				setPathOfUserFilesDefult: action,
 				setPathSeparator: action,
 				setRunInTauri: action,
+				setTabId: action,
 				setTitlebarShowLockIcon: action,
 				setTitlebarText: action,
 			},
@@ -120,9 +121,12 @@ class GlobalStore {
 	}
 	setPathSeparator(val: string) {
 		this.data.pathSeparator = val
-	}
+	}	
 	setRunInTauri(val: boolean) {
 		this.data.runInTauri = val
+	}
+	setTabId(val: TabId) {
+		this.data.tabId = val
 	}
 	setTitlebarShowLockIcon(val: boolean) {
 		this.data.titlebarShowLockIcon = val

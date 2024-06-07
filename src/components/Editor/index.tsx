@@ -345,7 +345,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		setInitData,
 	}))
 
-	const onChangeText = (_str: string) => {
+	const onChangeCm = (_str: string) => {
 		contentCurrent.current = _str
 	}
 
@@ -380,7 +380,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 			{(editorType === TYPE_SOURCE_CODE || editorType === TYPE_MD) && (
 				<CmEditor
 					content={contentText}
-					onChange={onChangeText}
+					onChange={onChangeCm}
 					isDarkMode={osThemeIsDark()}
 					canChangeLang={true}
 					fileExt={fileExt}

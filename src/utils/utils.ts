@@ -1,6 +1,8 @@
 import LZString from 'lz-string'
 
 import { PASSWORD_SALT } from '@/constants'
+import globalStore from '@/stores/globalStore'
+import settingStore from '@/stores/settingStore'
 
 import { sha256 } from './hash'
 import { getPageWidth } from './media_query'
@@ -195,4 +197,21 @@ export const genDialogWidthSmall = () => {
 	}
 
 	return '100%'
+}
+
+export const showOutline = () => {
+	const GD = globalStore.getData()
+	const SD = settingStore.getData()
+
+	const encryptedFileExt = SD.encryptedFileExt
+	if (
+		GD.currentFileName.endsWith(`.xrtm`) ||
+		GD.currentFileName.endsWith(`.xrtm.${encryptedFileExt}`)
+		// GD.currentFileName.endsWith(`.md`) ||
+		// GD.currentFileName.endsWith(`.md.${encryptedFileExt}`)
+	) {
+		return true
+	}
+
+	return false
 }
