@@ -24,15 +24,15 @@ Enassi is an encryption assistant for your data.
 
 ## Themes
 
-[All themes](https://enassi.github.io/enassi-docs/en/themes/)
+[All themes](https://enassi.pages.dev/en/themes/)
 
 Violet light
 
-![Violet light](https://enassi.github.io/enassi-docs/violet_light.png)
+![Violet light](https://enassi.pages.dev/violet_light.png)
 
 Violet dark
 
-![Violet dark](https://enassi.github.io/enassi-docs/violet_dark.png)
+![Violet dark](https://enassi.pages.dev/violet_dark.png)
 
 ## Donate
 
@@ -60,4 +60,4 @@ Tauri currently supports development and distribution on the following platforms
 
 ## Develop
 
-[Ddocument](https://enassi.github.io/enassi-docs/en/develop/build/)
+[Ddocument](https://enassi.pages.dev//en/develop/build/)
