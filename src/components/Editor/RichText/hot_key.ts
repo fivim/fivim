@@ -27,9 +27,9 @@ export const RE_H5 = /^(\s*)(#####)(\s*)$/
 export const RE_H6 = /^(\s*)(######)(\s*)$/
 export const RE_IMAGE = /^(\s*)(\[\[)(\s*)$/
 export const RE_ITALIC = /^(\s*)(\_)(\s*)$/
-export const RE_SEPARATOR_LINE = /^(\s*)(\*\*\*)(\s*)$/
+export const RE_HORIZONTAL_LINE = /^(\s*)(\*\*\*)(\s*)$/
 export const RE_LINK = /^(\s*)(\[)(\s*)$/
-export const RE_LIST_ORDERED = /^(\s*)(1\.)(\s*)$/
+export const RE_LIST_ORDERED = /^(\s*)(1)(\s*)$/
 export const RE_LIST_UNORDERED = /^(\s*)(-)(\s*)$/
 export const RE_QUOTE = /^(\s*)(>)(\s*)$/
 export const RE_TABLE = /^(\s*)(\|\|\|)(\s*)$/
@@ -75,9 +75,9 @@ export const processHotKey = (text: string): HotKeyRes => {
 	}
 	if (text.match(RE_ITALIC)) {
 		// THERE MUST BE AT LEAST ONE CHARACTER INSIDE THE ELEMENT.
-		return { html: `<em>${PLACE_HOLDER_TEXT || '&nbsp;'}</em>`, focusTag: 'em' }
+		return { html: `<i>${PLACE_HOLDER_TEXT || '&nbsp;'}</i>`, focusTag: 'i' }
 	}
-	if (text.match(RE_SEPARATOR_LINE)) {
+	if (text.match(RE_HORIZONTAL_LINE)) {
 		return { html: `<hr/>`, focusTag: 'hr' }
 	}
 	if (text.match(RE_LINK)) {
