@@ -4,7 +4,7 @@
  *
  * Title:#
  * Quote:>
- * italic:*
+ * italic:_
  * Bold:**
  * Split line:***
  * Unordered list:-
@@ -26,7 +26,7 @@ export const hotKeyReH4 = /^(\s*)(####)(\s*)$/
 export const hotKeyReH5 = /^(\s*)(#####)(\s*)$/
 export const hotKeyReH6 = /^(\s*)(######)(\s*)$/
 export const hotKeyReImage = /^(\s*)(\[\[)(\s*)$/
-export const hotKeyReItalic = /^(\s*)(\*)(\s*)$/
+export const hotKeyReItalic = /^(\s*)(\_)(\s*)$/
 export const hotKeyReSeparatorLine = /^(\s*)(\*\*\*)(\s*)$/
 export const hotKeyReLink = /^(\s*)(\[)(\s*)$/
 export const hotKeyReListOrdered = /^(\s*)(1\.)(\s*)$/
