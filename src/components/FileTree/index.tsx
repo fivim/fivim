@@ -167,7 +167,7 @@ const FileTree: React.FC<Props> = ({
 
 	const closeFaDialog = async () => {
 		if (settingStore.getUserFilesDir() === '') {
-			invoker.error(t('Please set the user-files directory first'))
+			invoker.error(t('Please set the user_files directory first'))
 		}
 
 		if (dialogTitle === ADD_DIR_STR) {

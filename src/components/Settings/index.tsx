@@ -76,7 +76,7 @@ export const Settings: React.FC<Props> = ({ showModal, onModalOk, onModalCancel,
 						style={{ width: '100%' }}
 					/>
 				</Form.Item>
-				<Form.Item label={t('user-files directory')}>
+				<Form.Item label={t('user_files directory')}>
 					<Input disabled defaultValue={settingStore.getUserFilesDir() || t('Unset')} />
 				</Form.Item>
 
