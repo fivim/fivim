@@ -1,34 +1,20 @@
-import classNames from 'classnames'
-import { Jodit } from 'jodit'
-import { isHTML } from 'jodit/esm/core/helpers'
-import { PasteEvent } from 'jodit/esm/plugins/paste/interface'
 import { Base64 } from 'js-base64'
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
+import { exsied, exsiedPlugins } from '@exsied/exsied'
+import { PluginConf } from '@exsied/exsied/dist/plugins/source_code/base'
+import '@exsied/exsied/style.css'
+
 import { LOCAL_FILE_LINK_PREFIX } from '@/constants'
-import { TYPE_NONE } from '@/constants'
-import i18n from '@/i18n'
 import globalStore from '@/stores/globalStore'
 import { StringStringObj } from '@/types'
-import { extractHeaders, splitMulitLinesToHtmlEle } from '@/utils/html'
-import { isMobileScreen, osThemeIsDark } from '@/utils/media_query'
+import { extractHeaders } from '@/utils/html'
 
-import {
-	EDITOR_CLASS_NAME,
-	IMG_BAK_SRC_ATTR_NAME,
-	TOOLBAR_BUTTON_ARRAY,
-	customJoditInit,
-	externalFunctions,
-	extractHeadingsData,
-} from './base'
-import { BlockEleDataSet, CustomBlockComponentRef, CustomBlockType } from './custom_block'
+import { IMG_BAK_SRC_ATTR_NAME, externalFunctions, extractHeadingsData } from './base'
+import { highlighCode } from './highlight'
 import { processHotKey } from './hot_key'
-import CodeBlock from './plugins/code-block/CodeBlock'
-import { TYPE_CODE_BLOCK } from './plugins/code-block/base'
 import './styles.scss'
-
-const t = i18n.t
 
 export type EditorComponentRef = {
 	setValue: (str: string) => void
@@ -36,7 +22,6 @@ export type EditorComponentRef = {
 	updateCustomBlockByUuid: (uuid: string, dataJsonStr: string, htmlStr: string, dataSet?: StringStringObj) => any
 	removeCustomBlockByUuid: (uuid: string) => any
 	renderLocalImg: () => any
-	renderCustomBlock: () => any
 }
 
 interface Props {
@@ -51,31 +36,20 @@ interface Props {
 export const RtEditor = forwardRef<EditorComponentRef, Props>(
 	({ id, name, onOpenFile, onSaveFile, placeholder, tabIndex }, ref) => {
 		const parentRef = useRef<HTMLDivElement>(null)
-		const editorRef = useRef<HTMLTextAreaElement>(null)
-		const editor = useRef<Jodit | null>(null)
-
-		const codeBlockRef = useRef<CustomBlockComponentRef>(null)
-
-		const [blockType, setBlockType] = useState<CustomBlockType>(TYPE_NONE)
-		const [blockContent, setBlockContent] = useState('')
-
-		const [blockEditingUuid, setBlockEditingUuid] = useState('')
-		const [blockEditingContent, setBlockEditingContent] = useState('')
+		const editorRef = useRef<HTMLDivElement>(null)
 
 		const setValue = async (str: string) => {
-			setBlockType(TYPE_NONE)
-
-			if (editor.current) {
+			if (editorRef.current) {
 				const html = headingAddAttr(str)
-				editor.current.value = html
+				exsied.setHtml(html)
+				updateOutline(html)
 				renderLocalImg()
-				renderCustomBlock()
 			}
 		}
 
 		const getValue = () => {
-			if (editor.current) {
-				const cnt = editor.current.value
+			if (editorRef.current) {
+				const cnt = exsied.getHtml()
 				const v = cleanData(cnt)
 				return v
 			}
@@ -89,7 +63,6 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 			updateCustomBlockByUuid,
 			removeCustomBlockByUuid,
 			renderLocalImg,
-			renderCustomBlock,
 		}))
 
 		const updateCustomBlockByUuid = (
@@ -148,22 +121,6 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 			})
 		}
 
-		const renderCustomBlock = () => {
-			const blocks = document.querySelectorAll(`.custom-block`)
-			blocks.forEach((block) => {
-				const ele = block as HTMLElement
-				const eleDataset = ele.dataset as BlockEleDataSet
-				const dataJsonEle = ele.querySelector('.dataJson')
-				const blockType = eleDataset.type
-
-				// CODE_BLOCK
-				if (blockType === TYPE_CODE_BLOCK && codeBlockRef.current && dataJsonEle) {
-					const rd = codeBlockRef.current.genBlockRenderData(eleDataset, dataJsonEle.innerHTML)
-					updateCustomBlockByUuid(eleDataset.uuid, rd.dataJsonStr, rd.innerHTML)
-				}
-			})
-		}
-
 		const handleClick = (event: MouseEvent) => {
 			if (!event.target) return false
 
@@ -174,17 +131,6 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 				event.preventDefault()
 				event.stopPropagation()
 				return false
-			}
-
-			// custom-block
-			const cbEle = target.closest('.custom-block')
-			if (cbEle) {
-				const blockType = cbEle.getAttribute('data-type')
-
-				// CODE_BLOCK
-				if (blockType == TYPE_CODE_BLOCK && codeBlockRef.current) {
-					codeBlockRef.current.clickHandler(target, cbEle)
-				}
 			}
 
 			return true
@@ -214,66 +160,52 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 				if (firstEle === null) return
 				const newRange = document.createRange()
 				newRange.setStart(firstEle, 0)
-				newRange.collapse(true)
-				const selectionN = window.getSelection()
-				if (selectionN === null) return
-				selectionN.removeAllRanges()
-				selectionN.addRange(newRange)
-			}
-
-			if (event.altKey) {
-				// Heading 1 - 6
-				if (event.key === '0') editor.current?.execCommand('formatBlock', false, 'p')
-				if (event.key === '1') editor.current?.execCommand('formatBlock', false, 'h1')
-				if (event.key === '2') editor.current?.execCommand('formatBlock', false, 'h2')
-				if (event.key === '3') editor.current?.execCommand('formatBlock', false, 'h3')
-				if (event.key === '4') editor.current?.execCommand('formatBlock', false, 'h4')
-				if (event.key === '5') editor.current?.execCommand('formatBlock', false, 'h5')
-				if (event.key === '6') editor.current?.execCommand('formatBlock', false, 'h6')
+				newRange.setEnd(firstEle, 0)
+				// newRange.collapse(true)
+				selection.removeAllRanges()
+				selection.addRange(newRange)
 			}
 		}
 
 		useEffect(() => {
-			if (editorRef.current) {
-				customJoditInit()
+			if (editorRef.current && id) {
+				const sourceCodeConf = exsiedPlugins.sourceCode.conf as PluginConf
+				sourceCodeConf.renderData = (ele: HTMLElement) => {
+					const lang = ele.getAttribute('lang') || ''
+					const res = highlighCode(ele.innerHTML, lang)
+					return `<pre><code>${res}</code></pre>`
+				}
+				sourceCodeConf.editData = (ele: HTMLElement, sign: string) => {}
+				sourceCodeConf.randomChars = () => {
+					return uuidv4()
+				}
 
-				// all options from https://xdsoft.net/jodit/docs/
-				editor.current = Jodit.make(editorRef.current, {
-					autofocus: true,
-					uploader: {
-						insertImageAsBase64URI: true,
-					},
-					className: classNames(EDITOR_CLASS_NAME),
-					theme: osThemeIsDark() ? 'dark' : '',
-					language: i18n.language.toLowerCase(),
-					buttons: TOOLBAR_BUTTON_ARRAY,
-					enter: 'div',
-					enterBlock: 'div',
-					events: {
-						afterInit: () => console.info('afterInit'),
-						change: (data: any) => {
-							const headings = extractHeaders(data).join('')
-							globalStore.setOutlineHeadings(extractHeadingsData(headings))
+				exsied.init({
+					id: id,
+					plugins: [
+						exsiedPlugins.bold,
+						exsiedPlugins.italic,
+						exsiedPlugins.underline,
+						exsiedPlugins.strikethrough,
+						exsiedPlugins.headings,
+						exsiedPlugins.link,
+						exsiedPlugins.image,
+						exsiedPlugins.table,
+						exsiedPlugins.fontSize,
+						exsiedPlugins.fontFamily,
+						exsiedPlugins.backgroundColor,
+						exsiedPlugins.textColor,
+						exsiedPlugins.findAndReplace,
+						exsiedPlugins.sourceCode,
+					],
+					enableToolbarBubble: true,
+					dataAttrs: { sign: 'data-uuid', signOriginal: 'data-origianl-uuid' },
+					hooks: {
+						onInput: (event) => {
+							const ele = event.target as HTMLElement
+							updateOutline(ele.innerHTML)
 						},
-						// beforePaste: function (event: any) {
-						// 	console.log('beforePaste::: ', event)
-						// 	return true
-						// },
-						// afterPaste: function (event: any) {
-						// 	console.log('afterPaste:::: ', event)
-						// },
-						processPaste: function (e: PasteEvent, text: string, types_str: string) {
-							if (!isHTML(text)) return splitMulitLinesToHtmlEle(text, 'div')
-							return text
-						},
-						// afterCopy: function (event: any) {
-						// 	console.log('afterCopy:::: ', event)
-						// },
 					},
-					disablePlugins: isMobileScreen() ? 'powered-by-jodit' : '',
-					placeholder: placeholder || '...',
-					readonly: false,
-					tabIndex: 1,
 				})
 			}
 
@@ -290,31 +222,11 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 			}
 		}, [])
 
-		useEffect(() => {
-			if (editor.current?.workplace) {
-				editor.current.workplace.tabIndex = tabIndex || -1
-			}
-		}, [tabIndex])
-
 		return (
 			<>
 				<div className="rich-editor-wrapper" ref={parentRef}>
-					<textarea name={name} id={id} ref={editorRef} />
+					<div id={id} ref={editorRef} />
 				</div>
-
-				<CodeBlock
-					ref={codeBlockRef}
-					blockType={blockType}
-					setBlockType={setBlockType}
-					blockContent={blockContent}
-					setBlockContent={setBlockContent}
-					blockEditingUuid={blockEditingUuid}
-					setBlockEditingUuid={setBlockEditingUuid}
-					blockEditingContent={blockEditingContent}
-					setBlockEditingContent={setBlockEditingContent}
-					onRemoveCustomBlockByUuid={removeCustomBlockByUuid}
-					onUpdateCustomBlockByUuid={updateCustomBlockByUuid}
-				/>
 			</>
 		)
 	},
@@ -361,4 +273,9 @@ const cleanData = (htmlString: string) => {
 	}
 
 	return doc.body.innerHTML
+}
+
+const updateOutline = (html: string) => {
+	const headings = extractHeaders(html).join('')
+	globalStore.setOutlineHeadings(extractHeadingsData(headings))
 }

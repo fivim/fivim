@@ -17,8 +17,6 @@
  */
 import { v4 as uuidv4 } from 'uuid'
 
-import { genEmptyCodeBlock } from './plugins/code-block/base'
-
 export const hotKeyReBold = /^(\s*)(\*\*)(\s*)$/
 export const hotKeyReCodeBlock = /^(\s*)(```)(\s*)$/
 export const hotKeyReH1 = /^(\s*)(#)(\s*)$/
@@ -36,7 +34,7 @@ export const hotKeyReListUnordered = /^(\s*)(-)(\s*)$/
 export const hotKeyReQuote = /^(\s*)(>)(\s*)$/
 export const hotKeyReTable = /^(\s*)(\|\|\|)(\s*)$/
 
-export const PLACE_HOLDER_TEXT = ''
+export const PLACE_HOLDER_TEXT = '\u200B'
 export const PLACE_HOLDER_IMG_SRC =
 	'data:image/svg+xml;base64,PHN2ZyB0PSIxNzE0Mjg0MDU1OTg5IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE1NDQiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cGF0aCBkPSJNOTE3LjA5OTUyIDg0LjY4NDhIMTE0LjQxMTUyYy0zMi44Mzk2OCAwLTU5LjQ1ODU2IDI2LjYyNC01OS40NTg1NiA1OS40NTg1NnY3NzIuOTYxMjhjMCAzMi44MzQ1NiAyNi42MjQgNTkuNDUzNDQgNTkuNDU4NTYgNTkuNDUzNDRoODAyLjY4OGMzMi44MzQ1NiAwIDU5LjQ1MzQ0LTI2LjYxODg4IDU5LjQ1MzQ0LTU5LjQ1MzQ0VjE0NC4xMzgyNGMwLTMyLjgyOTQ0LTI2LjYxODg4LTU5LjQ1MzQ0LTU5LjQ1MzQ0LTU5LjQ1MzQ0eiIgZmlsbD0iIiBwLWlkPSIxNTQ1Ij48L3BhdGg+PHBhdGggZD0iTTkxNy4wOTk1MiA1NC45NTI5NkgxMTQuNDExNTJjLTMyLjgzOTY4IDAtNTkuNDU4NTYgMjYuNjI0LTU5LjQ1ODU2IDU5LjQ1ODU2Vjg4Ny4zNTIzMmMwIDMyLjg0NDggMjYuNjI0IDU5LjQ2MzY4IDU5LjQ1ODU2IDU5LjQ2MzY4aDgwMi42ODhjMzIuODM0NTYgMCA1OS40NTM0NC0yNi42MTg4OCA1OS40NTM0NC01OS40NjM2OFYxMTQuNDExNTJjMC0zMi44MzQ1Ni0yNi42MTg4OC01OS40NTg1Ni01OS40NTM0NC01OS40NTg1NnoiIGZpbGw9IiNFQ0VBRTAiIHAtaWQ9IjE1NDYiPjwvcGF0aD48cGF0aCBkPSJNODcyLjUwNDMyIDExNC40MTE1MkgxNTkuMDA2NzJhNDQuNTk1MiA0NC41OTUyIDAgMCAwLTQ0LjU5NTIgNDQuNTk1MlY1OTAuMDc0ODhoODAyLjY4OFYxNTkuMDA2NzJhNDQuNTk1MiA0NC41OTUyIDAgMCAwLTQ0LjU5NTItNDQuNTk1MnoiIGZpbGw9IiM5OERDRjAiIHAtaWQ9IjE1NDciPjwvcGF0aD48cGF0aCBkPSJNNjEzLjYzNzEyIDQxMS41NTU4NGwtMTU0Ljk0MTQ0IDE3OC41MTkwNGgzMDkuODY3NTJ6IiBmaWxsPSIjNjk5QjU0IiBwLWlkPSIxNTQ4Ij48L3BhdGg+PHBhdGggZD0iTTU4Ni44MjM2OCA1OTAuMDc0ODhsLTIwNi41MzU2OC0yMzcuOTc3Ni0yMDYuNTQwOCAyMzcuOTc3NkgxMTQuNDExNTJWNjk0LjEyMzUyYTQ0LjU5NTIgNDQuNTk1MiAwIDAgMCA0NC41OTUyIDQ0LjU5NTJoNzEzLjQ5NzZhNDQuNTk1MiA0NC41OTUyIDAgMCAwIDQ0LjU5NTItNDQuNTk1MnYtMTA0LjA1Mzc2aC0zMzAuMjc1ODR6IiBmaWxsPSIjODBCQjY3IiBwLWlkPSIxNTQ5Ij48L3BhdGg+PHBhdGggZD0iTTc2OC40NDU0NCAyNjMuMDU1MzZtLTU5LjQ1ODU2IDBhNTkuNDU4NTYgNTkuNDU4NTYgMCAxIDAgMTE4LjkxNzEyIDAgNTkuNDU4NTYgNTkuNDU4NTYgMCAxIDAtMTE4LjkxNzEyIDBaIiBmaWxsPSIjRkZFNjhFIiBwLWlkPSIxNTUwIj48L3BhdGg+PC9zdmc+'
 
@@ -50,7 +48,9 @@ export const processHotKey = (text: string): HotKeyRes => {
 		return { html: `<strong>${PLACE_HOLDER_TEXT || '&nbsp;'}</strong>`, focusTag: 'strong' }
 	}
 	if (text.match(hotKeyReCodeBlock)) {
-		return { html: genEmptyCodeBlock(), focusTag: 'div' }
+		// TODO:
+		// return { html: genEmptyCodeBlock(), focusTag: 'div' }
+		return { html: '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^', focusTag: 'div' }
 	}
 	if (text.match(hotKeyReH1)) {
 		return { html: `<h1 data-uuid="${uuidv4()}">${PLACE_HOLDER_TEXT}</h1>`, focusTag: 'h1' }

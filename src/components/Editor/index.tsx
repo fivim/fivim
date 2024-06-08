@@ -374,7 +374,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 
 			{editorType === TYPE_XRTM && (
 				<div ref={rtEditorParentRef}>
-					<RtEditor ref={rtEditorRef} onOpenFile={editorOpenFile} onSaveFile={saveEditorContent} />
+					<RtEditor ref={rtEditorRef} id="richTextEditor" onOpenFile={editorOpenFile} onSaveFile={saveEditorContent} />
 				</div>
 			)}
 			{(editorType === TYPE_SOURCE_CODE || editorType === TYPE_MD) && (
