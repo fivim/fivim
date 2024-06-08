@@ -8,7 +8,7 @@
 
 [Engilsh document](https://enassi.github.io/enassi-docs/en/) / [简体中文文档](https://enassi.github.io/enassi-docs/zh-cn/)
 
-[Github repo](https://github.com/enassi/enassi) / [Gitee repo](https://gitee.com/vhash/enassi/)
+[Github repo](https://github.com/enassi/enassi) / [Gitee repo](https://gitee.com/enassi/enassi/)
 
 ## Features
 

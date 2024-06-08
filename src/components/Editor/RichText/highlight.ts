@@ -139,5 +139,6 @@ export const highlighCode = (str: string, lang: string) => {
 	if (lang in hljsLangMap) {
 		return hljs.highlight(str, { language: lang }).value
 	}
+
 	return str
 }

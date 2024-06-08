@@ -14,6 +14,7 @@ import {
 	HTTP_PUT,
 	HTTP_TRACE,
 } from '@/constants'
+import { TAB_FILE_TREE, TAB_OUTLINE, TAB_SAVE, TAB_SETTING, TAB_SYNC } from '@/constants'
 import { SyncSettings } from '@/synchronizer/types'
 
 import { OutlineHeading } from './components/Editor/RichText/types'
@@ -83,6 +84,8 @@ export type EditorType =
 	| typeof TYPE_AUDIO
 	| typeof TYPE_NONE
 
+export type TabId = typeof TAB_FILE_TREE | typeof TAB_OUTLINE | typeof TAB_SAVE | typeof TAB_SYNC | typeof TAB_SETTING
+
 export type AppCoreConf = {
 	defaultLanguage: string
 	defaultLanguageInNative: string
@@ -136,6 +139,7 @@ export type Global = {
 	pathOfUserFilesDefult: string
 	pathSeparator: string
 	runInTauri: boolean
+	tabId: TabId
 	titlebarText: string
 	titlebarShowLockIcon: boolean
 	textDirection: TextDirection

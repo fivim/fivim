@@ -1,5 +1,5 @@
 export const APP_NAME = 'enassi'
-export const APP_VERSION = 'v2.0.48'
+export const APP_VERSION = 'v2.1.0'
 export const AVAILABLE_THEMES = [
 	'default',
 	'amber',

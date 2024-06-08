@@ -1,21 +1,44 @@
 @import '@/styles/mixin.scss';
 
-$joditorPaddingY: 0.5rem;
+:root {
+	--exd-backgroud-color: var(--enas-bg-clr);
+	--exd-text-color: var(--enas-text-clr);
+	--exd-component-backgroud-color: var(--enas-cmp-clr) !important;
+	--exd-component-color: var(--enas-text-clr);
+	--exd-component-border-color: var(--enas-border-clr);
+	--exd-highlight-color: var(--enas-highlight-clr);
 
-.rich-editor-wrapper {
-	padding: $joditorPaddingY;
+	--exd-toolbar-backgroud-color: var(--enas-bg-clr2);
+	--exd-toolbar-text-color: var(--enas-text-clr2);
+	--exd-toolbar-ctrl-backgroud-color-active: var(--enas-solid-clr);
+	--exd-toolbar-ctrl-backgroud-color-hover: var(--enas-solid-clr2);
+
+	--exd-toolbar-height: 40px;
 }
 
-.joditor {
-	--jd-dark-background-color: var(--enas-bg-clr2);
+.dark {
+	.exsied {
+		.exsied-toolbar-main {
+			.exsied-icon {
+				filter: invert(0.9);
+			}
+		}
 
-	.jodit-wysiwyg {
-		height: calc(
-			100vh - var(--enas-title-bar-height) - var(--enas-jodit-toolbar-height) - var(--enas-jodit-status-bar-height) -
-				0.5rem - $joditorPaddingY * 2
-		) !important;
-		overflow-y: scroll;
-		font-family: var(--enas-editor-font-family);
+		.exsied-popup-view .exsied-icon {
+			filter: invert(0.9);
+		}
+	}
+}
+
+.exsied {
+	.exsied-toolbar-main {
+		z-index: 1;
+	}
+
+	.exsied-workplace {
+		overflow: scroll;
+		max-height: 100%;
+		height: calc(100vh - var(--exd-toolbar-height) - var(--enas-title-bar-height));
 
 		@include selection;
 		@include headings;
@@ -37,45 +60,25 @@ $joditorPaddingY: 0.5rem;
 			@include code;
 		}
 
-		blockquote {
-			@include quote;
+		pre code {
+			@include code;
+
+			display: block;
+
+			&::before {
+				all: unset;
+			}
+			&::after {
+				all: unset;
+			}
 		}
 
-		.custom-block {
-			background-color: var(--enas-cmp-clr);
-			padding: 0.5rem;
-			margin: 0.5rem;
-			min-height: 3rem;
-
-			.dataJson {
-				display: none;
-			}
-
-			.preview {
-				position: relative;
-			}
+		blockquote {
+			@include quote;
 		}
 	}
 }
 
-.jodit-popup-container {
-	.jodit-toolbar-button__text {
-		h1,
-		h2,
-		h3,
-		h4,
-		h5,
-		h6 {
-			font-size: unset;
-			font-weight: unset;
-			margin: unset;
-			word-break: keep-all;
-		}
-
-		pre {
-			background-color: unset;
-			color: unset;
-			overflow: unset;
-		}
-	}
+.exsied-btn-table-cell-action {
+	padding: 0;
 }
