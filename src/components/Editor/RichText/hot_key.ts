@@ -17,22 +17,22 @@
  */
 import { v4 as uuidv4 } from 'uuid'
 
-export const hotKeyReBold = /^(\s*)(\*\*)(\s*)$/
-export const hotKeyReCodeBlock = /^(\s*)(```)(\s*)$/
-export const hotKeyReH1 = /^(\s*)(#)(\s*)$/
-export const hotKeyReH2 = /^(\s*)(##)(\s*)$/
-export const hotKeyReH3 = /^(\s*)(###)(\s*)$/
-export const hotKeyReH4 = /^(\s*)(####)(\s*)$/
-export const hotKeyReH5 = /^(\s*)(#####)(\s*)$/
-export const hotKeyReH6 = /^(\s*)(######)(\s*)$/
-export const hotKeyReImage = /^(\s*)(\[\[)(\s*)$/
-export const hotKeyReItalic = /^(\s*)(\_)(\s*)$/
-export const hotKeyReSeparatorLine = /^(\s*)(\*\*\*)(\s*)$/
-export const hotKeyReLink = /^(\s*)(\[)(\s*)$/
-export const hotKeyReListOrdered = /^(\s*)(1\.)(\s*)$/
-export const hotKeyReListUnordered = /^(\s*)(-)(\s*)$/
-export const hotKeyReQuote = /^(\s*)(>)(\s*)$/
-export const hotKeyReTable = /^(\s*)(\|\|\|)(\s*)$/
+export const RE_BOLD = /^(\s*)(\*\*)(\s*)$/
+export const RE_CODE_BLOCK = /^(\s*)(```)(\s*)$/
+export const RE_H1 = /^(\s*)(#)(\s*)$/
+export const RE_H2 = /^(\s*)(##)(\s*)$/
+export const RE_H3 = /^(\s*)(###)(\s*)$/
+export const RE_H4 = /^(\s*)(####)(\s*)$/
+export const RE_H5 = /^(\s*)(#####)(\s*)$/
+export const RE_H6 = /^(\s*)(######)(\s*)$/
+export const RE_IMAGE = /^(\s*)(\[\[)(\s*)$/
+export const RE_ITALIC = /^(\s*)(\_)(\s*)$/
+export const RE_SEPARATOR_LINE = /^(\s*)(\*\*\*)(\s*)$/
+export const RE_LINK = /^(\s*)(\[)(\s*)$/
+export const RE_LIST_ORDERED = /^(\s*)(1\.)(\s*)$/
+export const RE_LIST_UNORDERED = /^(\s*)(-)(\s*)$/
+export const RE_QUOTE = /^(\s*)(>)(\s*)$/
+export const RE_TABLE = /^(\s*)(\|\|\|)(\s*)$/
 
 export const PLACE_HOLDER_TEXT = '\u200B'
 export const PLACE_HOLDER_IMG_SRC =
@@ -43,48 +43,48 @@ export type HotKeyRes = {
 	focusTag: string
 }
 export const processHotKey = (text: string): HotKeyRes => {
-	if (text.match(hotKeyReBold)) {
+	if (text.match(RE_BOLD)) {
 		// THERE MUST BE AT LEAST ONE CHARACTER INSIDE THE ELEMENT.
 		return { html: `<strong>${PLACE_HOLDER_TEXT || '&nbsp;'}</strong>`, focusTag: 'strong' }
 	}
-	if (text.match(hotKeyReCodeBlock)) {
+	if (text.match(RE_CODE_BLOCK)) {
 		// TODO:
 		// return { html: genEmptyCodeBlock(), focusTag: 'div' }
 		return { html: '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^', focusTag: 'div' }
 	}
-	if (text.match(hotKeyReH1)) {
+	if (text.match(RE_H1)) {
 		return { html: `<h1 data-uuid="${uuidv4()}">${PLACE_HOLDER_TEXT}</h1>`, focusTag: 'h1' }
 	}
-	if (text.match(hotKeyReH2)) {
+	if (text.match(RE_H2)) {
 		return { html: `<h2 data-uuid="${uuidv4()}">${PLACE_HOLDER_TEXT}</h2>`, focusTag: 'h2' }
 	}
-	if (text.match(hotKeyReH3)) {
+	if (text.match(RE_H3)) {
 		return { html: `<h3 data-uuid="${uuidv4()}">${PLACE_HOLDER_TEXT}</h3>`, focusTag: 'h3' }
 	}
-	if (text.match(hotKeyReH4)) {
+	if (text.match(RE_H4)) {
 		return { html: `<h4 data-uuid="${uuidv4()}">${PLACE_HOLDER_TEXT}</h4>`, focusTag: 'h4' }
 	}
-	if (text.match(hotKeyReH5)) {
+	if (text.match(RE_H5)) {
 		return { html: `<h5 data-uuid="${uuidv4()}">${PLACE_HOLDER_TEXT}</h5>`, focusTag: 'h5' }
 	}
-	if (text.match(hotKeyReH6)) {
+	if (text.match(RE_H6)) {
 		return { html: `<h6 data-uuid="${uuidv4()}">${PLACE_HOLDER_TEXT}</h6>`, focusTag: 'h6' }
 	}
-	if (text.match(hotKeyReImage)) {
+	if (text.match(RE_IMAGE)) {
 		return { html: `<img style="width:100px;height:100px" src="${PLACE_HOLDER_IMG_SRC}"/>`, focusTag: '' }
 	}
-	if (text.match(hotKeyReItalic)) {
+	if (text.match(RE_ITALIC)) {
 		// THERE MUST BE AT LEAST ONE CHARACTER INSIDE THE ELEMENT.
 		return { html: `<em>${PLACE_HOLDER_TEXT || '&nbsp;'}</em>`, focusTag: 'em' }
 	}
-	if (text.match(hotKeyReSeparatorLine)) {
+	if (text.match(RE_SEPARATOR_LINE)) {
 		return { html: `<hr/>`, focusTag: 'hr' }
 	}
-	if (text.match(hotKeyReLink)) {
+	if (text.match(RE_LINK)) {
 		// THERE MUST BE AT LEAST ONE CHARACTER INSIDE THE ELEMENT.
 		return { html: `<a href="https://xxx.com">${PLACE_HOLDER_TEXT || 'xxx'}</a>`, focusTag: '' }
 	}
-	if (text.match(hotKeyReListUnordered)) {
+	if (text.match(RE_LIST_UNORDERED)) {
 		return {
 			html: `
 				<ul>
@@ -96,7 +96,7 @@ export const processHotKey = (text: string): HotKeyRes => {
 			focusTag: 'ul',
 		}
 	}
-	if (text.match(hotKeyReListOrdered)) {
+	if (text.match(RE_LIST_ORDERED)) {
 		return {
 			html: `
 				<ol>
@@ -107,10 +107,10 @@ export const processHotKey = (text: string): HotKeyRes => {
 			focusTag: 'li',
 		}
 	}
-	if (text.match(hotKeyReQuote)) {
+	if (text.match(RE_QUOTE)) {
 		return { html: `<blockquote>${PLACE_HOLDER_TEXT}</blockquote>`, focusTag: 'blockquote' }
 	}
-	if (text.match(hotKeyReTable)) {
+	if (text.match(RE_TABLE)) {
 		return {
 			html: `
 				<table>
