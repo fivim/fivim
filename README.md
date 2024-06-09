@@ -60,4 +60,4 @@ Tauri currently supports development and distribution on the following platforms
 
 ## Develop
 
-[Ddocument](https://enassi.pages.dev//en/develop/build/)
+[Ddocument](https://enassi.pages.dev/en/develop/build/)

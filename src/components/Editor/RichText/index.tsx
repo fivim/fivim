@@ -1,8 +1,25 @@
 import { Base64 } from 'js-base64'
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { exsied, exsiedPlugins } from '@exsied/exsied'
+import {
+	KEY_CTRL,
+	backgroundColor,
+	bold,
+	exsied,
+	findAndReplace,
+	fontFamily,
+	fontSize,
+	headings,
+	image,
+	italic,
+	link,
+	sourceCode,
+	strikethrough,
+	table,
+	textColor,
+	underline,
+} from '@exsied/exsied'
 import { PluginConf } from '@exsied/exsied/dist/plugins/source_code/base'
 import '@exsied/exsied/style.css'
 
@@ -169,7 +186,7 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 
 		useEffect(() => {
 			if (editorRef.current && id) {
-				const sourceCodeConf = exsiedPlugins.sourceCode.conf as PluginConf
+				const sourceCodeConf = sourceCode.conf as PluginConf
 				sourceCodeConf.renderData = (ele: HTMLElement) => {
 					const lang = ele.getAttribute('lang') || ''
 					const res = highlighCode(ele.innerHTML, lang)
@@ -183,22 +200,32 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 				exsied.init({
 					id: id,
 					plugins: [
-						exsiedPlugins.bold,
-						exsiedPlugins.italic,
-						exsiedPlugins.underline,
-						exsiedPlugins.strikethrough,
-						exsiedPlugins.headings,
-						exsiedPlugins.link,
-						exsiedPlugins.image,
-						exsiedPlugins.table,
-						exsiedPlugins.fontSize,
-						exsiedPlugins.fontFamily,
-						exsiedPlugins.backgroundColor,
-						exsiedPlugins.textColor,
-						exsiedPlugins.findAndReplace,
-						exsiedPlugins.sourceCode,
+						bold,
+						italic,
+						underline,
+						strikethrough,
+						headings,
+						link,
+						image,
+						table,
+						fontSize,
+						fontFamily,
+						backgroundColor,
+						textColor,
+						findAndReplace,
+						sourceCode,
 					],
 					enableToolbarBubble: true,
+					iAbideByExsiedLicenseAndDisableTheAboutPlugin: true,
+					hotkeys: [
+						{ keyStr: 'b', func: bold.commands[bold.name], modifierKeys: [KEY_CTRL] },
+						{ keyStr: 'i', func: italic.commands[italic.name], modifierKeys: [KEY_CTRL] },
+						{
+							keyStr: 'u',
+							func: underline.commands[underline.name],
+							modifierKeys: [KEY_CTRL],
+						},
+					],
 					dataAttrs: { sign: 'data-uuid', signOriginal: 'data-origianl-uuid' },
 					hooks: {
 						onInput: (event) => {
