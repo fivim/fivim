@@ -33,6 +33,11 @@
 .exsied {
 	.exsied-toolbar-main {
 		z-index: 1;
+
+		.exsied-dropdown-list {
+			overflow: scroll;
+			max-height: 80vh;
+		}
 	}
 
 	.exsied-workplace {
