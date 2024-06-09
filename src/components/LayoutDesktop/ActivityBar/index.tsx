@@ -2,7 +2,6 @@ import { Tooltip } from 'antd'
 import classNames from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { forwardRef, useState } from 'react'
-import styled from 'styled-components'
 
 import {
 	BarsOutlined,
@@ -42,8 +41,6 @@ type Props = {
 	toggleTab: (tab: TabId) => void
 	className?: string
 }
-
-const Container = styled.div``
 
 const iconStyle = {
 	padding: `var(--enas-desktop-activity-bar-padding)`,
@@ -112,7 +109,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 
 		return (
 			<>
-				<Container className={classNames(styles.ActivityBar, className)} data-tauri-drag-region>
+				<div className={classNames(styles.ActivityBar, className)} data-tauri-drag-region>
 					<Tooltip placement="right" title={t('File tree')}>
 						<div
 							className={classNames(styles.Item, GD.tabId === TAB_FILE_TREE ? styles.Active : '')}
@@ -204,7 +201,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 							<SettingOutlined style={iconStyle} />
 						</div>
 					</Tooltip>
-				</Container>
+				</div>
 
 				<Settings
 					showModal={settingVisible}
