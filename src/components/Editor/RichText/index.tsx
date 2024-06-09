@@ -3,7 +3,8 @@ import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react
 import { v4 as uuidv4 } from 'uuid'
 
 import { KEY_CTRL, plugins as eg, exsied } from '@exsied/exsied'
-import { PluginConf } from '@exsied/exsied/dist/plugins/source_code/base'
+import { PluginConf as fontSizePluginConf } from '@exsied/exsied/dist/plugins/font_size/base'
+import { PluginConf as aboutPluginConf } from '@exsied/exsied/dist/plugins/source_code/base'
 import '@exsied/exsied/style.css'
 
 import { LOCAL_FILE_LINK_PREFIX } from '@/constants'
@@ -169,7 +170,8 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 
 		useEffect(() => {
 			if (editorRef.current && id) {
-				const sourceCodeConf = eg.sourceCode.conf as PluginConf
+				// sourceCode
+				const sourceCodeConf = eg.sourceCode.conf as aboutPluginConf
 				sourceCodeConf.renderData = (ele: HTMLElement) => {
 					const lang = ele.getAttribute('lang') || ''
 					const res = highlighCode(ele.innerHTML, lang)
@@ -178,6 +180,28 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 				sourceCodeConf.editData = (ele: HTMLElement, sign: string) => {}
 				sourceCodeConf.randomChars = () => {
 					return uuidv4()
+				}
+
+				// fontSize
+				const fontSizeConf = eg.fontSize.conf as fontSizePluginConf
+				const fontSizeArr = [
+					8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 42, 50, 58, 64, 72, 80, 90, 100, 120, 140, 180, 220, 280,
+				]
+				for (const item of fontSizeArr) {
+					const option = `${item}px`
+					let exist = false
+					fontSizeConf.fontSizeOptions.map((item) => {
+						if (item.name === option) {
+							exist = true
+						}
+					})
+					if (exist) continue
+
+					fontSizeConf.fontSizeOptions.push({
+						name: option,
+						value: option,
+						tooltipText: option,
+					})
 				}
 
 				exsied.init({
@@ -192,7 +216,7 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 						eg.image,
 						eg.table,
 						eg.fontSize,
-						eg.fontFamily,
+						// eg.fontFamily,
 						eg.backgroundColor,
 						eg.textColor,
 						eg.findAndReplace,
