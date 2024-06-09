@@ -1106,7 +1106,7 @@ checksum = "4ef6b89e5b37196644d8796de5268852ff179b44e96276cf4290264843743bb7"
 
 [[package]]
 name = "enassi"
-version = "2.1.0"
+version = "2.1.1"
 dependencies = [
  "base64 0.21.7",
  "chrono",
