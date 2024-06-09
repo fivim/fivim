@@ -130,11 +130,11 @@ export class SyncBase {
 		await this.beforeSyncData()
 
 		const GD = globalStore.getData()
-		const userFilesDir = settingStore.getUserFilesDir() // user-files directory
-		const userFilesDirBakDir = appendToDirPathStr(userFilesDir, userFilesDirBakDirPostfix) // Backup user-files directory
+		const userFilesDir = settingStore.getUserFilesDir() // user_files directory
+		const userFilesDirBakDir = appendToDirPathStr(userFilesDir, userFilesDirBakDirPostfix) // Backup user_files directory
 		const remoteFileTempDir = await pathJoin(GD.pathOfHome, TEMP_DIR_NAME)
 		const rmtFilePath = await pathJoin(remoteFileTempDir, tempRemoteZipFileName)
-		const dd = await invoker.deleteDir(userFilesDirBakDir) // Backup user-files directory
+		const dd = await invoker.deleteDir(userFilesDirBakDir) // Backup user_files directory
 
 		const gazr = await this._getArchiveZip(rmtFilePath)
 		if (!gazr.success) return gazr

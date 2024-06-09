@@ -79,7 +79,7 @@
 	"Please input ___name___": "请输入 {{name}}",
 	"Please open the file before saving it": "请打开文件之后再保存",
 	"Please open the file first": "请先打开文件",
-	"Please set the user-files directory first": "请先设置用户文件目录",
+	"Please set the user_files directory first": "请先设置用户文件目录",
 	"Preview": "预览",
 	"Preparation error": "准备出错",
 	"Project ID": "项目 ID",
@@ -114,6 +114,6 @@
 	"Unset": "未设置",
 	"Unsupported file types": "不支持的文件类型",
 	"Version": "版本",
-	"user-files directory": "用户文件目录",
+	"user_files directory": "用户文件目录",
 	"Warning": "警告"
 }

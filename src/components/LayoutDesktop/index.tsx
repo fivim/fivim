@@ -10,6 +10,7 @@ import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
 import { EditorType } from '@/types'
+import { TabId } from '@/types'
 
 import Outline from '../Outline'
 import ActivityBar from './ActivityBar'
@@ -17,12 +18,12 @@ import Resizer from './Resizer'
 import SideBar from './SideBar'
 import { SIDEBAR_DEFAULT_WIDTH, SIDEBAR_MIN_WIDTH } from './constants'
 import styles from './styles.module.scss'
-import { TabId } from './types'
 
 const DesktopLayout: React.FC = () => {
-	const [activityBarTabId, setActivityBarTabId] = useState<TabId>(TAB_FILE_TREE)
 	const [sideBarWidthBase, setSidebarWidthBase] = useState<number>(SIDEBAR_DEFAULT_WIDTH)
 	const [sideBarWidth, setSidebarWidth] = useState<number>(SIDEBAR_DEFAULT_WIDTH)
+
+	const GD = globalStore.getData()
 
 	const handleResize = (diffX: number) => {
 		let width = sideBarWidthBase + diffX
@@ -35,8 +36,8 @@ const DesktopLayout: React.FC = () => {
 	}
 
 	const toggleTab = (tab: TabId) => {
-		if (tab === activityBarTabId) sideBarWidth > 0 ? setSidebarWidth(0) : setSidebarWidth(SIDEBAR_DEFAULT_WIDTH)
-		setActivityBarTabId(tab)
+		if (tab === GD.tabId) sideBarWidth > 0 ? setSidebarWidth(0) : setSidebarWidth(SIDEBAR_DEFAULT_WIDTH)
+		globalStore.setTabId(tab)
 	}
 
 	const editorRef = React.createRef<EditorComponentRef>()
@@ -99,7 +100,6 @@ const DesktopLayout: React.FC = () => {
 		<>
 			<div className={styles.container}>
 				<ActivityBar
-					tabId={activityBarTabId}
 					saveEditorContent={saveEditorContent}
 					onDecryptContent={onDecryptContent}
 					onSaveEncrypt={onSaveEncrypt}
@@ -111,7 +111,7 @@ const DesktopLayout: React.FC = () => {
 				<div className={classNames(styles.flexibleWidth, 'disp-flex')}>
 					<SideBar width={`${sideBarWidth}px`} className={classNames(styles.sideBar)}>
 						<div className={classNames(styles.sideBarMenu)}>
-							{activityBarTabId === TAB_FILE_TREE && (
+							{GD.tabId === TAB_FILE_TREE && (
 								<FileTree
 									onOpenFile={onOpenFile}
 									onCloseMenu={(event) => {}}
@@ -122,7 +122,7 @@ const DesktopLayout: React.FC = () => {
 								/>
 							)}
 
-							{activityBarTabId === TAB_OUTLINE && <Outline />}
+							{GD.tabId === TAB_OUTLINE && <Outline />}
 						</div>
 
 						<Resizer onResize={handleResize} onOver={handleResizeOver} className={classNames(styles.sideBarResizer)} />

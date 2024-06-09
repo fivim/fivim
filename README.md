@@ -1,4 +1,4 @@
-# Enassi is your data encryption assistant.
+# Enassi
 
 [![stars](https://img.shields.io/github/stars/enassi?style=social)](https://github.com/enassi/enassi)
 [![followers](https://img.shields.io/github/followers/enassi?style=social)](https://github.com/enassi/enassi)
@@ -6,9 +6,11 @@
 [![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
 [![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
 
-[Engilsh document](https://enassi.github.io/enassi-docs/en/) / [简体中文文档](https://enassi.github.io/enassi-docs/zh-cn/)
+[Engilsh document](https://enassi.pages.dev/en/) / [简体中文文档](https://enassi.pages.dev/zh-cn/)
 
-[Github repo](https://github.com/enassi/enassi) / [Gitee repo](https://gitee.com/vhash/enassi/)
+[Github repo](https://github.com/enassi/enassi) / [Gitee repo](https://gitee.com/enassi/enassi/)
+
+Enassi is an encryption assistant for your data.
 
 ## Features
 
@@ -22,15 +24,15 @@
 
 ## Themes
 
-[All themes](https://enassi.github.io/enassi-docs/en/themes/)
+[All themes](https://enassi.pages.dev/en/themes/)
 
 Violet light
 
-![Violet light](https://enassi.github.io/enassi-docs/violet_light.png)
+![Violet light](https://enassi.pages.dev/violet_light.png)
 
 Violet dark
 
-![Violet dark](https://enassi.github.io/enassi-docs/violet_dark.png)
+![Violet dark](https://enassi.pages.dev/violet_dark.png)
 
 ## Donate
 
@@ -58,4 +60,4 @@ Tauri currently supports development and distribution on the following platforms
 
 ## Develop
 
-[Ddocument](https://enassi.github.io/enassi-docs/en/develop/build/)
+[Ddocument](https://enassi.pages.dev/en/develop/build/)

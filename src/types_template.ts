@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 
 import { AlertDialogProps } from '@/components/AlertDialog'
 import { MessageLineProps } from '@/components/MessageLine'
-import { TYPE_NONE } from '@/constants'
+import { TAB_FILE_TREE, TYPE_NONE } from '@/constants'
 import i18n from '@/i18n'
 import { Global, Setting, SettingOfStartUp } from '@/types'
 
@@ -102,6 +102,7 @@ export const tmplGlobal = (): Global => {
 		pathOfUserFilesDefult: '',
 		pathSeparator: '/',
 		runInTauri: false,
+		tabId: TAB_FILE_TREE,
 		titlebarText: '',
 		titlebarShowLockIcon: false,
 		textDirection: 'LTR',

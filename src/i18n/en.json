@@ -79,7 +79,7 @@
 	"Please input ___name___": "Please input {{name}}",
 	"Please open the file before saving it": "Please open the file before saving it",
 	"Please open the file first": "Please open the file first",
-	"Please set the user-files directory first": "Please set the user-files directory first",
+	"Please set the user_files directory first": "Please set the user_files directory first",
 	"Preview": "Preview",
 	"Preparation error": "Preparation error",
 	"Project ID": "Project ID",
@@ -114,6 +114,6 @@
 	"Unset": "Unset",
 	"Unsupported file types": "Unsupported file types",
 	"Version": "Version",
-	"user-files directory": "user-files directory",
+	"user_files directory": "user_files directory",
 	"Warning": "Warning"
 }

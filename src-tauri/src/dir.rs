@@ -39,7 +39,7 @@ fn get_current_root_dir() -> String {
     return "./".to_string();
 }
 
-// In debug mode, the user-files dir is "src-tauri", need to set it to the root dir of the project.
+// In debug mode, the user_files dir is "src-tauri", need to set it to the root dir of the project.
 #[cfg(debug_assertions)]
 fn get_current_root_dir() -> String {
     "../".to_string()
@@ -77,7 +77,7 @@ pub fn get_app_core_conf() -> AppCoreConf {
     document_dir.push(app_name());
     let home_dir = document_dir.to_string_lossy().to_string();
 
-    document_dir.push("user-files");
+    document_dir.push("user_files");
     let user_files_dir_default = document_dir.to_string_lossy().to_string();
 
     document_dir = get_document_dir();
