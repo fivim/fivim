@@ -6,11 +6,11 @@
 [![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
 [![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
 
+**Enassi** is an encryption assistant for your data.
+
 [Engilsh document](https://enassi.pages.dev/en/) / [简体中文文档](https://enassi.pages.dev/zh-cn/)
 
 [Github repo](https://github.com/enassi/enassi) / [Gitee repo](https://gitee.com/enassi/enassi/)
-
-Enassi is an encryption assistant for your data.
 
 ## Features
 
