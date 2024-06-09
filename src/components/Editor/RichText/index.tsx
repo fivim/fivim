@@ -2,24 +2,7 @@ import { Base64 } from 'js-base64'
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import {
-	KEY_CTRL,
-	backgroundColor,
-	bold,
-	exsied,
-	findAndReplace,
-	fontFamily,
-	fontSize,
-	headings,
-	image,
-	italic,
-	link,
-	sourceCode,
-	strikethrough,
-	table,
-	textColor,
-	underline,
-} from '@exsied/exsied'
+import { KEY_CTRL, plugins as eg, exsied } from '@exsied/exsied'
 import { PluginConf } from '@exsied/exsied/dist/plugins/source_code/base'
 import '@exsied/exsied/style.css'
 
@@ -186,7 +169,7 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 
 		useEffect(() => {
 			if (editorRef.current && id) {
-				const sourceCodeConf = sourceCode.conf as PluginConf
+				const sourceCodeConf = eg.sourceCode.conf as PluginConf
 				sourceCodeConf.renderData = (ele: HTMLElement) => {
 					const lang = ele.getAttribute('lang') || ''
 					const res = highlighCode(ele.innerHTML, lang)
@@ -200,29 +183,29 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 				exsied.init({
 					id: id,
 					plugins: [
-						bold,
-						italic,
-						underline,
-						strikethrough,
-						headings,
-						link,
-						image,
-						table,
-						fontSize,
-						fontFamily,
-						backgroundColor,
-						textColor,
-						findAndReplace,
-						sourceCode,
+						eg.bold,
+						eg.italic,
+						eg.underline,
+						eg.strikethrough,
+						eg.headings,
+						eg.link,
+						eg.image,
+						eg.table,
+						eg.fontSize,
+						eg.fontFamily,
+						eg.backgroundColor,
+						eg.textColor,
+						eg.findAndReplace,
+						eg.sourceCode,
 					],
 					enableToolbarBubble: true,
 					iAbideByExsiedLicenseAndDisableTheAboutPlugin: true,
 					hotkeys: [
-						{ keyStr: 'b', func: bold.commands[bold.name], modifierKeys: [KEY_CTRL] },
-						{ keyStr: 'i', func: italic.commands[italic.name], modifierKeys: [KEY_CTRL] },
+						{ keyStr: 'b', func: eg.bold.commands[eg.bold.name], modifierKeys: [KEY_CTRL] },
+						{ keyStr: 'i', func: eg.italic.commands[eg.italic.name], modifierKeys: [KEY_CTRL] },
 						{
 							keyStr: 'u',
-							func: underline.commands[underline.name],
+							func: eg.underline.commands[eg.underline.name],
 							modifierKeys: [KEY_CTRL],
 						},
 					],
