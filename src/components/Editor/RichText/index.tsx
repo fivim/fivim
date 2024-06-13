@@ -2,7 +2,7 @@ import { Base64 } from 'js-base64'
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { KEY_CTRL, plugins as eg, exsied } from '@exsied/exsied'
+import { KEY_CTRL, exsied, plugins } from '@exsied/exsied'
 import { PluginConf as fontSizePluginConf } from '@exsied/exsied/dist/plugins/font_size/base'
 import { PluginConf as aboutPluginConf } from '@exsied/exsied/dist/plugins/source_code/base'
 import '@exsied/exsied/style.css'
@@ -171,19 +171,19 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 		useEffect(() => {
 			if (editorRef.current && id) {
 				// sourceCode
-				const sourceCodeConf = eg.sourceCode.conf as aboutPluginConf
-				sourceCodeConf.renderData = (ele: HTMLElement) => {
+				const sourceCodeConf = plugins.sourceCode.conf as aboutPluginConf
+				sourceCodeConf.renderDataCb = (ele: HTMLElement) => {
 					const lang = ele.getAttribute('lang') || ''
 					const res = highlighCode(ele.innerHTML, lang)
 					return `<pre><code>${res}</code></pre>`
 				}
-				sourceCodeConf.editData = (ele: HTMLElement, sign: string) => {}
-				sourceCodeConf.randomChars = () => {
+				sourceCodeConf.editDataCb = (ele: HTMLElement, sign: string) => {}
+				sourceCodeConf.randomCharsCb = () => {
 					return uuidv4()
 				}
 
 				// fontSize
-				const fontSizeConf = eg.fontSize.conf as fontSizePluginConf
+				const fontSizeConf = plugins.fontSize.conf as fontSizePluginConf
 				const fontSizeArr = [
 					8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 42, 50, 58, 64, 72, 80, 90, 100, 120, 140, 180, 220, 280,
 				]
@@ -207,35 +207,37 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 				exsied.init({
 					id: id,
 					plugins: [
-						eg.bold,
-						eg.italic,
-						eg.underline,
-						eg.strikethrough,
-						eg.headings,
-						eg.link,
-						eg.image,
-						eg.table,
-						eg.horizonalRule,
-						eg.quote,
-						eg.lists,
-						eg.fontSize,
-						// eg.fontFamily,
-						eg.textAlign,
-						eg.indentAndOutdent,
-						eg.subscriptAndSuperscript,
-						eg.insertMenu,
-						eg.colors,
-						eg.findAndReplace,
-						eg.sourceCode,
+						plugins.redoAndUndo,
+						plugins.insertMenu,
+						plugins.bold,
+						plugins.italic,
+						plugins.underline,
+						plugins.strikethrough,
+						plugins.headings,
+						plugins.link,
+						plugins.image,
+						plugins.table,
+						plugins.horizonalRule,
+						plugins.quote,
+						plugins.lists,
+						plugins.fontSize,
+						// plugins.fontFamily,
+						plugins.textAlign,
+						plugins.indentAndOutdent,
+						plugins.subscriptAndSupscript,
+						plugins.colors,
+						plugins.findAndReplace,
+						plugins.sourceCode,
 					],
 					enableToolbarBubble: true,
+					locale: 'en',
 					iAbideByExsiedLicenseAndDisableTheAboutPlugin: true,
 					hotkeys: [
-						{ keyStr: 'b', func: eg.bold.commands[eg.bold.name], modifierKeys: [KEY_CTRL] },
-						{ keyStr: 'i', func: eg.italic.commands[eg.italic.name], modifierKeys: [KEY_CTRL] },
+						{ keyStr: 'b', func: plugins.bold.commands[plugins.bold.name], modifierKeys: [KEY_CTRL] },
+						{ keyStr: 'i', func: plugins.italic.commands[plugins.italic.name], modifierKeys: [KEY_CTRL] },
 						{
 							keyStr: 'u',
-							func: eg.underline.commands[eg.underline.name],
+							func: plugins.underline.commands[plugins.underline.name],
 							modifierKeys: [KEY_CTRL],
 						},
 					],
