@@ -1,4 +1,4 @@
-use enassi_rs_commands::encrypt_hash as rc;
+use fivim_rs_commands::encrypt_hash as rc;
 use log::error;
 
 #[tauri::command]

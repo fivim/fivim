@@ -1105,98 +1105,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4ef6b89e5b37196644d8796de5268852ff179b44e96276cf4290264843743bb7"
 
 [[package]]
-name = "enassi"
-version = "2.1.1"
-dependencies = [
- "base64 0.21.7",
- "chrono",
- "crc32fast",
- "custom_error",
- "dirs",
- "enassi-rs-commands",
- "enassi-rs-utils",
- "filetime",
- "fs_extra",
- "lazy_static",
- "log",
- "log4rs",
- "md5",
- "serde",
- "serde_json",
- "sha2",
- "sys-info",
- "tauri",
- "tauri-build",
- "time",
- "window-shadows",
-]
-
-[[package]]
-name = "enassi-rs-commands"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2367f93d0300febd3b31814d08db36c847c9d5e2356e2ecafb0d6239b07dd544"
-dependencies = [
- "anyhow",
- "base64 0.21.7",
- "chrono",
- "enassi-rs-encrypt",
- "enassi-rs-utils",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "enassi-rs-encrypt"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ee5647eabb2abe02eba026125022df6a1532dba41f9746c49f1d7040d693935"
-dependencies = [
- "aes",
- "aes-gcm",
- "anyhow",
- "base64 0.21.7",
- "cbc",
- "ccm",
- "chacha20poly1305",
- "enassi-rs-utils",
- "rand 0.8.5",
- "rand_core 0.6.4",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "enassi-rs-utils"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f451a7c0624181c4dd953857b06323b73b7bdc55900361211c60d7a6fbd9e9c"
-dependencies = [
- "anyhow",
- "base64 0.21.7",
- "chrono",
- "crc32fast",
- "filetime",
- "fs_extra",
- "lazy_static",
- "log",
- "md5",
- "openssl",
- "regex",
- "reqwest",
- "serde",
- "serde_json",
- "sha2",
- "simplelog",
- "sys-info",
- "time",
- "tokio",
- "toml 0.8.14",
- "walkdir",
- "zip",
-]
-
-[[package]]
 name = "encoding_rs"
 version = "0.8.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1310,6 +1218,98 @@ dependencies = [
  "libc",
  "redox_syscall 0.4.1",
  "windows-sys 0.52.0",
+]
+
+[[package]]
+name = "fivim"
+version = "2.1.1"
+dependencies = [
+ "base64 0.21.7",
+ "chrono",
+ "crc32fast",
+ "custom_error",
+ "dirs",
+ "filetime",
+ "fivim-rs-commands",
+ "fivim-rs-utils",
+ "fs_extra",
+ "lazy_static",
+ "log",
+ "log4rs",
+ "md5",
+ "serde",
+ "serde_json",
+ "sha2",
+ "sys-info",
+ "tauri",
+ "tauri-build",
+ "time",
+ "window-shadows",
+]
+
+[[package]]
+name = "fivim-rs-commands"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "25b0babdf7202898e19a1fa710b097a65372a580dc479a1589cada3563c8e31e"
+dependencies = [
+ "anyhow",
+ "base64 0.21.7",
+ "chrono",
+ "fivim-rs-encrypt",
+ "fivim-rs-utils",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "fivim-rs-encrypt"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2121a58bef7d891bc60a865c24bfb95118a71125fd78f39d275d8ce294c32cee"
+dependencies = [
+ "aes",
+ "aes-gcm",
+ "anyhow",
+ "base64 0.21.7",
+ "cbc",
+ "ccm",
+ "chacha20poly1305",
+ "fivim-rs-utils",
+ "rand 0.8.5",
+ "rand_core 0.6.4",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "fivim-rs-utils"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e6b05671942a416ca144c22f74a8796a6bf5d71137591a5e17288e72428bfdf"
+dependencies = [
+ "anyhow",
+ "base64 0.21.7",
+ "chrono",
+ "crc32fast",
+ "filetime",
+ "fs_extra",
+ "lazy_static",
+ "log",
+ "md5",
+ "openssl",
+ "regex",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "sha2",
+ "simplelog",
+ "sys-info",
+ "time",
+ "tokio",
+ "toml 0.8.14",
+ "walkdir",
+ "zip",
 ]
 
 [[package]]

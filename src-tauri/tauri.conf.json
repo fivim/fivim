@@ -7,7 +7,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "enassi",
+    "productName": "fivim",
     "version": "2.1.1"
   },
   "tauri": {
@@ -34,7 +34,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.enassi",
+      "identifier": "com.fivim",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -61,7 +61,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "enassi",
+        "title": "fivim",
         "height": 768,
         "width": 1024,
         "resizable": true,

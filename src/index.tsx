@@ -21,7 +21,7 @@ console.log(`
 ⠀⠀⠀⠀⠀⠀⠙⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠇⠁
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⠛⠻⠿⠻⠟⠻⠿⠋⠋⠈
 
-Welcome to enassi
+Welcome to fivim
 `)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
