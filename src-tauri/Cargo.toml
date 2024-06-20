@@ -34,6 +34,7 @@ time = "0.3"
 window-shadows = "0.2"
 fivim-rs-utils = "1.1"
 fivim-rs-commands = "1.1"
+
 dirs = "5.0"
 
 [features]

@@ -618,6 +618,7 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
+
   '@exsied/exsied@0.13.0':
     resolution: {integrity: sha512-jahvk0LquQiDVI54DRVy5WasNFg1erSN0YizyWad4voZy8YjCIpIVbGsT6sZg/b9Lnm0uSrMpHIMuyZy2IRVpw==}
 
