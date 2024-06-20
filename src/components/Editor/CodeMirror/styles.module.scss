@@ -1,27 +1,24 @@
 @import '@/styles/mixin.scss';
 
 .toolbar {
-	background-color: var(--enas-cmp-clr);
-	border-bottom: 1px solid var(--enas-border-clr);
+	@include flex-center;
+	background-color: var(--fvm-cmp-clr);
+	border-bottom: 1px solid var(--fvm-border-clr);
 	padding: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: var(--enas-editor-tool-bar-height);
-	> label {
-		margin-right: 15px;
-	}
+	height: var(--fvm-editor-tool-bar-height);
 
-	> button {
-		background-color: var(--enas-cmp-clr3);
-		padding: var(--enas-spacing-1) var(--enas-spacing-2);
-		margin: 0 var(--enas-spacing-1);
+	.actionBtn {
+		background-color: var(--fvm-cmp-clr3);
+		padding: var(--fvm-spacing-1);
+		margin: 0 var(--fvm-spacing-1);
+		border-radius: var(--fvm-spacing-2);
 	}
 }
 
 .colContainer {
 	.colPreview {
-		background-color: var(--enas-bg-clr);
+		background-color: var(--fvm-bg-clr);
+		color: var(--fvm-text-clr);
 		padding: 0.5rem;
 
 		@include headings;
@@ -48,11 +45,11 @@
 
 			th,
 			td {
-				border: 1px solid var(--enas-border-clr2);
+				border: 1px solid var(--fvm-border-clr2);
 			}
 
 			th {
-				background-color: var(--enas-cmp-clr2);
+				background-color: var(--fvm-cmp-clr2);
 			}
 		}
 	}
@@ -64,7 +61,7 @@
 	.col {
 		flex: 1; /* When there are two child elements, divide the width equally. */
 		width: 50%;
-		height: calc(100vh - var(--enas-title-bar-height) - var(--enas-editor-tool-bar-height));
+		height: calc(100vh - var(--fvm-title-bar-height) - var(--fvm-editor-tool-bar-height));
 		overflow: scroll;
 	}
 

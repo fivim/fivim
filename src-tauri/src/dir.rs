@@ -7,18 +7,14 @@ use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 use tauri::utils::assets::EmbeddedAssets;
 
-use crate::conf;
+// use crate::conf;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AppCoreConf {
     // #[serde(rename = "appName")]
     // app_name: String,
-    #[serde(rename = "homeDir")]
-    home_dir: String,
-    #[serde(rename = "userFilesDirDefult")]
-    user_files_dir_default: String,
-    #[serde(rename = "logFilePath")]
-    log_file_path: String,
+    #[serde(rename = "dataRootDir")]
+    data_root_dir: String,
     #[serde(rename = "pathSeparator")]
     path_separator: String,
     // repo: String,
@@ -75,22 +71,11 @@ pub fn get_app_core_conf() -> AppCoreConf {
     let mut document_dir = get_document_dir();
 
     document_dir.push(app_name());
-    let home_dir = document_dir.to_string_lossy().to_string();
-
-    document_dir.push("user_files");
-    let user_files_dir_default = document_dir.to_string_lossy().to_string();
-
-    document_dir = get_document_dir();
-    document_dir.push(app_name());
-    document_dir.push("logDir");
-    document_dir.push(format!("{}{}", app_name(), conf::LOG_FILE_EXT));
-    let log_dir = document_dir.to_string_lossy().to_string();
+    let data_root_dir = document_dir.to_string_lossy().to_string();
 
     AppCoreConf {
         // app_name: app_name(),
-        home_dir,
-        log_file_path: log_dir,
-        user_files_dir_default,
+        data_root_dir,
         path_separator: std::path::MAIN_SEPARATOR_STR.to_owned(),
         // repo: x_conf::PROJECT_REPO.to_string(),
         version: version(),

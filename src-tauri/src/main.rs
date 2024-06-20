@@ -56,6 +56,8 @@ fn main() {
             commands::fs::walk_dir_items_get_path,
             commands::fs::zip_dir,
             commands::fs::unzip_file,
+            commands::fs::search_document_dir,
+            commands::fs::search_document_file,
             // net
             commands::net::download_file,
             commands::net::http_request,

@@ -2,26 +2,26 @@
 @import '@radix-ui/colors/grass-dark.css';
 
 :root {
-	--enas-bg-color_grass: var(--grass-1);
-	--enas-text-color_grass: var(--grass-11);
-	--enas-highlight-color_grass: var(--grass-9);
+	--fvm-bg-color_grass: var(--grass-1);
+	--fvm-text-color_grass: var(--grass-11);
+	--fvm-highlight-color_grass: var(--grass-9);
 }
 
 :root[theme='grass'] {
-	--enas-bg-clr: var(--grass-1);
-	--enas-bg-clr2: var(--grass-2);
+	--fvm-bg-clr: var(--grass-1);
+	--fvm-bg-clr2: var(--grass-2);
 
-	--enas-cmp-clr: var(--grass-3);
-	--enas-cmp-clr2: var(--grass-4);
-	--enas-cmp-clr3: var(--grass-5);
+	--fvm-cmp-clr: var(--grass-3);
+	--fvm-cmp-clr2: var(--grass-4);
+	--fvm-cmp-clr3: var(--grass-5);
 
-	--enas-border-clr: var(--grass-6);
-	--enas-border-clr2: var(--grass-7);
-	--enas-border-clr3: var(--grass-8);
+	--fvm-border-clr: var(--grass-6);
+	--fvm-border-clr2: var(--grass-7);
+	--fvm-border-clr3: var(--grass-8);
 
-	--enas-solid-clr: var(--grass-9);
-	--enas-solid-clr2: var(--grass-10);
+	--fvm-solid-clr: var(--grass-9);
+	--fvm-solid-clr2: var(--grass-10);
 
-	--enas-text-clr: var(--grass-11);
-	--enas-text-clr2: var(--grass-12);
+	--fvm-text-clr: var(--grass-11);
+	--fvm-text-clr2: var(--grass-12);
 }

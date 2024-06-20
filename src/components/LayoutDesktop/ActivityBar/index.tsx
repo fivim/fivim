@@ -12,39 +12,40 @@ import {
 	LogoutOutlined,
 	PartitionOutlined,
 	SaveOutlined,
+	SearchOutlined,
 	SettingOutlined,
 	UndoOutlined,
 	UnlockOutlined,
 } from '@ant-design/icons'
 
 import { Settings } from '@/components/Settings'
-import { TAB_FILE_TREE, TAB_OUTLINE, TAB_SAVE, TYPE_MD, TYPE_NONE, TYPE_SOURCE_CODE } from '@/constants'
+import { TAB_FILE_TREE, TAB_OUTLINE, TAB_SAVE, TAB_SEARCH, TYPE_MD, TYPE_NONE, TYPE_SOURCE_CODE } from '@/constants'
 import i18n from '@/i18n/index'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
+import { showOutline } from '@/stores_utils'
 import { syncAdapter, syncIsEnabled } from '@/synchronizer'
-import { TabId } from '@/types'
+import { Func_Any_Void, Func_Empty_Void, TabId } from '@/types'
 import { isMobileScreen } from '@/utils/media_query'
-import { showOutline } from '@/utils/utils'
 
 import styles from './styles.module.scss'
 
 const t = i18n.t
 type Props = {
-	saveEditorContent: (event: any) => void
-	onDecryptContent: (event: any) => void
-	onSaveEncrypt: (event: any) => void
-	onSaveUnencrypt: (event: any) => void
-	onRestoreContent: (event: any) => void
-	onSyncFinished: () => void
+	saveEditorContent: Func_Any_Void
+	onDecryptContent: Func_Any_Void
+	onSaveEncrypt: Func_Any_Void
+	onSaveUnencrypt: Func_Any_Void
+	onRestoreContent: Func_Any_Void
+	onSyncFinished: Func_Empty_Void
 	toggleTab: (tab: TabId) => void
 	className?: string
 }
 
 const iconStyle = {
-	padding: `var(--enas-desktop-activity-bar-padding)`,
-	fontSize: `var(--enas-desktop-activity-bar-icon-size)`,
+	padding: `var(--fvm-desktop-activity-bar-padding)`,
+	fontSize: `var(--fvm-desktop-activity-bar-icon-size)`,
 }
 
 const ActivityBar = forwardRef<HTMLDivElement, Props>(
@@ -133,6 +134,17 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 							</div>
 						</Tooltip>
 					)}
+
+					<Tooltip placement="right" title={t('Search')}>
+						<div
+							className={classNames(styles.Item, GD.tabId === TAB_SEARCH ? styles.Active : '')}
+							onClick={() => {
+								toggleTab(TAB_SEARCH)
+							}}
+						>
+							<SearchOutlined style={iconStyle} />
+						</div>
+					</Tooltip>
 
 					<Tooltip placement="right" title={t('Save')}>
 						<div

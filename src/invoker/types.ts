@@ -32,3 +32,8 @@ export type ProgressStatus = {
 	percentage: number
 	step_name: string
 }
+
+export type SearchFileRes = {
+	path: string
+	matches: string[]
+}

@@ -1,4 +1,10 @@
-import { CONFIG_FILE_NAME, CONFIG_START_UP_FILE_NAME } from '@/constants'
+import {
+	CONFIG_FILE_NAME,
+	CONFIG_START_UP_FILE_NAME,
+	SUB_DIR_CACHED_XRTM,
+	SUB_DIR_CONF,
+	SUB_DIR_USER_FILES,
+} from '@/constants'
 import i18n from '@/i18n'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
@@ -14,7 +20,6 @@ const t = i18n.t
 
 export const initCoreConf = async () => {
 	const af = await invoker.getAppCoreConf()
-
 	if (af === null) {
 		invoker.showMessage(
 			t('Error'),
@@ -24,37 +29,42 @@ export const initCoreConf = async () => {
 		)
 	}
 
-	let homeDir = af.homeDir
-	if (!homeDir.endsWith(af.pathSeparator)) homeDir = homeDir + af.pathSeparator
+	let dataRootDir = af.dataRootDir
+	if (!dataRootDir.endsWith(af.pathSeparator)) dataRootDir = dataRootDir + af.pathSeparator
 
-	let userFilesDirDefult = af.userFilesDirDefult
-	if (!userFilesDirDefult.endsWith(af.pathSeparator)) userFilesDirDefult = userFilesDirDefult + af.pathSeparator
+	const separator = af.pathSeparator
 
-	globalStore.setPathOfConfDir(`${af.homeDir}${af.pathSeparator}conf${af.pathSeparator}`)
-	globalStore.setPathOfHome(homeDir)
-	globalStore.setPathOfLogFile(af.logFilePath)
-	globalStore.setPathOfUserFilesDefult(af.userFilesDirDefult)
-	globalStore.setPathSeparator(af.pathSeparator)
+	const subDataDir = (subDir: string) => {
+		return `${dataRootDir}${separator}${subDir}${separator}`
+	}
+
+	globalStore.setPaths({
+		confDir: subDataDir(SUB_DIR_CONF),
+		cachedXrtm: subDataDir(SUB_DIR_CACHED_XRTM),
+		dataRootDir: dataRootDir,
+		userFiles: subDataDir(SUB_DIR_USER_FILES),
+		separator: separator,
+	})
 
 	return true
 }
 
 export const getDataDirs = async () => {
-	const separator = globalStore.data.pathSeparator
-	let pathOfConfDir = globalStore.data.pathOfConfDir
-	if (!pathOfConfDir.endsWith(separator)) pathOfConfDir = pathOfConfDir + separator
+	const separator = globalStore.data.paths.separator
+	let pathConfDir = globalStore.data.paths.confDir
+	if (!pathConfDir.endsWith(separator)) pathConfDir = pathConfDir + separator
 
 	return {
-		pathOfConfDir: pathOfConfDir,
-		pathOfConfFile: `${pathOfConfDir}${CONFIG_FILE_NAME}`,
-		pathOfConfigStartUp: `${pathOfConfDir}${CONFIG_START_UP_FILE_NAME}`,
+		pathConfDir: pathConfDir,
+		pathConfFile: `${pathConfDir}${CONFIG_FILE_NAME}`,
+		pathConfigStartUp: `${pathConfDir}${CONFIG_START_UP_FILE_NAME}`,
 	}
 }
 
 export const initStartUpConfFile = async () => {
 	const p = await getDataDirs()
-	const str = await invoker.readFileToString(p.pathOfConfigStartUp)
-
+	const str = await invoker.readFileToString(p.pathConfigStartUp)
+	if (str === null) return false
 	if (str === '') return false
 
 	const conf = JSON.parse(str as string) as SettingOfStartUp
@@ -76,7 +86,7 @@ export const initStartUpConfFile = async () => {
 
 export const initConfFile = async (pwdVec: number[]) => {
 	const p = await getDataDirs()
-	const data = await invoker.decryptFileToString(genPwdArr(pwdVec), p.pathOfConfFile)
+	const data = await invoker.decryptFileToString(genPwdArr(pwdVec), p.pathConfFile)
 
 	if (data === '') {
 		return false
@@ -103,30 +113,34 @@ export const saveConfToFile = async () => {
 	const SD = settingStore.getData()
 	const p = await getDataDirs()
 
-	const wr = await invoker.encryptStringToFile(passwordStore.getData(), p.pathOfConfFile, JSON.stringify(SD))
-
-	const content: SettingOfStartUp = tmplSettinggStartup()
-	content.forceDarkMode = SD.forceDarkMode
-	content.locale = SD.locale
-	content.theme = SD.theme
-	invoker.writeStringIntoFile(p.pathOfConfigStartUp, JSON.stringify(content))
+	const wr = await invoker.encryptStringToFile(passwordStore.getData(), p.pathConfFile, JSON.stringify(SD))
+	if (wr !== null) {
+		const content: SettingOfStartUp = tmplSettinggStartup()
+		content.forceDarkMode = SD.forceDarkMode
+		content.locale = SD.locale
+		content.theme = SD.theme
+		invoker.writeStringIntoFile(p.pathConfigStartUp, JSON.stringify(content))
+	}
 }
 
 export const deleteConfFile = async () => {
 	const p = await getDataDirs()
-	await invoker.deleteFile(p.pathOfConfFile)
-	await invoker.deleteFile(p.pathOfConfigStartUp)
+	await invoker.deleteFile(p.pathConfFile)
+	await invoker.deleteFile(p.pathConfigStartUp)
 
 	return true
 }
 
 export const checkConfFileExist = async () => {
 	const p = await getDataDirs()
-	const exist = await invoker.existFile(p.pathOfConfFile)
+	const exist = await invoker.existFile(p.pathConfFile)
 
-	globalStore.setExistConfigFile(exist)
-
-	return true
+	if (exist === null) {
+		return false
+	} else {
+		globalStore.setExistConfigFile(exist)
+		return true
+	}
 }
 
 export const tryToInitConfFileByPwd = async (pwdVec: number[]) => {

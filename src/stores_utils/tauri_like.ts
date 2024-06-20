@@ -2,7 +2,7 @@ import { join as pathJoinT } from '@tauri-apps/api/path'
 
 import globalStore from '@/stores/globalStore'
 
-import { removeEnding } from './string'
+import { removeEnding } from '../utils/string'
 
 export const pathJoin = (...paths: string[]) => {
 	if (globalStore.data.runInTauri) {
@@ -11,8 +11,8 @@ export const pathJoin = (...paths: string[]) => {
 		const arr = []
 		for (let index = 0; index < paths.length; index++) {
 			const item = paths[index]
-			arr.push(removeEnding(item, globalStore.data.pathSeparator))
+			arr.push(removeEnding(item, globalStore.data.paths.separator))
 		}
-		return Promise.resolve(arr.join(globalStore.data.pathSeparator))
+		return Promise.resolve(arr.join(globalStore.data.paths.separator))
 	}
 }

@@ -1,11 +1,13 @@
 import classNames from 'classnames'
 import { useEffect, useRef, useState } from 'react'
 
+import { Func_Empty_Void } from '@/types'
+
 import styles from './styles.module.scss'
 
 type ResizerProps = {
 	onResize: (diffX: number) => void
-	onOver: () => void
+	onOver: Func_Empty_Void
 	className?: string
 }
 

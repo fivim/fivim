@@ -10,6 +10,9 @@ import { SmileOutlined } from '@ant-design/icons'
 import { ImageViewer } from '@/components/Editor/ImageViewer'
 import { PdfViewer } from '@/components/Editor/PdfViewer'
 import {
+	EXT_MARKDOWN,
+	EXT_PDF,
+	EXT_RICH_TEXT,
 	LOCAL_FILE_LINK_PREFIX,
 	TYPE_AUDIO,
 	TYPE_IMAGE,
@@ -19,36 +22,37 @@ import {
 	TYPE_SOURCE_CODE,
 	TYPE_XRTM,
 } from '@/constants'
+import { EXT_AUDIO, EXT_IMAGE, EXT_SOURCE_CODE } from '@/constants'
 import { invoker } from '@/invoker'
 import { WriteFileRes } from '@/invoker/types'
 import passwordStore from '@/stores/passwordStore'
 import settingStore from '@/stores/settingStore'
+import { pathToRelPath } from '@/stores_utils/path'
+import { pathJoin } from '@/stores_utils/tauri_like'
 import { syncAdapter, syncIsEnabled } from '@/synchronizer'
-import { pathToRelPath } from '@/synchronizer/sync_base'
-import { EditorType } from '@/types'
+import { EditorType, Func_Empty_Void, Func_String_Void } from '@/types'
 import { formatHtml } from '@/utils/html'
 import { osThemeIsDark } from '@/utils/media_query'
 import { getDirByFilePath, getFileName, getFileNameExt, removeEnding, stringToUint8Array } from '@/utils/string'
-import { pathJoin } from '@/utils/tauri_like'
 
 import CmEditor from './CodeMirror'
 import { RtEditor, EditorComponentRef as rtComponentRef } from './RichText'
 import { externalFunctions as externalFunctionsJodImg } from './RichText/base'
-import { AUDIO_EXT_ARR, IMAGE_EXT_ARR, SOURCE_CODE_EXT_ARR, WRONG_IMAGE_URL } from './constants'
+import { WRONG_IMAGE_URL } from './constants'
 
 export type EditorComponentRef = {
-	saveEditorContent: () => void
-	saveEditorContentNoCheck: () => void
+	saveEditorContent: Func_Empty_Void
+	saveEditorContentNoCheck: Func_Empty_Void
 	decryptContentText: () => Promise<void>
 	saveEncrypt: () => Promise<boolean>
-	saveUnencrypt: () => void
-	restoreContentText: () => void
-	setInitData: (filePath: string) => Promise<{ filePath: string; fileName: string }>
+	saveUnencrypt: Func_Empty_Void
+	restoreContentText: Func_Empty_Void
+	setInitData: (filePath: string, callback?: Func_Empty_Void) => Promise<{ filePath: string; fileName: string }>
 }
 
 interface Props {
 	onChangeEditorType: (event: EditorType) => void
-	onOpenFile: (event: any) => void
+	onOpenFile: Func_String_Void
 }
 
 const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
@@ -90,11 +94,13 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 	}
 
 	const decryptContentText = async () => {
-		const ddd = await invoker.decryptStringArray(passwordStore.getData(), contentCurrent.current.split('\n'))
-		const content = ddd.join('\n')
-		textIsEncrypted.current = true
+		const ccc = await invoker.decryptStringArray(passwordStore.getData(), contentCurrent.current.split('\n'))
+		if (ccc !== null) {
+			const content = ccc.join('\n')
+			textIsEncrypted.current = true
 
-		setText(content)
+			setText(content)
+		}
 	}
 
 	const saveEncrypt = async () => {
@@ -124,13 +130,14 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		}
 
 		if (fileIsEncrypted.current) {
-			content = await invoker.encryptLocalFileContentBase64(
+			const ccc = await invoker.encryptLocalFileContentBase64(
 				passwordStore.getData(),
 				Array.from(stringToUint8Array(content)),
 			)
+			if (ccc !== null) content = ccc
 		} else if (textIsEncrypted.current) {
-			const ddd = await invoker.encryptStringArray(passwordStore.getData(), content.split('\n'))
-			content = ddd.join('\n')
+			const ccc = await invoker.encryptStringArray(passwordStore.getData(), content.split('\n'))
+			if (ccc !== null) content = ccc.join('\n')
 		}
 
 		if (syncIsEnabled()) invoker.alert(t('Saving remote file'))
@@ -145,9 +152,11 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 				errMsg: '',
 			}
 			if (fileIsEncrypted.current) {
-				rw = await invoker.writeBase64IntoFile(fp, content)
+				const ccc = await invoker.writeBase64IntoFile(fp, content)
+				if (ccc != null) rw = ccc
 			} else {
-				rw = await invoker.writeStringIntoFile(fp, content)
+				const ccc = await invoker.writeStringIntoFile(fp, content)
+				if (ccc != null) rw = ccc
 			}
 			if (rw.success) {
 				invoker.success(t('Save successful'))
@@ -221,10 +230,14 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		}
 		const resPath = await pathJoin(dir, _path)
 		const fileExt = getFileNameExt(resPath).toLowerCase()
-		const content =
-			fileExt === SD.encryptedFileExt
-				? await invoker.decryptLocalFileBase64(passwordStore.getData(), resPath)
-				: await invoker.readFileToBase64String(resPath)
+		let content = ''
+		if (fileExt === SD.encryptedFileExt) {
+			const ccc = await invoker.decryptLocalFileBase64(passwordStore.getData(), resPath)
+			content = ccc === null ? '' : ccc
+		} else {
+			const ccc = await invoker.readFileToBase64String(resPath)
+			content = ccc === null ? '' : ccc
+		}
 
 		if (content === '') {
 			return WRONG_IMAGE_URL
@@ -236,30 +249,30 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 	externalFunctionsJodImg.loadImgBase64 = loadImgBase64
 	externalFunctionsJodImg.editorOpenFile = editorOpenFile
 
-	const initEditorType = (_fileExt: string) => {
-		if (_fileExt === 'md') {
+	const initEditorType = (_fileExt: string, callback?: Func_Empty_Void) => {
+		if (EXT_MARKDOWN.indexOf(_fileExt) > -1) {
 			setEditorType(TYPE_MD)
-			if (editorType === TYPE_MD) initEditorContent()
+			if (editorType === TYPE_MD) initEditorContent(callback)
 			props.onChangeEditorType(TYPE_MD)
-		} else if (_fileExt === 'xrtm') {
+		} else if (EXT_RICH_TEXT.indexOf(_fileExt) > -1) {
 			setEditorType(TYPE_XRTM)
-			if (editorType === TYPE_XRTM) initEditorContent()
+			if (editorType === TYPE_XRTM) initEditorContent(callback)
 			props.onChangeEditorType(TYPE_XRTM)
-		} else if (SOURCE_CODE_EXT_ARR.indexOf(_fileExt) > -1) {
+		} else if (EXT_SOURCE_CODE.indexOf(_fileExt) > -1) {
 			setEditorType(TYPE_SOURCE_CODE)
-			if (editorType === TYPE_SOURCE_CODE) initEditorContent()
+			if (editorType === TYPE_SOURCE_CODE) initEditorContent(callback)
 			props.onChangeEditorType(TYPE_SOURCE_CODE)
-		} else if (AUDIO_EXT_ARR.indexOf(_fileExt) > -1) {
+		} else if (EXT_AUDIO.indexOf(_fileExt) > -1) {
 			setEditorType(TYPE_AUDIO)
-			if (editorType === TYPE_AUDIO) initEditorContent()
+			if (editorType === TYPE_AUDIO) initEditorContent(callback)
 			props.onChangeEditorType(TYPE_AUDIO)
-		} else if (IMAGE_EXT_ARR.indexOf(_fileExt) > -1) {
+		} else if (EXT_IMAGE.indexOf(_fileExt) > -1) {
 			setEditorType(TYPE_IMAGE)
-			if (editorType === TYPE_IMAGE) initEditorContent()
+			if (editorType === TYPE_IMAGE) initEditorContent(callback)
 			props.onChangeEditorType(TYPE_IMAGE)
-		} else if (_fileExt === 'pdf') {
+		} else if (EXT_PDF.indexOf(_fileExt)) {
 			setEditorType(TYPE_PDF)
-			if (editorType === TYPE_PDF) initEditorContent()
+			if (editorType === TYPE_PDF) initEditorContent(callback)
 			props.onChangeEditorType(TYPE_PDF)
 		} else {
 			props.onChangeEditorType(TYPE_NONE)
@@ -268,16 +281,16 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		}
 	}
 
-	const initEditorContent = async () => {
+	const initEditorContent = async (callback?: Func_Empty_Void) => {
+		// Text type file
 		if ([TYPE_MD, TYPE_XRTM, TYPE_SOURCE_CODE].indexOf(editorType) > -1) {
-			// Text type file
 			let _content = ''
 			if (fileIsEncrypted.current) {
 				const b64 = await invoker.decryptLocalFileBase64(passwordStore.getData(), filePath.current)
-
-				_content = Base64.decode(b64)
+				if (b64 != null) _content = Base64.decode(b64)
 			} else {
-				_content = await invoker.readFileToString(filePath.current)
+				const rf = await invoker.readFileToString(filePath.current)
+				if (rf !== null) _content = rf
 			}
 			if (_content === null) {
 				console.info('File content is null')
@@ -285,13 +298,13 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 			}
 
 			contentOrigin.current = _content
-			if (editorType === TYPE_MD) {
-				setText(_content)
-			} else {
-				setText(_content)
-			}
-		} else if ([TYPE_PDF, TYPE_AUDIO, TYPE_IMAGE].indexOf(editorType) > -1) {
-			// Binary type file
+			setText(_content)
+
+			if (callback) callback()
+		}
+
+		// Binary type file
+		else if ([TYPE_PDF, TYPE_AUDIO, TYPE_IMAGE].indexOf(editorType) > -1) {
 			let content = fileIsEncrypted.current
 				? await invoker.decryptLocalFileBase64(passwordStore.getData(), filePath.current)
 				: await invoker.readFileToBase64String(filePath.current)
@@ -311,7 +324,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		}
 	}
 
-	const setInitData = async (_filePath: string) => {
+	const setInitData = async (_filePath: string, callback?: Func_Empty_Void) => {
 		fileIsEncrypted.current = false
 		textIsEncrypted.current = false
 
@@ -330,7 +343,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		setFileExt(_fileExt)
 
 		currentFilePath.current = _filePath
-		initEditorType(_fileExt)
+		initEditorType(_fileExt, callback)
 
 		return { filePath: _filePath, fileName: fileNameInner }
 	}

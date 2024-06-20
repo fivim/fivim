@@ -1,57 +1,57 @@
 @import '_variables.scss';
 
 :root {
-	--enas-base-font-size: 14px;
-	--enas-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+	--fvm-base-font-size: 14px;
+	--fvm-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
 		'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-	--enas-editor-font-family: var(--enas-font-family); // Font family in editor
+	--fvm-editor-font-family: var(--fvm-font-family); // Font family in editor
 
-	--enas-title-bar-height: 36px;
-	--enas-desktop-activity-bar-width: 60px;
-	--enas-desktop-activity-bar-padding: 10px;
-	--enas-desktop-activity-bar-icon-size: 20px;
-	--enas-desktop-rezizer-width: 2px;
-	--enas-editor-tool-bar-height: 30px;
+	--fvm-title-bar-height: 36px;
+	--fvm-desktop-activity-bar-width: 60px;
+	--fvm-desktop-activity-bar-padding: 10px;
+	--fvm-desktop-activity-bar-icon-size: 20px;
+	--fvm-desktop-rezizer-width: 2px;
+	--fvm-editor-tool-bar-height: 30px;
 
-	--enas-z-index-title-bar-progress-bar: 2;
-	--enas-z-index-title-bar-content: 3;
-	--enas-z-index-title-bar_actions: 4;
-	--enas-z-index-loading: 10;
+	--fvm-z-index-title-bar-progress-bar: 2;
+	--fvm-z-index-title-bar-content: 3;
+	--fvm-z-index-title-bar_actions: 4;
+	--fvm-z-index-loading: 10;
 
-	--enas-scrollbar-width: 5px;
-	--enas-scrollbar-height: 5px;
+	--fvm-scrollbar-width: 5px;
+	--fvm-scrollbar-height: 5px;
 
-	--enas-spacing-1: #{map-get($sizes, 1)};
-	--enas-spacing-2: #{map-get($sizes, 2)};
+	--fvm-spacing-1: #{map-get($sizes, 1)};
+	--fvm-spacing-2: #{map-get($sizes, 2)};
 
 	// Status color
-	--enas-danger-clr: rgb(243, 102, 102);
-	--enas-info-clr: rgb(142, 176, 197);
-	--enas-primary-clr: rgb(64, 158, 255);
-	--enas-success-clr: rgb(98, 183, 56);
-	--enas-warning-clr: rgb(230, 162, 60);
+	--fvm-danger-clr: rgb(243, 102, 102);
+	--fvm-info-clr: rgb(142, 176, 197);
+	--fvm-primary-clr: rgb(64, 158, 255);
+	--fvm-success-clr: rgb(98, 183, 56);
+	--fvm-warning-clr: rgb(230, 162, 60);
 
 	// Progress color
-	--enas-progress-clr-start: rgb(128, 0, 255);
-	--enas-progress-clr-middle: rgb(39, 158, 255);
-	--enas-progress-clr-end: rgb(0, 178, 0);
+	--fvm-progress-clr-start: rgb(128, 0, 255);
+	--fvm-progress-clr-middle: rgb(39, 158, 255);
+	--fvm-progress-clr-end: rgb(0, 178, 0);
 
 	// The default color of text
-	--enas-default-text-clr: var(--enas-default-text-clr-light);
-	--enas-default-text-clr-light: #333; // Light mode
-	--enas-default-text-clr-dark: #999; // Dark mode
+	--fvm-default-text-clr: var(--fvm-default-text-clr-light);
+	--fvm-default-text-clr-light: #333; // Light mode
+	--fvm-default-text-clr-dark: #999; // Dark mode
 
 	// Other color
-	--enas-highlight-clr: var(--enas-solid-clr);
-	--enas-scrollbar-thumb-clr: var(--enas-border-clr);
+	--fvm-highlight-clr: var(--fvm-solid-clr);
+	--fvm-scrollbar-thumb-clr: var(--fvm-border-clr);
 }
 
 .light:root {
-	--enas-default-text-clr: var(--enas-default-text-clr-light);
+	--fvm-default-text-clr: var(--fvm-default-text-clr-light);
 }
 
 .dark:root {
-	--enas-default-text-clr: var(--enas-default-text-clr-dark);
+	--fvm-default-text-clr: var(--fvm-default-text-clr-dark);
 }
 
 * {
@@ -60,8 +60,8 @@
 
 html {
 	overflow: hidden;
-	font-size: var(--enas-base-font-size);
-	font-family: var(--enas-font-family);
+	font-size: var(--fvm-base-font-size);
+	font-family: var(--fvm-font-family);
 	-moz-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-font-smoothing: antialiased;
@@ -77,47 +77,47 @@ body {
 	height: 100%;
 	margin: 0 !important;
 	padding: 0 !important;
-	color: var(--enas-default-text-clr) !important;
-	background-color: var(--enas-bg-clr) !important;
+	color: var(--fvm-default-text-clr) !important;
+	background-color: var(--fvm-bg-clr) !important;
 }
 
 .background-color {
-	color: var(--enas-bg-clr) !important;
+	color: var(--fvm-bg-clr) !important;
 }
 
-.background2-color {
-	background-color: var(--enas-bg-clr2) !important;
+.background-color2 {
+	background-color: var(--fvm-bg-clr2) !important;
 }
 
 .text-color {
-	color: var(--enas-text-clr) !important;
+	color: var(--fvm-text-clr) !important;
 }
 
 .text-color2 {
-	color: var(--enas-text-clr2) !important;
+	color: var(--fvm-text-clr2) !important;
 }
 
 .highlight-color {
-	color: var(--enas-solid-clr) !important;
+	color: var(--fvm-solid-clr) !important;
 }
 
 .highlight-color2 {
-	color: var(--enas-solid-clr2) !important;
+	color: var(--fvm-solid-clr2) !important;
 }
 
 .danger-color {
-	color: var(--enas-danger-clr) !important;
+	color: var(--fvm-danger-clr) !important;
 }
 
 // scrollbar
 ::-webkit-scrollbar {
-	width: var(--enas-scrollbar-width);
-	height: var(--enas-scrollbar-height);
+	width: var(--fvm-scrollbar-width);
+	height: var(--fvm-scrollbar-height);
 }
 
 ::-webkit-scrollbar-thumb {
 	-webkit-border-radius: 5px;
-	background-color: var(--enas-scrollbar-thumb-clr);
+	background-color: var(--fvm-scrollbar-thumb-clr);
 }
 
 ::-webkit-scrollbar-corner {
@@ -125,10 +125,10 @@ body {
 }
 
 // custom list
-.enas-list {
+.fvm-list {
 	.group-title {
 		font-weight: 700;
-		color: var(--enas-solid-clr2);
+		color: var(--fvm-solid-clr2);
 		padding: 0.5rem;
 	}
 

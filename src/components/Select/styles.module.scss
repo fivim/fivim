@@ -6,31 +6,31 @@ Like mdxeditor_editor
 @import '@/styles/mixin.scss';
 
 .SelectContainer {
-	background-color: var(--enas-cmp-clr);
-	color: var(--enas-text-clr);
-	border: 1px solid var(--enas-text-clr);
+	background-color: var(--fvm-cmp-clr);
+	color: var(--fvm-text-clr);
+	border: 1px solid var(--fvm-text-clr);
 	z-index: 1;
-	border-bottom-left-radius: var(--enas-spacing-1);
-	border-bottom-right-radius: var(--enas-spacing-1);
+	border-bottom-left-radius: var(--fvm-spacing-1);
+	border-bottom-right-radius: var(--fvm-spacing-1);
 }
 
 .SelectItem {
-	padding: var(--enas-spacing-1) var(--enas-spacing-2);
+	padding: var(--fvm-spacing-1) var(--fvm-spacing-2);
 	cursor: pointer;
 
 	&[data-state='checked'] {
-		background-color: var(--enas-solid-clr);
+		background-color: var(--fvm-solid-clr);
 	}
 
 	&[data-highlighted] {
-		background-color: var(--enas-cmp-clr3);
-		color: var(--enas-solid-clr2);
+		background-color: var(--fvm-cmp-clr3);
+		color: var(--fvm-solid-clr2);
 		font-weight: 700;
 	}
 
 	&:last-child {
-		border-bottom-left-radius: var(--enas-spacing-1);
-		border-bottom-right-radius: var(--enas-spacing-1);
+		border-bottom-left-radius: var(--fvm-spacing-1);
+		border-bottom-right-radius: var(--fvm-spacing-1);
 	}
 }
 
@@ -44,14 +44,14 @@ Like mdxeditor_editor
 	border: 0;
 	display: flex;
 	align-items: center;
-	background-color: var(--enas-cmp-clr3);
-	color: var(--enas-solid-clr2);
+	background-color: var(--fvm-cmp-clr3);
+	color: var(--fvm-text-clr);
 	height: 1.5rem;
-	padding: var(--enas-spacing-1) var(--enas-spacing-2);
-	border-radius: var(--enas-spacing-2);
+	padding: var(--fvm-spacing-1) var(--fvm-spacing-2);
+	border-radius: var(--fvm-spacing-2);
 	white-space: nowrap;
 	flex-wrap: nowrap;
-	margin: 0 var(--enas-spacing-1);
+	margin: 0 var(--fvm-spacing-1);
 
 	&[data-state='open'] {
 		filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.2));
@@ -66,6 +66,6 @@ Like mdxeditor_editor
 
 .SelectSeparator {
 	height: 1px;
-	background-color: var(--enas-solid-clr);
+	background-color: var(--fvm-solid-clr);
 	margin: 5px;
 }

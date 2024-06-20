@@ -10,6 +10,7 @@ import { saveConfToFile } from '@/initialize'
 import settingStore from '@/stores/settingStore'
 import { SYNC_MODE_OPTIONS, TYPE_GITEE_API_V5, TYPE_GITLAB_API } from '@/synchronizer/constants'
 import { SyncMode } from '@/synchronizer/types'
+import { Func_Any_Void } from '@/types'
 import { resetDarkMode, setDarkMode, setTheme } from '@/utils/html'
 
 import styles from './styles.module.scss'
@@ -17,8 +18,8 @@ import styles from './styles.module.scss'
 type TabPosition = 'left' | 'right' | 'top' | 'bottom'
 interface Props {
 	showModal: boolean
-	onModalOk: (event: any) => void
-	onModalCancel: (event: any) => void
+	onModalOk: Func_Any_Void
+	onModalCancel: Func_Any_Void
 	tabPosition: TabPosition
 }
 
@@ -114,7 +115,7 @@ export const Settings: React.FC<Props> = ({ showModal, onModalOk, onModalCancel,
 			</Checkbox>
 
 			<Form.Item label={t('Theme')}>
-				<div className={classNames('enas-list cur-ptr pl-4', styles.ThemeSelector)}>
+				<div className={classNames('fvm-list cur-ptr pl-4', styles.ThemeSelector)}>
 					{AVAILABLE_THEMES.map((item, index) => (
 						<div
 							className={styles.ListItem}
@@ -137,15 +138,15 @@ export const Settings: React.FC<Props> = ({ showModal, onModalOk, onModalCancel,
 									<div className={styles.ThemeColorBoxGroup}>
 										<div
 											className={styles.ThemeColorBox}
-											style={{ backgroundColor: `var(--enas-bg-color_${item})` }}
+											style={{ backgroundColor: `var(--fvm-bg-color_${item})` }}
 										></div>
 										<div
 											className={styles.ThemeColorBox}
-											style={{ backgroundColor: `var(--enas-text-color_${item})` }}
+											style={{ backgroundColor: `var(--fvm-text-color_${item})` }}
 										></div>
 										<div
 											className={styles.ThemeColorBox}
-											style={{ backgroundColor: `var(--enas-highlight-color_${item})` }}
+											style={{ backgroundColor: `var(--fvm-highlight-color_${item})` }}
 										></div>
 									</div>
 								</div>

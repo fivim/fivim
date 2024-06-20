@@ -1,10 +1,7 @@
-/* reset */
-button {
-	all: unset;
-}
+@import '@/styles/mixin.scss';
 
 .AlertDialogOverlay {
-	background-color: var(--enas-bg-clr);
+	background-color: var(--fvm-bg-clr);
 	position: fixed;
 	inset: 0;
 	animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -12,8 +9,8 @@ button {
 }
 
 .AlertDialogContent {
-	background-color: var(--enas-cmp-clr);
-	border: 1px solid var(--enas-border-clr);
+	background-color: var(--fvm-cmp-clr);
+	border: 1px solid var(--fvm-border-clr);
 	border-radius: 6px;
 	box-shadow:
 		hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
@@ -28,6 +25,10 @@ button {
 	padding: 25px;
 	animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 	z-index: 2;
+
+	button {
+		all: unset;
+	}
 }
 
 .AlertDialogContent:focus {
@@ -36,7 +37,7 @@ button {
 
 .AlertDialogTitle {
 	margin: 0;
-	color: var(--enas-solid-clr);
+	color: var(--fvm-solid-clr);
 	font-size: 1.5rem;
 	font-weight: 700;
 	line-height: 2rem;
@@ -50,15 +51,14 @@ button {
 
 .AlertDialogDescription {
 	margin-bottom: 20px;
-	color: var(--enas-text-clr2);
+	color: var(--fvm-text-clr2);
 	font-size: 15px;
 	line-height: 1.5;
 }
 
 .Button {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
+	@include flex-center;
+	// display: inline-flex;
 	border-radius: 4px;
 	padding: 0 15px;
 	font-size: 15px;
@@ -68,17 +68,17 @@ button {
 }
 
 .Button.ok {
-	background-color: var(--enas-solid-clr);
+	background-color: var(--fvm-solid-clr);
 }
 .Button.ok:hover {
-	background-color: var(--enas-solid-clr2);
+	background-color: var(--fvm-solid-clr2);
 }
 
 .Button.cancel {
-	background-color: var(--enas-cmp-clr3);
+	background-color: var(--fvm-cmp-clr3);
 }
 .Button.cancel:hover {
-	background-color: var(--enas-cmp-clr2);
+	background-color: var(--fvm-cmp-clr2);
 }
 
 @keyframes overlayShow {

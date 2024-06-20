@@ -20,18 +20,20 @@ import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import { getFileName } from '@/utils/string'
 
+export type Func_Node_Void = (node: TreeDataNode) => void
+
 interface Props {
 	treeDataArr: TreeDataNode[]
-	onClickNode: (event: any) => void
-	onCreateDir: (event: any) => void
-	onCreateFile: (event: any, ext: string) => void
+	onClickNode: Func_Node_Void
+	onCreateDir: Func_Node_Void
+	onCreateFile: (node: TreeDataNode, ext: string) => void
 	onMoveFile: (pathOld: string, pathNew: string) => Promise<boolean>
-	onRenameFile: (event: any) => void
-	onRenameDir: (event: any) => void
-	onFileInfo: (event: any) => void
-	onDel: (event: any) => void
-	onImportFile: (event: any) => void
-	onImportFileAndEncrypt: (event: any) => void
+	onRenameFile: Func_Node_Void
+	onRenameDir: Func_Node_Void
+	onFileInfo: Func_Node_Void
+	onDel: Func_Node_Void
+	onImportFile: Func_Node_Void
+	onImportFileAndEncrypt: Func_Node_Void
 }
 
 export const TreeMenu: React.FC<Props> = ({
@@ -99,7 +101,7 @@ export const TreeMenu: React.FC<Props> = ({
 		// Move file
 		const filePathOld = (dragObj as TreeDataNode).key.toString()
 		const targetDir = dropNode.key.toString()
-		const filePathNew = targetDir + globalStore.data.pathSeparator + getFileName(filePathOld, '')
+		const filePathNew = targetDir + globalStore.data.paths.separator + getFileName(filePathOld, '')
 		const moved = await onMoveFile(filePathOld, filePathNew)
 		if (!moved) {
 			invoker.error(t('File move error'))

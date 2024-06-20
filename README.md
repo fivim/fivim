@@ -1,4 +1,4 @@
-# fivim
+# Fivim
 
 [![stars](https://img.shields.io/github/stars/fivim?style=social)](https://github.com/fivim/fivim)
 [![followers](https://img.shields.io/github/followers/fivim?style=social)](https://github.com/fivim/fivim)

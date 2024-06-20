@@ -2,14 +2,15 @@ import { observer } from 'mobx-react-lite'
 
 import i18n from '@/i18n'
 import globalStore from '@/stores/globalStore'
-import { showOutline } from '@/utils/utils'
+import { showOutline } from '@/stores_utils'
+import { Func_Any_Void } from '@/types'
 
 import styles from './styles.module.scss'
 
 const t = i18n.t
 
 interface Props {
-	onClick?: (event: any) => void
+	onClick?: Func_Any_Void
 }
 
 const Outline: React.FC<Props> = ({ onClick }) => {

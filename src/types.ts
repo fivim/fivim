@@ -2,7 +2,16 @@ import { TreeDataNode } from 'antd'
 
 import { AlertDialogProps, AlertDialogRes } from '@/components/AlertDialog'
 import { MessageLineProps } from '@/components/MessageLine'
-import { TYPE_AUDIO, TYPE_IMAGE, TYPE_MD, TYPE_NONE, TYPE_PDF, TYPE_SOURCE_CODE, TYPE_XRTM } from '@/constants'
+import {
+	TAB_SEARCH,
+	TYPE_AUDIO,
+	TYPE_IMAGE,
+	TYPE_MD,
+	TYPE_NONE,
+	TYPE_PDF,
+	TYPE_SOURCE_CODE,
+	TYPE_XRTM,
+} from '@/constants'
 import {
 	HTTP_CONNECT,
 	HTTP_DELETE,
@@ -30,7 +39,6 @@ export type StringStringObj = {
 }
 
 export type StringPair = [string, string]
-
 export type NumberArray = number[]
 export type StringArray = string[]
 export type ObjectArray = object[]
@@ -39,6 +47,10 @@ export type Obj = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any
 }
+
+export type Func_Empty_Void = () => void
+export type Func_Any_Void = (param: any) => void
+export type Func_String_Void = (param: string) => void
 
 export type HttpMethod =
 	| typeof HTTP_GET
@@ -84,18 +96,20 @@ export type EditorType =
 	| typeof TYPE_AUDIO
 	| typeof TYPE_NONE
 
-export type TabId = typeof TAB_FILE_TREE | typeof TAB_OUTLINE | typeof TAB_SAVE | typeof TAB_SYNC | typeof TAB_SETTING
+export type TabId =
+	| typeof TAB_FILE_TREE
+	| typeof TAB_OUTLINE
+	| typeof TAB_SEARCH
+	| typeof TAB_SAVE
+	| typeof TAB_SYNC
+	| typeof TAB_SETTING
 
 export type AppCoreConf = {
-	defaultLanguage: string
-	defaultLanguageInNative: string
-	homeAppDir: string
-	homeDir: string
-	logFilePath: string
+	dataRootDir: string
 	pathSeparator: string
 	repo: string
 	version: string
-	userFilesDirDefult: string
+	userFilesDir: string
 }
 
 export type Setting = {
@@ -113,6 +127,14 @@ export type SettingOfStartUp = {
 	forceDarkMode: boolean // Force use of dark mode
 	locale: string
 	theme: string
+}
+
+export type Paths = {
+	confDir: string
+	cachedXrtm: string
+	dataRootDir: string
+	userFiles: string
+	separator: string
 }
 
 export type Global = {
@@ -133,11 +155,7 @@ export type Global = {
 	openMenuTree: boolean
 	openMenuOpt: boolean
 	outlineHeadings: OutlineHeading[]
-	pathOfConfDir: string
-	pathOfHome: string
-	pathOfLogFile: string
-	pathOfUserFilesDefult: string
-	pathSeparator: string
+	paths: Paths
 	runInTauri: boolean
 	tabId: TabId
 	titlebarText: string

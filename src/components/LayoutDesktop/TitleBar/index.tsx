@@ -75,7 +75,7 @@ const Titlebar = forwardRef<HTMLDivElement, Props>(({ title, percent }, ref) => 
 					<span className={styles.Title}>
 						{runningStore.getData().titlebarShowLockIcon && (
 							<span className="px-4">
-								<LockOutlined style={{ color: 'var(--enas-highlight-clr)' }} />
+								<LockOutlined style={{ color: 'var(--fvm-highlight-clr)' }} />
 							</span>
 						)}
 						{title && <span>{`${title} - ${APP_NAME}`}</span>}

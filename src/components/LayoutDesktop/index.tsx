@@ -5,14 +5,15 @@ import React from 'react'
 
 import Editor, { EditorComponentRef } from '@/components/Editor'
 import FileTree from '@/components/FileTree'
-import { TAB_FILE_TREE, TAB_OUTLINE } from '@/constants'
+import { TAB_FILE_TREE, TAB_OUTLINE, TAB_SEARCH } from '@/constants'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
-import { EditorType } from '@/types'
+import { EditorType, Func_Empty_Void } from '@/types'
 import { TabId } from '@/types'
 
 import Outline from '../Outline'
+import Search from '../Search'
 import ActivityBar from './ActivityBar'
 import Resizer from './Resizer'
 import SideBar from './SideBar'
@@ -75,14 +76,14 @@ const DesktopLayout: React.FC = () => {
 	const updateFileTreeData = async () => {
 		const tree = await invoker.treeInfo(settingStore.getUserFilesDir())
 
-		if (tree.children) {
+		if (tree !== null && tree.children) {
 			globalStore.setFileTreeData(tree.children)
 		}
 	}
 
-	const onOpenFile = async (filePath: string) => {
+	const onOpenFile = async (filePath: string, callback?: Func_Empty_Void) => {
 		if (editorRef.current) {
-			const ir = await editorRef.current.setInitData(filePath)
+			const ir = await editorRef.current.setInitData(filePath, callback)
 			globalStore.setCurrentFilePath(ir.filePath)
 			globalStore.setCurrentFileName(ir.fileName)
 			globalStore.setTitlebarShowLockIcon(false)
@@ -123,6 +124,8 @@ const DesktopLayout: React.FC = () => {
 							)}
 
 							{GD.tabId === TAB_OUTLINE && <Outline />}
+
+							{GD.tabId === TAB_SEARCH && <Search onOpenFile={onOpenFile} />}
 						</div>
 
 						<Resizer onResize={handleResize} onOver={handleResizeOver} className={classNames(styles.sideBarResizer)} />
@@ -130,7 +133,7 @@ const DesktopLayout: React.FC = () => {
 
 					<div
 						style={{
-							width: `calc(100% - ${sideBarWidth}px - var(--enas-desktop-rezizer-width))`,
+							width: `calc(100% - ${sideBarWidth}px - var(--fvm-desktop-rezizer-width))`,
 							height: '100%',
 							minWidth: '200px',
 						}}

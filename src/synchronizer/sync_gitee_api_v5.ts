@@ -7,8 +7,8 @@ import i18n from '@/i18n'
 import { saveConfToFile } from '@/initialize'
 import { invoker } from '@/invoker'
 import settingStore from '@/stores/settingStore'
+import { pathJoin } from '@/stores_utils/tauri_like'
 import { removeEnding } from '@/utils/string'
-import { pathJoin } from '@/utils/tauri_like'
 
 import { SYNC_LOCK_FILE_NAME } from './constants'
 import { SyncActionRes, SyncBase } from './sync_base'
@@ -69,7 +69,9 @@ const getCommitsHistory = async (
 	let commitsArr: GitlabCommitItem[] = []
 
 	const res = await invoker.httpRequestText(HTTP_GET, url, '', {}, {})
-	if (res.errorMsg !== '') {
+	if (res === null) {
+		return commitsArr
+	} else if (res.errorMsg !== '') {
 		invoker.alert(res.errorMsg)
 		return commitsArr
 	} else if (res.status === 401) {
@@ -130,7 +132,9 @@ const commitMultipleItems = async (actions: CommitActionDataItem[], commitName: 
 	const body = JSON.stringify(commitReqData)
 
 	const res = await invoker.httpRequestText(HTTP_POST, url, body, headeMap, {})
-	if (res.errorMsg !== '') {
+	if (res === null) {
+		return false
+	} else if (res.errorMsg !== '') {
 		return false
 	} else if (res.status === 200 || res.status === 201) {
 		return true
@@ -151,7 +155,9 @@ const compareRemoteCommitDiff = async (from: string, to: string) => {
 	}
 
 	const res = await invoker.httpRequestText(HTTP_GET, url, '', {}, {})
-	if (res.errorMsg !== '') {
+	if (res === null) {
+		return diff
+	} else if (res.errorMsg !== '') {
 		invoker.alert(res.errorMsg)
 		return diff
 	} else if (res.status === 200) {
@@ -219,7 +225,9 @@ const getFileDetail = async (filePath: string): Promise<FileDetail> => {
 	const body = {}
 
 	const res = await invoker.httpRequestText(HTTP_GET, url, JSON.stringify(body), headeMap, {})
-	if (res.status !== 200) {
+	if (res === null) {
+		return { sha: '' }
+	} else if (res.status !== 200) {
 		console.error('>>> getFileDetail error: ', getErrorMsg(res.text))
 		return { sha: '' }
 	}
@@ -337,7 +345,9 @@ export class SyncGiteeApiV5 extends SyncBase {
 		}
 
 		const res = await invoker.httpRequestText(HTTP_POST, url, JSON.stringify(body), headeMap, {})
-		if (res.errorMsg !== '') {
+		if (res === null) {
+			return { disabled: false, success: false, errMsg: 'httpRequestText error' }
+		} else if (res.errorMsg !== '') {
 			return { disabled: false, success: false, errMsg: res.errorMsg }
 		} else if (res.status === 400) {
 			return { disabled: false, success: false, errMsg: getErrorMsg(res.text) }
@@ -357,15 +367,21 @@ export class SyncGiteeApiV5 extends SyncBase {
 		}
 
 		const fp = await pathJoin(settingStore.getUserFilesDir(), filePath)
+		const ccc = await invoker.readFileToBase64String(fp)
+		if (ccc === null) {
+			return { disabled: false, success: false, errMsg: 'readFileToBase64String error' }
+		}
 		const body = {
 			access_token: ss.token,
 			branch: ss.branch,
-			content: await invoker.readFileToBase64String(fp),
+			content: ccc,
 			message: `create file: ${filePath}`,
 		}
 
 		const res = await invoker.httpRequestText(HTTP_POST, url, JSON.stringify(body), headeMap, {})
-		if (res.errorMsg !== '') {
+		if (res === null) {
+			return { disabled: false, success: false, errMsg: 'httpRequestText error' }
+		} else if (res.errorMsg !== '') {
 			return { disabled: false, success: false, errMsg: res.errorMsg }
 		} else if (res.status === 200 || res.status === 201) {
 			return { disabled: false, success: true, errMsg: '' }
@@ -392,7 +408,9 @@ export class SyncGiteeApiV5 extends SyncBase {
 		}
 
 		const res = await invoker.httpRequestText(HTTP_PUT, url, JSON.stringify(body), headeMap, {})
-		if (res.errorMsg !== '') {
+		if (res === null) {
+			return { disabled: false, success: false, errMsg: 'httpRequestText error' }
+		} else if (res.errorMsg !== '') {
 			return { disabled: false, success: false, errMsg: res.errorMsg }
 		} else if (res.status === 200) {
 			return { disabled: false, success: true, errMsg: '' }
@@ -408,7 +426,10 @@ export class SyncGiteeApiV5 extends SyncBase {
 			'Content-Type': 'application/json',
 		}
 
-		const content = await invoker.readFileToBase64String(await pathJoin(settingStore.getUserFilesDir(), filePathFrom))
+		const ccc = await invoker.readFileToBase64String(await pathJoin(settingStore.getUserFilesDir(), filePathFrom))
+		if (ccc === null) {
+			return { disabled: false, success: false, errMsg: 'readFileToBase64String error' }
+		}
 		const commitReqData: CommitActionData = {
 			access_token: ss.token,
 			branch: ss.branch,
@@ -419,14 +440,16 @@ export class SyncGiteeApiV5 extends SyncBase {
 					path: filePathTo,
 					previous_path: filePathFrom,
 					encoding: 'base64',
-					content,
+					content: ccc,
 				},
 			],
 		}
 
 		const body = JSON.stringify(commitReqData)
 		const res = await invoker.httpRequestText(HTTP_POST, url, body, headeMap, {})
-		if (res.errorMsg !== '') {
+		if (res === null) {
+			return { disabled: false, success: false, errMsg: 'httpRequestText error' }
+		} else if (res.errorMsg !== '') {
 			return { disabled: false, success: false, errMsg: res.errorMsg }
 		}
 
@@ -448,7 +471,9 @@ export class SyncGiteeApiV5 extends SyncBase {
 		}
 
 		const res = await invoker.httpRequestText(HTTP_DELETE, url, JSON.stringify(body), headeMap, {})
-		if (res.errorMsg !== '') {
+		if (res === null) {
+			return { disabled: false, success: false, errMsg: 'httpRequestText error' }
+		} else if (res.errorMsg !== '') {
 			return { disabled: false, success: false, errMsg: res.errorMsg }
 		} else if (res.status === 400) {
 			return { disabled: false, success: false, errMsg: getErrorMsg(res.text) }
@@ -468,7 +493,7 @@ export class SyncGiteeApiV5 extends SyncBase {
 	_dirDelete = async (dirPath: string) => {
 		const dir = await pathJoin(settingStore.getUserFilesDir(), dirPath)
 		const lines = await invoker.walkDirItemsGetPath(dir, '', [])
-
+		if (lines === null) return { disabled: false, success: false, errMsg: 'walkDirItemsGetPath error' }
 		const commitActions: CommitActionDataItem[] = []
 		for (const item of lines) {
 			if (item === '') {
@@ -493,7 +518,8 @@ export class SyncGiteeApiV5 extends SyncBase {
 
 		const localPath = await pathJoin(settingStore.getUserFilesDir(), filePath)
 		const ret = await invoker.downloadFile(HTTP_GET, url, localPath, {}, {}, isLarge, '')
-		return ret
+		if (ret) return true
+		return false
 	}
 
 	sync = async (): Promise<SyncActionRes> => {
@@ -506,7 +532,7 @@ export class SyncGiteeApiV5 extends SyncBase {
 		// Write lock file
 		const lockFilePath = await pathJoin(settingStore.getUserFilesDir(), SYNC_LOCK_FILE_NAME)
 		const wlr = await invoker.writeStringIntoFile(lockFilePath, '# This is a lock file of sync. ')
-		if (!wlr) {
+		if (wlr === null || !wlr.success) {
 			return { disabled: false, success: false, errMsg: t('Failed to write synchronization lock file') }
 		}
 

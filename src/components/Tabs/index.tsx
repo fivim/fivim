@@ -3,6 +3,8 @@ import React from 'react'
 import { CloseOutlined } from '@ant-design/icons'
 import * as RxTabs from '@radix-ui/react-tabs'
 
+import { Func_Any_Void } from '@/types'
+
 import styles from './styles.module.scss'
 
 export type TabArrayItem = {
@@ -14,7 +16,7 @@ export type TabArrayItem = {
 export type TabsProp = {
 	defaultValue: string
 	showCloseBtn: boolean
-	onCloseMenu: (event: any) => void
+	onCloseMenu: Func_Any_Void
 	tabArray: TabArrayItem[]
 }
 
