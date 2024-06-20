@@ -62,11 +62,7 @@ const SetupWizard: React.FC = () => {
 		SD.encryptedFileExt = encryptedFileExt
 		SD.passwordSum = genMasterPasswordSha256(password)
 		SD.theme = themeName
-		SD.userFilesDir = GD.pathOfUserFilesDefult
-
-		if (GD.isMobileOs) {
-			SD.userFilesDir = GD.pathOfUserFilesDefult
-		}
+		SD.userFilesDir = GD.paths.userFiles
 
 		passwordStore.setData(password)
 		settingStore.setData(SD)

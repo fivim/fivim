@@ -3,8 +3,8 @@
 //
 // Imitate the usage of "@radix-ui/colors": https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale
 $defaultBgClr: rgb(3, 3, 23);
-$defaultHighlightClr: rgb(101, 87, 224);
-$defaultTextClr: rgb(129, 146, 221);
+$defaultHighlightClr: rgb(86, 79, 143);
+$defaultTextClr: rgb(125, 137, 190);
 
 :root {
 	--fvm-bg-color_default: #{$defaultBgClr};
@@ -23,10 +23,10 @@ $defaultTextClr: rgb(129, 146, 221);
 	// Border color
 	--fvm-border-clr: rgb(45, 50, 88); // 6
 	--fvm-border-clr2: rgb(46, 45, 114); // 7
-	--fvm-border-clr3: rgb(45, 55, 145); // 8
+	--fvm-border-clr3: rgb(43, 51, 122); // 8
 	// Solid color
 	--fvm-solid-clr: #{$defaultHighlightClr}; // 9
-	--fvm-solid-clr2: rgb(116, 122, 226); // 10
+	--fvm-solid-clr2: rgb(69, 72, 136); // 10
 	// Text color
 	--fvm-text-clr: #{$defaultTextClr}; // 11
 	--fvm-text-clr2: rgb(173, 195, 241); // 12

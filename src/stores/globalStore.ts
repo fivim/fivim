@@ -4,7 +4,7 @@ import { action, makeAutoObservable, observable } from 'mobx'
 import { AlertDialogProps, AlertDialogRes } from '@/components/AlertDialog'
 import { OutlineHeading } from '@/components/Editor/RichText/types'
 import { MessageLineProps } from '@/components/MessageLine'
-import { EditorType, Global, TabId } from '@/types'
+import { EditorType, Global, Paths, TabId } from '@/types'
 import { tmplGlobal } from '@/types_template'
 
 class GlobalStore {
@@ -34,11 +34,7 @@ class GlobalStore {
 				setOpenMenuOpt: action,
 				setOpenMenuTree: action,
 				setOutlineHeadings: action,
-				setPathOfConfDir: action,
-				setPathOfHome: action,
-				setPathOfLogFile: action,
-				setPathOfUserFilesDefult: action,
-				setPathSeparator: action,
+				setPaths: action,
 				setRunInTauri: action,
 				setTabId: action,
 				setTitlebarShowLockIcon: action,
@@ -107,21 +103,9 @@ class GlobalStore {
 	setOutlineHeadings(val: OutlineHeading[]) {
 		this.data.outlineHeadings = val
 	}
-	setPathOfConfDir(val: string) {
-		this.data.pathOfConfDir = val
+	setPaths(val: Paths) {
+		this.data.paths = val
 	}
-	setPathOfHome(val: string) {
-		this.data.pathOfHome = val
-	}
-	setPathOfLogFile(val: string) {
-		this.data.pathOfLogFile = val
-	}
-	setPathOfUserFilesDefult(val: string) {
-		this.data.pathOfUserFilesDefult = val
-	}
-	setPathSeparator(val: string) {
-		this.data.pathSeparator = val
-	}	
 	setRunInTauri(val: boolean) {
 		this.data.runInTauri = val
 	}

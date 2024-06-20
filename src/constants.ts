@@ -1,5 +1,5 @@
-export const APP_NAME = 'fivim'
-export const APP_VERSION = 'v2.1.1'
+export const APP_NAME = 'Fivim'
+export const APP_VERSION = 'v2.2.0'
 export const AVAILABLE_THEMES = [
 	'default',
 	'amber',
@@ -18,6 +18,10 @@ export const AVAILABLE_THEMES = [
 export const CONFIG_FILE_NAME = 'conf.bin' // main configuration file
 export const CONFIG_START_UP_FILE_NAME = 'conf.startup.json' // only read once on every startup
 
+export const SUB_DIR_CONF = 'conf'
+export const SUB_DIR_USER_FILES = 'user_files'
+export const SUB_DIR_CACHED_XRTM = 'cached_xrtm'
+
 export const PASSWORD_MIN_LENGTH = 8
 export const PASSWORD_MAX_LENGTH = 32
 export const PASSWORD_SALT = '___enas^#$___' // DO NOT MODIFY, OR THE OLD DATA WILL NOT BE DECRYPTED!
@@ -35,6 +39,7 @@ export const TYPE_XRTM = 'XRTM'
 
 export const TAB_FILE_TREE = 'FILE_TREE'
 export const TAB_OUTLINE = 'OUTLINE'
+export const TAB_SEARCH = 'SEARCH'
 export const TAB_SAVE = 'SAVE'
 export const TAB_SYNC = 'SYNC'
 export const TAB_SETTING = 'SETTING'
@@ -48,3 +53,48 @@ export const HTTP_HEAD = 'HEAD'
 export const HTTP_OPTIONS = 'OPTIONS'
 export const HTTP_CONNECT = 'CONNECT'
 export const HTTP_TRACE = 'TRACE'
+
+export const EXT_RICH_TEXT = ['xrtm']
+export const EXT_MARKDOWN = ['md']
+
+export const EXT_PDF = ['pdf']
+
+// Extention of image files.
+export const EXT_IMAGE = ['bmp', 'jpg', 'jpeg', 'png', 'gif']
+
+// Extention of source code files.
+export const EXT_SOURCE_CODE = [
+	'c',
+	'c++',
+	'cpp',
+	'cs',
+	'css',
+	'cxx',
+	'go',
+	'h',
+	'hpp',
+	'htm',
+	'html',
+	'hxx',
+	'java',
+	'jl',
+	'js',
+	'json',
+	'kt',
+	'log',
+	'php',
+	'pl',
+	'pm',
+	'py',
+	'r',
+	'rs',
+	'sql',
+	'swift',
+	'ts',
+	'xml',
+	//
+	'txt',
+]
+
+// Extention of audio files.
+export const EXT_AUDIO = ['aac', 'aif', 'aiff', 'ape', 'flac', 'mid', 'mp3', 'ogg', 'wav', 'wma']

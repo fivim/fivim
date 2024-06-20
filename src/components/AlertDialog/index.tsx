@@ -55,9 +55,7 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
 				<RxAlertDialog.Overlay className={styles.AlertDialogOverlay} />
 				<RxAlertDialog.Content className={styles.AlertDialogContent}>
 					<RxAlertDialog.Title className={styles.AlertDialogTitle}>
-						{msgType === 'info' && (
-							<InfoCircledIcon className={styles.icon} style={{ color: 'var(--fvm-info-clr)' }} />
-						)}
+						{msgType === 'info' && <InfoCircledIcon className={styles.icon} style={{ color: 'var(--fvm-info-clr)' }} />}
 						{msgType === 'success' && (
 							<CheckCircledIcon className={styles.icon} style={{ color: 'var(--fvm-success-clr)' }} />
 						)}
@@ -71,7 +69,9 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
 						{title}
 					</RxAlertDialog.Title>
 
-					<RxAlertDialog.Description className={styles.AlertDialogDescription}>{description}</RxAlertDialog.Description>
+					<RxAlertDialog.Description className={styles.AlertDialogDescription}>
+						<pre>{description}</pre>
+					</RxAlertDialog.Description>
 					<div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
 						{cancelText && (
 							<RxAlertDialog.Cancel asChild>

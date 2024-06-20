@@ -39,7 +39,7 @@ class SettingStore {
 
 	getUserFilesDir = () => {
 		let userFilesDir = this.data.userFilesDir
-		const ssep = globalStore.getData().pathSeparator
+		const ssep = globalStore.getData().paths.separator
 		if (!userFilesDir.endsWith(ssep)) {
 			userFilesDir = userFilesDir + ssep
 		}

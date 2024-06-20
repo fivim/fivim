@@ -1,27 +1,24 @@
 @import '@/styles/mixin.scss';
 
 .toolbar {
+	@include flex-center;
 	background-color: var(--fvm-cmp-clr);
 	border-bottom: 1px solid var(--fvm-border-clr);
 	padding: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	height: var(--fvm-editor-tool-bar-height);
-	> label {
-		margin-right: 15px;
-	}
 
-	> button {
+	.actionBtn {
 		background-color: var(--fvm-cmp-clr3);
-		padding: var(--fvm-spacing-1) var(--fvm-spacing-2);
+		padding: var(--fvm-spacing-1);
 		margin: 0 var(--fvm-spacing-1);
+		border-radius: var(--fvm-spacing-2);
 	}
 }
 
 .colContainer {
 	.colPreview {
 		background-color: var(--fvm-bg-clr);
+		color: var(--fvm-text-clr);
 		padding: 0.5rem;
 
 		@include headings;

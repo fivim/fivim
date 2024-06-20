@@ -2,8 +2,8 @@ import i18n from '@/i18n'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
+import { pathJoin } from '@/stores_utils/tauri_like'
 import { appendToDirPathStr } from '@/utils/string'
-import { pathJoin } from '@/utils/tauri_like'
 
 import { APP_DATA_DIR_IN_USER_FILES_DIR, SYNC_LOCK_FILE_NAME, TEMP_DIR_NAME } from './constants'
 import { CheckConfRes } from './types'
@@ -19,12 +19,6 @@ export type SyncActionRes = {
 	disabled: boolean // Whether sync is disabled.
 	success: boolean
 	errMsg: string
-}
-
-// Convert absolute path to relative path
-export const pathToRelPath = (p: string) => {
-	const userFilesDir = settingStore.getUserFilesDir()
-	return p.replace(userFilesDir, '')
 }
 
 export class SyncBase {
@@ -132,7 +126,7 @@ export class SyncBase {
 		const GD = globalStore.getData()
 		const userFilesDir = settingStore.getUserFilesDir() // user_files directory
 		const userFilesDirBakDir = appendToDirPathStr(userFilesDir, userFilesDirBakDirPostfix) // Backup user_files directory
-		const remoteFileTempDir = await pathJoin(GD.pathOfHome, TEMP_DIR_NAME)
+		const remoteFileTempDir = await pathJoin(GD.paths.dataRootDir, TEMP_DIR_NAME)
 		const rmtFilePath = await pathJoin(remoteFileTempDir, tempRemoteZipFileName)
 		const dd = await invoker.deleteDir(userFilesDirBakDir) // Backup user_files directory
 
@@ -145,6 +139,7 @@ export class SyncBase {
 			return { disabled: false, success: false, errMsg: t('Failed to unzip file') }
 
 		const ldca = await invoker.listDirChildren(zipToDir)
+		if (ldca === null) return { disabled: false, success: false, errMsg: 'listDirChildren error' }
 		let remoteFileDir = zipToDir
 		if (ldca.length === 1 && ldca[0].is_dir) {
 			remoteFileDir = await pathJoin(zipToDir, ldca[0].name)
@@ -174,7 +169,7 @@ export class SyncBase {
 		)
 
 		const wlr = await invoker.writeStringIntoFile(lockFilePath, '# This is a lock file of sync. ')
-		if (!wlr) {
+		if (wlr !== null && !wlr.success) {
 			console.error('Save sync lock file error.')
 			return false
 		}

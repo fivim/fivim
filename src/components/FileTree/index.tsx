@@ -14,23 +14,24 @@ import {
 } from '@ant-design/icons'
 
 import { TreeMenu } from '@/components/FileTree/TreeMenu'
-import { TREE_DIR_PATH_PREFIX, TYPE_NONE } from '@/constants'
+import { EXT_MARKDOWN, EXT_RICH_TEXT, TREE_DIR_PATH_PREFIX, TYPE_NONE } from '@/constants'
 import { invoker } from '@/invoker'
 import { FileInfo } from '@/invoker/types'
 import globalStore from '@/stores/globalStore'
 import passwordStore from '@/stores/passwordStore'
 import settingStore from '@/stores/settingStore'
+import { pathToRelPath } from '@/stores_utils/path'
+import { pathJoin } from '@/stores_utils/tauri_like'
 import { syncAdapter, syncIsEnabled } from '@/synchronizer'
-import { pathToRelPath } from '@/synchronizer/sync_base'
+import { Func_Any_Void, Func_Empty_Void, Func_String_Void } from '@/types'
 import { getDirByFilePath, getFileName } from '@/utils/string'
-import { pathJoin } from '@/utils/tauri_like'
 import { convertFileIndexTime } from '@/utils/time'
 
 interface Props {
-	onOpenFile: (event: any) => void
-	onCloseMenu: (event: any) => void
-	onReloadMenu: () => void
-	onModifyFile: () => void
+	onOpenFile: Func_String_Void
+	onCloseMenu: Func_Any_Void
+	onReloadMenu: Func_Empty_Void
+	onModifyFile: Func_Empty_Void
 	showCloseBtn?: boolean
 	showReloadBtn?: boolean
 }
@@ -188,9 +189,12 @@ const FileTree: React.FC<Props> = ({
 
 			if (syncIsEnabled()) invoker.alert(t('Creating remote file'))
 			const isBase64 = modalFaExt.endsWith(SD.encryptedFileExt)
-			const emptyContent = isBase64
-				? await invoker.encryptLocalFileContentBase64(passwordStore.getData(), [88, 74])
-				: ''
+
+			let emptyContent = ''
+			if (isBase64) {
+				const ccc = await invoker.encryptLocalFileContentBase64(passwordStore.getData(), [88, 74])
+				if (ccc !== null) emptyContent = ccc
+			}
 			const resCreate = await syncer.fileCreateText(relPath, emptyContent, isBase64)
 			if (resCreate.errMsg !== '') {
 				const msg = resCreate.errMsg ? resCreate.errMsg : resCreate.errMsg
@@ -214,7 +218,7 @@ const FileTree: React.FC<Props> = ({
 				invoker.showMessage(t('Rename remote file failed'), renameRes.errMsg, 'error', true)
 			} else {
 				invoker.alert(t('Renaming local file'))
-				const newPathAbs = await pathJoin(getDirByFilePath(ops, '/').replaceAll('/', GD.pathSeparator), name)
+				const newPathAbs = await pathJoin(getDirByFilePath(ops, '/').replaceAll('/', GD.paths.separator), name)
 				if (await invoker.rename(oldPathStr, newPathAbs, false)) {
 					invoker.success(t('Rename successful'))
 				} else {
@@ -271,10 +275,11 @@ const FileTree: React.FC<Props> = ({
 		const filePathFrom = await invoker.pickFile()
 		const fileName = getFileName(filePathFrom, '')
 		const filePathTo = await pathJoin(parentDir, fileName)
-		const rrr = invoker.copyFile(filePathFrom, filePathTo)
-
-		syncer.fileCreateBin(fileName)
-		onModifyFile()
+		const rrr = await invoker.copyFile(filePathFrom, filePathTo)
+		if (rrr) {
+			syncer.fileCreateBin(fileName)
+			onModifyFile()
+		}
 	}
 
 	const importFileAndEncrypt = async (parentDir: string) => {
@@ -283,9 +288,10 @@ const FileTree: React.FC<Props> = ({
 		const fileNameTo = `${fileName}.${SD.encryptedFileExt}`
 		const filePathTo = await pathJoin(parentDir, fileNameTo)
 		const rrr = invoker.encryptLocalFile(passwordStore.getData(), filePathFrom, filePathTo)
-
-		syncer.fileCreateBin(fileNameTo)
-		onModifyFile()
+		if (rrr !== null) {
+			syncer.fileCreateBin(fileNameTo)
+			onModifyFile()
+		}
 	}
 
 	const onImportFileToRoot = async () => {
@@ -313,10 +319,10 @@ const FileTree: React.FC<Props> = ({
 	})
 
 	const onFileInfo = async (node: TreeDataNode) => {
+		setModalFiOpen(true)
 		const p = node.key.toString()
 		const fi = await invoker.fileInfo(p)
-		setModalFiOpen(true)
-		setFileInfo(fi)
+		if (fi) setFileInfo(fi)
 	}
 
 	type FieldType = {
@@ -444,11 +450,11 @@ const FileTree: React.FC<Props> = ({
 									<Radio className="w-full py-2" value={''}>
 										{t('None')}
 									</Radio>
-									<Radio className="w-full py-2" value={'.md'}>
-										.md (Markdown)
+									<Radio className="w-full py-2" value={`.${EXT_MARKDOWN[0]}`}>
+										{`.${EXT_MARKDOWN[0]}`} (Markdown)
 									</Radio>
-									<Radio className="w-full py-2" value={'.xrtm'}>
-										.xrtm (rich text mrakup)
+									<Radio className="w-full py-2" value={`.${EXT_RICH_TEXT[0]}`}>
+										{`.${EXT_RICH_TEXT[0]}`} (rich text mrakup)
 									</Radio>
 								</Radio.Group>
 							</Form.Item>

@@ -7,11 +7,21 @@ import { AppCoreConf } from '@/types'
 import { HttpMethod, HttpResponse, MessageType, StringPair, StringStringObj } from '@/types'
 
 import { cmdAdapter } from './adapter'
-import { FileInfo, ProgressStatus, WriteFileRes } from './types'
+import { FileInfo, InvokeArgs, InvokeOptions, ProgressStatus, SearchFileRes, WriteFileRes } from './types'
 
-const ivk = () => {
-	const invoke = cmdAdapter().invoke
-	return invoke
+async function runIvk<T>(_cmd: string, _args?: InvokeArgs, _options?: InvokeOptions) {
+	const invoke = cmdAdapter().invoke<T>
+	let res = null
+
+	try {
+		res = await invoke(_cmd, _args, _options)
+	} catch (error) {
+		console.error('>>> Invoke error: ', error, invoke)
+
+		await invoker.confirm(`${error}`, 'Error')
+	}
+
+	return res as T
 }
 
 export type SyncListResItemLocalDisk = {
@@ -35,60 +45,90 @@ export const invoker = {
 	pickFiles: (allowedExtensions?: string[]) => cmdAdapter().pickFiles(allowedExtensions),
 
 	// fs
-	addFile: (filePath: string) => ivk()<boolean>('add_file', { filePath }),
-	copyFile: (filePath: string, targetFilePath: string) => ivk()<boolean>('copy_file', { filePath, targetFilePath }),
-	deleteFile: (filePath: string) => ivk()<boolean>('delete_file', { filePath }),
-	existFile: (filePath: string) => ivk()<boolean>('exist_file', { filePath }),
-	readFileToString: (filePath: string) => ivk()<string>('read_file_to_string', { filePath }),
-	readFileToBase64String: (filePath: string) => ivk()<string>('read_file_to_base64_string', { filePath }),
+	addFile: (filePath: string) => runIvk<boolean | null>('add_file', { filePath }),
+	copyFile: (filePath: string, targetFilePath: string) =>
+		runIvk<boolean | null>('copy_file', { filePath, targetFilePath }),
+	deleteFile: (filePath: string) => runIvk<boolean | null>('delete_file', { filePath }),
+	existFile: (filePath: string) => runIvk<boolean | null>('exist_file', { filePath }),
+	readFileToString: (filePath: string) => runIvk<string | null>('read_file_to_string', { filePath }),
+	readFileToBase64String: (filePath: string) => runIvk<string | null>('read_file_to_base64_string', { filePath }),
 	writeStringIntoFile: (filePath: string, fileContent: string) =>
-		ivk()<WriteFileRes>('write_string_into_file', { filePath, fileContent }),
+		runIvk<WriteFileRes | null>('write_string_into_file', { filePath, fileContent }),
 	writeBase64IntoFile: (filePath: string, fileContent: string) =>
-		ivk()<WriteFileRes>('write_base64_into_file', { filePath, fileContent }), // TODO: not used
-	addDir: (dirPath: string) => ivk()<boolean>('add_dir', { dirPath }),
-	deleteDir: (dirPath: string) => ivk()<boolean>('delete_dir', { dirPath }),
-	getDirSize: (dirPath: string) => ivk()<number>('get_dir_size', { dirPath }),
-	listDirChildren: (dirPath: string) => ivk()<SyncListResItemLocalDisk[]>('list_dir_children', { dirPath }),
-	rename: (pathOld: string, pathNew: string, isDir: boolean) => ivk()<boolean>('rename', { pathOld, pathNew, isDir }),
-	updateFileModifiedTime: (filePath: string, iso8601String: string) =>
-		ivk()<boolean>('update_file_modified_time', { filePath, iso8601String }),
-	fileInfo: (filePath: string) => ivk()<FileInfo>('file_info', { filePath }),
-	treeInfo: (dirPath: string) => ivk()<TreeDataNode>('tree_info', { dirPath }),
-	walkDirItemsGetPathAndModifyTime: (dirPath: string, filePath: string, excludeDires: string[]) =>
-		ivk()<string>('walk_dir_items_get_path_and_modify_time', { dirPath, filePath, excludeDires }),
+		runIvk<WriteFileRes | null>('write_base64_into_file', { filePath, fileContent }), // TODO: not used
+	addDir: (dirPath: string) => runIvk<boolean | null>('add_dir', { dirPath }),
+	deleteDir: (dirPath: string) => runIvk<boolean | null>('delete_dir', { dirPath }),
+	// getDirSize: (dirPath: string) => runIvk<number | null>('get_dir_size', { dirPath }),
+	listDirChildren: (dirPath: string) => runIvk<SyncListResItemLocalDisk[] | null>('list_dir_children', { dirPath }),
+	rename: (pathOld: string, pathNew: string, isDir: boolean) =>
+		runIvk<boolean | null>('rename', { pathOld, pathNew, isDir }),
+	// updateFileModifiedTime: (filePath: string, iso8601String: string) =>
+	// runIvk<boolean | null>('update_file_modified_time', { filePath, iso8601String }),
+	fileInfo: (filePath: string) => runIvk<FileInfo | null>('file_info', { filePath }),
+	treeInfo: (dirPath: string) => runIvk<TreeDataNode | null>('tree_info', { dirPath }),
+	// walkDirItemsGetPathAndModifyTime: (dirPath: string, filePath: string, excludeDires: string[]) =>
+	// 	runIvk<string | null>('walk_dir_items_get_path_and_modify_time', { dirPath, filePath, excludeDires }),
 	walkDirItemsGetPath: (dirPath: string, filePath: string, excludeDires: string[]) =>
-		ivk()<string[]>('walk_dir_items_get_path', { dirPath, filePath, excludeDires }),
-	zipDir: (dirPath: string, filePath: string) => ivk()<boolean>('zip_dir', { dirPath, filePath }),
-	unzipFile: (filePath: string, dirPath: string) => ivk()<boolean>('unzip_file', { dirPath, filePath }),
+		runIvk<string[] | null>('walk_dir_items_get_path', { dirPath, filePath, excludeDires }),
+	// zipDir: (dirPath: string, filePath: string) => runIvk<boolean | null>('zip_dir', { dirPath, filePath }),
+	unzipFile: (filePath: string, dirPath: string) => runIvk<boolean | null>('unzip_file', { dirPath, filePath }),
+	searchDocumentDir: (
+		dirPath: string,
+		isReMode: boolean,
+		search: string,
+		contextSize: number,
+		wrapperPrefix: string,
+		wrapperPostfix: string,
+	) =>
+		runIvk<SearchFileRes[] | null>('search_document_dir', {
+			dirPath,
+			isReMode,
+			search,
+			contextSize,
+			wrapperPrefix,
+			wrapperPostfix,
+		}),
+	searchDocumentFile: (
+		filePath: string,
+		isReMode: boolean,
+		search: string,
+		contextSize: number,
+		wrapperPrefix: string,
+		wrapperPostfix: string,
+	) =>
+		runIvk<SearchFileRes[] | null>('search_document_file', {
+			filePath,
+			isReMode,
+			search,
+			contextSize,
+			wrapperPrefix,
+			wrapperPostfix,
+		}),
 
 	// encrypt_hash
 	// Read and write the configuration files.
-	encryptStringToFile: (pwd: number[], filePath: string, fileContent: string) => {
-		return ivk()<WriteFileRes>('encrypt_string_into_file', { pwd, filePath, fileContent })
-	},
-	decryptFileToString: (pwd: number[], filePath: string) => {
-		return ivk()<string>('decrypt_file_to_string', { pwd, filePath })
-	},
+	encryptStringToFile: (pwd: number[], filePath: string, fileContent: string) =>
+		runIvk<WriteFileRes | null>('encrypt_string_into_file', { pwd, filePath, fileContent }),
+	decryptFileToString: (pwd: number[], filePath: string) =>
+		runIvk<string | null>('decrypt_file_to_string', { pwd, filePath }),
 	// Encrypt and decrypt the text files which are set to encrypt when save the content.
-	encryptStringArray: (pwd: number[], content: string[]) => ivk()<string[]>('encrypt_string_array', { pwd, content }),
-	decryptStringArray: (pwd: number[], content: string[]) => ivk()<string[]>('decrypt_string_array', { pwd, content }),
+	encryptStringArray: (pwd: number[], content: string[]) =>
+		runIvk<string[] | null>('encrypt_string_array', { pwd, content }),
+	decryptStringArray: (pwd: number[], content: string[]) =>
+		runIvk<string[] | null>('decrypt_string_array', { pwd, content }),
 
 	// Read and write the files that users imported.
-	encryptLocalFile: (pwd: number[], filePathFrom: string, filePathTo: string) => {
-		return ivk()<WriteFileRes>('encrypt_local_file', { pwd, filePathFrom, filePathTo })
-	},
-	encryptLocalFileContentBase64: (pwd: number[], content: number[]) => {
-		return ivk()<string>('encrypt_local_file_content_base64', { pwd, content })
-	},
-	decryptLocalFile: (pwd: number[], filePathFrom: string, filePathTo: string) => {
-		return ivk()<string>('decrypt_local_file', { pwd, filePathFrom, filePathTo })
-	},
-	decryptLocalFileBase64: (pwd: number[], filePath: string) => {
-		return ivk()<string>('decrypt_local_file_base64', { pwd, filePath })
-	},
-	sha256ByFilePath: (filePath: string) => ivk()<string>('sha256_by_file_path', { filePath }),
-	stringSha256: (str: string) => ivk()<string>('string_sha256', { content: str }),
-	stringCrc32: (str: string) => ivk()<number>('string_crc32', { content: str }),
+	encryptLocalFile: (pwd: number[], filePathFrom: string, filePathTo: string) =>
+		runIvk<WriteFileRes | null>('encrypt_local_file', { pwd, filePathFrom, filePathTo }),
+	encryptLocalFileContentBase64: (pwd: number[], content: number[]) =>
+		runIvk<string | null>('encrypt_local_file_content_base64', { pwd, content }),
+	// decryptLocalFile: (pwd: number[], filePathFrom: string, filePathTo: string) =>
+	// 	runIvk<string | null>('decrypt_local_file', { pwd, filePathFrom, filePathTo }),
+	decryptLocalFileBase64: (pwd: number[], filePath: string) =>
+		runIvk<string | null>('decrypt_local_file_base64', { pwd, filePath }),
+	// sha256ByFilePath: (filePath: string) => runIvk<string | null>('sha256_by_file_path', { filePath }),
+	// stringSha256: (str: string) => runIvk<string | null>('string_sha256', { content: str }),
+	// stringCrc32: (str: string) => runIvk<number | null>('string_crc32', { content: str }),
 
 	// net
 	downloadFile: (
@@ -99,7 +139,8 @@ export const invoker = {
 		paramsMap: StringStringObj,
 		isLargeFile: boolean,
 		progressName: string,
-	) => ivk()<boolean>('download_file', { method, url, filePath, headerMap, paramsMap, isLargeFile, progressName }),
+	) =>
+		runIvk<boolean | null>('download_file', { method, url, filePath, headerMap, paramsMap, isLargeFile, progressName }),
 
 	httpRequestText: (
 		method: HttpMethod,
@@ -107,30 +148,30 @@ export const invoker = {
 		body: string,
 		headerMap: StringStringObj,
 		paramsMap: StringStringObj,
-	) => ivk()<HttpResponse>('http_request', { method, url, respDataType: 'text', headerMap, paramsMap, body }),
-	httpRequestBase64: (
-		method: HttpMethod,
-		url: string,
-		body: string,
-		headerMap: StringStringObj,
-		paramsMap: StringStringObj,
-	) => ivk()<HttpResponse>('http_request', { method, url, respDataType: 'base64', headerMap, paramsMap, body }),
+	) => runIvk<HttpResponse | null>('http_request', { method, url, respDataType: 'text', headerMap, paramsMap, body }),
+	// httpRequestBase64: (
+	// 	method: HttpMethod,
+	// 	url: string,
+	// 	body: string,
+	// 	headerMap: StringStringObj,
+	// 	paramsMap: StringStringObj,
+	// ) => runIvk<HttpResponse | null>('http_request', { method, url, respDataType: 'base64', headerMap, paramsMap, body }),
 
 	// other
 	logInfo: (content: string) => {
 		console.info('log info::', content)
-		ivk()('log', { level: 'INFO', content })
+		runIvk('log', { level: 'INFO', content })
 	},
-	logError: (content: string) => {
-		console.error('log error::', content)
-		ivk()('log', { level: 'ERROR', content })
-	},
-	logDebug: (content: string) => {
-		console.debug('log debug::', content)
-		ivk()('log', { level: 'DEBUG', content })
-	},
-	getProgress: (progressName: string) => ivk()<ProgressStatus>('get_progress', { progressName }),
-	getAppCoreConf: () => ivk()<AppCoreConf>('get_app_core_conf', {}),
-	jsonToToml: (content: string) => ivk()<StringPair>('json_to_toml', { content }),
-	tomlToJson: (content: string) => ivk()<StringPair>('toml_to_json', { content }),
+	// logError: (content: string) => {
+	// 	console.error('log error::', content)
+	// 	runIvk('log', { level: 'ERROR', content })
+	// },
+	// logDebug: (content: string) => {
+	// 	console.debug('log debug::', content)
+	// 	runIvk('log', { level: 'DEBUG', content })
+	// },
+	// getProgress: (progressName: string) => runIvk<ProgressStatus | null>('get_progress', { progressName }),
+	getAppCoreConf: () => runIvk<AppCoreConf>('get_app_core_conf', {}),
+	// jsonToToml: (content: string) => runIvk<StringPair | null>('json_to_toml', { content }),
+	// tomlToJson: (content: string) => runIvk<StringPair | null>('toml_to_json', { content }),
 }

@@ -18,12 +18,12 @@ export const externalFunctions = {
 export const extractHeadingsData = (htmlString: string) => {
 	const regex = /<h([1-6])([^>]*)>([\s\S]*?)<\/h\1>/g
 
-	let matches: OutlineHeading[] = []
+	const matches: OutlineHeading[] = []
 	let match
 
 	while ((match = regex.exec(htmlString)) !== null) {
-		let level = match[1]
-		let content = match[3]
+		const level = match[1]
+		const content = match[3]
 		const text = removeHtmlTags(content).replace('&nbsp;', ' ')
 
 		let uuidAttr = ''

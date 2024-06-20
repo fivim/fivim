@@ -1,6 +1,6 @@
 import dateUtil from 'date-and-time'
 
-import { IMAGE_EXT_ARR } from '@/components/Editor/constants'
+import { EXT_IMAGE } from '@/constants'
 import globalStore from '@/stores/globalStore'
 
 export const fileToBase64 = (file: File) => {
@@ -113,7 +113,7 @@ export const getFileNameExt = (fileName: string) => {
 }
 
 export const getFileName = (filePath: string, sep: string) => {
-	if (sep === '') sep = globalStore.data.pathSeparator
+	if (sep === '') sep = globalStore.data.paths.separator
 	return filePath.split(sep).pop() || ''
 }
 export const getFileNameFromUrl = (url: string) => {
@@ -131,19 +131,19 @@ export const getFileNameFromUrl = (url: string) => {
 }
 
 export const getDirByFilePath = (filePath: string, sep: string) => {
-	if (sep === '') sep = globalStore.data.pathSeparator
+	if (sep === '') sep = globalStore.data.paths.separator
 	const arr = filePath.split(sep)
 	arr.pop()
 	return arr.join(sep)
 }
 
 export const appendToDirPathStr = (dirPath: string, postfix: string) => {
-	if (dirPath.endsWith(globalStore.data.pathSeparator)) {
+	if (dirPath.endsWith(globalStore.data.paths.separator)) {
 		dirPath = dirPath.substr(0, dirPath.length - 1)
 	}
 	return dirPath + postfix
 }
 
 export const fileNameIsImage = (fileName: string) => {
-	return IMAGE_EXT_ARR.indexOf(getFileNameExt(fileName).toLowerCase()) >= 0
+	return EXT_IMAGE.indexOf(getFileNameExt(fileName).toLowerCase()) > -1
 }

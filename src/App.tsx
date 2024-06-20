@@ -4,6 +4,7 @@ import React from 'react'
 import { AlertDialog } from '@/components/AlertDialog'
 import DesktopLayout from '@/components/LayoutDesktop'
 import DesktopTitlebar from '@/components/LayoutDesktop/TitleBar'
+import MobileLayout from '@/components/LayoutMobile'
 import Loading from '@/components/Loading'
 import LockScreen from '@/components/LockScreen'
 import { MessageLine } from '@/components/MessageLine'
@@ -13,13 +14,13 @@ import { checkConfFileExist, initCoreConf, initStartUpConfFile } from '@/initial
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
+import { pathJoin } from '@/stores_utils/tauri_like'
 import '@/styles/index.scss'
 import { SYNC_LOCK_FILE_NAME } from '@/synchronizer/constants'
 import { tmplAlertDialogProps } from '@/types_template'
 import { insertStyleSheet } from '@/utils/html'
 import { isMobileScreen, isPcScreen, osThemeIsDark } from '@/utils/media_query'
-import { isMobile, isPc, isWindows } from '@/utils/os'
-import { pathJoin } from '@/utils/tauri_like'
+import { isMobile, isPc } from '@/utils/os'
 import { runInTauri } from '@/utils/utils'
 
 const t = i18n.t
@@ -28,20 +29,13 @@ const init = async () => {
 	const GD = globalStore.getData()
 
 	globalStore.setIsMobile(await isMobile())
-	globalStore.setIsPc(await isPc())
 	globalStore.setIsMobileScreen(isMobileScreen())
+	globalStore.setIsPc(await isPc())
 	globalStore.setIsPcScreen(isPcScreen())
 	globalStore.setRunInTauri(runInTauri())
 
-	globalStore.setPathSeparator((await isWindows()) ? '\\' : '/')
-	globalStore.setIsMobile(await isMobile())
-
 	document.documentElement.classList.add(osThemeIsDark() ? 'dark' : 'light')
 	if (GD.isPcOs) insertStyleSheet(`body {border: 1px solid var(--fvm-border-clr);}`)
-
-	// if (isDebug() && GD.isPcOs) {
-	// 	disableRightCilckAndDevTool()
-	// }
 
 	const icc = await initCoreConf()
 	if (!icc) return false
@@ -53,7 +47,7 @@ const init = async () => {
 
 	// Check sync lock file
 	const ef = await invoker.existFile(await pathJoin(settingStore.getUserFilesDir(), SYNC_LOCK_FILE_NAME))
-	if (ef) {
+	if (ef !== null && !ef) {
 		invoker.alert(t('Found synchronization lock file, please resynchronize to ensure data integrity.'))
 		return false
 	}
@@ -84,7 +78,12 @@ const App: React.FC = () => {
 						{GD.existConfigFile && (
 							<>
 								{GD.lockscreen && <LockScreen />}
-								{!GD.lockscreen && <>{GD.isPcScreen && <DesktopLayout />}</>}
+								{!GD.lockscreen && (
+									<>
+										{GD.isPcScreen && <DesktopLayout />}
+										{GD.isMobileScreen && <MobileLayout />}
+									</>
+								)}
 							</>
 						)}
 					</>

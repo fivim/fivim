@@ -48,7 +48,7 @@ export const splitMulitLinesToHtmlEle = (text: string, tagName: string) => {
 	if (text.indexOf('\n')) {
 		if (tagName === '') tagName = 'div'
 		const arr = text.split('\n')
-		let arr2 = arr.map((item) => `<${tagName}>${item}</${tagName}>`)
+		const arr2 = arr.map((item) => `<${tagName}>${item}</${tagName}>`)
 		text = arr2.join('\n')
 	}
 

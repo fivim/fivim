@@ -1,6 +1,6 @@
 // Window
 pub const WINDOW_LABEL_MAIN: &str = "main";
-pub const TRAY_ID: &str = "enas-tray";
+pub const TRAY_ID: &str = "fvm-tray";
 
 // Menu text
 pub const TEXT_EXIT: &str = "Exit";

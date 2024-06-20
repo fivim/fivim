@@ -1,4 +1,8 @@
+@import '@/styles/mixin.scss';
+
 .Titlebar {
+	@include flex-center;
+
 	height: var(--fvm-title-bar-height);
 	line-height: calc(var(--fvm-title-bar-height));
 	background-color: var(--fvm-cmp-clr3);
@@ -11,9 +15,6 @@
 	left: 1px;
 	text-align: center;
 	user-select: none;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 
 	.Content {
 		position: relative;

@@ -10,8 +10,8 @@ module.exports = {
 		ecmaFeatures: {
 			jsx: true,
 		},
-		// sourceType: 'module',
-		// ecmaVersion: 2018,
+		sourceType: 'module',
+		ecmaVersion: 2020,
 	},
 	extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
 	plugins: ['@typescript-eslint', '@stylistic'],

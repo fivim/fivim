@@ -1,6 +1,5 @@
 use fivim_rs_commands::net as rc;
-use fivim_rs_utils::web::{self as xu_web, HttpResponse};
-use log::error;
+use fivim_rs_utils::web::{self as xu_web};
 use std::collections::{hash_map::RandomState, HashMap};
 
 #[tauri::command]
@@ -12,8 +11,8 @@ pub async fn download_file(
     file_path: String,
     is_large_file: bool,
     progress_name: String,
-) -> bool {
-    return match rc::download_file(
+) -> Result<bool, String> {
+    match rc::download_file(
         &method,
         &url,
         &header_map,
@@ -24,12 +23,9 @@ pub async fn download_file(
     )
     .await
     {
-        Ok(rrr) => rrr,
-        Err(e) => {
-            error!("download_file error: {e}");
-            false
-        }
-    };
+        Ok(sss) => Ok(sss),
+        Err(e) => Err(format!("download_file error: {}", e.to_string())),
+    }
 }
 
 #[tauri::command]
@@ -40,8 +36,8 @@ pub async fn http_request(
     params_map: HashMap<String, String, RandomState>,
     body: String,
     resp_data_type: String,
-) -> xu_web::HttpResponse {
-    return match rc::http_request(
+) -> Result<xu_web::HttpResponse, String> {
+    match rc::http_request(
         &method,
         &url,
         &header_map,
@@ -51,12 +47,7 @@ pub async fn http_request(
     )
     .await
     {
-        Ok(rrr) => rrr,
-        Err(e) => {
-            error!("http_request error: {e}");
-            let mut res = HttpResponse::new();
-            res.error_msg = format!("http_request error: {e}");
-            res
-        }
-    };
+        Ok(sss) => Ok(sss),
+        Err(e) => Err(format!("http_request error: {}", e.to_string())),
+    }
 }

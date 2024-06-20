@@ -1,5 +1,5 @@
 // import { platform } from '@tauri-apps/plugin-os'// for tauri2.x
-import { runInTauri } from './utils'
+// import { runInTauri } from './utils'
 
 export const isIos = async () => {
 	// if (runInTauri()) {

@@ -1,3 +1,9 @@
+@mixin flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 /* Color of the selected text */
 @mixin selection {
 	::selection {

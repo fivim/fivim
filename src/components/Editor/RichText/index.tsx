@@ -9,7 +9,7 @@ import '@exsied/exsied/style.css'
 
 import { LOCAL_FILE_LINK_PREFIX } from '@/constants'
 import globalStore from '@/stores/globalStore'
-import { StringStringObj } from '@/types'
+import { Func_Empty_Void, Func_String_Void, StringStringObj } from '@/types'
 import { extractHeaders } from '@/utils/html'
 
 import { IMG_BAK_SRC_ATTR_NAME, externalFunctions, extractHeadingsData } from './base'
@@ -18,7 +18,7 @@ import { processHotKey } from './hot_key'
 import './styles.scss'
 
 export type EditorComponentRef = {
-	setValue: (str: string) => void
+	setValue: Func_String_Void
 	getValue: () => string
 	updateCustomBlockByUuid: (uuid: string, dataJsonStr: string, htmlStr: string, dataSet?: StringStringObj) => any
 	removeCustomBlockByUuid: (uuid: string) => any
@@ -28,8 +28,8 @@ export type EditorComponentRef = {
 interface Props {
 	id?: string
 	name?: string
-	onOpenFile: (str: string) => void
-	onSaveFile: () => void
+	onOpenFile: Func_String_Void
+	onSaveFile: Func_Empty_Void
 	placeholder?: string
 	tabIndex?: number
 }
@@ -275,11 +275,11 @@ export const RtEditor = forwardRef<EditorComponentRef, Props>(
 )
 
 const headingAddAttr = (htmlString: string) => {
-	var tempDiv = document.createElement('div')
+	const tempDiv = document.createElement('div')
 	tempDiv.innerHTML = htmlString
-	var headers = tempDiv.querySelectorAll('h1, h2, h3, h4, h5, h6')
+	const headers = tempDiv.querySelectorAll('h1, h2, h3, h4, h5, h6')
 
-	for (var i = 0; i < headers.length; i++) {
+	for (let i = 0; i < headers.length; i++) {
 		if (!headers[i].hasAttribute('data-uuid')) {
 			headers[i].setAttribute('data-uuid', uuidv4())
 		}

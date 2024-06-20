@@ -1,7 +1,7 @@
+@import '@/styles/mixin.scss';
+
 .SetupWizard {
+	@include flex-center;
 	height: 100vh;
-	display: flex;
-	align-items: center;
 	text-align: center;
-	justify-content: center;
 }

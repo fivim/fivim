@@ -20,6 +20,7 @@ import CodeMirror, { Extension, ViewUpdate } from '@uiw/react-codemirror'
 
 import i18n from '@/i18n'
 import globalStore from '@/stores/globalStore'
+import { Func_Empty_Void, Func_String_Void } from '@/types'
 
 import { Select } from '../../Select'
 import { FILE_EXT_LANG_MAP, FILE_EXT_LANG_MAP_KEY, LangsKey, themesOptions } from './base'
@@ -35,9 +36,9 @@ interface Props {
 	height?: string
 	isDarkMode: boolean
 	lang?: string
-	onChange: (str: string) => void
-	onChangeLang?: (str: string) => void
-	onSaveFile?: () => void
+	onChange: Func_String_Void
+	onChangeLang?: Func_String_Void
+	onSaveFile?: Func_Empty_Void
 }
 
 const SHOW_MD_PREVIEW_DEFAULT = false
@@ -225,24 +226,24 @@ const CmEditor: React.FC<Props> = ({
 				{/* markdown preview */}
 				{fileExt === 'md' && (
 					<>
-						<button
-							className="cur-ptr pl-2"
+						<span
+							className={classNames('cur-ptr pl-2', styles.actionBtn)}
 							style={{ color: showMdPreview ? 'var(--fvm-solid-clr)' : '' }}
 							onClick={() => {
 								setShowMdPreview(!showMdPreview)
 							}}
 						>
 							{t('Preview')}
-						</button>
+						</span>
 
-						<button
-							className="cur-ptr pl-2"
+						<span
+							className={classNames('cur-ptr pl-2', styles.actionBtn)}
 							onClick={() => {
 								formatMd()
 							}}
 						>
 							{t('Format')}
-						</button>
+						</span>
 					</>
 				)}
 			</div>
