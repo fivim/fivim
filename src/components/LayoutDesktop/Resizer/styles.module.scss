@@ -1,8 +1,8 @@
 .Resizer {
-	background-color: var(--enas-border-clr);
+	background-color: var(--fvm-border-clr);
 	cursor: col-resize;
-	height: calc(100vh - var(--enas-title-bar-height));
+	height: calc(100vh - var(--fvm-title-bar-height));
 	position: fixed;
-	top: var(--enas-title-bar-height);
-	width: var(--enas-desktop-rezizer-width);
+	top: var(--fvm-title-bar-height);
+	width: var(--fvm-desktop-rezizer-width);
 }

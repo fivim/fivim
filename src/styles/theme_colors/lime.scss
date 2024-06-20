@@ -4,26 +4,26 @@
 $lime11: #d6fa8f;
 
 :root {
-	--enas-bg-color_lime: var(--lime-1);
-	--enas-text-color_lime: #{$lime11}; // var(--lime-11);
-	--enas-highlight-color_lime: var(--lime-9);
+	--fvm-bg-color_lime: var(--lime-1);
+	--fvm-text-color_lime: #{$lime11}; // var(--lime-11);
+	--fvm-highlight-color_lime: var(--lime-9);
 }
 
 :root[theme='lime'] {
-	--enas-bg-clr: var(--lime-1);
-	--enas-bg-clr2: var(--lime-2);
+	--fvm-bg-clr: var(--lime-1);
+	--fvm-bg-clr2: var(--lime-2);
 
-	--enas-cmp-clr: var(--lime-3);
-	--enas-cmp-clr2: var(--lime-4);
-	--enas-cmp-clr3: var(--lime-5);
+	--fvm-cmp-clr: var(--lime-3);
+	--fvm-cmp-clr2: var(--lime-4);
+	--fvm-cmp-clr3: var(--lime-5);
 
-	--enas-border-clr: var(--lime-6);
-	--enas-border-clr2: var(--lime-7);
-	--enas-border-clr3: var(--lime-8);
+	--fvm-border-clr: var(--lime-6);
+	--fvm-border-clr2: var(--lime-7);
+	--fvm-border-clr3: var(--lime-8);
 
-	--enas-solid-clr: var(--lime-9);
-	--enas-solid-clr2: var(--lime-10);
+	--fvm-solid-clr: var(--lime-9);
+	--fvm-solid-clr2: var(--lime-10);
 
-	--enas-text-clr: #{$lime11}; // var(--lime-11);
-	--enas-text-clr2: var(--lime-12);
+	--fvm-text-clr: #{$lime11}; // var(--lime-11);
+	--fvm-text-clr2: var(--lime-12);
 }

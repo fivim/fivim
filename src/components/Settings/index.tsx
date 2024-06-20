@@ -137,15 +137,15 @@ export const Settings: React.FC<Props> = ({ showModal, onModalOk, onModalCancel,
 									<div className={styles.ThemeColorBoxGroup}>
 										<div
 											className={styles.ThemeColorBox}
-											style={{ backgroundColor: `var(--enas-bg-color_${item})` }}
+											style={{ backgroundColor: `var(--fvm-bg-color_${item})` }}
 										></div>
 										<div
 											className={styles.ThemeColorBox}
-											style={{ backgroundColor: `var(--enas-text-color_${item})` }}
+											style={{ backgroundColor: `var(--fvm-text-color_${item})` }}
 										></div>
 										<div
 											className={styles.ThemeColorBox}
-											style={{ backgroundColor: `var(--enas-highlight-color_${item})` }}
+											style={{ backgroundColor: `var(--fvm-highlight-color_${item})` }}
 										></div>
 									</div>
 								</div>

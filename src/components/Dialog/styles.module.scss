@@ -6,7 +6,7 @@ input {
 }
 
 .DialogOverlay {
-	background-color: var(--enas-bg-clr);
+	background-color: var(--fvm-bg-clr);
 	position: fixed;
 	inset: 0;
 
@@ -16,8 +16,8 @@ input {
 }
 
 .DialogContent {
-	background-color: var(--enas-cmp-clr);
-	border: 1px solid var(--enas-border-clr);
+	background-color: var(--fvm-cmp-clr);
+	border: 1px solid var(--fvm-border-clr);
 	border-radius: 6px;
 	box-shadow:
 		hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
@@ -59,13 +59,13 @@ input {
 .DialogTitle {
 	margin: 0;
 	font-weight: 500;
-	color: var(--enas-solid-clr);
+	color: var(--fvm-solid-clr);
 	font-size: 1.5rem;
 }
 
 .DialogDescription {
 	margin: 10px 0 20px;
-	color: var(--enas-text-clr2);
+	color: var(--fvm-text-clr2);
 	font-size: 1rem;
 	line-height: 1.5;
 }
@@ -81,29 +81,29 @@ input {
 	line-height: 1;
 	font-weight: 500;
 	height: 35px;
-	border: 1px solid var(--enas-solid-clr);
+	border: 1px solid var(--fvm-solid-clr);
 
 	&.Ok {
-		background-color: var(--enas-solid-clr);
+		background-color: var(--fvm-solid-clr);
 
 		&:hover {
-			background-color: var(--enas-solid-clr2);
+			background-color: var(--fvm-solid-clr2);
 		}
 	}
 
 	&.Cancel {
-		background-color: var(--enas-cmp-clr);
+		background-color: var(--fvm-cmp-clr);
 
 		&:hover {
-			background-color: var(--enas-cmp-clr3);
+			background-color: var(--fvm-cmp-clr3);
 		}
 	}
 
 	&.Ext {
-		background-color: var(--enas-cmp-clr3);
+		background-color: var(--fvm-cmp-clr3);
 
 		&:hover {
-			background-color: var(--enas-cmp-clr);
+			background-color: var(--fvm-cmp-clr);
 		}
 	}
 }
@@ -116,13 +116,13 @@ input {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	color: var(--enas-danger-clr);
+	color: var(--fvm-danger-clr);
 	position: absolute;
 	top: 10px;
 	right: 10px;
 
 	&:hover {
-		background-color: var(--enas-warning-clr);
+		background-color: var(--fvm-warning-clr);
 	}
 }
 

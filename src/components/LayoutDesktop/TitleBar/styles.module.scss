@@ -1,8 +1,8 @@
 .Titlebar {
-	height: var(--enas-title-bar-height);
-	line-height: calc(var(--enas-title-bar-height));
-	background-color: var(--enas-cmp-clr3);
-	color: var(--enas-text-clr);
+	height: var(--fvm-title-bar-height);
+	line-height: calc(var(--fvm-title-bar-height));
+	background-color: var(--fvm-cmp-clr3);
+	color: var(--fvm-text-clr);
 	cursor: pointer;
 
 	position: fixed;
@@ -18,20 +18,20 @@
 	.Content {
 		position: relative;
 		width: 100%;
-		z-index: var(--enas-z-index-title-bar-content);
+		z-index: var(--fvm-z-index-title-bar-content);
 
 		.title {
-			background-color: var(--enas-bg-clr);
+			background-color: var(--fvm-bg-clr);
 			padding: 0.3rem 0.5rem;
 		}
 	}
 
 	.Actions {
-		z-index: var(--enas-z-index-title-bar_actions);
+		z-index: var(--fvm-z-index-title-bar_actions);
 
 		span:hover {
-			background-color: var(--enas-cmp-clr);
-			color: var(--enas-text-clr2);
+			background-color: var(--fvm-cmp-clr);
+			color: var(--fvm-text-clr2);
 		}
 	}
 
@@ -42,16 +42,16 @@
 		top: 0;
 		left: 0;
 		width: 100%;
-		z-index: var(--enas-z-index-title-bar-progress-bar);
-		height: var(--enas-title-bar-height);
+		z-index: var(--fvm-z-index-title-bar-progress-bar);
+		height: var(--fvm-title-bar-height);
 
 		.Colors {
 			height: $processBarHeight;
 			background-image: linear-gradient(
 				to right,
-				var(--enas-progress-clr-start),
-				var(--enas-progress-clr-middle),
-				var(--enas-progress-clr-end)
+				var(--fvm-progress-clr-start),
+				var(--fvm-progress-clr-middle),
+				var(--fvm-progress-clr-end)
 			);
 		}
 
@@ -60,7 +60,7 @@
 			top: 0;
 			right: 0;
 			height: $processBarHeight;
-			background-color: var(--enas-solid-clr) !important;
+			background-color: var(--fvm-solid-clr) !important;
 		}
 	}
 }

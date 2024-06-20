@@ -130,7 +130,7 @@ const DesktopLayout: React.FC = () => {
 
 					<div
 						style={{
-							width: `calc(100% - ${sideBarWidth}px - var(--enas-desktop-rezizer-width))`,
+							width: `calc(100% - ${sideBarWidth}px - var(--fvm-desktop-rezizer-width))`,
 							height: '100%',
 							minWidth: '200px',
 						}}

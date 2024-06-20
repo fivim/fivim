@@ -56,16 +56,16 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
 				<RxAlertDialog.Content className={styles.AlertDialogContent}>
 					<RxAlertDialog.Title className={styles.AlertDialogTitle}>
 						{msgType === 'info' && (
-							<InfoCircledIcon className={styles.icon} style={{ color: 'var(--enas-info-clr)' }} />
+							<InfoCircledIcon className={styles.icon} style={{ color: 'var(--fvm-info-clr)' }} />
 						)}
 						{msgType === 'success' && (
-							<CheckCircledIcon className={styles.icon} style={{ color: 'var(--enas-success-clr)' }} />
+							<CheckCircledIcon className={styles.icon} style={{ color: 'var(--fvm-success-clr)' }} />
 						)}
 						{msgType === 'error' && (
-							<CrossCircledIcon className={styles.icon} style={{ color: 'var(--enas-danger-clr)' }} />
+							<CrossCircledIcon className={styles.icon} style={{ color: 'var(--fvm-danger-clr)' }} />
 						)}
 						{msgType === 'warning' && (
-							<CircleBackslashIcon className={styles.icon} style={{ color: 'var(--enas-warning-clr)' }} />
+							<CircleBackslashIcon className={styles.icon} style={{ color: 'var(--fvm-warning-clr)' }} />
 						)}
 
 						{title}

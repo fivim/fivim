@@ -1,21 +1,21 @@
 .ActivityBar {
-	background-color: var(--enas-cmp-clr);
-	width: var(--enas-desktop-activity-bar-width);
-	height: calc(100vh - var(--enas-title-bar-height));
+	background-color: var(--fvm-cmp-clr);
+	width: var(--fvm-desktop-activity-bar-width);
+	height: calc(100vh - var(--fvm-title-bar-height));
 
 	.Item {
 		text-align: center;
 		padding: 0.5rem 0;
 
 		&.TextAction {
-			background-color: var(--enas-border-clr2);
+			background-color: var(--fvm-border-clr2);
 		}
 		&.Active {
-			background-color: var(--enas-solid-clr);
+			background-color: var(--fvm-solid-clr);
 		}
 
 		&:hover {
-			background-color: var(--enas-solid-clr2);
+			background-color: var(--fvm-solid-clr2);
 		}
 	}
 }

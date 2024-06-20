@@ -4,7 +4,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: var(--enas-z-index-loading);
+	z-index: var(--fvm-z-index-loading);
 
 	svg {
 		width: 5rem;
@@ -14,7 +14,7 @@
 
 	circle {
 		fill: none;
-		stroke: var(--enas-text-clr);
+		stroke: var(--fvm-text-clr);
 		stroke-width: 2;
 		stroke-dasharray: 1, 200;
 		stroke-dashoffset: 0;

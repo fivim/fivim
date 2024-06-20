@@ -37,8 +37,8 @@ export class CommandsWeb {
 		}
 
 		globalStore.setGlobalMessageLineProps({
-			backgroundColor: 'var(--enas-border-clr)',
-			color: 'var(--enas-text-clr)',
+			backgroundColor: 'var(--fvm-border-clr)',
+			color: 'var(--fvm-text-clr)',
 			description: msg,
 			open: true,
 			title: title,

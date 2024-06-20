@@ -37,7 +37,7 @@ const init = async () => {
 	globalStore.setIsMobile(await isMobile())
 
 	document.documentElement.classList.add(osThemeIsDark() ? 'dark' : 'light')
-	if (GD.isPcOs) insertStyleSheet(`body {border: 1px solid var(--enas-border-clr);}`)
+	if (GD.isPcOs) insertStyleSheet(`body {border: 1px solid var(--fvm-border-clr);}`)
 
 	// if (isDebug() && GD.isPcOs) {
 	// 	disableRightCilckAndDevTool()

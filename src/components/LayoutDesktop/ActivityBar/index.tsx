@@ -43,8 +43,8 @@ type Props = {
 }
 
 const iconStyle = {
-	padding: `var(--enas-desktop-activity-bar-padding)`,
-	fontSize: `var(--enas-desktop-activity-bar-icon-size)`,
+	padding: `var(--fvm-desktop-activity-bar-padding)`,
+	fontSize: `var(--fvm-desktop-activity-bar-icon-size)`,
 }
 
 const ActivityBar = forwardRef<HTMLDivElement, Props>(

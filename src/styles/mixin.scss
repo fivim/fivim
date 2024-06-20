@@ -1,8 +1,8 @@
 /* Color of the selected text */
 @mixin selection {
 	::selection {
-		color: var(--enas-bg-clr2);
-		background-color: var(--enas-text-clr2);
+		color: var(--fvm-bg-clr2);
+		background-color: var(--fvm-text-clr2);
 	}
 }
 
@@ -22,10 +22,10 @@
 	h4::before,
 	h5::before,
 	h6::before {
-		color: var(--enas-primary-clr);
+		color: var(--fvm-primary-clr);
 		padding-inline-end: 0.5rem;
 		margin-inline-end: 0.5rem;
-		border-inline-end: 2px dashed var(--enas-success-clr);
+		border-inline-end: 2px dashed var(--fvm-success-clr);
 	}
 
 	h1 {
@@ -82,25 +82,25 @@
 
 @mixin underline {
 	text-underline-offset: 0.3rem;
-	text-decoration-color: var(--enas-solid-clr);
+	text-decoration-color: var(--fvm-solid-clr);
 }
 
 @mixin strikethrough {
 	text-decoration-color: rgba(0, 0, 0, 0);
 	background: linear-gradient(
 		to bottom,
-		var(--enas-bg-clr2) 0%,
-		var(--enas-bg-clr2) 40%,
-		var(--enas-danger-clr) 50%,
-		var(--enas-bg-clr2) 60%,
-		var(--enas-bg-clr2) 100%
+		var(--fvm-bg-clr2) 0%,
+		var(--fvm-bg-clr2) 40%,
+		var(--fvm-danger-clr) 50%,
+		var(--fvm-bg-clr2) 60%,
+		var(--fvm-bg-clr2) 100%
 	);
 }
 
 @mixin link {
 	text-underline-offset: 0.3rem;
-	background-color: var(--enas-cmp-clr) !important;
-	color: var(--enas-solid-clr);
+	background-color: var(--fvm-cmp-clr) !important;
+	color: var(--fvm-solid-clr);
 	padding: 0 1rem;
 
 	&::before {
@@ -112,12 +112,12 @@
 	padding: 0.5rem;
 	margin-inline-start: 1em;
 	margin-inline-end: 1em;
-	border-inline-start: 3px solid var(--enas-solid-clr);
+	border-inline-start: 3px solid var(--fvm-solid-clr);
 }
 
 @mixin code {
-	background-color: var(--enas-cmp-clr2) !important;
-	color: var(--enas-text-clr) !important;
+	background-color: var(--fvm-cmp-clr2) !important;
+	color: var(--fvm-text-clr) !important;
 
 	&::before,
 	&::after {

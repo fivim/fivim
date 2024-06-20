@@ -1,9 +1,9 @@
 .container {
 	display: flex;
-	padding-top: var(--enas-title-bar-height);
+	padding-top: var(--fvm-title-bar-height);
 
 	.flexibleWidth {
-		width: calc(100vw - var(--enas-desktop-activity-bar-width));
+		width: calc(100vw - var(--fvm-desktop-activity-bar-width));
 	}
 
 	.sideBar {

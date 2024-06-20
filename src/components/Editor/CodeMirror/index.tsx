@@ -227,7 +227,7 @@ const CmEditor: React.FC<Props> = ({
 					<>
 						<button
 							className="cur-ptr pl-2"
-							style={{ color: showMdPreview ? 'var(--enas-solid-clr)' : '' }}
+							style={{ color: showMdPreview ? 'var(--fvm-solid-clr)' : '' }}
 							onClick={() => {
 								setShowMdPreview(!showMdPreview)
 							}}
