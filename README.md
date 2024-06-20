@@ -1,16 +1,16 @@
-# Enassi
+# fivim
 
-[![stars](https://img.shields.io/github/stars/enassi?style=social)](https://github.com/enassi/enassi)
-[![followers](https://img.shields.io/github/followers/enassi?style=social)](https://github.com/enassi/enassi)
-[![watchers](https://img.shields.io/github/watchers/enassi/enassi?style=social)](https://github.com/enassi/enassi)
-[![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/enassi/enassi)
-[![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/enassi/enassi)
+[![stars](https://img.shields.io/github/stars/fivim?style=social)](https://github.com/fivim/fivim)
+[![followers](https://img.shields.io/github/followers/fivim?style=social)](https://github.com/fivim/fivim)
+[![watchers](https://img.shields.io/github/watchers/fivim/fivim?style=social)](https://github.com/fivim/fivim)
+[![chat-discord](https://img.shields.io/badge/chat-discord-7289da.svg)](https://github.com/fivim/fivim)
+[![sponsor-Open_Collective](https://img.shields.io/badge/sponsor-Open%20Collective-blue.svg)](https://github.com/fivim/fivim)
 
-[Engilsh document](https://enassi.pages.dev/en/) / [简体中文文档](https://enassi.pages.dev/zh-cn/)
+**Fivim** is an encryption assistant for your data.
 
-[Github repo](https://github.com/enassi/enassi) / [Gitee repo](https://gitee.com/enassi/enassi/)
+[Engilsh document](https://fivim.pages.dev/en/) / [简体中文文档](https://fivim.pages.dev/zh-cn/)
 
-Enassi is an encryption assistant for your data.
+[Github repo](https://github.com/fivim/fivim) / [Gitee repo](https://gitee.com/fivim/fivim/)
 
 ## Features
 
@@ -24,19 +24,19 @@ Enassi is an encryption assistant for your data.
 
 ## Themes
 
-[All themes](https://enassi.pages.dev/en/themes/)
+[All themes](https://fivim.pages.dev/en/themes/)
 
 Violet light
 
-![Violet light](https://enassi.pages.dev/violet_light.png)
+![Violet light](https://fivim.pages.dev/violet_light.png)
 
 Violet dark
 
-![Violet dark](https://enassi.pages.dev/violet_dark.png)
+![Violet dark](https://fivim.pages.dev/violet_dark.png)
 
 ## Donate
 
-[Open collective](https://opencollective.com/enassi)
+[Open collective](https://opencollective.com/fivim)
 
 [Alipay / Weixin pay](https://github.com/newproplus)
 
@@ -60,4 +60,4 @@ Tauri currently supports development and distribution on the following platforms
 
 ## Develop
 
-[Ddocument](https://enassi.pages.dev/en/develop/build/)
+[Ddocument](https://fivim.pages.dev/en/develop/build/)

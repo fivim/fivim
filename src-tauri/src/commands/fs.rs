@@ -1,6 +1,6 @@
-use enassi_rs_commands::fs as rc;
-use enassi_rs_commands::types as rt;
-use enassi_rs_utils::fs as xu_fs;
+use fivim_rs_commands::fs as rc;
+use fivim_rs_commands::types as rt;
+use fivim_rs_utils::fs as xu_fs;
 use log::error;
 
 #[tauri::command]

@@ -1,5 +1,5 @@
 use crate::conf;
-use enassi_rs_utils::logger as xu_logger;
+use fivim_rs_utils::logger as xu_logger;
 use tauri::{
     CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
 };

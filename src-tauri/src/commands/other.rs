@@ -1,6 +1,6 @@
 use crate::dir as x_dir;
-use enassi_rs_commands::other as rc;
-use enassi_rs_utils::progress as xu_progress;
+use fivim_rs_commands::other as rc;
+use fivim_rs_utils::progress as xu_progress;
 use log::error;
 
 #[tauri::command]

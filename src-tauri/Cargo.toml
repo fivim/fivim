@@ -1,10 +1,10 @@
 [package]
-name = "enassi"
+name = "fivim"
 version = "2.1.1"
 description = "Encryption assistant"
 authors = ["newproplus"]
 license = ""
-repository = "https://github.com/enassi/enassi"
+repository = "https://github.com/fivim/fivim"
 edition = "2021"
 rust-version = "1.78"
 
@@ -31,8 +31,8 @@ sys-info = "0.9"
 tauri = {version = "1.6", features = ["api-all", "system-tray", "devtools"] }
 time = "0.3"
 window-shadows = "0.2"
-enassi-rs-utils = "1.0.0"
-enassi-rs-commands = "1.0.0"
+fivim-rs-utils = "1.0"
+fivim-rs-commands = "1.0"
 dirs = "5.0"
 
 [features]

@@ -1,4 +1,4 @@
-export const APP_NAME = 'enassi'
+export const APP_NAME = 'fivim'
 export const APP_VERSION = 'v2.1.1'
 export const AVAILABLE_THEMES = [
 	'default',
@@ -22,7 +22,7 @@ export const PASSWORD_MIN_LENGTH = 8
 export const PASSWORD_MAX_LENGTH = 32
 export const PASSWORD_SALT = '___enas^#$___' // DO NOT MODIFY, OR THE OLD DATA WILL NOT BE DECRYPTED!
 
-export const LOCAL_FILE_LINK_PREFIX = 'enassi.file://'
+export const LOCAL_FILE_LINK_PREFIX = 'fivim.file://'
 export const TREE_DIR_PATH_PREFIX = '\r\r\r'
 
 export const TYPE_AUDIO = 'AUDIO' // Audio files
