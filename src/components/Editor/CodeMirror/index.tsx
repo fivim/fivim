@@ -4,30 +4,34 @@ import parserMarkdown from 'prettier/plugins/markdown'
 import prettier from 'prettier/standalone'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { color } from '@uiw/codemirror-extensions-color'
-import { langs } from '@uiw/codemirror-extensions-langs'
-import { androidstudio } from '@uiw/codemirror-theme-androidstudio'
-import { bbedit } from '@uiw/codemirror-theme-bbedit'
-import { dracula } from '@uiw/codemirror-theme-dracula'
-import { eclipse } from '@uiw/codemirror-theme-eclipse'
-import { githubDark, githubLight } from '@uiw/codemirror-theme-github'
-import { materialDark, materialLight } from '@uiw/codemirror-theme-material'
-import { monokai } from '@uiw/codemirror-theme-monokai'
-import { noctisLilac } from '@uiw/codemirror-theme-noctis-lilac'
-import { vscodeDark } from '@uiw/codemirror-theme-vscode'
-import { xcodeDark, xcodeLight } from '@uiw/codemirror-theme-xcode'
-import CodeMirror, { Extension, ViewUpdate } from '@uiw/react-codemirror'
+import { javascript } from '@codemirror/lang-javascript'
+import { Compartment, Extension } from '@codemirror/state'
 
 import i18n from '@/i18n'
 import globalStore from '@/stores/globalStore'
 import { Func_Empty_Void, Func_String_Void } from '@/types'
 
 import { Select } from '../../Select'
-import { FILE_EXT_LANG_MAP, FILE_EXT_LANG_MAP_KEY, LangsKey, themesOptions } from './base'
+import {
+	DEFAULT_DARK_THEME,
+	DEFAULT_LIGHT_THEME,
+	FILE_EXT_LANG_MAP,
+	FILE_EXT_LANG_MAP_KEY,
+	LangsKey,
+	ThemeName,
+	cmSuppertedLang,
+	getLang,
+	getThemeByName,
+	themesOptions,
+} from './base'
 import { md2html } from './md'
 import styles from './styles.module.scss'
+import { useCodeMirror } from './useCodeMirror'
 
 const t = i18n.t
+
+const language = new Compartment()
+
 interface Props {
 	canChangeLang: boolean
 	className?: string
@@ -57,22 +61,34 @@ const CmEditor: React.FC<Props> = ({
 }) => {
 	const GD = globalStore.getData()
 
+	const [currentThemeName, setCurrentThemeName] = useState<ThemeName>(DEFAULT_LIGHT_THEME)
+	const [currentTheme, setCurrentTheme] = useState<Extension>(getThemeByName(DEFAULT_LIGHT_THEME))
+
+	const [currentLangName, setCurrentLangName] = useState<string>('')
+	const [currentLang, setCurrentLang] = useState<Extension>(language.of(javascript()))
+
+	const [extensions, setExtensions] = useState<Extension[]>([currentTheme, currentLang])
+
+	const editor = useRef<HTMLDivElement>(null)
 	const [cmContent, setCmContent] = useState('')
-	const [mode, setMode] = useState('')
-	const [extensions, setExtensions] = useState<Extension[]>()
-	const [theme, setTheme] = useState<Extension | 'light' | 'none' | 'dark'>()
-	const [themeName, setThemeName] = useState<string>('light')
-	const [showMdPreview, setShowMdPreview] = useState(SHOW_MD_PREVIEW_DEFAULT)
+
+	const { state, view, container } = useCodeMirror({
+		container: editor.current,
+		value: cmContent,
+		height,
+		extensions,
+		onChange: (param) => {
+			if (onChange) onChange(param)
+			currentContent.current = param
+			previewMd()
+		},
+	})
 
 	const cmRef = useRef<HTMLDivElement>(null)
 	const previewMdRef = useRef<HTMLDivElement>(null)
 	const currentContent = useRef('')
 
-	const _onChange = (str: string, viewUpdate: ViewUpdate) => {
-		if (onChange) onChange(str)
-		currentContent.current = str
-		previewMd()
-	}
+	const [showMdPreview, setShowMdPreview] = useState(SHOW_MD_PREVIEW_DEFAULT)
 
 	const previewMd = async () => {
 		if (previewMdRef.current) {
@@ -100,6 +116,8 @@ const CmEditor: React.FC<Props> = ({
 	}
 
 	const reset = (_content: string) => {
+		if (isDarkMode) setThemeByName(DEFAULT_DARK_THEME)
+
 		setShowMdPreview(SHOW_MD_PREVIEW_DEFAULT)
 		// Preview markdown on PC
 		if (fileExt === 'md' && SHOW_MD_PREVIEW_DEFAULT && GD.isPcOs) {
@@ -114,17 +132,17 @@ const CmEditor: React.FC<Props> = ({
 	}
 
 	const handleLangChange = (lang: LangsKey) => {
-		if (langs[lang]) {
-			setExtensions([color, langs[lang]()])
-		}
-		setMode(lang)
+		const newLang = getLang(lang)
 
-		if (onChangeLang) onChangeLang(lang)
+		if (newLang) {
+			setCurrentLangName(newLang.language.name)
+			setCurrentLang(newLang)
+			setExtensions([currentTheme, newLang])
+		}
 	}
 
 	const langsToOptions = () => {
-		const arr = Object.keys(langs).sort()
-		return arr.map((item) => {
+		return cmSuppertedLang.map((item) => {
 			return { label: item, value: item }
 		})
 	}
@@ -136,30 +154,18 @@ const CmEditor: React.FC<Props> = ({
 		}
 	}
 
-	const setThemeByName = (name: string) => {
-		setThemeName(name)
-		if (name === 'light') setTheme('light')
-		if (name === 'dark') setTheme('dark')
-		if (name === 'androidstudio') setTheme(androidstudio)
-		if (name === 'bbedit') setTheme(bbedit)
-		if (name === 'dracula') setTheme(dracula)
-		if (name === 'eclipse') setTheme(eclipse)
-		if (name === 'githubDark') setTheme(githubDark)
-		if (name === 'githubLight') setTheme(githubLight)
-		if (name === 'materialDark') setTheme(materialDark)
-		if (name === 'materialLight') setTheme(materialLight)
-		if (name === 'monokai') setTheme(monokai)
-		if (name === 'noctisLilac') setTheme(noctisLilac)
-		if (name === 'vscodeDark') setTheme(vscodeDark)
-		if (name === 'xcodeDark') setTheme(xcodeDark)
-		if (name === 'xcodeLight') setTheme(xcodeLight)
+	const setThemeByName = (name: ThemeName) => {
+		setCurrentThemeName(name)
+
+		const theme = getThemeByName(name)
+		if (theme) {
+			setCurrentTheme(theme)
+			setExtensions([theme, currentLang])
+		}
 	}
 
 	useEffect(() => {
-		isDarkMode ? setThemeByName('dark') : setThemeByName('light')
 		reset('')
-
-		if (lang) handleLangChange(lang as LangsKey)
 
 		if (cmRef.current) {
 			cmRef.current.addEventListener('keydown', handleKeyDown)
@@ -205,18 +211,19 @@ const CmEditor: React.FC<Props> = ({
 				{canChangeLang && (
 					<Select
 						items={langsToOptions()}
-						value={mode}
-						onChange={(val) => handleLangChange(val as keyof typeof langs)}
+						value={currentLangName}
+						onChange={(val) => handleLangChange(val as LangsKey)}
 						triggerTitle={t('Language')}
 						placeholder={''}
 						selectMaxHeight="50vh"
 					/>
 				)}
+
 				<Select
 					items={themesOptions}
-					value={themeName as string}
+					value={currentThemeName as string}
 					onChange={(val) => {
-						setThemeByName(val)
+						setThemeByName(val as ThemeName)
 					}}
 					triggerTitle={t('Theme')}
 					placeholder={''}
@@ -249,14 +256,7 @@ const CmEditor: React.FC<Props> = ({
 			</div>
 
 			<div className={classNames(styles.colContainer, styles.colContainerDesktop)} style={{ flex: 1 }} ref={cmRef}>
-				<CodeMirror
-					className={classNames(styles.col, className)}
-					value={cmContent}
-					height={height}
-					theme={theme}
-					extensions={extensions}
-					onChange={_onChange}
-				/>
+				<div ref={editor} className={classNames(styles.col, styles.CmWrapper, className)}></div>
 
 				{/*  markdown preview	 */}
 				<div

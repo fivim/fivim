@@ -34,7 +34,7 @@ export const SelectContent: React.FC<{ children: React.ReactNode; selectMaxHeigh
 	children,
 	selectMaxHeight,
 }) => {
-	const style = selectMaxHeight ? { height: selectMaxHeight, overflow: 'scroll' } : {}
+	const style = selectMaxHeight ? { maxHeight: selectMaxHeight, overflow: 'scroll' } : {}
 	return (
 		<RxSelect.Portal>
 			<RxSelect.Content
@@ -49,6 +49,8 @@ export const SelectContent: React.FC<{ children: React.ReactNode; selectMaxHeigh
 	)
 }
 
+export const SELECT_SEPARATOR = 'separator'
+
 /**
  * A toolbar primitive you can use to build dropdowns, such as the block type select.
  * @group Toolbar Primitives
@@ -58,7 +60,7 @@ export const Select = <T extends string>(props: {
 	onChange: (value: T) => void
 	triggerTitle: string
 	placeholder: string
-	items: ({ label: string | JSX.Element; value: T } | 'separator')[]
+	items: ({ label: string | JSX.Element; value: T } | typeof SELECT_SEPARATOR)[]
 	selectMaxHeight?: string
 }) => {
 	return (
@@ -66,7 +68,7 @@ export const Select = <T extends string>(props: {
 			<SelectTrigger title={props.triggerTitle} placeholder={props.placeholder} />
 			<SelectContent selectMaxHeight={props.selectMaxHeight}>
 				{props.items.map((item, index) => {
-					if (item === 'separator') {
+					if (item === SELECT_SEPARATOR) {
 						return <RxSelect.Separator key={index} className={styles.SelectSeparator} />
 					}
 					return (
