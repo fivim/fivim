@@ -1253,7 +1253,6 @@ name = "fivim-rs-commands"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ea2eb917c13a69214af0405eff413d3aa40ff7876dc260c1059247565d1d6d5a"
-
 dependencies = [
  "anyhow",
  "base64 0.21.7",
@@ -1289,7 +1288,6 @@ name = "fivim-rs-utils"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f707c28ff4e77c7989bad59944c33f198c45a877d9c47b7b6728f306597735b1"
-
 dependencies = [
  "anyhow",
  "base64 0.21.7",

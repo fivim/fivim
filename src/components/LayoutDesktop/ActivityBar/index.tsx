@@ -155,8 +155,8 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 						</div>
 					</Tooltip>
 
-					{/* Hide these btns */}
-					{((false && GD.editorType === TYPE_MD) || GD.editorType === TYPE_SOURCE_CODE) &&
+					{/* 
+					{(GD.editorType === TYPE_MD || GD.editorType === TYPE_SOURCE_CODE) &&
 						!GD.currentFileName.endsWith(SD.encryptedFileExt) && (
 							<>
 								<Tooltip placement="right" title={t('Try to decrypt the content')}>
@@ -180,7 +180,8 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 									</div>
 								</Tooltip>
 							</>
-						)}
+						)} 
+						 */}
 
 					{SD.sync.mode !== TYPE_NONE && (
 						<>
