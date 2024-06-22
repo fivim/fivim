@@ -56,6 +56,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install TypeScript
+        run: npm install -g typescript
+
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:

@@ -1,3 +1,5 @@
+import { CN_WORKPLACE_ELE } from "@exsied/exsied"
+
 export const APP_NAME = 'Fivim'
 export const APP_VERSION = 'v2.2.0'
 export const AVAILABLE_THEMES = [
@@ -54,15 +56,16 @@ export const HTTP_OPTIONS = 'OPTIONS'
 export const HTTP_CONNECT = 'CONNECT'
 export const HTTP_TRACE = 'TRACE'
 
+export const CN_WORKPLACE_EXSIED = CN_WORKPLACE_ELE
+export const CN_WORKPLACE_CODEMIRROR = "cm-content"
+
 export const EXT_RICH_TEXT = ['xrtm']
 export const EXT_MARKDOWN = ['md']
 
 export const EXT_PDF = ['pdf']
 
-// Extention of image files.
 export const EXT_IMAGE = ['bmp', 'jpg', 'jpeg', 'png', 'gif']
 
-// Extention of source code files.
 export const EXT_SOURCE_CODE = [
 	'c',
 	'c++',

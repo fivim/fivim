@@ -3,11 +3,11 @@ import classNames from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { useRef, useState } from 'react'
 
-import { DownOutlined, InteractionOutlined, SearchOutlined, UpOutlined } from '@ant-design/icons'
+import { InteractionOutlined, SearchOutlined } from '@ant-design/icons'
 import Icon from '@ant-design/icons'
-import { CN_TEMP_ELE_HIGHLIGHT, CN_WORKPLACE_ELE, TN_SPAN, utils } from '@exsied/exsied'
+import { CN_TEMP_ELE_HIGHLIGHT, TN_SPAN, utils } from '@exsied/exsied'
 
-import { EXT_MARKDOWN, EXT_RICH_TEXT, EXT_SOURCE_CODE } from '@/constants'
+import { CN_WORKPLACE_CODEMIRROR, CN_WORKPLACE_EXSIED } from '@/constants'
 import i18n from '@/i18n'
 import RegexSvg from '@/icons/regex.svg?react'
 import { invoker } from '@/invoker'
@@ -16,7 +16,6 @@ import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
 import { Func_Empty_Void } from '@/types'
-import { getFileNameExt } from '@/utils/string'
 
 import styles from './styles.module.scss'
 
@@ -100,26 +99,33 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 
 		const dataIndex = ele.getAttribute('data-index')
 		const index = parseInt(dataIndex || '')
-		const ext = getFileNameExt(path).toLowerCase()
-
-		let className = ''
-		if (EXT_RICH_TEXT.indexOf(ext) > -1) className = CN_WORKPLACE_ELE
-		else if (EXT_MARKDOWN.indexOf(ext) > -1 || EXT_SOURCE_CODE.indexOf(ext) > -1) className = 'cm-content'
-		const findRootEle = document.querySelector(`.${className}`)
 
 		await onOpenFile(path, () => {
-			const ranges = utils.FindAndReplace.findRanges(findRootEle as HTMLElement, searchText.current)
-			if (!ranges) return
+			// in Exsied
+			const workplaceExsiedEle = document.querySelector(`.${CN_WORKPLACE_EXSIED}`)
+			if (workplaceExsiedEle) {
+				const ranges = utils.FindAndReplace.findRanges(workplaceExsiedEle as HTMLElement, searchText.current)
+				if (!ranges) return
 
-			const range = ranges[index]
-			utils.FormatTaName.formatSelected(TN_SPAN, range, `${CN_TEMP_ELE_HIGHLIGHT}`)
+				const range = ranges[index]
+				utils.FormatTaName.formatSelected(TN_SPAN, range, `${CN_TEMP_ELE_HIGHLIGHT}`)
 
-			const ele = document.querySelector(`.${CN_TEMP_ELE_HIGHLIGHT}`)
-			if (ele) {
-				ele.scrollIntoView({
-					behavior: 'smooth',
-					block: 'center',
-				})
+				const ele = document.querySelector(`.${CN_TEMP_ELE_HIGHLIGHT}`)
+				if (ele) {
+					ele.scrollIntoView({
+						behavior: 'smooth',
+						block: 'center',
+					})
+				}
+
+				return
+			}
+
+			// in codemirror
+			const workplaceCmEle = document.querySelector(`.${CN_WORKPLACE_CODEMIRROR}`)
+			if (workplaceCmEle) {
+				// TODO:
+				return
 			}
 		})
 	}
