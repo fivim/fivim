@@ -87,8 +87,8 @@ importers:
         specifier: ^6.28.2
         version: 6.28.2
       '@exsied/exsied':
-        specifier: 0.13.0
-        version: 0.13.0
+        specifier: link:/run/media/jam/648C77808C774B94/dev/__xxx/github_repos/test/exsied
+        version: link:../github_repos/test/exsied
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
@@ -497,6 +497,9 @@ packages:
 
   '@codemirror/lint@6.8.1':
     resolution: {integrity: sha512-IZ0Y7S4/bpaunwggW2jYqwLuHj0QtESf5xcROewY6+lDNwZ/NzvR4t+vpYgg9m7V8UXLPYqG+lu3DF470E5Oxg==}
+
+  '@codemirror/search@0.20.1':
+    resolution: {integrity: sha512-ROe6gRboQU5E4z6GAkNa2kxhXqsGNbeLEisbvzbOeB7nuDYXUZ70vGIgmqPu0tB+1M3F9yWk6W8k2vrFpJaD4Q==}
 
   '@codemirror/search@0.20.1':
     resolution: {integrity: sha512-ROe6gRboQU5E4z6GAkNa2kxhXqsGNbeLEisbvzbOeB7nuDYXUZ70vGIgmqPu0tB+1M3F9yWk6W8k2vrFpJaD4Q==}
@@ -3608,6 +3611,12 @@ snapshots:
       '@codemirror/view': 0.20.7
       crelt: 1.0.6
 
+  '@codemirror/search@0.20.1':
+    dependencies:
+      '@codemirror/state': 0.20.1
+      '@codemirror/view': 0.20.7
+      crelt: 1.0.6
+
   '@codemirror/search@6.5.6':
     dependencies:
       '@codemirror/state': 6.4.1
@@ -3727,8 +3736,6 @@ snapshots:
       - supports-color
 
   '@eslint/js@8.57.0': {}
-
-  '@exsied/exsied@0.13.0': {}
 
   '@floating-ui/core@1.6.2':
     dependencies:
