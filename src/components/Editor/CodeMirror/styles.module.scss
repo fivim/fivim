@@ -2,16 +2,17 @@
 
 .toolbar {
 	@include flex-center;
-	background-color: var(--fvm-cmp-clr);
+	background-color: var(--fvm-tool-bar-background-clr);
+	color: var(--fvm-tool-bar-clr);
 	border-bottom: 1px solid var(--fvm-border-clr);
 	padding: 0;
 	height: var(--fvm-editor-tool-bar-height);
 
 	.actionBtn {
 		background-color: var(--fvm-cmp-clr3);
-		padding: var(--fvm-spacing-1);
-		margin: 0 var(--fvm-spacing-1);
-		border-radius: var(--fvm-spacing-2);
+		padding: var(--fvm-spacing1);
+		margin: 0 var(--fvm-spacing1);
+		border-radius: var(--fvm-spacing2);
 	}
 }
 

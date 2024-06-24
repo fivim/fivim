@@ -1,31 +1,25 @@
 @import '@/styles/mixin.scss';
 
-:root {
-	--exd-backgroud-color: var(--fvm-bg-clr);
-	--exd-text-color: var(--fvm-text-clr);
+.exsied {
+	--exd-backgroud-color: var(--fvm-bg-clr) !important;
+	--exd-text-color: var(--fvm-text-clr) !important;
 	--exd-component-backgroud-color: var(--fvm-cmp-clr) !important;
-	--exd-component-color: var(--fvm-text-clr);
-	--exd-component-border-color: var(--fvm-border-clr);
-	--exd-highlight-color: var(--fvm-highlight-clr);
+	--exd-component-color: var(--fvm-text-clr) !important;
+	--exd-component-border-color: var(--fvm-border-clr) !important;
+	--exd-highlight-color: var(--fvm-highlight-clr) !important;
 
-	--exd-toolbar-backgroud-color: var(--fvm-bg-clr2);
-	--exd-toolbar-text-color: var(--fvm-text-clr2);
-	--exd-toolbar-ctrl-backgroud-color-active: var(--fvm-solid-clr);
-	--exd-toolbar-ctrl-backgroud-color-hover: var(--fvm-solid-clr2);
+	--exd-toolbar-backgroud-color: var(--fvm-tool-bar-background-clr) !important;
+	--exd-toolbar-text-color: var(--fvm-tool-bar-clr) !important;
+	--exd-toolbar-ctrl-backgroud-color-active: var(--fvm-solid-clr) !important;
+	--exd-toolbar-ctrl-backgroud-color-hover: var(--fvm-solid-clr2) !important;
 
 	--exd-toolbar-height: 40px;
 }
 
 .dark {
 	.exsied {
-		.exsied-toolbar-main {
-			.exsied-icon {
-				filter: invert(0.9);
-			}
-		}
-
-		.exsied-popup-view .exsied-icon {
-			filter: invert(0.9);
+		.exsied-icon {
+			filter: invert(0.9) !important;
 		}
 	}
 }
@@ -88,4 +82,9 @@
 
 .exsied-btn-table-cell-action {
 	padding: 0;
+}
+
+// TODO: move to exsied
+.exsied-icon::after {
+	min-width: 1.2rem;
 }

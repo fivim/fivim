@@ -55,10 +55,9 @@
 // tree
 .ant-tree {
 	color: var(--fvm-text-clr2);
-	background-color: var(--fvm-bg-clr);
 
 	.ant-tree-treenode {
-		background-color: var(--fvm-bg-clr);
+		background-color: var(--fvm-side-bar-background-clr);
 
 		:hover {
 			background-color: var(--fvm-cmp-clr3);
@@ -222,6 +221,10 @@
 		color: var(--fvm-text-clr);
 		background-color: var(--fvm-bg-clr);
 		border-color: var(--fvm-border-clr3);
+
+		.ant-drawer-body {
+			padding: 0;
+		}
 	}
 }
 
@@ -233,4 +236,8 @@
 
 .anticon {
 	color: var(--fvm-text-clr);
+}
+
+.ant-result-info .ant-result-icon > .anticon {
+	color: var(--fvm-solid-clr);
 }

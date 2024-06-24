@@ -2,32 +2,69 @@
 // Theme colors
 //
 // Imitate the usage of "@radix-ui/colors": https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale
-$defaultBgClr: rgb(3, 3, 23);
-$defaultHighlightClr: rgb(86, 79, 143);
-$defaultTextClr: rgb(125, 137, 190);
 
 :root {
-	--fvm-bg-color_default: #{$defaultBgClr};
-	--fvm-text-color_default: #{$defaultTextClr};
-	--fvm-highlight-color_default: #{$defaultHighlightClr};
+	--fvm-bg-color_default: #fff;
+	--fvm-text-color_default: #1a1d23;
+	--fvm-highlight-color_default: #099be0;
 }
 
 :root {
 	// Background color
-	--fvm-bg-clr: #{$defaultBgClr}; // 1
-	--fvm-bg-clr2: rgb(24, 28, 42); // 2
+	--fvm-bg-clr: var(--fvm-bg-color_default); // 1
+	--fvm-bg-clr2: #eee; // 2
 	// Component color
-	--fvm-cmp-clr: rgb(38, 41, 56); // 3
-	--fvm-cmp-clr2: rgb(44, 48, 70); // 4
-	--fvm-cmp-clr3: rgb(52, 62, 109); // 5
+	--fvm-cmp-clr: #eee; // 3
+	--fvm-cmp-clr2: #e9e9e9; // 4
+	--fvm-cmp-clr3: #e3e3e3; // 5
 	// Border color
-	--fvm-border-clr: rgb(45, 50, 88); // 6
-	--fvm-border-clr2: rgb(46, 45, 114); // 7
-	--fvm-border-clr3: rgb(43, 51, 122); // 8
+	--fvm-border-clr: #dbdbdb; // 6
+	--fvm-border-clr2: #c7c7c7; // 7
+	--fvm-border-clr3: #acacac; // 8
 	// Solid color
-	--fvm-solid-clr: #{$defaultHighlightClr}; // 9
-	--fvm-solid-clr2: rgb(69, 72, 136); // 10
+	--fvm-solid-clr: var(--fvm-highlight-color_default); // 9
+	--fvm-solid-clr2: #00b0ff; // 10
 	// Text color
-	--fvm-text-clr: #{$defaultTextClr}; // 11
-	--fvm-text-clr2: rgb(173, 195, 241); // 12
+	--fvm-text-clr: var(--fvm-text-color_default); // 11
+	--fvm-text-clr2: #181c2a; // 12
+
+	// Elements color
+	--fvm-title-bar-background-clr: #f9f9f9;
+	--fvm-activity-bar-background-clr: #eee;
+	--fvm-side-bar-background-clr: #fff;
+	--fvm-tool-bar-background-clr: var(--fvm-cmp-clr);
+	--fvm-tool-bar-clr: var(--fvm-text-clr2);
+}
+
+:root.dark {
+	--fvm-bg-color_default: #1a1d23;
+	--fvm-text-color_default: #cacacc;
+	--fvm-highlight-color_default: #099be0;
+}
+
+:root.dark {
+	// Background color
+	--fvm-bg-clr: var(--fvm-bg-color_default); // 1
+	--fvm-bg-clr2: #181c2a; // 2
+	// Component color
+	--fvm-cmp-clr: #262938; // 3
+	--fvm-cmp-clr2: #2c3046; // 4
+	--fvm-cmp-clr3: #343e6d; // 5
+	// Border color
+	--fvm-border-clr: #2d3258; // 6
+	--fvm-border-clr2: #2e2d72; // 7
+	--fvm-border-clr3: #2b337a; // 8
+	// Solid color
+	--fvm-solid-clr: var(--fvm-highlight-color_default); // 9
+	--fvm-solid-clr2: #00b0ff; // 10
+	// Text color
+	--fvm-text-clr: var(--fvm-text-color_default); // 11
+	--fvm-text-clr2: #adc3f1; // 12
+
+	// Elements color
+	--fvm-title-bar-background-clr: #1a1e29;
+	--fvm-activity-bar-background-clr: #252834;
+	--fvm-side-bar-background-clr: #24252c;
+	--fvm-tool-bar-background-clr: var(--fvm-cmp-clr);
+	--fvm-tool-bar-clr: var(--fvm-text-clr2);
 }

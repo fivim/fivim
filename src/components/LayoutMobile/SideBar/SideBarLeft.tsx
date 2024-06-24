@@ -10,6 +10,8 @@ import { TAB_FILE_TREE, TAB_OUTLINE } from '@/constants'
 import i18n from '@/i18n'
 import { Func_Empty_Void, Func_String_Void } from '@/types'
 
+import styles from './styles.module.scss'
+
 const t = i18n.t
 interface Props {
 	onOpenFile: Func_String_Void
@@ -46,7 +48,7 @@ const SideBarLeft: React.FC<Props> = ({ onOpenFile, onCloseMenu, onModifyFile })
 	]
 
 	return (
-		<>
+		<div className={styles.SideBarMobile}>
 			<Tabs
 				defaultValue={TAB_FILE_TREE}
 				tabArray={tabArray}
@@ -55,7 +57,7 @@ const SideBarLeft: React.FC<Props> = ({ onOpenFile, onCloseMenu, onModifyFile })
 					onCloseMenu()
 				}}
 			/>
-		</>
+		</div>
 	)
 }
 

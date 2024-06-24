@@ -5,13 +5,15 @@ import React from 'react'
 
 import Editor, { EditorComponentRef } from '@/components/Editor'
 import FileTree from '@/components/FileTree'
-import { TAB_FILE_TREE, TAB_OUTLINE, TAB_SEARCH } from '@/constants'
+import { TAB_CONTENT_TAGS, TAB_FILE_TREE, TAB_LINK_TAGS, TAB_OUTLINE, TAB_SEARCH } from '@/constants'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
 import { EditorType, Func_Empty_Void } from '@/types'
 import { TabId } from '@/types'
 
+import ContentTags from '../ContentTags'
+import LinkTags from '../LinkTags'
 import Outline from '../Outline'
 import Search from '../Search'
 import ActivityBar from './ActivityBar'
@@ -124,8 +126,9 @@ const DesktopLayout: React.FC = () => {
 							)}
 
 							{GD.tabId === TAB_OUTLINE && <Outline />}
-
 							{GD.tabId === TAB_SEARCH && <Search onOpenFile={onOpenFile} />}
+							{GD.tabId === TAB_CONTENT_TAGS && <ContentTags onOpenFile={onOpenFile} />}
+							{GD.tabId === TAB_LINK_TAGS && <LinkTags onOpenFile={onOpenFile} />}
 						</div>
 
 						<Resizer onResize={handleResize} onOver={handleResizeOver} className={classNames(styles.sideBarResizer)} />

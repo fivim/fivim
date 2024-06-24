@@ -72,37 +72,41 @@ export const invoker = {
 		runIvk<string[] | null>('walk_dir_items_get_path', { dirPath, filePath, excludeDires }),
 	// zipDir: (dirPath: string, filePath: string) => runIvk<boolean | null>('zip_dir', { dirPath, filePath }),
 	unzipFile: (filePath: string, dirPath: string) => runIvk<boolean | null>('unzip_file', { dirPath, filePath }),
-	searchDocumentDir: (
+	searchInDir: (
 		dirPath: string,
 		isReMode: boolean,
 		search: string,
 		contextSize: number,
 		wrapperPrefix: string,
 		wrapperPostfix: string,
+		htmlLikeExts: string[],
 	) =>
-		runIvk<SearchFileRes[] | null>('search_document_dir', {
+		runIvk<SearchFileRes[] | null>('search_in_dir', {
 			dirPath,
 			isReMode,
 			search,
 			contextSize,
 			wrapperPrefix,
 			wrapperPostfix,
+			htmlLikeExts,
 		}),
-	searchDocumentFile: (
+	searchInFile: (
 		filePath: string,
 		isReMode: boolean,
 		search: string,
 		contextSize: number,
 		wrapperPrefix: string,
 		wrapperPostfix: string,
+		htmlLikeExts: string[],
 	) =>
-		runIvk<SearchFileRes[] | null>('search_document_file', {
+		runIvk<SearchFileRes[] | null>('search_in_file', {
 			filePath,
 			isReMode,
 			search,
 			contextSize,
 			wrapperPrefix,
 			wrapperPostfix,
+			htmlLikeExts,
 		}),
 
 	// encrypt_hash

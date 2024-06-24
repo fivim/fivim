@@ -1,7 +1,13 @@
 .ActivityBar {
-	background-color: var(--fvm-cmp-clr);
+	background-color: var(--fvm-activity-bar-background-clr);
 	width: var(--fvm-desktop-activity-bar-width);
 	height: calc(100vh - var(--fvm-title-bar-height));
+
+	.Bottom {
+		position: absolute;
+		bottom: 0;
+		width: var(--fvm-desktop-activity-bar-width);
+	}
 
 	.Item {
 		text-align: center;

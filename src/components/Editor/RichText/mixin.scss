@@ -1,0 +1,10 @@
+@mixin bkgSvgIcon() {
+	content: ' ';
+	// background-image: url(./close.svg); // replace this url
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+	display: inline-block;
+	width: 1rem;
+	height: 1rem;
+}

@@ -1,0 +1,23 @@
+@import '../components/Editor/RichText/mixin.scss';
+
+.exsied-workplace-like {
+	.exsied-icon-content-tag {
+		background-color: var(--fvm-solid-clr);
+		cursor: pointer;
+
+		&::after {
+			@include bkgSvgIcon;
+			background-image: url(../icons/tag.svg);
+		}
+	}
+
+	.exsied-icon-link-tag {
+		background-color: var(--fvm-solid-clr);
+		cursor: pointer;
+
+		&::after {
+			@include bkgSvgIcon;
+			background-image: url(../icons/link.svg);
+		}
+	}
+}

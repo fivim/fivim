@@ -102,7 +102,7 @@ const SideBarRight: React.FC<Props> = ({
 	}
 
 	return (
-		<>
+		<div className={styles.SideBarMobile}>
 			<div className="disp-flex pb-4">
 				<span style={{ flex: '1' }}>
 					<span className="text-bold"> &nbsp; </span>
@@ -224,7 +224,7 @@ const SideBarRight: React.FC<Props> = ({
 				onModalCancel={closeSetting}
 				tabPosition={isMobileScreen() ? 'top' : 'left'}
 			/>
-		</>
+		</div>
 	)
 }
 

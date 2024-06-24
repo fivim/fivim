@@ -1,6 +1,6 @@
 [package]
 name = "fivim"
-version = "2.2.0"
+version = "2.3.0"
 description = "Encryption assistant"
 authors = ["newproplus"]
 license = ""
@@ -32,8 +32,8 @@ sys-info = "0.9"
 tauri = {version = "1.6", features = ["api-all", "system-tray", "devtools"] }
 time = "0.3"
 window-shadows = "0.2"
-fivim-rs-utils = "1.1"
-fivim-rs-commands = "1.1"
+fivim-rs-utils = "1.2"
+fivim-rs-commands = "1.2"
 dirs = "5.0"
 
 [features]

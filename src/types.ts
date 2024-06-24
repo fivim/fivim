@@ -3,6 +3,8 @@ import { TreeDataNode } from 'antd'
 import { AlertDialogProps, AlertDialogRes } from '@/components/AlertDialog'
 import { MessageLineProps } from '@/components/MessageLine'
 import {
+	TAB_CONTENT_TAGS,
+	TAB_LINK_TAGS,
 	TAB_SEARCH,
 	TYPE_AUDIO,
 	TYPE_IMAGE,
@@ -30,6 +32,10 @@ import { OutlineHeading } from './components/Editor/RichText/types'
 
 export type OptionItem = { value: string; label: string }
 
+export type StringAnyObj = {
+	[key: string]: any
+}
+
 export type StringNumberObj = {
 	[key: string]: number
 }
@@ -42,11 +48,6 @@ export type StringPair = [string, string]
 export type NumberArray = number[]
 export type StringArray = string[]
 export type ObjectArray = object[]
-
-export type Obj = {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	[key: string]: any
-}
 
 export type Func_Empty_Void = () => void
 export type Func_Any_Void = (param: any) => void
@@ -103,6 +104,8 @@ export type TabId =
 	| typeof TAB_SAVE
 	| typeof TAB_SYNC
 	| typeof TAB_SETTING
+	| typeof TAB_CONTENT_TAGS
+	| typeof TAB_LINK_TAGS
 
 export type AppCoreConf = {
 	dataRootDir: string

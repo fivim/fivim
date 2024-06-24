@@ -2,7 +2,7 @@
 	"name": "fivim",
 	"description": "Office and Encryption Assistant",
 	"private": true,
-	"version": "2.2.0",
+	"version": "2.3.0",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -37,9 +37,8 @@
 		"@codemirror/language": "^6.10.2",
 		"@codemirror/search": "^6.5.6",
 		"@codemirror/state": "^6.4.1",
-		"@codemirror/view": "^6.28.2",
-
-		"@exsied/exsied": "0.13.0",
+		"@codemirror/view": "^6.28.1",
+		"@exsied/exsied": "link:/run/media/jam/648C77808C774B94/dev/__xxx/github_repos/test/exsied",
 		"@radix-ui/colors": "^3.0.0",
 		"@radix-ui/react-alert-dialog": "^1.1.1",
 		"@radix-ui/react-dialog": "^1.1.1",
@@ -59,6 +58,7 @@
 		"crypto-js": "^4.2.0",
 		"date-and-time": "^3.3.0",
 		"filesize": "^10.1.2",
+		"he": "^1.2.0",
 		"highlight.js": "^11.9.0",
 		"i18next": "^23.11.5",
 		"i18next-browser-languagedetector": "^7.2.1",
@@ -73,7 +73,7 @@
 		"react-dom": "^18.3.1",
 		"react-i18next": "^14.1.2",
 		"react-pdf": "^9.0.0",
-		"react-zoom-pan-pinch": "^3.5.0",
+		"react-zoom-pan-pinch": "^3.4.4",
 		"uuid": "^9.0.1"
 	},
 	"devDependencies": {
@@ -82,6 +82,7 @@
 		"@tauri-apps/cli": "^1.5.14",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
 		"@types/crypto-js": "^4.2.2",
+		"@types/he": "^1.2.3",
 		"@types/luxon": "^3.4.2",
 		"@types/node": "^20.14.7",
 		"@types/react": "^18.3.3",

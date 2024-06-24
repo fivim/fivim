@@ -10,12 +10,12 @@ Like mdxeditor_editor
 	color: var(--fvm-text-clr);
 	border: 1px solid var(--fvm-text-clr);
 	z-index: 1;
-	border-bottom-left-radius: var(--fvm-spacing-1);
-	border-bottom-right-radius: var(--fvm-spacing-1);
+	border-bottom-left-radius: var(--fvm-spacing1);
+	border-bottom-right-radius: var(--fvm-spacing1);
 }
 
 .SelectItem {
-	padding: var(--fvm-spacing-1) var(--fvm-spacing-2);
+	padding: var(--fvm-spacing1) var(--fvm-spacing2);
 	cursor: pointer;
 
 	&[data-state='checked'] {
@@ -29,8 +29,8 @@ Like mdxeditor_editor
 	}
 
 	&:last-child {
-		border-bottom-left-radius: var(--fvm-spacing-1);
-		border-bottom-right-radius: var(--fvm-spacing-1);
+		border-bottom-left-radius: var(--fvm-spacing1);
+		border-bottom-right-radius: var(--fvm-spacing1);
 	}
 }
 
@@ -47,11 +47,11 @@ Like mdxeditor_editor
 	background-color: var(--fvm-cmp-clr3);
 	color: var(--fvm-text-clr);
 	height: 1.5rem;
-	padding: var(--fvm-spacing-1) var(--fvm-spacing-2);
-	border-radius: var(--fvm-spacing-2);
+	padding: var(--fvm-spacing1) var(--fvm-spacing2);
+	border-radius: var(--fvm-spacing2);
 	white-space: nowrap;
 	flex-wrap: nowrap;
-	margin: 0 var(--fvm-spacing-1);
+	margin: 0 var(--fvm-spacing1);
 
 	&[data-state='open'] {
 		filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.2));

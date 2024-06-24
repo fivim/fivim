@@ -11,5 +11,6 @@ export const cmdAdapter = (): Commands => {
 	if (globalStore.getData().runInTauri) {
 		return CT
 	}
+
 	return CW
 }

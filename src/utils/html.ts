@@ -28,6 +28,7 @@ export const formatHtml = async (htmlString: string) => {
 		embeddedLanguageFormatting: 'auto',
 	})
 }
+
 export const extractHeaders = (htmlString: string) => {
 	const regex = /<h[1-6][^>]*>(.*?)<\/h[1-6]>/gi
 	const matches = []
@@ -41,7 +42,19 @@ export const extractHeaders = (htmlString: string) => {
 }
 
 export const removeHtmlTags = (htmlString: string) => {
-	return htmlString.replace(/<[^>]*>/g, '')
+	let str = htmlString
+
+	const firstBracketIndex = htmlString.indexOf('>')
+	if (str.lastIndexOf('<', firstBracketIndex) == -1) {
+		str = str.substring(firstBracketIndex + 1)
+	}
+
+	const lastBracketIndex = str.lastIndexOf('<')
+	if (str.indexOf('>', lastBracketIndex) == -1) {
+		str = str.substring(0, lastBracketIndex)
+	}
+
+	return str.replace(/<[^>]*>/g, '')
 }
 
 export const splitMulitLinesToHtmlEle = (text: string, tagName: string) => {

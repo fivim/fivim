@@ -16,11 +16,3 @@ export const showOutline = () => {
 
 	return false
 }
-
-export const cacheXrtm = (filePath: string) => {
-	// TODO:
-}
-
-export const cacheXrtmDir = (dirPath: string) => {
-	// TODO:
-}

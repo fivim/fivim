@@ -27,6 +27,14 @@
 		padding-left: $size !important;
 	}
 
+	.pis-#{$name} {
+		padding-inline-start: $size !important;
+	}
+
+	.pie-#{$name} {
+		padding-inline-end: $size !important;
+	}
+
 	// margin
 	.m-#{$name} {
 		margin: $size !important;
