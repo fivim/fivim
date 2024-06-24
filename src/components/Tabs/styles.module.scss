@@ -10,35 +10,42 @@
 
 		.Triggers {
 			flex-grow: 1;
+			padding: 0.5rem;
 
 			.TabsTrigger {
+				all: unset;
 				user-select: none;
 				padding: 0.25rem 1rem;
 
 				&:first-child {
 					border-top-left-radius: 6px;
 				}
+
 				&:last-child {
 					border-top-right-radius: 6px;
 				}
+
 				&:hover {
 					color: var(--fvm-solid-clr2);
 				}
+
+				&:focus {
+					position: relative;
+					box-shadow: 0 0 0 2px black;
+				}
+
 				&[data-state='active'] {
 					color: var(--fvm-solid-clr);
 					box-shadow:
 						inset 0 -1px 0 0 currentColor,
 						0 1px 0 0 currentColor;
 				}
-				.TabsTrigger:focus {
-					position: relative;
-					box-shadow: 0 0 0 2px black;
-				}
 			}
 		}
 
 		.Btns {
 			flex: 0 0 auto;
+			padding: 0.5rem;
 		}
 	}
 

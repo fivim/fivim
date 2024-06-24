@@ -1,7 +1,7 @@
-import { CN_WORKPLACE_ELE } from "@exsied/exsied"
+import { CN_WORKPLACE_ELE } from '@exsied/exsied'
 
 export const APP_NAME = 'Fivim'
-export const APP_VERSION = 'v2.2.0'
+export const APP_VERSION = 'v2.3.0'
 export const AVAILABLE_THEMES = [
 	'default',
 	'amber',
@@ -45,6 +45,8 @@ export const TAB_SEARCH = 'SEARCH'
 export const TAB_SAVE = 'SAVE'
 export const TAB_SYNC = 'SYNC'
 export const TAB_SETTING = 'SETTING'
+export const TAB_CONTENT_TAGS = 'CONTENT_TAGS'
+export const TAB_LINK_TAGS = 'LINK_TAGS'
 
 export const HTTP_GET = 'GET'
 export const HTTP_POST = 'POST'
@@ -57,15 +59,13 @@ export const HTTP_CONNECT = 'CONNECT'
 export const HTTP_TRACE = 'TRACE'
 
 export const CN_WORKPLACE_EXSIED = CN_WORKPLACE_ELE
-export const CN_WORKPLACE_CODEMIRROR = "cm-content"
+export const CN_WORKPLACE_CODEMIRROR = 'cm-content'
 
+export const EXT_HTML_LIKE = ['html', 'xrtm']
 export const EXT_RICH_TEXT = ['xrtm']
 export const EXT_MARKDOWN = ['md']
-
 export const EXT_PDF = ['pdf']
-
 export const EXT_IMAGE = ['bmp', 'jpg', 'jpeg', 'png', 'gif']
-
 export const EXT_SOURCE_CODE = [
 	'c',
 	'c++',
@@ -98,6 +98,4 @@ export const EXT_SOURCE_CODE = [
 	//
 	'txt',
 ]
-
-// Extention of audio files.
 export const EXT_AUDIO = ['aac', 'aif', 'aiff', 'ape', 'flac', 'mid', 'mp3', 'ogg', 'wav', 'wma']

@@ -61,3 +61,6 @@ src-tauri/gen/android/gradle/wrapper/gradle-8.0-bin.zip
 
 # pdfjs
 public/worker/pdf.worker.*
+
+
+test/*

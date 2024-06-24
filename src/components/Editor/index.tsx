@@ -36,7 +36,7 @@ import { osThemeIsDark } from '@/utils/media_query'
 import { getDirByFilePath, getFileName, getFileNameExt, removeEnding, stringToUint8Array } from '@/utils/string'
 
 import CmEditor from './CodeMirror'
-import { RtEditor, EditorComponentRef as rtComponentRef } from './RichText'
+import { RichTextEditor, EditorComponentRef as rtComponentRef } from './RichText'
 import { externalFunctions as externalFunctionsJodImg } from './RichText/base'
 import { WRONG_IMAGE_URL } from './constants'
 
@@ -387,7 +387,12 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 
 			{editorType === TYPE_XRTM && (
 				<div ref={rtEditorParentRef}>
-					<RtEditor ref={rtEditorRef} id="richTextEditor" onOpenFile={editorOpenFile} onSaveFile={saveEditorContent} />
+					<RichTextEditor
+						ref={rtEditorRef}
+						id="richTextEditor"
+						onOpenFile={editorOpenFile}
+						onSaveFile={saveEditorContent}
+					/>
 				</div>
 			)}
 			{(editorType === TYPE_SOURCE_CODE || editorType === TYPE_MD) && (

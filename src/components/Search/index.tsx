@@ -5,9 +5,9 @@ import { useRef, useState } from 'react'
 
 import { InteractionOutlined, SearchOutlined } from '@ant-design/icons'
 import Icon from '@ant-design/icons'
-import { CN_TEMP_ELE_HIGHLIGHT, TN_SPAN, utils } from '@exsied/exsied'
+import { CN_TEMP_ELE_HIGHLIGHT, FindAndReplace, FormatTaName, TN_SPAN } from '@exsied/exsied'
 
-import { CN_WORKPLACE_CODEMIRROR, CN_WORKPLACE_EXSIED } from '@/constants'
+import { CN_WORKPLACE_CODEMIRROR, CN_WORKPLACE_EXSIED, EXT_HTML_LIKE } from '@/constants'
 import i18n from '@/i18n'
 import RegexSvg from '@/icons/regex.svg?react'
 import { invoker } from '@/invoker'
@@ -32,19 +32,14 @@ interface Props {
 }
 
 const Search: React.FC<Props> = ({ onOpenFile }) => {
-	const GD = globalStore.getData()
-
 	const [isReMode, setIsReMode] = useState(false)
+	const [isLoading, setIsLoading] = useState<boolean>(false)
 
 	const toggleReMode = () => {
 		setIsReMode(!isReMode)
 	}
 
 	const [replaceVisible, setReplaceVisible] = useState(false)
-
-	const toggleReplaceVisible = () => {
-		setReplaceVisible(!replaceVisible)
-	}
 
 	const searchText = useRef<string>('')
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,30 +57,16 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 	const [searchRes, setSearchRes] = useState<SearchFileRes[]>([])
 
 	const searchAll = async () => {
+		setIsLoading(true)
 		const dir = settingStore.getUserFilesDir()
 		const text = searchText.current
-		const res = await invoker.searchDocumentDir(dir, isReMode, text, conf.contentLength, '<b>', '</b>')
+		const res = await invoker.searchInDir(dir, isReMode, text, conf.contentLength, '<b>', '</b>', EXT_HTML_LIKE)
 		if (res) setSearchRes(res)
-	}
-
-	const searchInFile = async (filePath: string) => {
-		const text = searchText.current
-		const res = await invoker.searchDocumentFile(filePath, isReMode, text, conf.contentLength, '<b>', '</b>')
-
-		// setSearchRes(res)
-		// TODO: replace the file search results
+		setIsLoading(false)
 	}
 
 	const replaceAll = () => {
 		console.log('>>> replaceAll', replaceText.current)
-	}
-
-	const replaceInFile = () => {
-		console.log('>>> replaceInFile', replaceText.current)
-	}
-
-	const replaceInFileByIndex = () => {
-		console.log('>>> replaceInFileByIndex', replaceText.current)
 	}
 
 	const showInFile = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -104,11 +85,11 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 			// in Exsied
 			const workplaceExsiedEle = document.querySelector(`.${CN_WORKPLACE_EXSIED}`)
 			if (workplaceExsiedEle) {
-				const ranges = utils.FindAndReplace.findRanges(workplaceExsiedEle as HTMLElement, searchText.current)
+				const ranges = FindAndReplace.findRanges(workplaceExsiedEle as HTMLElement, searchText.current)
 				if (!ranges) return
 
 				const range = ranges[index]
-				utils.FormatTaName.formatSelected(TN_SPAN, range, `${CN_TEMP_ELE_HIGHLIGHT}`)
+				FormatTaName.formatSelected(TN_SPAN, range, `${CN_TEMP_ELE_HIGHLIGHT}`)
 
 				const ele = document.querySelector(`.${CN_TEMP_ELE_HIGHLIGHT}`)
 				if (ele) {
@@ -175,29 +156,35 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 			</Form>
 
 			<div className={styles.SearchResult}>
-				{searchRes.map((file, fileIndex) => {
-					return (
-						<div
-							className={classNames(styles.SearchResultItem, conf.classNameFileMatch)}
-							data-file-path={file.path}
-							key={fileIndex}
-						>
-							<div className={styles.FilePath}>{pathToRelPath(file.path)}</div>
-							<div className={styles.FileMatches}>
-								{file.matches.map((matche, matcheIndex) => {
-									return (
-										<div
-											className={classNames(styles.FileMatch, conf.classNameFileMatchItem)}
-											data-index={matcheIndex}
-											onClick={showInFile}
-											dangerouslySetInnerHTML={{ __html: matche }}
-										></div>
-									)
-								})}
-							</div>
-						</div>
-					)
-				})}
+				{searchRes.length > 0 ? (
+					<>
+						{searchRes.map((fileData, fileIndex) => {
+							return (
+								<div
+									className={classNames(styles.SearchResultItem, conf.classNameFileMatch)}
+									data-file-path={fileData.path}
+									key={fileIndex}
+								>
+									<div className={styles.FilePath}>{pathToRelPath(fileData.path)}</div>
+									<div className={styles.FileMatches}>
+										{fileData.matches.map((matchedText, matcheIndex) => {
+											return (
+												<div
+													className={classNames(styles.FileMatch, conf.classNameFileMatchItem)}
+													data-index={matcheIndex}
+													onClick={showInFile}
+													dangerouslySetInnerHTML={{ __html: matchedText }}
+												></div>
+											)
+										})}
+									</div>
+								</div>
+							)
+						})}
+					</>
+				) : (
+					<div> {isLoading ? t('Loading') : t('None')}</div>
+				)}
 			</div>
 		</div>
 	)

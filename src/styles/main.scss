@@ -21,8 +21,8 @@
 	--fvm-scrollbar-width: 5px;
 	--fvm-scrollbar-height: 5px;
 
-	--fvm-spacing-1: #{map-get($sizes, 1)};
-	--fvm-spacing-2: #{map-get($sizes, 2)};
+	--fvm-spacing1: #{map-get($sizes, 1)};
+	--fvm-spacing2: #{map-get($sizes, 2)};
 
 	// Status color
 	--fvm-danger-clr: rgb(243, 102, 102);
@@ -41,9 +41,16 @@
 	--fvm-default-text-clr-light: #333; // Light mode
 	--fvm-default-text-clr-dark: #999; // Dark mode
 
+	// Elements color
+	--fvm-title-bar-background-clr: var(--fvm-cmp-clr3);
+	--fvm-activity-bar-background-clr: var(--fvm-cmp-clr);
+	--fvm-side-bar-background-clr: var(--fvm-bg-clr2);
+	--fvm-tool-bar-background-clr: var(--fvm-cmp-clr);
+	--fvm-tool-bar-clr: var(--fvm-text-clr2);
+	--fvm-scrollbar-thumb-clr: var(--fvm-border-clr);
+
 	// Other color
 	--fvm-highlight-clr: var(--fvm-solid-clr);
-	--fvm-scrollbar-thumb-clr: var(--fvm-border-clr);
 }
 
 .light:root {

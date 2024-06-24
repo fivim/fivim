@@ -1,0 +1,50 @@
+@import '../../../mixin.scss';
+
+i.exsied-icon-copy {
+	&::after {
+		@include bkgSvgIcon;
+		background-image: url(@/icons/copy.svg);
+	}
+}
+
+.exsied-ele {
+	.exsied-icon-content-tag {
+		&::after {
+			@include bkgSvgIcon;
+			background-image: url(@/icons/tag.svg);
+		}
+	}
+
+	.exsied-workplace {
+		.exsied-icon-content-tag {
+			background-color: var(--fvm-solid-clr);
+			cursor: pointer;
+		}
+	}
+}
+
+.exsied-content-tag-editor {
+	.exsied-content-tag-view {
+		display: block;
+		width: calc(100% - 1.5rem);
+		margin: 0.5rem 0.75rem;
+
+		.exsied-content-tag-preview,
+		.exsied-content-tag-edit-view {
+			.exsied-tag-name {
+				padding: 1rem 0;
+			}
+		}
+
+		.exsied-btn {
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			padding: 0.5rem;
+		}
+	}
+
+	.exsied-actions {
+		display: flex;
+	}
+}

@@ -1,6 +1,6 @@
 import { Base64 } from 'js-base64'
 
-import { Obj, OptionItem } from '@/types'
+import { OptionItem, StringAnyObj } from '@/types'
 
 /**
  * Split one-dimensional array to two-dimensional array by number
@@ -148,7 +148,7 @@ export class OrderedFieldArrayTable {
 
 	// From Object Array to Field Array
 
-	fromObjectArray(objArr: Obj[], callbackObj: OfatFromObjectArrayCallbackObj) {
+	fromObjectArray(objArr: StringAnyObj[], callbackObj: OfatFromObjectArrayCallbackObj) {
 		if (objArr.length === 0) {
 			return
 		}

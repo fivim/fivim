@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { forwardRef, useState } from 'react'
 
-import {
+import Icon, {
 	BarsOutlined,
 	CloudDownloadOutlined,
 	CloudSyncOutlined,
@@ -14,13 +14,25 @@ import {
 	SaveOutlined,
 	SearchOutlined,
 	SettingOutlined,
+	TagsOutlined,
 	UndoOutlined,
 	UnlockOutlined,
 } from '@ant-design/icons'
 
 import { Settings } from '@/components/Settings'
-import { TAB_FILE_TREE, TAB_OUTLINE, TAB_SAVE, TAB_SEARCH, TYPE_MD, TYPE_NONE, TYPE_SOURCE_CODE } from '@/constants'
+import {
+	TAB_CONTENT_TAGS,
+	TAB_FILE_TREE,
+	TAB_LINK_TAGS,
+	TAB_OUTLINE,
+	TAB_SAVE,
+	TAB_SEARCH,
+	TYPE_MD,
+	TYPE_NONE,
+	TYPE_SOURCE_CODE,
+} from '@/constants'
 import i18n from '@/i18n/index'
+import LinkSvg from '@/icons/link.svg?react'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
@@ -108,6 +120,10 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 			invoker.reoladWindow()
 		}
 
+		const fileOpened = () => {
+			return GD.currentFileName !== ''
+		}
+
 		return (
 			<>
 				<div className={classNames(styles.ActivityBar, className)} data-tauri-drag-region>
@@ -122,7 +138,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 						</div>
 					</Tooltip>
 
-					{showOutline() && (
+					{fileOpened() && showOutline() && (
 						<Tooltip placement="right" title={t('Outline')}>
 							<div
 								className={classNames(styles.Item, GD.tabId === TAB_OUTLINE ? styles.Active : '')}
@@ -146,14 +162,31 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 						</div>
 					</Tooltip>
 
-					<Tooltip placement="right" title={t('Save')}>
+					<Tooltip placement="right" title={t('Content tags')}>
 						<div
-							className={classNames(styles.Item, GD.tabId === TAB_SAVE ? styles.Active : '')}
-							onClick={saveEditorContent}
+							className={classNames(styles.Item, GD.tabId === TAB_CONTENT_TAGS ? styles.Active : '')}
+							onClick={() => {
+								toggleTab(TAB_CONTENT_TAGS)
+							}}
 						>
-							<SaveOutlined style={iconStyle} />
+							<TagsOutlined style={iconStyle} />
 						</div>
 					</Tooltip>
+
+					{fileOpened() && (
+						<>
+							<Tooltip placement="right" title={t('Link tags')}>
+								<div
+									className={classNames(styles.Item, GD.tabId === TAB_LINK_TAGS ? styles.Active : '')}
+									onClick={() => {
+										toggleTab(TAB_LINK_TAGS)
+									}}
+								>
+									<Icon component={LinkSvg} style={iconStyle} />
+								</div>
+							</Tooltip>
+						</>
+					)}
 
 					{/* 
 					{(GD.editorType === TYPE_MD || GD.editorType === TYPE_SOURCE_CODE) &&
@@ -198,22 +231,35 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 						</>
 					)}
 
-					<Tooltip placement="right" title={t('Logout')}>
-						<div className={classNames(styles.Item)} onClick={refreshPage}>
-							<LogoutOutlined style={iconStyle} />
-						</div>
-					</Tooltip>
+					<div className={classNames(styles.Bottom)}>
+						{fileOpened() && (
+							<Tooltip placement="right" title={t('Save')}>
+								<div
+									className={classNames(styles.Item, GD.tabId === TAB_SAVE ? styles.Active : '')}
+									onClick={saveEditorContent}
+								>
+									<SaveOutlined style={iconStyle} />
+								</div>
+							</Tooltip>
+						)}
 
-					<Tooltip placement="right" title={t('Setting')}>
-						<div
-							className={classNames(styles.Item)}
-							onClick={() => {
-								setSettingVisible(true)
-							}}
-						>
-							<SettingOutlined style={iconStyle} />
-						</div>
-					</Tooltip>
+						<Tooltip placement="right" title={t('Logout')}>
+							<div className={classNames(styles.Item)} onClick={refreshPage}>
+								<LogoutOutlined style={iconStyle} />
+							</div>
+						</Tooltip>
+
+						<Tooltip placement="right" title={t('Setting')}>
+							<div
+								className={classNames(styles.Item)}
+								onClick={() => {
+									setSettingVisible(true)
+								}}
+							>
+								<SettingOutlined style={iconStyle} />
+							</div>
+						</Tooltip>
+					</div>
 				</div>
 
 				<Settings
