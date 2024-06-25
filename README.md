@@ -14,13 +14,22 @@
 
 ## Features
 
-- 🙂 Easy to use
 - 💌 Free and open source
 - 💻 Cross-platform
 - 🌐 Multi-language
 - 🎨 Various themes
 - ☁️ Synchronize(Gitee and Gitlab)
-- ⌨️ Markdown, 📖 rich text, 🔣 source code files, 📔 PDFs, 🎵 images
+- 🙂 Easy to organize your content
+
+  - 🏷️ Content tags, classificate content
+  - 🔗 Link tags, like back-links or two-way links in note-taking apps like Obsidian or SiYuan, but more easier to use.
+
+- 🧮 Supports multiple file types
+  - ⌨️ Markdown
+  - 📖 rich text(based on HTML)
+  - 🔣 source code files
+  - 📔 PDFs
+  - 🎵 images
 
 ## Themes
 
