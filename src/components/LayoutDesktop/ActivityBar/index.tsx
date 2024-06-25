@@ -242,7 +242,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 								</div>
 							</Tooltip>
 						)}
-
+						
 						<Tooltip placement="right" title={t('Logout')}>
 							<div className={classNames(styles.Item)} onClick={refreshPage}>
 								<LogoutOutlined style={iconStyle} />
