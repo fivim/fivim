@@ -32,6 +32,7 @@ import ContentTag from './plugins/content_tag'
 import LinkTag from './plugins/link_tag'
 
 export const CN_ICON_WITH_BKG = 'exsied-icon-with-bkg'
+const CN_CODEMIRROR_RENDER = 'code-mirror-render'
 let editorView: EditorView | null
 
 function getExtensions(lang: string, onChange: CodeMirrorOnChange) {
@@ -72,7 +73,7 @@ sourceCodeConf.editDataCb = (codeEle: HTMLElement, sign: string) => {
 				})}
 			</select>			
 		</div>
-		<div class="code-mirror-render"></div>
+		<div class="${CN_CODEMIRROR_RENDER}"></div>
 		`
 
 	const ele = PopupView.create({
@@ -94,6 +95,7 @@ sourceCodeConf.editDataCb = (codeEle: HTMLElement, sign: string) => {
 
 	const lang = codeEle.getAttribute('lang') || ''
 	const textContent = codeEle.textContent || ''
+	let currentLang = lang
 	let newTextContent = textContent
 
 	document.body.appendChild(ele)
@@ -107,36 +109,44 @@ sourceCodeConf.editDataCb = (codeEle: HTMLElement, sign: string) => {
 	if (saveBtn) {
 		saveBtn.addEventListener('click', () => {
 			codeEle.textContent = newTextContent
-			const cb = plugins.sourceCode.commands['renderCodeEle']
-			if (cb) {
-				const event = new Event('custom')
+			const render = plugins.sourceCode.commands['renderCodeEle']
+			if (render) {
+				const event = new Event('')
 				const eventWithElement = {
 					...event,
 					customElement: codeEle,
 				} as EventWithElement
 
-				cb(eventWithElement)
+				codeEle.setAttribute('lang', currentLang)
+
+				render(eventWithElement)
 			} else {
 				console.error("Cannot call sourceCode.commands['renderCodeEle']")
 			}
+
 			ele.remove()
 		})
 	}
 	const seleteor = ele.querySelector('.language-seleteor')
 	if (seleteor) {
+		const seleteorEle = seleteor as HTMLSelectElement
+		seleteorEle.value = lang
+
 		seleteor.addEventListener('change', (event) => {
 			const target = event.target
 			if (target) {
 				const targetEle = target as HTMLSelectElement
 				const lang = targetEle.value
 				if (editorView) {
+					currentLang = lang
 					const exts = getExtensions(lang, onChange)
 					editorView.dispatch({ effects: StateEffect.reconfigure.of(exts) })
 				}
 			}
 		})
 	}
-	const renderBlk = ele.querySelector('.code-mirror-render')
+
+	const renderBlk = ele.querySelector(`.${CN_CODEMIRROR_RENDER}`)
 	if (renderBlk) {
 		initCodeMirror(textContent, renderBlk as HTMLElement, lang, onChange)
 	}
