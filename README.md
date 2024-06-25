@@ -26,13 +26,13 @@
 
 [All themes](https://fivim.pages.dev/en/themes/)
 
-Violet light
+Default light
 
-![Violet light](https://fivim.pages.dev/violet_light.png)
+![Violet light](https://fivim.pages.dev/default_light.png)
 
-Violet dark
+Default dark
 
-![Violet dark](https://fivim.pages.dev/violet_dark.png)
+![Violet dark](https://fivim.pages.dev/default_dark.png)
 
 ## Donate
 
