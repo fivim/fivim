@@ -688,9 +688,6 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@exsied/exsied@0.15.0':
-    resolution: {integrity: sha512-0Uon6AUzObRgam/JgIIS/RurZkPB1g+XCTBWaljOaYp0TmZruS13YnR3Umc0rS+QVhMqpSHFaFZVDTYzw3NSQQ==}
-
   '@floating-ui/core@1.6.3':
     resolution: {integrity: sha512-1ZpCvYf788/ZXOhRQGFxnYQOVgeU+pi0i+d0Ow34La7qjIXETi6RNswGVKkA6KcDO8/+Ysu2E/CeUmmeEBDvTg==}
 
@@ -3804,8 +3801,6 @@ snapshots:
       - supports-color
 
   '@eslint/js@8.57.0': {}
-
-  '@exsied/exsied@0.15.0': {}
 
   '@floating-ui/core@1.6.3':
     dependencies:
