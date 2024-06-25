@@ -3,9 +3,9 @@ import { TreeDataNode } from 'antd'
 import { AlertDialogProps, AlertDialogRes } from '@/components/AlertDialog'
 import { MessageLineProps } from '@/components/MessageLine'
 import {
-	TAB_CONTENT_TAGS,
 	TAB_LINK_TAGS,
 	TAB_SEARCH,
+	TAB_CONTENT_TAGS,
 	TYPE_AUDIO,
 	TYPE_IMAGE,
 	TYPE_MD,

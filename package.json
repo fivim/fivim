@@ -2,7 +2,7 @@
 	"name": "fivim",
 	"description": "Office and Encryption Assistant",
 	"private": true,
-	"version": "2.3.0",
+	"version": "2.3.1",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -38,7 +38,7 @@
 		"@codemirror/search": "^6.5.6",
 		"@codemirror/state": "^6.4.1",
 		"@codemirror/view": "^6.28.2",
-		"@exsied/exsied": "0.14.0",
+		"@exsied/exsied": "0.15.0",
 		"@radix-ui/colors": "^3.0.0",
 		"@radix-ui/react-alert-dialog": "^1.1.1",
 		"@radix-ui/react-dialog": "^1.1.1",

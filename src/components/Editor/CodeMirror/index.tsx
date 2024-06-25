@@ -26,7 +26,7 @@ import {
 } from './base'
 import { md2html } from './md'
 import styles from './styles.module.scss'
-import { useCodeMirror } from './useCodeMirror'
+import { useCodeMirror } from './initCodeMirror'
 
 const t = i18n.t
 
@@ -231,7 +231,7 @@ const CmEditor: React.FC<Props> = ({
 				/>
 
 				{/* markdown preview */}
-				{fileExt === 'md' && (
+				{currentLangName === 'markdown' && (
 					<>
 						<span
 							className={classNames('cur-ptr pl-2', styles.actionBtn)}
