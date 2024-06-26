@@ -1,3 +1,4 @@
+import { decode } from 'he'
 import parserHtml from 'prettier/plugins/html'
 import prettier from 'prettier/standalone'
 
@@ -29,13 +30,13 @@ export const formatHtml = async (htmlString: string) => {
 	})
 }
 
-export const extractHeaders = (htmlString: string) => {
+export const extractHeadings = (htmlString: string) => {
 	const regex = /<h[1-6][^>]*>(.*?)<\/h[1-6]>/gi
 	const matches = []
 	let match
 
 	while ((match = regex.exec(htmlString)) !== null) {
-		matches.push(match[0])
+		matches.push(decode(match[0]))
 	}
 
 	return matches

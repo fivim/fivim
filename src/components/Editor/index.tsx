@@ -1,15 +1,14 @@
-import { Result } from 'antd'
 import { Base64 } from 'js-base64'
 import { observer } from 'mobx-react-lite'
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { SmileOutlined } from '@ant-design/icons'
-
 import { ImageViewer } from '@/components/Editor/ImageViewer'
 import { PdfViewer } from '@/components/Editor/PdfViewer'
 import {
+	APP_NAME,
+	APP_VERSION,
 	EXT_MARKDOWN,
 	EXT_PDF,
 	EXT_RICH_TEXT,
@@ -383,7 +382,15 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 
 	return (
 		<>
-			{editorType === TYPE_NONE && <Result icon={<SmileOutlined />} title={t('Please open the file first')} />}
+			{editorType === TYPE_NONE && (
+				<div className="text-align-center pt-12">
+					<img src="/public/logo.png" alt="" width="100px" />
+					<p>
+						{APP_NAME} {APP_VERSION}
+					</p>
+					<h2>{t('Please open the file first')}</h2>
+				</div>
+			)}
 
 			{editorType === TYPE_XRTM && (
 				<div ref={rtEditorParentRef}>

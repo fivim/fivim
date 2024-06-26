@@ -2,7 +2,7 @@
 	"name": "fivim",
 	"description": "Office and Encryption Assistant",
 	"private": true,
-	"version": "2.3.1",
+	"version": "2.4.0",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -12,6 +12,7 @@
 		"format": "npx prettier --write '**/*.{html,json,md,css,scss,ts,tsx,js,jsx}'"
 	},
 	"dependencies": {
+		"3d-force-graph": "^1.73.3",
 		"@ant-design/icons": "^5.3.7",
 		"@codemirror/basic-setup": "^0.20.0",
 		"@codemirror/commands": "^6.6.0",
@@ -41,6 +42,7 @@
 		"@exsied/exsied": "^0.15.0",
 		"@radix-ui/colors": "^3.0.0",
 		"@radix-ui/react-alert-dialog": "^1.1.1",
+		"@radix-ui/react-collapsible": "^1.1.0",
 		"@radix-ui/react-dialog": "^1.1.1",
 		"@radix-ui/react-icons": "^1.3.0",
 		"@radix-ui/react-select": "^2.1.1",

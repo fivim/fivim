@@ -7,12 +7,12 @@ import { InteractionOutlined, SearchOutlined } from '@ant-design/icons'
 import Icon from '@ant-design/icons'
 import { CN_TEMP_ELE_HIGHLIGHT, FindAndReplace, FormatTaName, TN_SPAN } from '@exsied/exsied'
 
+import Collapsible from '@/components/Collapsible'
 import { CN_WORKPLACE_CODEMIRROR, CN_WORKPLACE_EXSIED, EXT_HTML_LIKE } from '@/constants'
 import i18n from '@/i18n'
 import RegexSvg from '@/icons/regex.svg?react'
 import { invoker } from '@/invoker'
 import { SearchFileRes } from '@/invoker/types'
-import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
 import { Func_Empty_Void } from '@/types'
@@ -21,11 +21,7 @@ import styles from './styles.module.scss'
 
 const t = i18n.t
 
-const conf = {
-	contentLength: 10,
-	classNameFileMatch: 'file-match-block',
-	classNameFileMatchItem: 'file-match-item',
-}
+const contentLength = 10
 
 interface Props {
 	onOpenFile: (event: any, callback?: Func_Empty_Void) => Promise<void>
@@ -60,7 +56,7 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 		setIsLoading(true)
 		const dir = settingStore.getUserFilesDir()
 		const text = searchText.current
-		const res = await invoker.searchInDir(dir, isReMode, text, conf.contentLength, '<b>', '</b>', EXT_HTML_LIKE)
+		const res = await invoker.searchInDir(dir, isReMode, text, contentLength, '<b>', '</b>', EXT_HTML_LIKE)
 		if (res) setSearchRes(res)
 		setIsLoading(false)
 	}
@@ -69,18 +65,7 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 		console.log('>>> replaceAll', replaceText.current)
 	}
 
-	const showInFile = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-		let ele = event.target as HTMLElement
-		if (!ele.classList.contains(conf.classNameFileMatchItem)) {
-			ele = ele.closest(`.${conf.classNameFileMatchItem}`) as HTMLElement
-		}
-		const eleF = ele.closest(`.${conf.classNameFileMatch}`)
-		const path = eleF?.getAttribute('data-file-path')
-		if (!path) return
-
-		const dataIndex = ele.getAttribute('data-index')
-		const index = parseInt(dataIndex || '')
-
+	const showInFile = async (path: string, index: number) => {
 		await onOpenFile(path, () => {
 			// in Exsied
 			const workplaceExsiedEle = document.querySelector(`.${CN_WORKPLACE_EXSIED}`)
@@ -160,25 +145,22 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 					<>
 						{searchRes.map((fileData, fileIndex) => {
 							return (
-								<div
-									className={classNames(styles.SearchResultItem, conf.classNameFileMatch)}
-									data-file-path={fileData.path}
+								<Collapsible
 									key={fileIndex}
-								>
-									<div className={styles.FilePath}>{pathToRelPath(fileData.path)}</div>
-									<div className={styles.FileMatches}>
-										{fileData.matches.map((matchedText, matcheIndex) => {
-											return (
-												<div
-													className={classNames(styles.FileMatch, conf.classNameFileMatchItem)}
-													data-index={matcheIndex}
-													onClick={showInFile}
-													dangerouslySetInnerHTML={{ __html: matchedText }}
-												></div>
-											)
-										})}
-									</div>
-								</div>
+									title={pathToRelPath(fileData.path)}
+									dataArray={fileData.matches.map((matchedText, matcheIndex) => {
+										return (
+											<div
+												className={classNames(styles.FileMatch, 'cur-ptr', 'pis-4', 'py-1')}
+												onClick={() => {
+													showInFile(fileData.path, matcheIndex)
+												}}
+												dangerouslySetInnerHTML={{ __html: matchedText }}
+												key={`${fileIndex}-${matcheIndex}`}
+											></div>
+										)
+									})}
+								/>
 							)
 						})}
 					</>

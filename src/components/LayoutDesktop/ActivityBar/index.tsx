@@ -19,6 +19,7 @@ import Icon, {
 	UnlockOutlined,
 } from '@ant-design/icons'
 
+import { showNebula } from '@/components/Nebula'
 import { Settings } from '@/components/Settings'
 import {
 	TAB_CONTENT_TAGS,
@@ -33,6 +34,7 @@ import {
 } from '@/constants'
 import i18n from '@/i18n/index'
 import LinkSvg from '@/icons/link.svg?react'
+import starsSvg from '@/icons/stars.svg?react'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
@@ -51,6 +53,7 @@ type Props = {
 	onSaveUnencrypt: Func_Any_Void
 	onRestoreContent: Func_Any_Void
 	onSyncFinished: Func_Empty_Void
+	onOpenFile: (filePath: string, callback?: Func_Empty_Void) => void
 	toggleTab: (tab: TabId) => void
 	className?: string
 }
@@ -69,6 +72,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 			onSaveUnencrypt,
 			onRestoreContent,
 			onSyncFinished,
+			onOpenFile,
 			toggleTab,
 			className,
 		},
@@ -188,6 +192,19 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 						</>
 					)}
 
+					<>
+						<Tooltip placement="right" title={t('Nebula')}>
+							<div
+								className={classNames(styles.Item)}
+								onClick={() => {
+									showNebula(onOpenFile)
+								}}
+							>
+								<Icon component={starsSvg} style={iconStyle} />
+							</div>
+						</Tooltip>
+					</>
+
 					{/* 
 					{(GD.editorType === TYPE_MD || GD.editorType === TYPE_SOURCE_CODE) &&
 						!GD.currentFileName.endsWith(SD.encryptedFileExt) && (
@@ -242,7 +259,7 @@ const ActivityBar = forwardRef<HTMLDivElement, Props>(
 								</div>
 							</Tooltip>
 						)}
-						
+
 						<Tooltip placement="right" title={t('Logout')}>
 							<div className={classNames(styles.Item)} onClick={refreshPage}>
 								<LogoutOutlined style={iconStyle} />

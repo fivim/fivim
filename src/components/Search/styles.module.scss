@@ -21,39 +21,4 @@
 			}
 		}
 	}
-
-	.SearchResult {
-		.SearchResultItem {
-			padding: 0.5rem;
-			border-bottom: 1px solid var(--fvm-border-clr);
-
-			.FilePath {
-				cursor: pointer;
-			}
-
-			.FileMatches {
-				padding-inline-start: 1rem;
-
-				div:first-child {
-					border-top: 1px dashed var(--fvm-border-clr2);
-					margin-top: 0.25rem;
-					padding-top: 0.25rem;
-				}
-
-				.FileMatch {
-					cursor: pointer;
-					white-space: nowrap;
-
-					&:hover {
-						background-color: var(--fvm-cmp-clr3);
-					}
-
-					b {
-						font-weight: 700;
-						background-color: var(--fvm-highlight-clr);
-					}
-				}
-			}
-		}
-	}
 }

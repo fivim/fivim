@@ -1,5 +1,4 @@
 export type OutlineHeading = {
-	level: string
+	level: number
 	text: string
-	uuid: string
 }

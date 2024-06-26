@@ -1,5 +1,5 @@
 import globalStore from '@/stores/globalStore'
-import { extractHeaders, removeHtmlTags } from '@/utils/html'
+import { extractHeadings } from '@/utils/html'
 
 import { OutlineHeading } from './types'
 
@@ -27,20 +27,16 @@ export const extractHeadingsData = (htmlString: string) => {
 		const content = match[3]
 		const text = content.replace('&nbsp;', ' ')
 
-		let uuidAttr = ''
-		const dataAbdRegex = /data-uuid="([^"]*)"/
-		const dataAbdMatch = match[2].match(dataAbdRegex)
-		if (dataAbdMatch) {
-			uuidAttr = dataAbdMatch[1]
-		}
-
-		matches.push({ level: level, text, uuid: uuidAttr })
+		matches.push({
+			level: parseInt(level),
+			text,
+		})
 	}
 
 	return matches
 }
 
 export const updateOutline = (html: string) => {
-	const headings = extractHeaders(html).join('')
+	const headings = extractHeadings(html).join('')
 	globalStore.setOutlineHeadings(extractHeadingsData(headings))
 }

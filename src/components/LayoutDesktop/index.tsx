@@ -109,6 +109,7 @@ const DesktopLayout: React.FC = () => {
 					onSaveUnencrypt={onSaveUnencrypt}
 					onRestoreContent={onRestoreContent}
 					onSyncFinished={updateFileTreeData}
+					onOpenFile={onOpenFile}
 					toggleTab={toggleTab}
 				/>
 				<div className={classNames(styles.flexibleWidth, 'disp-flex')}>
@@ -135,6 +136,7 @@ const DesktopLayout: React.FC = () => {
 					</SideBar>
 
 					<div
+						className="workspace"
 						style={{
 							width: `calc(100% - ${sideBarWidth}px - var(--fvm-desktop-rezizer-width))`,
 							height: '100%',

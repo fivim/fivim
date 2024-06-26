@@ -14,12 +14,13 @@ import { Func_Empty_Void } from '@/types'
 import { removeHtmlTags } from '@/utils/html'
 import { insertStringAt } from '@/utils/string'
 
+import Collapsible from '../Collapsible'
 import { DATA_ATTR_LINK_TAG_NAME } from '../Editor/RichText/exsied/plugins/link_tag/base'
 import styles from './styles.module.scss'
 
 const t = i18n.t
-const reText = `${DATA_ATTR_LINK_TAG_NAME}=["']([^"']+)["']`
-const tagNamePattern = new RegExp(reText)
+export const reText = `${DATA_ATTR_LINK_TAG_NAME}=["']([^"']+)["']`
+export const tagNamePattern = new RegExp(reText)
 const tagPlaceholder = '«fivim-tag»'
 
 function outputMatch(str: string) {
@@ -51,7 +52,6 @@ const LinkTags: React.FC<Props> = ({ onOpenFile }) => {
 	const searchAllLinkTags = async () => {
 		setIsLoading(true)
 		const dir = settingStore.getUserFilesDir()
-
 		const res = await invoker.searchInDir(dir, true, reText, 100, '', '', [])
 		if (!res) return
 
@@ -85,18 +85,7 @@ const LinkTags: React.FC<Props> = ({ onOpenFile }) => {
 		setTimeout(searchAllLinkTags, 200)
 	}, [])
 
-	const showInFile = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-		let ele = event.target as HTMLElement
-		if (!ele.classList.contains(conf.classNameFileMatchItem)) {
-			ele = ele.closest(`.${conf.classNameFileMatchItem}`) as HTMLElement
-		}
-		const eleF = ele.closest(`.${conf.classNameFileMatch}`)
-		const path = eleF?.getAttribute('data-file-path')
-		if (!path) return
-
-		const dataIndex = ele.getAttribute('data-index')
-		const index = parseInt(dataIndex || '')
-
+	const showInFile = async (path: string, index: number) => {
 		await onOpenFile(path, () => {
 			// in Exsied
 			const workplaceExsiedEle = document.querySelector(`.${CN_WORKPLACE_EXSIED}`)
@@ -135,27 +124,22 @@ const LinkTags: React.FC<Props> = ({ onOpenFile }) => {
 
 								{outboundLinks.map((fileData, fileIndex) => {
 									return (
-										<div
-											className={classNames(styles.SearchResultItem, conf.classNameFileMatch)}
-											data-file-path={fileData.path}
+										<Collapsible
 											key={fileIndex}
-										>
-											<div className={styles.FilePath}>
-												<b>{pathToRelPath(fileData.path)}</b>
-											</div>
-											<div className={classNames(styles.FileMatches, 'pis-4')}>
-												{fileData.matches.map((matchedText, matcheIndex) => {
-													return (
-														<div
-															className={classNames(styles.FileMatch, conf.classNameFileMatchItem, 'cur-ptr')}
-															data-index={matcheIndex}
-															onClick={showInFile}
-															dangerouslySetInnerHTML={{ __html: outputMatch(matchedText) }}
-														></div>
-													)
-												})}
-											</div>
-										</div>
+											title={pathToRelPath(fileData.path)}
+											dataArray={fileData.matches.map((matchedText, matcheIndex) => {
+												return (
+													<div
+														className={classNames(styles.FileMatch, 'cur-ptr', 'pis-4', 'py-1')}
+														onClick={() => {
+															showInFile(fileData.path, matcheIndex)
+														}}
+														dangerouslySetInnerHTML={{ __html: outputMatch(matchedText) }}
+														key={`${fileIndex}-${matcheIndex}`}
+													></div>
+												)
+											})}
+										/>
 									)
 								})}
 							</div>
@@ -164,27 +148,22 @@ const LinkTags: React.FC<Props> = ({ onOpenFile }) => {
 
 								{inboundLinks.map((fileData, fileIndex) => {
 									return (
-										<div
-											className={classNames(styles.SearchResultItem, conf.classNameFileMatch)}
-											data-file-path={fileData.path}
+										<Collapsible
 											key={fileIndex}
-										>
-											<div className={styles.FilePath}>
-												<b>{pathToRelPath(fileData.path)}</b>
-											</div>
-											<div className={classNames(styles.FileMatches, 'pis-4')}>
-												{fileData.matches.map((matchedText, matcheIndex) => {
-													return (
-														<div
-															className={classNames(styles.FileMatch, conf.classNameFileMatchItem, 'cur-ptr')}
-															data-index={matcheIndex}
-															onClick={showInFile}
-															dangerouslySetInnerHTML={{ __html: outputMatch(matchedText) }}
-														></div>
-													)
-												})}
-											</div>
-										</div>
+											title={pathToRelPath(fileData.path)}
+											dataArray={fileData.matches.map((matchedText, matcheIndex) => {
+												return (
+													<div
+														className={classNames(styles.FileMatch, 'cur-ptr', 'pis-4', 'py-1')}
+														onClick={() => {
+															showInFile(fileData.path, matcheIndex)
+														}}
+														dangerouslySetInnerHTML={{ __html: outputMatch(matchedText) }}
+														key={`${fileIndex}-${matcheIndex}`}
+													></div>
+												)
+											})}
+										/>
 									)
 								})}
 							</div>

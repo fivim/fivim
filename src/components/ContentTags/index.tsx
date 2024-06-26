@@ -18,8 +18,8 @@ import { DATA_ATTR_CONTENT_TAG_NAME } from '../Editor/RichText/exsied/plugins/co
 import styles from './styles.module.scss'
 
 const t = i18n.t
-const reText = `${DATA_ATTR_CONTENT_TAG_NAME}=["']([^"']+)["']`
-const tagNamePattern = new RegExp(reText)
+export const reText = `${DATA_ATTR_CONTENT_TAG_NAME}=["']([^"']+)["']`
+export const tagNamePattern = new RegExp(reText)
 const tagPlaceholder = '«fivim-tag»'
 
 function outputMatch(str: string) {
@@ -221,6 +221,7 @@ const ContentTags: React.FC<Props> = ({ onOpenFile }) => {
 													data-index={matcheIndex}
 													onClick={showInFile}
 													dangerouslySetInnerHTML={{ __html: outputMatch(matchedText) }}
+													key={`${fileIndex}-${matcheIndex}`}
 												></div>
 											)
 										})}

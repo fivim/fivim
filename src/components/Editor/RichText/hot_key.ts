@@ -12,7 +12,7 @@
  * Table:|||
  * Code block:```
  * Link:[
- * Image:[[
+ * Image:!
  *
  */
 import { v4 as uuidv4 } from 'uuid'
@@ -25,7 +25,7 @@ export const RE_H3 = /^(\s*)(###)(\s*)$/
 export const RE_H4 = /^(\s*)(####)(\s*)$/
 export const RE_H5 = /^(\s*)(#####)(\s*)$/
 export const RE_H6 = /^(\s*)(######)(\s*)$/
-export const RE_IMAGE = /^(\s*)(\[\[)(\s*)$/
+export const RE_IMAGE = /^(\s*)(!)(\s*)$/
 export const RE_ITALIC = /^(\s*)(\_)(\s*)$/
 export const RE_HORIZONTAL_LINE = /^(\s*)(\*\*\*)(\s*)$/
 export const RE_LINK = /^(\s*)(\[)(\s*)$/
