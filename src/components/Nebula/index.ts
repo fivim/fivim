@@ -77,7 +77,10 @@ export async function showNebula(onOpenFile: (filePath: string, callback?: Func_
 
 		const dir = settingStore.getUserFilesDir()
 		const res = await invoker.searchInDir(dir, true, reText, 0, '', '', [])
-		if (!res) return
+		if (!res) {
+			ele.remove()
+			return
+		}
 
 		const nodes: NebulaNode[] = []
 		const links: NebulaLink[] = []

@@ -384,7 +384,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		<>
 			{editorType === TYPE_NONE && (
 				<div className="text-align-center pt-12">
-					<img src="/public/logo.png" alt="" width="100px" />
+					<img src="/logo.png" alt="" width="100px" />
 					<p>
 						{APP_NAME} {APP_VERSION}
 					</p>

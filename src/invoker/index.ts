@@ -18,7 +18,7 @@ async function runIvk<T>(_cmd: string, _args?: InvokeArgs, _options?: InvokeOpti
 	} catch (error) {
 		console.error('>>> Invoke error: ', error, invoke)
 
-		await invoker.confirm(`${error}`, 'Error')
+		invoker.confirm(`${error}`, 'Error')
 	}
 
 	return res as T

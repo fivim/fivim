@@ -3,9 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-extern crate custom_error;
-extern crate lazy_static;
-
 use std::env;
 
 mod commands;

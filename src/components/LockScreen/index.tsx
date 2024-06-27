@@ -28,7 +28,7 @@ const LockScreen: React.FC = () => {
 		if (!icf) {
 			invoker.showMessage('', t('Invalid password'), 'error', false)
 		} else {
-			GD.lockscreen = false
+			globalStore.setLockscreen(false)
 			globalStore.setData(GD)
 			passwordStore.setData(password)
 			setPassword('')
