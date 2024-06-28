@@ -8,7 +8,7 @@
 
 **Fivim** is an encryption assistant for your data.
 
-[Engilsh document](https://fivim.pages.dev/en/) / [简体中文文档](https://fivim.pages.dev/zh-cn/)
+[Engilsh document](https://fivim.top/en/) / [简体中文文档](https://fivim.top/zh-cn/)
 
 [Github repo](https://github.com/fivim/fivim) / [Gitee repo](https://gitee.com/fivim/fivim/)
 
@@ -33,15 +33,15 @@
 
 ## Themes
 
-[All themes](https://fivim.pages.dev/en/themes/)
+[All themes](https://fivim.top/en/themes/)
 
 Default light
 
-![Violet light](https://fivim.pages.dev/default_light.png)
+![Violet light](https://fivim.top/default_light.png)
 
 Default dark
 
-![Violet dark](https://fivim.pages.dev/default_dark.png)
+![Violet dark](https://fivim.top/default_dark.png)
 
 ## Donate
 
@@ -69,4 +69,4 @@ Tauri currently supports development and distribution on the following platforms
 
 ## Develop
 
-[Ddocument](https://fivim.pages.dev/en/develop/build/)
+[Ddocument](https://fivim.top/en/develop/build/)

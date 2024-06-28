@@ -96,7 +96,7 @@ export const Settings: React.FC<Props> = ({ showModal, onModalOk, onModalCancel,
 				{t('Version')}: {APP_VERSION}
 			</div>
 			<div>
-				{t('Document')}: <span>https://fivim.pages.dev</span>
+				{t('Document')}: <span>https://fivim.top</span>
 			</div>
 		</>
 	)

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { StateEffect } from '@codemirror/state'
 import { CN_TEMP_ELE, DomUtils, PopupView, exsied, plugins } from '@exsied/exsied'
 import { EventWithElement } from '@exsied/exsied/dist/core/plugin'
-import { PluginConf as sourceCodePluginConf } from '@exsied/exsied/dist/plugins/source_code/base'
+import { PluginConf as SourceCodePluginConf } from '@exsied/exsied/dist/plugins/source_code/base'
 
 import { formatHtml } from '@/utils/html'
 import { osThemeIsDark } from '@/utils/media_query'
@@ -16,15 +16,15 @@ import {
 	cmSuppertedLang,
 	getLang,
 	getThemeByName,
-} from '../../CodeMirror/base'
+} from '../../../CodeMirror/base'
 import {
 	CodeMirrorOnChange,
 	genDefaultThemeOption,
 	genExtensions,
 	initEditorState,
 	initEditorView,
-} from '../../CodeMirror/initCodeMirror'
-import { highlighCode } from '../highlight'
+} from '../../../CodeMirror/initCodeMirror'
+import { highlighCode } from '../../highlight'
 
 let editorView: EditorView | null
 const CN_CODEMIRROR_RENDER = 'code-mirror-render'
@@ -48,7 +48,7 @@ async function initCodeMirror(str: string, parentEle: HTMLElement, lang: string,
 }
 
 export function reconfSourceCode() {
-	const sourceCodeConf = plugins.sourceCode.conf as sourceCodePluginConf
+	const sourceCodeConf = plugins.sourceCode.conf as SourceCodePluginConf
 	sourceCodeConf.renderDataCb = (ele: HTMLElement) => {
 		const lang = ele.getAttribute('lang') || ''
 		const res = highlighCode(ele.innerHTML, lang)

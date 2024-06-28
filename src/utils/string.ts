@@ -148,6 +148,6 @@ export const fileNameIsImage = (fileName: string) => {
 	return EXT_IMAGE.indexOf(getFileNameExt(fileName).toLowerCase()) > -1
 }
 
-export function insertStringAt(str: string, index: number, newSubStr: string) {
+export const insertStringAt = (str: string, index: number, newSubStr: string) => {
 	return str.slice(0, index) + newSubStr + str.slice(index)
 }

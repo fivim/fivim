@@ -450,11 +450,11 @@ const FileTree: React.FC<Props> = ({
 									<Radio className="w-full py-2" value={''}>
 										{t('None')}
 									</Radio>
-									<Radio className="w-full py-2" value={`.${EXT_MARKDOWN[0]}`}>
-										{`.${EXT_MARKDOWN[0]}`} (Markdown)
-									</Radio>
 									<Radio className="w-full py-2" value={`.${EXT_RICH_TEXT[0]}`}>
-										{`.${EXT_RICH_TEXT[0]}`} (rich text mrakup)
+										{`.${EXT_RICH_TEXT[0]}`} ({t('Recommended')})
+									</Radio>
+									<Radio className="w-full py-2" value={`.${EXT_MARKDOWN[0]}`}>
+										{`.${EXT_MARKDOWN[0]}`}
 									</Radio>
 								</Radio.Group>
 							</Form.Item>

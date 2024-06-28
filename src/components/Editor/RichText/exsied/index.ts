@@ -2,17 +2,19 @@ import { KEY_CTRL, exsied, plugins } from '@exsied/exsied'
 import '@exsied/exsied/style.css'
 
 import { updateOutline } from '../base'
+import { reconfFontSize } from './plugin_conf/fontSize'
+import { reconfLink } from './plugin_conf/link'
+import { reconfSourceCode } from './plugin_conf/sourceCode'
 import ContentTag from './plugins/content_tag'
 import LinkTag from './plugins/link_tag'
-import { reconfFontSize } from './plugin_conf_fontSize'
-import { reconfSourceCode } from './plugin_conf_sourceCode'
 
 export const CN_ICON_WITH_BKG = 'exsied-icon-with-bkg'
 
 reconfFontSize()
+reconfLink()
 reconfSourceCode()
 
-export function initExsied(id: string) {
+export const initExsied = (id: string) => {
 	exsied.init({
 		id: id,
 		plugins: [

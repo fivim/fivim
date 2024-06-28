@@ -194,12 +194,18 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 			return
 		}
 
-		// If path starts with "/", use userFilesDir.
+		// If path starts with "/", use userFilesDir as the parent dir.
 		if (_path.startsWith('/')) {
 			dir = settingStore.getUserFilesDir()
 		} else {
 			dir = getDirByFilePath(currentFilePath.current, '')
 		}
+
+		// TODO: add an option to set?
+		if (_path.startsWith('./')) {
+			_path = _path.slice('./'.length)
+		}
+
 		resPath = await pathJoin(dir, _path)
 
 		props.onOpenFile(resPath)
@@ -269,7 +275,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 			setEditorType(TYPE_IMAGE)
 			if (editorType === TYPE_IMAGE) initEditorContent(callback)
 			props.onChangeEditorType(TYPE_IMAGE)
-		} else if (EXT_PDF.indexOf(_fileExt)) {
+		} else if (EXT_PDF.indexOf(_fileExt) > -1) {
 			setEditorType(TYPE_PDF)
 			if (editorType === TYPE_PDF) initEditorContent(callback)
 			props.onChangeEditorType(TYPE_PDF)

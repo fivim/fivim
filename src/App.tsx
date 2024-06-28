@@ -47,7 +47,7 @@ const init = async () => {
 
 	// Check sync lock file
 	const ef = await invoker.existFile(await pathJoin(settingStore.getUserFilesDir(), SYNC_LOCK_FILE_NAME))
-	if (ef !== null && !ef) {
+	if (ef !== null && ef) {
 		invoker.alert(t('Found synchronization lock file, please resynchronize to ensure data integrity.'))
 		return false
 	}

@@ -39,7 +39,7 @@ export function insertLinkTag() {
 	if (exsied.elements.workplace) DomUtils.addElementBySelection(exsied.elements.workplace, ele)
 }
 
-export function onClickLinkTag(event: Event) {
+export const onClickLinkTag = (event: Event) => {
 	event.stopPropagation()
 	event.preventDefault()
 
@@ -123,7 +123,7 @@ export function onClickLinkTag(event: Event) {
 	}
 }
 
-export function onClickCopyBtn(event: Event) {
+export const onClickCopyBtn = (event: Event) => {
 	const ele = document.querySelector(`[${DATA_ATTR_TEMP_EDIT}="${PLUGIN_NAME}"]`) as HTMLAnchorElement
 	const linkName = ele.getAttribute(DATA_ATTR_LINK_TAG_NAME) || ''
 	navigator.clipboard
@@ -136,7 +136,7 @@ export function onClickCopyBtn(event: Event) {
 		})
 }
 
-export function onClickEditBtn(event: Event) {
+export const onClickEditBtn = (event: Event) => {
 	const root = (event.target as HTMLElement).closest(`.${CN_ROOT}`)
 	const previewView = root?.querySelector(`.${CN_PREVIEW}`) as HTMLElement
 	const editView = root?.querySelector(`.${CN_EDIT_VIEW}`) as HTMLElement
@@ -149,7 +149,7 @@ export function onClickEditBtn(event: Event) {
 	editView.style.display = 'flex'
 }
 
-export function onClickTrashBtn(_event: Event) {
+export const onClickTrashBtn = (_event: Event) => {
 	const link = document.querySelector(`[${DATA_ATTR_TEMP_EDIT}="${PLUGIN_NAME}"]`) as HTMLAnchorElement
 	const textContent = link.textContent || link.innerText
 	link.parentNode?.replaceChild(document.createTextNode(textContent), link)
@@ -158,14 +158,14 @@ export function onClickTrashBtn(_event: Event) {
 	DomUtils.removeElementById(POPUP_ID)
 }
 
-export function onClickConcelBtn(_event: Event) {
+export const onClickConcelBtn = (_event: Event) => {
 	const link = document.querySelector(`[${DATA_ATTR_TEMP_EDIT}="${PLUGIN_NAME}"]`) as HTMLAnchorElement
 	link.removeAttribute(DATA_ATTR_TEMP_EDIT)
 
 	DomUtils.removeElementById(POPUP_ID)
 }
 
-export function onClickConfirmBtn(event: Event) {
+export const onClickConfirmBtn = (event: Event) => {
 	const root = (event.target as HTMLElement).closest(`.${CN_ROOT}`)
 	const editView = root?.querySelector(`.${CN_EDIT_VIEW}`) as HTMLElement
 

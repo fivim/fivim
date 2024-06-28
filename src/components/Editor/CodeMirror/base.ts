@@ -51,7 +51,7 @@ export const themesOptions: ({ label: string; value: string } | typeof SELECT_SE
 export const DEFAULT_DARK_THEME = 'materialDark'
 export const DEFAULT_LIGHT_THEME = 'materialLight'
 
-export function getThemeByName(name: ThemeName) {
+export const getThemeByName = (name: ThemeName) => {
 	if (name === 'materialLight') return materialLight
 	if (name === 'vscodeLight') return vscodeLight
 	if (name === 'xcodeLight') return xcodeLight
@@ -132,7 +132,7 @@ export const cmSuppertedLang = [
 export type FILE_EXT_LANG_MAP_KEY = keyof typeof FILE_EXT_LANG_MAP
 export type LangsKey = (typeof cmSuppertedLang)[number]
 
-export function getLang(lang: string) {
+export const getLang = (lang: string) => {
 	let newLang: LanguageSupport | null = null
 
 	if (lang === 'angular') newLang = angular()

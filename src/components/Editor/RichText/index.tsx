@@ -7,7 +7,8 @@ import { exsied } from '@exsied/exsied'
 import { LOCAL_FILE_LINK_PREFIX } from '@/constants'
 import { Func_Empty_Void, Func_String_Void } from '@/types'
 
-import { IMG_BAK_SRC_ATTR_NAME, externalFunctions, updateOutline } from './base'
+import { IMG_SRC_BAK_DATA_ATTR, externalFunctions, updateOutline } from './base'
+import { htmlAddExtAttr, htmlRemoveExtAttr } from './base'
 import { initExsied } from './exsied'
 import { processHotKey } from './hot_key'
 import './styles.scss'
@@ -24,13 +25,13 @@ interface Props {
 }
 
 export const RichTextEditor = forwardRef<EditorComponentRef, Props>(({ id, onOpenFile, onSaveFile }, ref) => {
-	// TODO: onOpenFile, onSaveFile not use ???
 	const parentRef = useRef<HTMLDivElement>(null)
 	const editorRef = useRef<HTMLDivElement>(null)
 
 	const setValue = async (str: string) => {
 		if (editorRef.current) {
-			const html = headingAddAttr(str)
+			let html = headingAddAttr(str)
+			html = await htmlAddExtAttr(html)
 			exsied.setHtml(html)
 			updateOutline(html)
 			renderLocalImg()
@@ -40,8 +41,9 @@ export const RichTextEditor = forwardRef<EditorComponentRef, Props>(({ id, onOpe
 	const getValue = () => {
 		if (editorRef.current) {
 			const cnt = exsied.getHtml()
-			const v = cleanData(cnt)
-			return v
+			let html = cleanData(cnt)
+			html = htmlRemoveExtAttr(html)
+			return html
 		}
 
 		return ''
@@ -54,7 +56,7 @@ export const RichTextEditor = forwardRef<EditorComponentRef, Props>(({ id, onOpe
 
 	const renderLocalImg = async () => {
 		const matches = document.querySelectorAll(`img`)
-		const srcBakAttr = `data-${IMG_BAK_SRC_ATTR_NAME}`
+		const srcBakAttr = `data-${IMG_SRC_BAK_DATA_ATTR}`
 
 		if (matches) {
 			for (let index = 0; index < matches.length; index++) {
@@ -164,7 +166,7 @@ const cleanData = (htmlString: string) => {
 
 	// Replace img src
 	const imgEles = doc.querySelectorAll('img')
-	const imgDataAttr = `data-${IMG_BAK_SRC_ATTR_NAME}`
+	const imgDataAttr = `data-${IMG_SRC_BAK_DATA_ATTR}`
 	imgEles.forEach((ele) => {
 		if (ele.hasAttribute(imgDataAttr)) {
 			const srcBak = ele.getAttribute(imgDataAttr)

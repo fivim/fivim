@@ -1,4 +1,4 @@
-export function getEleContentSize(element: HTMLElement) {
+export const getEleContentSize = (element: HTMLElement) => {
 	const computedStyle = window.getComputedStyle(element)
 
 	const parseSpacing = (properties: string[]): number => {

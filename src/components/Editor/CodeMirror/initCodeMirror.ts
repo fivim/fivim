@@ -34,7 +34,7 @@ export function genDefaultThemeOption(
 	return option
 }
 
-export function genExtensions(defaultThemeOption?: Extension, onChange?: CodeMirrorOnChange) {
+export const genExtensions = (defaultThemeOption?: Extension, onChange?: CodeMirrorOnChange) => {
 	const exts = [
 		basicSetup,
 		history(),
@@ -63,7 +63,7 @@ export function genExtensions(defaultThemeOption?: Extension, onChange?: CodeMir
 	return exts
 }
 
-export function initEditorState(html: string, extensions?: Extension[]) {
+export const initEditorState = (html: string, extensions?: Extension[]) => {
 	const config = {
 		doc: html,
 		extensions: extensions,
@@ -72,7 +72,7 @@ export function initEditorState(html: string, extensions?: Extension[]) {
 	return stateCurrent
 }
 
-export function initEditorView(state: EditorState, parent: Element, root?: ShadowRoot | Document) {
+export const initEditorView = (state: EditorState, parent: Element, root?: ShadowRoot | Document) => {
 	const viewCurrent = new EditorView({
 		state: state,
 		parent: parent,
@@ -96,7 +96,7 @@ export interface UseCodeMirror {
 	onChange?: CodeMirrorOnChange
 }
 
-export function useCodeMirror(props: UseCodeMirror) {
+export const useCodeMirror = (props: UseCodeMirror) => {
 	const {
 		value,
 		extensions,
