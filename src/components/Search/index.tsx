@@ -8,15 +8,15 @@ import Icon from '@ant-design/icons'
 import { CN_TEMP_ELE_HIGHLIGHT, FindAndReplace, FormatTaName, TN_SPAN } from '@exsied/exsied'
 
 import Collapsible from '@/components/Collapsible'
-import { CN_WORKPLACE_CODEMIRROR, CN_WORKPLACE_EXSIED, EXT_HTML_LIKE } from '@/constants'
+import { CN_WORKPLACE_ACE, CN_WORKPLACE_EXSIED, EXT_HTML_LIKE } from '@/constants'
 import i18n from '@/i18n'
 import RegexSvg from '@/icons/regex.svg?react'
 import { invoker } from '@/invoker'
 import { SearchFileRes } from '@/invoker/types'
 import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
-import { Func_Empty_Void } from '@/types'
 
+import { EditorSetContentCallback } from '../Editor'
 import styles from './styles.module.scss'
 
 const t = i18n.t
@@ -24,7 +24,7 @@ const t = i18n.t
 const contentLength = 10
 
 interface Props {
-	onOpenFile: (event: any, callback?: Func_Empty_Void) => Promise<void>
+	onOpenFile: (event: any, callback?: EditorSetContentCallback) => Promise<void>
 }
 
 const Search: React.FC<Props> = ({ onOpenFile }) => {
@@ -66,11 +66,11 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 	}
 
 	const showInFile = async (path: string, index: number) => {
-		await onOpenFile(path, () => {
+		await onOpenFile(path, (func) => {
 			// in Exsied
-			const workplaceExsiedEle = document.querySelector(`.${CN_WORKPLACE_EXSIED}`)
-			if (workplaceExsiedEle) {
-				const ranges = FindAndReplace.findRanges(workplaceExsiedEle as HTMLElement, searchText.current)
+			const workplaceExsied = document.querySelector(`.${CN_WORKPLACE_EXSIED}`)
+			if (workplaceExsied) {
+				const ranges = FindAndReplace.findRanges(workplaceExsied as HTMLElement, searchText.current)
 				if (!ranges) return
 
 				const range = ranges[index]
@@ -87,11 +87,13 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 				return
 			}
 
-			// in codemirror
-			const workplaceCmEle = document.querySelector(`.${CN_WORKPLACE_CODEMIRROR}`)
-			if (workplaceCmEle) {
-				// TODO:
-				return
+			// in Ace
+			const workplaceAce = document.querySelector(`.${CN_WORKPLACE_ACE}`)
+			if (workplaceAce) {
+				func({
+					findText: searchText.current,
+					findTextIndex: index,
+				})
 			}
 		})
 	}

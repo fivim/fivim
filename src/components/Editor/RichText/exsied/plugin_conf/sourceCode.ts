@@ -1,51 +1,22 @@
-import { EditorView } from 'codemirror'
+import ace from 'ace-builds'
 import { t } from 'i18next'
 import { v4 as uuidv4 } from 'uuid'
 
-import { StateEffect } from '@codemirror/state'
 import { CN_TEMP_ELE, DomUtils, PopupView, exsied, plugins } from '@exsied/exsied'
 import { EventWithElement } from '@exsied/exsied/dist/core/plugin'
 import { PluginConf as SourceCodePluginConf } from '@exsied/exsied/dist/plugins/source_code/base'
 
-import { formatHtml } from '@/utils/html'
+import { initAceEditor } from '@/components/Editor/Ace'
+import { DEFAULT_DARK_THEME, DEFAULT_LIGHT_THEME, languageOption, themesOptions } from '@/components/Editor/Ace/base'
+import { CN_ACTIONS } from '@/constants'
+import { getEleContentSize } from '@/utils/dom'
 import { osThemeIsDark } from '@/utils/media_query'
 
-import {
-	DEFAULT_DARK_THEME,
-	DEFAULT_LIGHT_THEME,
-	cmSuppertedLang,
-	getLang,
-	getThemeByName,
-} from '../../../CodeMirror/base'
-import {
-	CodeMirrorOnChange,
-	genDefaultThemeOption,
-	genExtensions,
-	initEditorState,
-	initEditorView,
-} from '../../../CodeMirror/initCodeMirror'
 import { highlighCode } from '../../highlight'
 
-let editorView: EditorView | null
-const CN_CODEMIRROR_RENDER = 'code-mirror-render'
-
-function getExtensions(lang: string, onChange: CodeMirrorOnChange) {
-	const defaultThemeOption = genDefaultThemeOption(null, null, null, null, null, null)
-	const exts = genExtensions(defaultThemeOption, onChange)
-
-	const theme = osThemeIsDark() ? getThemeByName(DEFAULT_DARK_THEME) : getThemeByName(DEFAULT_LIGHT_THEME)
-	exts.push(theme)
-
-	const language = getLang(lang)
-	if (language) exts.push(language)
-	return exts
-}
-
-async function initCodeMirror(str: string, parentEle: HTMLElement, lang: string, onChange: CodeMirrorOnChange) {
-	const text = lang === 'html' ? await formatHtml(str) : str
-	const state = initEditorState(text, getExtensions(lang, onChange))
-	editorView = initEditorView(state, parentEle)
-}
+const CN_ACE_RENDER = 'ace-render'
+const CN_LANG_SELECTOT = 'language-seleteor'
+const CN_THEME_SELECTOT = 'theme-seleteor'
 
 export function reconfSourceCode() {
 	const sourceCodeConf = plugins.sourceCode.conf as SourceCodePluginConf
@@ -59,15 +30,20 @@ export function reconfSourceCode() {
 		const ID = `exsied_${NAME}_popup`
 
 		const contentHtml = `
-		<div>
+		<div class="${CN_ACTIONS}">
 			<button class="save-btn"> ${t('Save')}</button>
-			<select class="language-seleteor">
-				${cmSuppertedLang.map((item) => {
-					return `<option>${item}</option>`
+			<select class="${CN_LANG_SELECTOT}">
+				${languageOption.map((item, index) => {
+					return `<option value="${item.value}">${item.label}</option>`
 				})}
-			</select>			
+			</select>
+			<select class="${CN_THEME_SELECTOT}">
+				${themesOptions.map((item, index) => {
+					return `<option value="${item.value}">${item.label}</option>`
+				})}
+			</select>
 		</div>
-		<div class="${CN_CODEMIRROR_RENDER}"></div>
+		<div class="${CN_ACE_RENDER}"></div>
 		`
 
 		const ele = PopupView.create({
@@ -81,11 +57,11 @@ export function reconfSourceCode() {
 		})
 
 		ele.style.position = 'absolute'
-		ele.style.top = '5vh'
-		ele.style.left = '5vw'
+		ele.style.top = '0'
+		ele.style.left = '0'
 
-		ele.style.height = '90vh'
-		ele.style.width = '90vw'
+		ele.style.height = '100vh'
+		ele.style.width = '100vw'
 
 		const lang = codeEle.getAttribute('lang') || ''
 		const textContent = codeEle.textContent || ''
@@ -95,9 +71,7 @@ export function reconfSourceCode() {
 		document.body.appendChild(ele)
 		DomUtils.limitElementRect(ele)
 
-		const onChange = (param: string) => {
-			newTextContent = param
-		}
+		let editor: ace.Ace.Editor | null = null
 
 		const saveBtn = ele.querySelector('.save-btn')
 		if (saveBtn) {
@@ -111,7 +85,7 @@ export function reconfSourceCode() {
 						customElement: codeEle,
 					} as EventWithElement
 
-					codeEle.setAttribute('lang', currentLang)
+					codeEle.setAttribute('lang', currentLang.replace('ace/mode/', ''))
 
 					render(eventWithElement)
 				} else {
@@ -121,28 +95,62 @@ export function reconfSourceCode() {
 				ele.remove()
 			})
 		}
-		const seleteor = ele.querySelector('.language-seleteor')
-		if (seleteor) {
-			const seleteorEle = seleteor as HTMLSelectElement
-			seleteorEle.value = lang
 
-			seleteor.addEventListener('change', (event) => {
+		const sltLang = ele.querySelector(`.${CN_LANG_SELECTOT}`)
+		if (sltLang) {
+			const seleteorEle = sltLang as HTMLSelectElement
+			seleteorEle.value = 'ace/mode/' + lang
+
+			sltLang.addEventListener('change', (event) => {
 				const target = event.target
 				if (target) {
 					const targetEle = target as HTMLSelectElement
 					const lang = targetEle.value
-					if (editorView) {
-						currentLang = lang
-						const exts = getExtensions(lang, onChange)
-						editorView.dispatch({ effects: StateEffect.reconfigure.of(exts) })
-					}
+					currentLang = lang
+					if (editor) editor.session.setMode(lang)
 				}
 			})
 		}
 
-		const renderBlk = ele.querySelector(`.${CN_CODEMIRROR_RENDER}`)
+		const sltTheme = ele.querySelector(`.${CN_THEME_SELECTOT}`)
+		if (sltTheme) {
+			sltTheme.addEventListener('change', (event) => {
+				const target = event.target
+				if (target) {
+					const targetEle = target as HTMLSelectElement
+					const val = targetEle.value
+					if (editor) editor.setTheme(val)
+				}
+			})
+		}
+
+		const actionBlk = ele.querySelector(`.${CN_ACTIONS}`)
+		if (!actionBlk) return
+		const actionBlkEle = actionBlk as HTMLElement
+
+		const titlebar = ele.querySelector(`.exsied-popup-titlebar`)
+		if (!titlebar) return
+		const titlebarEle = titlebar as HTMLElement
+
+		const renderBlk = ele.querySelector(`.${CN_ACE_RENDER}`)
 		if (renderBlk) {
-			initCodeMirror(textContent, renderBlk as HTMLElement, lang, onChange)
+			const renderBlkEle = renderBlk as HTMLElement
+			const size = getEleContentSize(ele)
+			const rectTitlebarEle = titlebarEle.getBoundingClientRect()
+			const rectActionsEle = actionBlkEle.getBoundingClientRect()
+			renderBlkEle.style.height = `${size.height - rectTitlebarEle.height - rectActionsEle.height - 10}px` // TODO:
+
+			editor = initAceEditor(renderBlk)
+			editor.session.setValue(textContent)
+			editor.session.setMode('ace/mode/' + lang)
+			editor.on('change', (_delta) => {
+				newTextContent = editor ? editor.getValue() : ''
+			})
+
+			const seleteorEle = sltTheme as HTMLSelectElement
+			const theme = osThemeIsDark() ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME
+			seleteorEle.value = theme
+			if (editor != null) editor.setTheme(theme)
 		}
 	}
 	sourceCodeConf.randomCharsCb = () => {
@@ -152,8 +160,12 @@ export function reconfSourceCode() {
 	sourceCodeConf.toggleSourceViewAferInitCb = async (ele) => {
 		ele.contentEditable = 'false'
 		const htmlStr = exsied.elements.workplace.innerHTML
-		initCodeMirror(htmlStr, ele, 'html', (param) => {
-			exsied.elements.workplace.innerHTML = param
+
+		const editor = initAceEditor(ele)
+		editor.setValue(htmlStr)
+		editor.session.setMode('ace/mode/html')
+		editor.on('change', (_delta) => {
+			exsied.elements.workplace.innerHTML = editor.getValue()
 		})
 	}
 }

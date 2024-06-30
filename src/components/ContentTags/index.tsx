@@ -4,16 +4,17 @@ import { decode } from 'he'
 import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 
-import { CN_WORKPLACE_CODEMIRROR, CN_WORKPLACE_EXSIED } from '@/constants'
+import { CN_WORKPLACE_ACE, CN_WORKPLACE_EXSIED } from '@/constants'
 import i18n from '@/i18n'
 import { invoker } from '@/invoker'
 import { SearchFileRes } from '@/invoker/types'
 import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
-import { Func_Empty_Void, StringStringObj } from '@/types'
+import { StringStringObj } from '@/types'
 import { removeHtmlTags } from '@/utils/html'
 import { insertStringAt } from '@/utils/string'
 
+import { EditorSetContentCallback } from '../Editor'
 import { DATA_ATTR_CONTENT_TAG_NAME } from '../Editor/RichText/exsied/plugins/content_tag/base'
 import styles from './styles.module.scss'
 
@@ -35,7 +36,7 @@ const conf = {
 }
 
 interface Props {
-	onOpenFile: (event: any, callback?: Func_Empty_Void) => Promise<void>
+	onOpenFile: (event: any, callback?: EditorSetContentCallback) => Promise<void>
 }
 
 const ContentTags: React.FC<Props> = ({ onOpenFile }) => {
@@ -135,7 +136,7 @@ const ContentTags: React.FC<Props> = ({ onOpenFile }) => {
 		const dataIndex = ele.getAttribute('data-index')
 		const index = parseInt(dataIndex || '')
 
-		await onOpenFile(path, () => {
+		await onOpenFile(path, (func) => {
 			// in Exsied
 			const workplaceExsiedEle = document.querySelector(`.${CN_WORKPLACE_EXSIED}`)
 			if (workplaceExsiedEle) {
@@ -154,11 +155,13 @@ const ContentTags: React.FC<Props> = ({ onOpenFile }) => {
 				return
 			}
 
-			// in codemirror
-			const workplaceCmEle = document.querySelector(`.${CN_WORKPLACE_CODEMIRROR}`)
-			if (workplaceCmEle) {
-				// TODO:
-				return
+			// in Ace
+			const workplaceAce = document.querySelector(`.${CN_WORKPLACE_ACE}`)
+			if (workplaceAce) {
+				func({
+					findText: currentTagName,
+					findTextIndex: index,
+				})
 			}
 		})
 	}

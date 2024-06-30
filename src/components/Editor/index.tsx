@@ -34,10 +34,17 @@ import { formatHtml } from '@/utils/html'
 import { osThemeIsDark } from '@/utils/media_query'
 import { getDirByFilePath, getFileName, getFileNameExt, removeEnding, stringToUint8Array } from '@/utils/string'
 
-import CmEditor from './CodeMirror'
+import { AceEditor } from './Ace'
 import { RichTextEditor, EditorComponentRef as rtComponentRef } from './RichText'
-import { externalFunctions as externalFunctionsJodImg } from './RichText/base'
 import { WRONG_IMAGE_URL } from './constants'
+import { externalFunctions as externalFunctionsJodImg } from './html'
+
+export type EditorSetContentCallbackParam = (param: {
+	goToLine?: number
+	findText?: string
+	findTextIndex?: number
+}) => void
+export type EditorSetContentCallback = (func: EditorSetContentCallbackParam) => void
 
 export type EditorComponentRef = {
 	saveEditorContent: Func_Empty_Void
@@ -46,7 +53,10 @@ export type EditorComponentRef = {
 	saveEncrypt: () => Promise<boolean>
 	saveUnencrypt: Func_Empty_Void
 	restoreContentText: Func_Empty_Void
-	setInitData: (filePath: string, callback?: Func_Empty_Void) => Promise<{ filePath: string; fileName: string }>
+	setInitData: (
+		filePath: string,
+		callback?: EditorSetContentCallback,
+	) => Promise<{ filePath: string; fileName: string }>
 }
 
 interface Props {
@@ -254,7 +264,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 	externalFunctionsJodImg.loadImgBase64 = loadImgBase64
 	externalFunctionsJodImg.editorOpenFile = editorOpenFile
 
-	const initEditorType = (_fileExt: string, callback?: Func_Empty_Void) => {
+	const initEditorType = (_fileExt: string, callback?: EditorSetContentCallback) => {
 		if (EXT_MARKDOWN.indexOf(_fileExt) > -1) {
 			setEditorType(TYPE_MD)
 			if (editorType === TYPE_MD) initEditorContent(callback)
@@ -286,7 +296,11 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		}
 	}
 
-	const initEditorContent = async (callback?: Func_Empty_Void) => {
+	const [goToLine, setGoToLine] = useState(0)
+	const [findText, setFindText] = useState('')
+	const [findTextIndex, setFindTextIndex] = useState(0)
+
+	const initEditorContent = async (callback?: EditorSetContentCallback) => {
 		// Text type file
 		if ([TYPE_MD, TYPE_XRTM, TYPE_SOURCE_CODE].indexOf(editorType) > -1) {
 			let _content = ''
@@ -305,7 +319,15 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 			contentOrigin.current = _content
 			setText(_content)
 
-			if (callback) callback()
+			const editorSetContentCallback = (param: { goToLine?: number; findText?: string; findTextIndex?: number }) => {
+				if (param.goToLine) setGoToLine(param.goToLine)
+				if (param.findText) setFindText(param.findText)
+				if (param.findTextIndex) setFindTextIndex(param.findTextIndex)
+			}
+
+			if (callback) {
+				callback(editorSetContentCallback)
+			}
 		}
 
 		// Binary type file
@@ -329,7 +351,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		}
 	}
 
-	const setInitData = async (_filePath: string, callback?: Func_Empty_Void) => {
+	const setInitData = async (_filePath: string, callback?: EditorSetContentCallback) => {
 		fileIsEncrypted.current = false
 		textIsEncrypted.current = false
 
@@ -409,13 +431,16 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 				</div>
 			)}
 			{(editorType === TYPE_SOURCE_CODE || editorType === TYPE_MD) && (
-				<CmEditor
+				<AceEditor
 					content={contentText}
 					onChange={onChangeCm}
 					isDarkMode={osThemeIsDark()}
 					canChangeLang={true}
 					fileExt={fileExt}
 					onSaveFile={saveEditorContent}
+					goToLine={goToLine}
+					findText={findText}
+					findTextIndex={findTextIndex}
 				/>
 			)}
 			{editorType === TYPE_PDF && <PdfViewer base64Str={contentPdf} />}

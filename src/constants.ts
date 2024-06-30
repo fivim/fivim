@@ -1,7 +1,7 @@
 import { CN_WORKPLACE_ELE } from '@exsied/exsied'
 
 export const APP_NAME = 'Fivim'
-export const APP_VERSION = 'v2.4.1'
+export const APP_VERSION = 'v2.4.2'
 export const AVAILABLE_THEMES = [
 	'default',
 	'amber',
@@ -59,7 +59,8 @@ export const HTTP_CONNECT = 'CONNECT'
 export const HTTP_TRACE = 'TRACE'
 
 export const CN_WORKPLACE_EXSIED = CN_WORKPLACE_ELE
-export const CN_WORKPLACE_CODEMIRROR = 'cm-content'
+export const CN_WORKPLACE_ACE = 'ace_content'
+export const CN_ACTIONS = 'actions'
 
 export const EXT_HTML_LIKE = ['html', 'xrtm']
 export const EXT_RICH_TEXT = ['xrtm']

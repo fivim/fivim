@@ -30,22 +30,12 @@ export const formatHtml = async (htmlString: string) => {
 	})
 }
 
-export const extractHeadings = (htmlString: string) => {
-	const regex = /<h[1-6][^>]*>(.*?)<\/h[1-6]>/gi
-	const matches = []
-	let match
-
-	while ((match = regex.exec(htmlString)) !== null) {
-		matches.push(decode(match[0]))
-	}
-
-	return matches
-}
-
 export const removeHtmlTags = (htmlString: string) => {
 	let str = htmlString
 
-	const firstBracketIndex = htmlString.indexOf('>')
+	const firstBracketIndex = str.indexOf('>')
+	if (firstBracketIndex === -1 && str.lastIndexOf('<')) return str
+
 	if (str.lastIndexOf('<', firstBracketIndex) == -1) {
 		str = str.substring(firstBracketIndex + 1)
 	}

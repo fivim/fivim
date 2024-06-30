@@ -41,3 +41,34 @@ export const getEleContentSize = (element: HTMLElement) => {
 		margin: { left: marginLeft, right: marginRight, top: marginTop, bottom: marginBottom },
 	}
 }
+
+export const findVisibleEleRange = (selector: string) => {
+	const spans = document.querySelectorAll(selector)
+
+	let highestEle: HTMLElement | null = null
+	let lowestEle: HTMLElement | null = null
+
+	for (const span of spans) {
+		const spanEle = span as HTMLElement
+		const rect = spanEle.getBoundingClientRect()
+
+		if (highestEle === null) {
+			if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+				highestEle = spanEle as HTMLElement
+				continue
+			}
+		}
+
+		if (lowestEle === null) {
+			if (rect.bottom > window.innerHeight) {
+				lowestEle = spanEle as HTMLElement
+				break
+			}
+		}
+	}
+
+	return {
+		highestEle,
+		lowestEle,
+	}
+}

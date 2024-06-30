@@ -4,6 +4,7 @@ import { t } from 'i18next'
 
 import { CN_TEMP_ELE, DomUtils, PopupView } from '@exsied/exsied'
 
+import { CN_ACTIONS } from '@/constants'
 import { invoker } from '@/invoker'
 import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
@@ -29,7 +30,6 @@ export type NebulaDataSet = {
 export type NebulaLink = { source: string; target: string }
 
 const CN_NEBULA_RENDER = 'nebula-render'
-const CN_ACTIONS = 'actions'
 
 export async function showNebula(onOpenFile: (filePath: string, callback?: Func_Empty_Void) => void) {
 	const NAME = 'Nebula'

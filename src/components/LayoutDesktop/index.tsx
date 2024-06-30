@@ -3,13 +3,13 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 import React from 'react'
 
-import Editor, { EditorComponentRef } from '@/components/Editor'
+import Editor, { EditorComponentRef, EditorSetContentCallback } from '@/components/Editor'
 import FileTree from '@/components/FileTree'
 import { TAB_CONTENT_TAGS, TAB_FILE_TREE, TAB_LINK_TAGS, TAB_OUTLINE, TAB_SEARCH } from '@/constants'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
-import { EditorType, Func_Empty_Void } from '@/types'
+import { EditorType } from '@/types'
 import { TabId } from '@/types'
 
 import ContentTags from '../ContentTags'
@@ -83,7 +83,7 @@ const DesktopLayout: React.FC = () => {
 		}
 	}
 
-	const onOpenFile = async (filePath: string, callback?: Func_Empty_Void) => {
+	const onOpenFile = async (filePath: string, callback?: EditorSetContentCallback) => {
 		if (editorRef.current) {
 			const ir = await editorRef.current.setInitData(filePath, callback)
 			globalStore.setCurrentFilePath(ir.filePath)

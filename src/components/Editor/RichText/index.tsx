@@ -7,8 +7,8 @@ import { exsied } from '@exsied/exsied'
 import { LOCAL_FILE_LINK_PREFIX } from '@/constants'
 import { Func_Empty_Void, Func_String_Void } from '@/types'
 
-import { IMG_SRC_BAK_DATA_ATTR, externalFunctions, updateOutline } from './base'
-import { htmlAddExtAttr, htmlRemoveExtAttr } from './base'
+import { IMG_SRC_BAK_DATA_ATTR, externalFunctions, updateOutline } from '../html'
+import { htmlAddExtAttr, htmlRemoveExtAttr } from '../html'
 import { initExsied } from './exsied'
 import { processHotKey } from './hot_key'
 import './styles.scss'
@@ -30,8 +30,7 @@ export const RichTextEditor = forwardRef<EditorComponentRef, Props>(({ id, onOpe
 
 	const setValue = async (str: string) => {
 		if (editorRef.current) {
-			let html = headingAddAttr(str)
-			html = await htmlAddExtAttr(html)
+			const html = await htmlAddExtAttr(str)
 			exsied.setHtml(html)
 			updateOutline(html)
 			renderLocalImg()
@@ -146,20 +145,6 @@ export const RichTextEditor = forwardRef<EditorComponentRef, Props>(({ id, onOpe
 	)
 })
 
-const headingAddAttr = (htmlString: string) => {
-	const tempDiv = document.createElement('div')
-	tempDiv.innerHTML = htmlString
-	const headers = tempDiv.querySelectorAll('h1, h2, h3, h4, h5, h6')
-
-	for (let i = 0; i < headers.length; i++) {
-		if (!headers[i].hasAttribute('data-uuid')) {
-			headers[i].setAttribute('data-uuid', uuidv4())
-		}
-	}
-
-	return tempDiv.innerHTML
-}
-
 const cleanData = (htmlString: string) => {
 	const parser = new DOMParser()
 	const doc = parser.parseFromString(htmlString, 'text/html')
@@ -177,6 +162,7 @@ const cleanData = (htmlString: string) => {
 		}
 	})
 
+	// TODO: exist?
 	// Remove .preview
 	const previewEles = doc.querySelectorAll('.preview')
 	if (previewEles) {

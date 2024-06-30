@@ -3,18 +3,18 @@ import { decode } from 'he'
 import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 
-import { CN_WORKPLACE_CODEMIRROR, CN_WORKPLACE_EXSIED } from '@/constants'
+import { CN_WORKPLACE_ACE, CN_WORKPLACE_EXSIED } from '@/constants'
 import i18n from '@/i18n'
 import { invoker } from '@/invoker'
 import { SearchFileRes } from '@/invoker/types'
 import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
-import { Func_Empty_Void } from '@/types'
 import { removeHtmlTags } from '@/utils/html'
 import { insertStringAt } from '@/utils/string'
 
 import Collapsible from '../Collapsible'
+import { EditorSetContentCallback } from '../Editor'
 import { DATA_ATTR_LINK_TAG_NAME } from '../Editor/RichText/exsied/plugins/link_tag/base'
 import styles from './styles.module.scss'
 
@@ -36,7 +36,7 @@ const conf = {
 }
 
 interface Props {
-	onOpenFile: (event: any, callback?: Func_Empty_Void) => Promise<void>
+	onOpenFile: (event: any, callback?: EditorSetContentCallback) => Promise<void>
 }
 
 const LinkTags: React.FC<Props> = ({ onOpenFile }) => {
@@ -86,7 +86,7 @@ const LinkTags: React.FC<Props> = ({ onOpenFile }) => {
 	}, [])
 
 	const showInFile = async (path: string, index: number) => {
-		await onOpenFile(path, () => {
+		await onOpenFile(path, (func) => {
 			// in Exsied
 			const workplaceExsiedEle = document.querySelector(`.${CN_WORKPLACE_EXSIED}`)
 			if (workplaceExsiedEle) {
@@ -101,12 +101,13 @@ const LinkTags: React.FC<Props> = ({ onOpenFile }) => {
 
 				return
 			}
-
-			// in codemirror
-			const workplaceCmEle = document.querySelector(`.${CN_WORKPLACE_CODEMIRROR}`)
-			if (workplaceCmEle) {
-				// TODO:
-				return
+			// in Ace
+			const workplaceAce = document.querySelector(`.${CN_WORKPLACE_ACE}`)
+			if (workplaceAce) {
+				func({
+					findText: currentTagName,
+					findTextIndex: index,
+				})
 			}
 		})
 	}

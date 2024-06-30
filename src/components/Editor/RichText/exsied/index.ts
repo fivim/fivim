@@ -1,7 +1,7 @@
 import { KEY_CTRL, exsied, plugins } from '@exsied/exsied'
 import '@exsied/exsied/style.css'
 
-import { updateOutline } from '../base'
+import { updateOutline } from '../../html'
 import { reconfFontSize } from './plugin_conf/fontSize'
 import { reconfLink } from './plugin_conf/link'
 import { reconfSourceCode } from './plugin_conf/sourceCode'

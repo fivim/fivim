@@ -1,7 +1,7 @@
 import { plugins } from '@exsied/exsied'
 import { PluginConf as LinkConf } from '@exsied/exsied/dist/plugins/link/base'
 
-import { externalFunctions, localLinkSignAdd, localLinkSignRemove } from '../../base'
+import { externalFunctions, localLinkSignAdd, localLinkSignRemove } from '../../../html'
 
 const linkConf = plugins.link.conf as LinkConf
 
