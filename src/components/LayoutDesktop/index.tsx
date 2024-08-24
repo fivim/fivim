@@ -8,7 +8,6 @@ import FileTree from '@/components/FileTree'
 import { TAB_CONTENT_TAGS, TAB_FILE_TREE, TAB_LINK_TAGS, TAB_OUTLINE, TAB_SEARCH } from '@/constants'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
-import settingStore from '@/stores/settingStore'
 import { EditorType } from '@/types'
 import { TabId } from '@/types'
 
@@ -76,7 +75,7 @@ const DesktopLayout: React.FC = () => {
 	}
 
 	const updateFileTreeData = async () => {
-		const tree = await invoker.treeInfo(settingStore.getUserFilesDir())
+		const tree = await invoker.treeInfo(globalStore.data.paths.userFiles)
 
 		if (tree !== null && tree.children) {
 			globalStore.setFileTreeData(tree.children)

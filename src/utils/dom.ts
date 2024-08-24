@@ -1,3 +1,7 @@
+import { PopupView } from '@exsied/exsied'
+
+import { StringStringObj } from '@/types'
+
 export const getEleContentSize = (element: HTMLElement) => {
 	const computedStyle = window.getComputedStyle(element)
 
@@ -71,4 +75,39 @@ export const findVisibleEleRange = (selector: string) => {
 		highestEle,
 		lowestEle,
 	}
+}
+
+export type showPopupParam = {
+	id: string
+	classNames: string[]
+	attrs: StringStringObj
+	titlebarText?: string
+	contentClassNames: string[]
+	contentAttrs: StringStringObj
+	contentHtml: string
+	top?: string
+	left?: string
+	height?: string
+	width?: string
+}
+
+export const showPopup = (param: showPopupParam) => {
+	const ele = PopupView.create({
+		id: param.id,
+		classNames: param.classNames,
+		attrs: param.attrs,
+		contentClassNames: param.contentClassNames,
+		contentAttrs: param.contentAttrs,
+		contentHtml: param.contentHtml,
+		titlebarText: param.titlebarText,
+	})
+
+	ele.style.position = 'absolute'
+	ele.style.top = param.top || '0'
+	ele.style.left = param.left || '0'
+
+	if (param.height) ele.style.height = param.height
+	if (param.width) ele.style.width = param.width
+
+	return ele
 }

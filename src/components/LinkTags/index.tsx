@@ -8,7 +8,6 @@ import i18n from '@/i18n'
 import { invoker } from '@/invoker'
 import { SearchFileRes } from '@/invoker/types'
 import globalStore from '@/stores/globalStore'
-import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
 import { removeHtmlTags } from '@/utils/html'
 import { insertStringAt } from '@/utils/string'
@@ -51,7 +50,7 @@ const LinkTags: React.FC<Props> = ({ onOpenFile }) => {
 
 	const searchAllLinkTags = async () => {
 		setIsLoading(true)
-		const dir = settingStore.getUserFilesDir()
+		const dir = globalStore.data.paths.userFiles
 		const res = await invoker.searchInDir(dir, true, reText, 100, '', '', [])
 		if (!res) return
 

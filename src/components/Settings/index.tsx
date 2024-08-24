@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { APP_NAME, APP_VERSION, AVAILABLE_THEMES } from '@/constants'
+import { APP_VERSION, AVAILABLE_THEMES } from '@/constants'
 import { languagesOptions } from '@/i18n'
 import { saveConfToFile } from '@/initialize'
 import settingStore from '@/stores/settingStore'
@@ -14,6 +14,7 @@ import { Func_Any_Void } from '@/types'
 import { resetDarkMode, setDarkMode, setTheme } from '@/utils/html'
 
 import styles from './styles.module.scss'
+import globalStore from '@/stores/globalStore'
 
 type TabPosition = 'left' | 'right' | 'top' | 'bottom'
 interface Props {
@@ -78,7 +79,7 @@ export const Settings: React.FC<Props> = ({ showModal, onModalOk, onModalCancel,
 					/>
 				</Form.Item>
 				<Form.Item label={t('user_files directory')}>
-					<Input disabled defaultValue={settingStore.getUserFilesDir() || t('Unset')} />
+					<Input disabled defaultValue={globalStore.data.paths.userFiles || t('Unset')} />
 				</Form.Item>
 
 				<Form.Item label={t('Extension of encrypted file')}>

@@ -2,16 +2,16 @@ import ForceGraph3D from '3d-force-graph'
 
 import { t } from 'i18next'
 
-import { CN_TEMP_ELE, DomUtils, PopupView } from '@exsied/exsied'
+import { CN_TEMP_ELE, DomUtils } from '@exsied/exsied'
 
 import { CN_ACTIONS } from '@/constants'
 import { invoker } from '@/invoker'
-import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
 import { Func_Empty_Void } from '@/types'
-import { getEleContentSize } from '@/utils/dom'
+import { getEleContentSize, showPopup } from '@/utils/dom'
 
 import { reText, tagNamePattern } from '../LinkTags'
+import globalStore from '@/stores/globalStore'
 
 export type NebulaNode = {
 	id: string
@@ -41,22 +41,17 @@ export async function showNebula(onOpenFile: (filePath: string, callback?: Func_
 		<div class="${CN_NEBULA_RENDER}"></div>
 		`
 
-	const ele = PopupView.create({
+	const ele = showPopup({
 		id: ID,
 		classNames: [CN_TEMP_ELE],
 		attrs: { TEMP_EDIT_ID: ID },
-		contentClassNames: [NAME],
 		contentAttrs: {},
+		contentClassNames: [NAME],
 		contentHtml,
 		titlebarText: t('Nebula'),
+		height: '100vh',
+		width: '100vw',
 	})
-
-	ele.style.position = 'absolute'
-	ele.style.top = '5vh'
-	ele.style.left = '5vw'
-
-	ele.style.height = '100vh'
-	ele.style.width = '100vw'
 
 	document.body.appendChild(ele)
 	DomUtils.limitElementRect(ele)
@@ -75,7 +70,7 @@ export async function showNebula(onOpenFile: (filePath: string, callback?: Func_
 		const rectTitlebarEle = titlebarEle.getBoundingClientRect()
 		const rectActionsEle = actionBlkEle.getBoundingClientRect()
 
-		const dir = settingStore.getUserFilesDir()
+		const dir = globalStore.data.paths.userFiles
 		const res = await invoker.searchInDir(dir, true, reText, 0, '', '', [])
 		if (!res) {
 			ele.remove()
@@ -162,7 +157,7 @@ export async function showNebula(onOpenFile: (filePath: string, callback?: Func_
 		Graph.onNodeClick((node) => {
 			const nnn = node as NebulaNode
 			if (nnn.desc) {
-				onOpenFile(settingStore.getUserFilesDir() + nnn.desc)
+				onOpenFile(globalStore.data.paths.userFiles + nnn.desc)
 				ele.remove()
 			}
 		})

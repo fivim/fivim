@@ -35,7 +35,7 @@ export const initCoreConf = async () => {
 	const separator = af.pathSeparator
 
 	const subDataDir = (subDir: string) => {
-		return `${dataRootDir}${separator}${subDir}${separator}`
+		return `${dataRootDir}${subDir}${separator}`
 	}
 
 	globalStore.setPaths({

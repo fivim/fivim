@@ -12,6 +12,7 @@ import { removeEnding } from '@/utils/string'
 import { SYNC_LOCK_FILE_NAME } from './constants'
 import { SyncActionRes, SyncBase } from './sync_base'
 import { CheckConfRes } from './types'
+import globalStore from '@/stores/globalStore'
 
 const t = i18n.t
 
@@ -344,7 +345,7 @@ export class SyncGitlabApi extends SyncBase {
 			'PRIVATE-TOKEN': ss.token,
 			'Content-Type': 'application/json',
 		}
-		const fp = await pathJoin(settingStore.getUserFilesDir(), filePath)
+		const fp = await pathJoin(globalStore.data.paths.userFiles, filePath)
 		const ccc = await invoker.readFileToBase64String(fp)
 		if (ccc === null) {
 			return { disabled: false, success: false, errMsg: 'readFileToBase64String error' }
@@ -408,7 +409,7 @@ export class SyncGitlabApi extends SyncBase {
 			'Content-Type': 'application/json',
 		}
 
-		const ccc = await invoker.readFileToBase64String(await pathJoin(settingStore.getUserFilesDir(), filePathFrom))
+		const ccc = await invoker.readFileToBase64String(await pathJoin(globalStore.data.paths.userFiles, filePathFrom))
 		if (ccc === null) {
 			return { disabled: false, success: false, errMsg: 'readFileToBase64String error' }
 		}
@@ -476,7 +477,7 @@ export class SyncGitlabApi extends SyncBase {
 
 	_dirDelete = async (dirPath: string) => {
 		// https://docs.gitlab.com/ee/api/commits.html#create-a-commit-with-multiple-files-and-actions
-		const dir = await pathJoin(settingStore.getUserFilesDir(), dirPath)
+		const dir = await pathJoin(globalStore.data.paths.userFiles, dirPath)
 		const lines = await invoker.walkDirItemsGetPath(dir, '', [])
 		if (lines === null) return { disabled: false, success: false, errMsg: 'walkDirItemsGetPath error' }
 		const commitActions: CommitActionDataItem[] = []
@@ -504,7 +505,7 @@ export class SyncGitlabApi extends SyncBase {
 		const url = `${site}/api/v4/projects/${ss.projectId}/repository/files/${rmtPath}/raw?ref=${ss.branch}`
 		const headeMap = { 'PRIVATE-TOKEN': ss.token }
 
-		const localPath = await pathJoin(settingStore.getUserFilesDir(), filePath)
+		const localPath = await pathJoin(globalStore.data.paths.userFiles, filePath)
 		const ret = await invoker.downloadFile(HTTP_GET, url, localPath, headeMap, {}, isLarge, '')
 		if (ret) return true
 		return false
@@ -518,7 +519,7 @@ export class SyncGitlabApi extends SyncBase {
 		const ss = syncSettings()
 
 		// Write lock file
-		const lockFilePath = await pathJoin(settingStore.getUserFilesDir(), SYNC_LOCK_FILE_NAME)
+		const lockFilePath = await pathJoin(globalStore.data.paths.userFiles, SYNC_LOCK_FILE_NAME)
 		const wlr = await invoker.writeStringIntoFile(lockFilePath, '# This is a lock file of sync. ')
 		if (wlr === null || !wlr.success) {
 			return { disabled: false, success: false, errMsg: t('Failed to write synchronization lock file') }
@@ -568,7 +569,7 @@ export class SyncGitlabApi extends SyncBase {
 		// Since it is required to be online to create/edit/delete files, there is no need to consider the issue of submitting updated text files here.
 		// Delete all old_path
 		for (const fp of lclWillDelFiles) {
-			const ffp = await pathJoin(settingStore.getUserFilesDir(), fp)
+			const ffp = await pathJoin(globalStore.data.paths.userFiles, fp)
 			console.info(`Delete local file: ${ffp}`)
 			await invoker.deleteFile(ffp)
 		}

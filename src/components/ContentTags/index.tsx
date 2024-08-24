@@ -8,7 +8,6 @@ import { CN_WORKPLACE_ACE, CN_WORKPLACE_EXSIED } from '@/constants'
 import i18n from '@/i18n'
 import { invoker } from '@/invoker'
 import { SearchFileRes } from '@/invoker/types'
-import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
 import { StringStringObj } from '@/types'
 import { removeHtmlTags } from '@/utils/html'
@@ -17,6 +16,7 @@ import { insertStringAt } from '@/utils/string'
 import { EditorSetContentCallback } from '../Editor'
 import { DATA_ATTR_CONTENT_TAG_NAME } from '../Editor/RichText/exsied/plugins/content_tag/base'
 import styles from './styles.module.scss'
+import globalStore from '@/stores/globalStore'
 
 const t = i18n.t
 export const reText = `${DATA_ATTR_CONTENT_TAG_NAME}=["']([^"']+)["']`
@@ -48,7 +48,7 @@ const ContentTags: React.FC<Props> = ({ onOpenFile }) => {
 
 	const searchAllContentTags = async () => {
 		setIsLoading(true)
-		const dir = settingStore.getUserFilesDir()
+		const dir = globalStore.data.paths.userFiles
 
 		const res = await invoker.searchInDir(dir, true, reText, 100, '', '', [])
 		if (!res) return

@@ -4,7 +4,6 @@ import React from 'react'
 import Editor, { EditorComponentRef } from '@/components/Editor'
 import { invoker } from '@/invoker'
 import globalStore from '@/stores/globalStore'
-import settingStore from '@/stores/settingStore'
 import { EditorType } from '@/types'
 
 import Sidebars from './SideBar'
@@ -48,7 +47,7 @@ const MobileLayout: React.FC = () => {
 	}
 
 	const onFileTreeOpened = async () => {
-		const tree = await invoker.treeInfo(settingStore.getUserFilesDir())
+		const tree = await invoker.treeInfo(globalStore.data.paths.userFiles)
 		if (tree !== null && tree.children) {
 			globalStore.setFileTreeData(tree.children)
 		}

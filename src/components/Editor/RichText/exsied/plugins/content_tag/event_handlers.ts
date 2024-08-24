@@ -11,6 +11,8 @@ import { t } from 'i18next'
 
 import { CN_TEMP_ELE, DATA_ATTR_TEMP_EDIT, DomUtils, PopupView, exsied } from '@exsied/exsied'
 
+import { showPopup } from '@/utils/dom'
+
 import {
 	CN_BTN_CANCEL,
 	CN_BTN_CONFIRM_BTN,
@@ -79,19 +81,18 @@ export const onClickContentTag = (event: Event) => {
         </div>
         `
 
-	const ele = PopupView.create({
+	const rect = targetEle.getBoundingClientRect()
+
+	const ele = showPopup({
 		id: POPUP_ID,
 		classNames: [CN_TEMP_ELE, CN_ROOT],
 		attrs: { TEMP_EDIT_ID: PLUGIN_NAME },
 		contentClassNames: ['exsied-content-tag-view'],
 		contentAttrs: {},
-		contentHtml,
+		contentHtml: contentHtml,
+		top: rect.bottom + 'px',
+		left: rect.left + 'px',
 	})
-
-	const rect = targetEle.getBoundingClientRect()
-	ele.style.position = 'absolute'
-	ele.style.top = rect.bottom + 'px'
-	ele.style.left = rect.left + 'px'
 
 	document.body.appendChild(ele)
 	DomUtils.limitElementRect(ele)

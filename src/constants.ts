@@ -1,7 +1,7 @@
 import { CN_WORKPLACE_ELE } from '@exsied/exsied'
 
 export const APP_NAME = 'Fivim'
-export const APP_VERSION = 'v2.4.2'
+export const APP_VERSION = 'v2.4.3'
 export const AVAILABLE_THEMES = [
 	'default',
 	'amber',

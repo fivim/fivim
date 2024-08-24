@@ -4,8 +4,6 @@ import { GitlabApiConf, SyncMode } from '@/synchronizer/types'
 import { Setting } from '@/types'
 import { tmplSetting } from '@/types_template'
 
-import globalStore from './globalStore'
-
 class SettingStore {
 	data = tmplSetting()
 
@@ -19,7 +17,6 @@ class SettingStore {
 				setEncryptedFileExt: action,
 				setLocale: action,
 				setTheme: action,
-				getUserFilesDir: action,
 				setPasswordSum: action,
 				setForceDarkMode: action,
 				setSyncMode: action,
@@ -35,15 +32,6 @@ class SettingStore {
 
 	setData(value: Setting) {
 		this.data = value
-	}
-
-	getUserFilesDir = () => {
-		let userFilesDir = this.data.userFilesDir
-		const ssep = globalStore.getData().paths.separator
-		if (!userFilesDir.endsWith(ssep)) {
-			userFilesDir = userFilesDir + ssep
-		}
-		return userFilesDir
 	}
 
 	setDateTimeFormatValString(value: string) {

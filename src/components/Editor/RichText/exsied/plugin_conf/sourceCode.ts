@@ -9,7 +9,7 @@ import { PluginConf as SourceCodePluginConf } from '@exsied/exsied/dist/plugins/
 import { initAceEditor } from '@/components/Editor/Ace'
 import { DEFAULT_DARK_THEME, DEFAULT_LIGHT_THEME, languageOption, themesOptions } from '@/components/Editor/Ace/base'
 import { CN_ACTIONS } from '@/constants'
-import { getEleContentSize } from '@/utils/dom'
+import { getEleContentSize, showPopup } from '@/utils/dom'
 import { osThemeIsDark } from '@/utils/media_query'
 
 import { highlighCode } from '../../highlight'
@@ -26,9 +26,6 @@ export function reconfSourceCode() {
 		return `<pre><code>${res}</code></pre>`
 	}
 	sourceCodeConf.editDataCb = (codeEle: HTMLElement, sign: string) => {
-		const NAME = 'sourceCodeEditor'
-		const ID = `exsied_${NAME}_popup`
-
 		const contentHtml = `
 		<div class="${CN_ACTIONS}">
 			<button class="save-btn"> ${t('Save')}</button>
@@ -46,22 +43,20 @@ export function reconfSourceCode() {
 		<div class="${CN_ACE_RENDER}"></div>
 		`
 
-		const ele = PopupView.create({
+		const NAME = 'sourceCodeEditor'
+		const ID = `exsied_${NAME}_popup`
+
+		const ele = showPopup({
 			id: ID,
 			classNames: [CN_TEMP_ELE],
 			attrs: { TEMP_EDIT_ID: ID },
-			contentClassNames: [NAME],
-			contentAttrs: {},
-			contentHtml,
 			titlebarText: t('Source code editor'),
+			contentAttrs: {},
+			contentClassNames: [NAME],
+			contentHtml: contentHtml,
+			height: '100vh',
+			width: '100vw',
 		})
-
-		ele.style.position = 'absolute'
-		ele.style.top = '0'
-		ele.style.left = '0'
-
-		ele.style.height = '100vh'
-		ele.style.width = '100vw'
 
 		const lang = codeEle.getAttribute('lang') || ''
 		const textContent = codeEle.textContent || ''

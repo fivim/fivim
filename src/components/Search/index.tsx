@@ -13,11 +13,11 @@ import i18n from '@/i18n'
 import RegexSvg from '@/icons/regex.svg?react'
 import { invoker } from '@/invoker'
 import { SearchFileRes } from '@/invoker/types'
-import settingStore from '@/stores/settingStore'
 import { pathToRelPath } from '@/stores_utils/path'
 
 import { EditorSetContentCallback } from '../Editor'
 import styles from './styles.module.scss'
+import globalStore from '@/stores/globalStore'
 
 const t = i18n.t
 
@@ -54,7 +54,7 @@ const Search: React.FC<Props> = ({ onOpenFile }) => {
 
 	const searchAll = async () => {
 		setIsLoading(true)
-		const dir = settingStore.getUserFilesDir()
+		const dir = globalStore.data.paths.userFiles
 		const text = searchText.current
 		const res = await invoker.searchInDir(dir, isReMode, text, contentLength, '<b>', '</b>', EXT_HTML_LIKE)
 		if (res) setSearchRes(res)

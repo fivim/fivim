@@ -6,9 +6,9 @@ import { HTTP_DELETE, HTTP_GET, HTTP_POST, HTTP_PUT } from '@/constants'
 import i18n from '@/i18n'
 import { saveConfToFile } from '@/initialize'
 import { invoker } from '@/invoker'
+import globalStore from '@/stores/globalStore'
 import settingStore from '@/stores/settingStore'
 import { pathJoin } from '@/stores_utils/tauri_like'
-import { removeEnding } from '@/utils/string'
 
 import { SYNC_LOCK_FILE_NAME } from './constants'
 import { SyncActionRes, SyncBase } from './sync_base'
@@ -244,6 +244,7 @@ const getErrorMsg = (text: string) => {
 
 	return ''
 }
+
 export class SyncGiteeApiV5 extends SyncBase {
 	allowedMethod = () => {
 		return [
@@ -366,7 +367,7 @@ export class SyncGiteeApiV5 extends SyncBase {
 			'Content-Type': 'application/json',
 		}
 
-		const fp = await pathJoin(settingStore.getUserFilesDir(), filePath)
+		const fp = await pathJoin(globalStore.data.paths.userFiles, filePath)
 		const ccc = await invoker.readFileToBase64String(fp)
 		if (ccc === null) {
 			return { disabled: false, success: false, errMsg: 'readFileToBase64String error' }
@@ -426,7 +427,7 @@ export class SyncGiteeApiV5 extends SyncBase {
 			'Content-Type': 'application/json',
 		}
 
-		const ccc = await invoker.readFileToBase64String(await pathJoin(settingStore.getUserFilesDir(), filePathFrom))
+		const ccc = await invoker.readFileToBase64String(await pathJoin(globalStore.data.paths.userFiles, filePathFrom))
 		if (ccc === null) {
 			return { disabled: false, success: false, errMsg: 'readFileToBase64String error' }
 		}
@@ -491,7 +492,7 @@ export class SyncGiteeApiV5 extends SyncBase {
 	}
 
 	_dirDelete = async (dirPath: string) => {
-		const dir = await pathJoin(settingStore.getUserFilesDir(), dirPath)
+		const dir = await pathJoin(globalStore.data.paths.userFiles, dirPath)
 		const lines = await invoker.walkDirItemsGetPath(dir, '', [])
 		if (lines === null) return { disabled: false, success: false, errMsg: 'walkDirItemsGetPath error' }
 		const commitActions: CommitActionDataItem[] = []
@@ -516,7 +517,7 @@ export class SyncGiteeApiV5 extends SyncBase {
 		const rmtPath = encodeURIComponent(filePath)
 		const url = `https://gitee.com/api/v5/repos/${ss.owner}/${ss.repo}/raw/${rmtPath}?ref=${ss.branch}&access_token=${ss.token}`
 
-		const localPath = await pathJoin(settingStore.getUserFilesDir(), filePath)
+		const localPath = await pathJoin(globalStore.data.paths.userFiles, filePath)
 		const ret = await invoker.downloadFile(HTTP_GET, url, localPath, {}, {}, isLarge, '')
 		if (ret) return true
 		return false
@@ -530,7 +531,7 @@ export class SyncGiteeApiV5 extends SyncBase {
 		const ss = syncSettings()
 
 		// Write lock file
-		const lockFilePath = await pathJoin(settingStore.getUserFilesDir(), SYNC_LOCK_FILE_NAME)
+		const lockFilePath = await pathJoin(globalStore.data.paths.userFiles, SYNC_LOCK_FILE_NAME)
 		const wlr = await invoker.writeStringIntoFile(lockFilePath, '# This is a lock file of sync. ')
 		if (wlr === null || !wlr.success) {
 			return { disabled: false, success: false, errMsg: t('Failed to write synchronization lock file') }
@@ -580,7 +581,7 @@ export class SyncGiteeApiV5 extends SyncBase {
 		// Since it is required to be online to create/edit/delete files, there is no need to consider the issue of submitting updated text files here.
 		// Delete all old_path
 		for (const fp of lclWillDelFiles) {
-			const ffp = await pathJoin(settingStore.getUserFilesDir(), fp)
+			const ffp = await pathJoin(globalStore.data.paths.userFiles, fp)
 			console.info(`Delete local file: ${ffp}`)
 			await invoker.deleteFile(ffp)
 		}

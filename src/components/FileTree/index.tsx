@@ -167,13 +167,13 @@ const FileTree: React.FC<Props> = ({
 	}
 
 	const closeFaDialog = async () => {
-		if (settingStore.getUserFilesDir() === '') {
+		if (globalStore.data.paths.userFiles === '') {
 			invoker.error(t('Please set the user_files directory first'))
 		}
 
 		if (dialogTitle === ADD_DIR_STR) {
 			// Only create directory on disk.
-			const parentDir = dialogType === TYPE_ADD_TO_NODE ? faNodePath.toString() : settingStore.getUserFilesDir()
+			const parentDir = dialogType === TYPE_ADD_TO_NODE ? faNodePath.toString() : globalStore.data.paths.userFiles
 			const fullPath = await pathJoin(parentDir, name)
 
 			if (await invoker.addDir(fullPath)) {
@@ -183,7 +183,7 @@ const FileTree: React.FC<Props> = ({
 			}
 		} else if (dialogTitle === ADD_FILE_STR) {
 			const fileNameFull = name + modalFaExt
-			const parentDir = dialogType === TYPE_ADD_TO_NODE ? faNodePath.toString() : settingStore.getUserFilesDir()
+			const parentDir = dialogType === TYPE_ADD_TO_NODE ? faNodePath.toString() : globalStore.data.paths.userFiles
 			const fullPath = await pathJoin(parentDir, fileNameFull)
 			const relPath = dialogType === TYPE_ADD_TO_NODE ? pathToRelPath(fullPath) : fileNameFull
 
@@ -295,11 +295,11 @@ const FileTree: React.FC<Props> = ({
 	}
 
 	const onImportFileToRoot = async () => {
-		importFile(settingStore.getUserFilesDir())
+		importFile(globalStore.data.paths.userFiles)
 	}
 
 	const onImportFileAndEncryptToRoot = async () => {
-		importFileAndEncrypt(settingStore.getUserFilesDir())
+		importFileAndEncrypt(globalStore.data.paths.userFiles)
 	}
 
 	const onImportFileToNode = async (node: TreeDataNode) => {

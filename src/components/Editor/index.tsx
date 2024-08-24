@@ -38,6 +38,7 @@ import { AceEditor } from './Ace'
 import { RichTextEditor, EditorComponentRef as rtComponentRef } from './RichText'
 import { WRONG_IMAGE_URL } from './constants'
 import { externalFunctions as externalFunctionsJodImg } from './html'
+import globalStore from '@/stores/globalStore'
 
 export type EditorSetContentCallbackParam = (param: {
 	goToLine?: number
@@ -206,7 +207,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 
 		// If path starts with "/", use userFilesDir as the parent dir.
 		if (_path.startsWith('/')) {
-			dir = settingStore.getUserFilesDir()
+			dir = globalStore.data.paths.userFiles
 		} else {
 			dir = getDirByFilePath(currentFilePath.current, '')
 		}
@@ -239,7 +240,7 @@ const Editor = forwardRef<EditorComponentRef, Props>((props, ref) => {
 		if (_path.startsWith(LOCAL_FILE_LINK_PREFIX)) _path = _path.replace(LOCAL_FILE_LINK_PREFIX, '')
 
 		if (_path.startsWith('/')) {
-			dir = settingStore.getUserFilesDir()
+			dir = globalStore.data.paths.userFiles
 		} else {
 			dir = getDirByFilePath(currentFilePath.current, '')
 		}
